@@ -15,10 +15,6 @@
         <link href="css/bootstrap-icons.css" rel="stylesheet">
         <link href="css/templatemo-festava-live.css" rel="stylesheet">
 
-        <script src="js/jquery.min.js"></script>
-        <script src="js/bootstrap.min.js"></script>
-        <script src="js/contribute.js"></script>
-
     </head>
 <body>
     
@@ -93,7 +89,7 @@
                             <div class="collapse" id="collapseDrinks">
                                 <div id="beerText" class="card card-body custom-collapse-2" data-bs-toggle="collapse" data-bs-target="#collapseBeer" aria-expanded="false" aria-controls="collapseBeer">
                                     <beerText>Sör: 0l :(</beerText>
-                                    <button type="button" class="btn btn-primary">Add</button>
+                                    <button type="button" class="btn btn-primary custom-js-no-event-propagation" onclick="event.stopPropagation()" data-bs-toggle="modal" data-bs-target="#drinksModal" data-bs-whatever="beer">Add</button>
 
                                     <div class="collapse" id="collapseBeer">
                                         <div class="card card-body custom-collapse-3">
@@ -143,7 +139,60 @@
                 <img src="images/blurred_praty.jpeg" class="custom-image"/>
             </div>
         </section>
+
+
+        <!-- MODAL -->
+
+        <div class="modal fade" id="drinksModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Contribute</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <form action="http://localhost:8080/api/contribution" method="POST">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                        <label for="drink_type" class="col-form-label">type:</label>
+                        <select class="form-select" id="drink_type" aria-label="Default select example">
+                            <option value="beer">beer</option>
+                            <option value="2">Two</option>
+                            <option value="3">Three</option>
+                        </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="name" class="col-form-label">Name:</label>
+                            <input type="text" class="form-control" id="name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="quantity" class="col-form-label">Quantity:</label>
+                            <input type="text" class="form-control" id="quantity" placeholder="E.g: 0.7">
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="col-form-label">Description:</label>
+                            <textarea class="form-control" id="description" rows="2" placeholder="Brand, and some additional details (optional)"></textarea>
+                        </div>
+                    </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Send message</button>
+                  </div>
+                </form>
+                
+              </div>
+            </div>
+          </div>
+
+          <!-- MODAL END -->
+
     </main>
+
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/contribute.js"></script>
 
 </body>
 </html>

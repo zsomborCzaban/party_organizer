@@ -702,3 +702,13 @@ strong {
   height: fit-content;
   min-height: 100vh;
 }
+
+/* todo: find a better solution (this causes some "jumping") */
+.collapse button{
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+div.custom-collapse-1 h1{
+  margin-left: 10px;
+}
