@@ -1,5 +1,7 @@
-package dev.czaban.party_website;
+package dev.czaban.party_website.services;
 
+import dev.czaban.party_website.models.Contribution;
+import dev.czaban.party_website.repositories.ContributionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

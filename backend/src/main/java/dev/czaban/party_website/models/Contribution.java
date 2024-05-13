@@ -1,4 +1,4 @@
-package dev.czaban.party_website;
+package dev.czaban.party_website.models;
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
