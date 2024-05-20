@@ -31,7 +31,7 @@ public class ContributionController {
     }
 
     @CrossOrigin //todo: allow only for frontend
-    @GetMapping()
+    @GetMapping("/")
     public ResponseEntity<List<Contribution>> contributions(){
         System.out.println("requested");
         System.out.println(contributionService.allContribution());
