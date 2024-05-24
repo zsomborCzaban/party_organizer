@@ -15,10 +15,12 @@ import java.util.stream.Collectors;
 @Service
 public class DrinkContributionService {
 
-    @Autowired //auto init
-    private ContributionRepository contributionRepository;
-
+    private final ContributionRepository contributionRepository;
     private final Logger logger = LoggerFactory.getLogger(DrinkContributionService.class);
+
+    public DrinkContributionService(ContributionRepository contributionRepository) {
+        this.contributionRepository = contributionRepository;
+    }
 
     private final Set<String> types = new HashSet<>(){{ //todo: get from db
         add("beer");

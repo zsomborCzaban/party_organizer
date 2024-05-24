@@ -20,19 +20,24 @@ import java.util.Map;
 @RequestMapping("/api/contributions")
 public class DrinkContributionController {
 
-    @Autowired
-    private DrinkContributionService drinkContributionService;
+    private final DrinkContributionService drinkContributionService;
+    private final Logger logger = LoggerFactory.getLogger(DrinkContributionController.class);
 
-    Logger logger = LoggerFactory.getLogger(DrinkContributionController.class);
+    public DrinkContributionController(DrinkContributionService drinkContributionService) {
+        this.drinkContributionService = drinkContributionService;
+    }
 
-    @GetMapping("/beers")
-    public ResponseEntity<List<DrinkContribution>> beers(){
-        return  new ResponseEntity<>(drinkContributionService.allContributionWithType("beer"), HttpStatus.OK);
+    @GetMapping("/{type}")
+    public ResponseEntity<List<DrinkContribution>> getContributionsByType(@PathVariable String type){
+        if(!drinkContributionService.isValidType(type)){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST); //todo: return message
+        }
+        return  new ResponseEntity<>(drinkContributionService.allContributionWithType(type), HttpStatus.OK);
     }
 
     @CrossOrigin //todo: allow only for frontend
     @GetMapping()
-    public ResponseEntity<List<DrinkContribution>> contributions(){
+    public ResponseEntity<List<DrinkContribution>> getContributions(){
         System.out.println("requested");
         System.out.println(drinkContributionService.allContribution());
         return  new ResponseEntity<>(drinkContributionService.allContribution(), HttpStatus.OK);
