@@ -8,11 +8,11 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "contributions")
+@Document(collection = "drink_contributions")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Contribution {
+public class DrinkContribution {
 
     @Id
     private ObjectId id;
@@ -34,7 +34,7 @@ public class Contribution {
     @Size(max = 300, message="Description cannot be longer than 300 characters")
     private String description;
 
-    public Contribution(String type, double quantity, String description, String contributor_name) {
+    public DrinkContribution(String type, double quantity, String description, String contributor_name) {
         this.type = type;
         this.quantity = quantity;
         this.description = description;

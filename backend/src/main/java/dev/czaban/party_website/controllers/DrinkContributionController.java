@@ -1,7 +1,7 @@
 package dev.czaban.party_website.controllers;
 
-import dev.czaban.party_website.services.ContributionService;
-import dev.czaban.party_website.models.Contribution;
+import dev.czaban.party_website.services.DrinkContributionService;
+import dev.czaban.party_website.models.DrinkContribution;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,36 +18,37 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/contributions")
-public class ContributionController {
+public class DrinkContributionController {
 
     @Autowired
-    private ContributionService contributionService;
+    private DrinkContributionService drinkContributionService;
 
-    Logger logger = LoggerFactory.getLogger(ContributionController.class);
+    Logger logger = LoggerFactory.getLogger(DrinkContributionController.class);
 
     @GetMapping("/beers")
-    public ResponseEntity<List<Contribution>> beers(){
-        return  new ResponseEntity<>(contributionService.allContributionWithType("beer"), HttpStatus.OK);
+    public ResponseEntity<List<DrinkContribution>> beers(){
+        return  new ResponseEntity<>(drinkContributionService.allContributionWithType("beer"), HttpStatus.OK);
     }
 
     @CrossOrigin //todo: allow only for frontend
-    @GetMapping("/")
-    public ResponseEntity<List<Contribution>> contributions(){
+    @GetMapping()
+    public ResponseEntity<List<DrinkContribution>> contributions(){
         System.out.println("requested");
-        System.out.println(contributionService.allContribution());
-        return  new ResponseEntity<>(contributionService.allContribution(), HttpStatus.OK);
+        System.out.println(drinkContributionService.allContribution());
+        return  new ResponseEntity<>(drinkContributionService.allContribution(), HttpStatus.OK);
     }
 
     //todo: make post with data validation and with auth
     @CrossOrigin
     @PostMapping(path ="/contribution", consumes = "application/json" /*produces = MediaType.APPLICATION_JSON_VALUE --- responseEntity will use string as raw value even if this is specified*/)    //solution: create wrapper class for the string :/
-    public ResponseEntity<String> createContribution(@Valid @RequestBody Contribution contribution){    //todo: send all errors in the same response. (solution?: Maybe make a costum bean validator)
-        System.out.println(contribution);
+    public ResponseEntity<String> createContribution(@Valid @RequestBody DrinkContribution drinkContribution){    //todo: send all errors in the same response. (solution?: Maybe make a costum bean validator)
 
-        if(!contributionService.isValidType(contribution.getType())){
+        if(!drinkContributionService.isValidType(drinkContribution.getType())){
             return new ResponseEntity<>("{type: 'incorrect type, choose from the available options'}", HttpStatus.BAD_REQUEST);
         }
-        if(contributionService.createContribution(contribution)){
+
+
+        if(drinkContributionService.createContribution(drinkContribution)){
             return new ResponseEntity<>("Contribution created", HttpStatus.OK);
         }
         return new ResponseEntity<>("DB error", HttpStatus.INTERNAL_SERVER_ERROR);

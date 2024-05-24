@@ -1,6 +1,6 @@
 package dev.czaban.party_website.services;
 
-import dev.czaban.party_website.models.Contribution;
+import dev.czaban.party_website.models.DrinkContribution;
 import dev.czaban.party_website.repositories.ContributionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,31 +13,32 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class ContributionService {
+public class DrinkContributionService {
 
     @Autowired //auto init
     private ContributionRepository contributionRepository;
 
-    Logger logger = LoggerFactory.getLogger(ContributionService.class);
+    private final Logger logger = LoggerFactory.getLogger(DrinkContributionService.class);
 
     private final Set<String> types = new HashSet<>(){{ //todo: get from db
         add("beer");
         add("wine");
         add("spirit");
-    }};;
+    }};
 
-    public List<Contribution> allContribution(){
+    public List<DrinkContribution> allContribution(){
         return contributionRepository.findAll();
     }
 
-    public List<Contribution> allContributionWithType(String type){
+    public List<DrinkContribution> allContributionWithType(String type){
+        logger.info("return of allcontributions with type: {}", contributionRepository.findAll().stream().filter(c -> c.getType().equals(type)).collect(Collectors.toList()));
         return contributionRepository.findAll().stream().filter(c -> c.getType().equals(type)).collect(Collectors.toList());
     }
 
-    public Boolean createContribution(Contribution contribution){ //should be bool
+    public Boolean createContribution(DrinkContribution drinkContribution){ //should be bool
         logger.info("inserting to DB");
         try{
-            contributionRepository.insert(contribution);
+            contributionRepository.insert(drinkContribution);
             logger.info("insertion to DB Successful");
             return true;
         } catch (Exception e){
