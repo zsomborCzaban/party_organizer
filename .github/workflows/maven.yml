@@ -28,13 +28,13 @@ jobs:
     
     - name: Adding secret
       run: |
-          echo "$APPLICATION_PROPERTIES" > /backend/src/main/resources/application.properties
-          echo "$PUBLIC_JWT_KEY" > /backend/src/main/resources/certs/public.pem
-          echo "$PRIVATE_JWT_KEY" > /backend/src/main/resources/certs/private.pem
+          echo "$APPLICATION_PROPERTIES" > backend/src/main/resources/application.properties
+          echo "$PUBLIC_JWT_KEY" > backend/src/main/resources/certs/public.pem
+          echo "$PRIVATE_JWT_KEY" > backend/src/main/resources/certs/private.pem
       env:
         APPLICATION_PROPERTIES: ${{ secrets.APPLICATION_PROPERTIES }}
-        PUBLIC_JWT_KEY: ${{ secrets.PUBLIC_KEY }}
-        PRIVATE_JWT_KEY: ${{ secrets.PRIVATE_KEY }}
+        PUBLIC_JWT_KEY: ${{ secrets.PUBLIC_JWT_KEY }}
+        PRIVATE_JWT_KEY: ${{ secrets.PRIVATE_JWT_KEY }}
       shell: bash
         
     - name: Set up JDK 17
