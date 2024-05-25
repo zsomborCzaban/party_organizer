@@ -21,10 +21,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
+    - name: Output current path
+      run: pwd
+      shell: bash
     
     - name: Adding secret
       run: |
-          echo <<< "$(pwd)"
           echo "${{ secrets.APPLICATION_PROPERTIES }}" > backend/src/main/resources/application.properties
           echo "${{ secrets.PUBLIC_JWT_KEY}}" > backend/src/main/resources/certs/public.pem
           echo "${{ secrets.PRIVATE_JWT_KEY}}" > backend/src/main/resources/certs/private.pem
