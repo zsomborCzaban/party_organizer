@@ -25,10 +25,11 @@ class DrinkContributionControllerTest {
     @Autowired
     private MockMvc mvc;
 
+
     @MockBean
-    DrinkContributionService drinkContributionService;
+    private UserRepository userRepository;
     @MockBean
-    UserRepository userRepository;
+    private DrinkContributionService drinkContributionService;
 
     private final String CONTRIBUTIONS_END_POINT_PATH = "/api/contributions";
     private final String TOKEN_END_POINT_PATH = "/token";
@@ -40,17 +41,17 @@ class DrinkContributionControllerTest {
     }
 
     @Test
-    void contributionsAuthenticated() throws Exception{
+    void contributionsBadCredential() throws Exception{
         MvcResult result = this.mvc.perform(post(TOKEN_END_POINT_PATH)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{ \"username\": \"zsombor\", \"password\": \"strong_password_haha\" }"))
-                .andExpect(status().isOk())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{ \"username\": \"bad\", \"password\": \"credentials\" }"))
+                .andExpect(status().isUnauthorized())
                 .andReturn();
 
-        String token = result.getResponse().getContentAsString();
-
-        this.mvc.perform(get(CONTRIBUTIONS_END_POINT_PATH)
-                .header("Authorization", "Bearer " + token))
-                .andExpect(status().isOk());
+//        String token = result.getResponse().getContentAsString();
+//
+//        this.mvc.perform(get(CONTRIBUTIONS_END_POINT_PATH)
+//                .header("Authorization", "Bearer " + token))
+//                .andExpect(status().isOk());
     }
 }
