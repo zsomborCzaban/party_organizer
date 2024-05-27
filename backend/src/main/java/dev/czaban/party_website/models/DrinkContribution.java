@@ -2,14 +2,12 @@ package dev.czaban.party_website.models;
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "drink_contributions")
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class DrinkContribution {
@@ -41,4 +39,39 @@ public class DrinkContribution {
         this.contributor_name = contributor_name;
     }
 
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public double getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(double quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getContributor_name() {
+        return contributor_name;
+    }
+
+    public void setContributor_name(String contributor_name) {
+        this.contributor_name = contributor_name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public ObjectId getId() {
+        return id;
+    }
+
+    public void setId(ObjectId id) {
+        this.id = id;
+    }
 }

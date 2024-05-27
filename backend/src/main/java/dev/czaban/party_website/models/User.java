@@ -1,7 +1,5 @@
 package dev.czaban.party_website.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
@@ -11,7 +9,6 @@ import org.springframework.data.annotation.Id;
 @Document(collection = "users")
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 public class User {
 
     @Id // @generatedValue is not available for mongoDB
