@@ -1,0 +1,10 @@
+[
+{
+  "type": "main_dish",
+  "name": "Pörkölt"
+},
+{
+  "type": "other",
+  "name": "Other"
+}
+]

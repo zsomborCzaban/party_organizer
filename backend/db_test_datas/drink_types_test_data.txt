@@ -1,0 +1,32 @@
+[
+{
+  "type": "beer",
+  "name": "Beer",
+  "quantity_mark": "karton"
+},
+{
+  "type": "wine",
+  "name": "Wine",
+  "quantity_mark": "l"
+},
+{
+  "type": "spirit",
+  "name": "Spirit",
+  "quantity_mark": "l"
+},
+{
+  "type": "liqueur",
+  "name": "Liqueur",
+  "quantity_mark": "l"
+},
+{
+  "type": "soft_drink",
+  "name": "Soft Drink",
+  "quantity_mark": "l"
+},
+{
+  "type": "other",
+  "name": "Other",
+  "quantity_mark": "l"
+}
+]
