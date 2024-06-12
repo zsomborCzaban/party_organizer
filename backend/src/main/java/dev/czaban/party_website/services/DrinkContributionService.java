@@ -1,10 +1,11 @@
 package dev.czaban.party_website.services;
 
-import dev.czaban.party_website.models.DrinkContribution;
-import dev.czaban.party_website.repositories.ContributionRepository;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import dev.czaban.party_website.models.drink.DrinkContribution;
+import dev.czaban.party_website.models.drink.DrinkTypes;
+import dev.czaban.party_website.repositories.DrinkContributionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -15,11 +16,13 @@ import java.util.stream.Collectors;
 @Service
 public class DrinkContributionService {
 
-    private final ContributionRepository contributionRepository;
+    private final DrinkContributionRepository drinkContributionRepository;
+    private final DrinkTypes drinkTypes;
     private final Logger logger = LoggerFactory.getLogger(DrinkContributionService.class);
 
-    public DrinkContributionService(ContributionRepository contributionRepository) {
-        this.contributionRepository = contributionRepository;
+    public DrinkContributionService(DrinkContributionRepository drinkContributionRepository, DrinkTypes drinkTypes) {
+        this.drinkContributionRepository = drinkContributionRepository;
+        this.drinkTypes = drinkTypes;
     }
 
     private final Set<String> types = new HashSet<>(){{ //todo: get from db
@@ -29,18 +32,20 @@ public class DrinkContributionService {
     }};
 
     public List<DrinkContribution> allContribution(){
-        return contributionRepository.findAll();
+        return drinkContributionRepository.findAll();
     }
 
     public List<DrinkContribution> allContributionWithType(String type){
-        logger.info("return of allcontributions with type: {}", contributionRepository.findAll().stream().filter(c -> c.getType().equals(type)).collect(Collectors.toList()));
-        return contributionRepository.findAll().stream().filter(c -> c.getType().equals(type)).collect(Collectors.toList());
+        logger.info("return of allcontributions with type: {}", drinkContributionRepository.findAll().stream().filter(c -> c.getType().equals(type)).collect(Collectors.toList()));
+        System.out.println(drinkTypes.getDrinkType("beer"));
+        return drinkContributionRepository.findAll().stream().filter(c -> c.getType().equals(type)).collect(Collectors.toList());
     }
 
-    public Boolean createContribution(DrinkContribution drinkContribution){ //should be bool
+    public Boolean createContribution(ObjectNode json){ //should be bool
+        DrinkContribution dc = new DrinkContribution(drinkTypes.getDrinkType(json.get("type").asText()), json.get("quantity").asDouble(), json.get("description").asText(), json.get("contributorName").asText());
         logger.info("inserting to DB");
         try{
-            contributionRepository.insert(drinkContribution);
+            drinkContributionRepository.insert(dc);
             logger.info("insertion to DB Successful");
             return true;
         } catch (Exception e){
