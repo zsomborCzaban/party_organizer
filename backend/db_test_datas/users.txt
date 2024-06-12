@@ -1,6 +1,1 @@
-{
-    "username": "zsombor2",
-    "password": "password",
-    "contributor_name": "zsombor2",
-    "roles": "BASIC_USER"
-}
+
