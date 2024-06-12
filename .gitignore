@@ -4,3 +4,4 @@
 .idea/
 /backend/target/
 backend/src/main/resources/.env
+backend/db_test_datas/users.txt
