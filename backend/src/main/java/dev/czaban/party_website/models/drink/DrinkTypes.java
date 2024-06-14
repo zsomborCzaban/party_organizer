@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 @Component   //by default components and beans are singleton, so no need to implement it :(
@@ -31,7 +32,7 @@ public class DrinkTypes {
         return drinkTypes.get(drinkType);
     }
 
-    public List<DrinkType> getAllDrinkType(){
+    public Iterable<DrinkType> getAllDrinkType(){
         return drinkTypeRepository.findAll();
     }
 }

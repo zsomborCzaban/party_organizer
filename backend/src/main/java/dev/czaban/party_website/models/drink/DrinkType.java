@@ -2,23 +2,23 @@ package dev.czaban.party_website.models.drink;
 
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
-@Document(collection = "drink_types")
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 public class DrinkType {
 
     @Id
-    private ObjectId id;
+    @GeneratedValue
+    private Long id;
     private String type;
     private String name;
-    @Field("quantity_mark")
+    @Column(name = "quantity_mark")
     private String quantityMark;
 
     public DrinkType(String type, String name, String quantityMark) {
@@ -27,11 +27,11 @@ public class DrinkType {
         this.quantityMark = quantityMark;
     }
 
-    public ObjectId getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -1,22 +1,25 @@
 package dev.czaban.party_website.models.food;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "food_contributions")
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 public class FoodContribution {
 
     @Id
-    private ObjectId objectId;
+    @GeneratedValue
+    private Long id;
 
     private String type;
 
-    private String contributor_name;
+    @Column(name = "contributor_name")
+    private String contributorName;
 
     private double quantity;
 
@@ -26,21 +29,21 @@ public class FoodContribution {
 
     private boolean isMainDish;
 
-    public FoodContribution(String type, String contributor_name, double quantity, String quantityMark, String description, boolean isMainDish) {
+    public FoodContribution(String type, String contributorName, double quantity, String quantityMark, String description, boolean isMainDish) {
         this.type = type;
-        this.contributor_name = contributor_name;
+        this.contributorName = contributorName;
         this.quantity = quantity;
         this.quantityMark = quantityMark;
         this.description = description;
         this.isMainDish = isMainDish;
     }
 
-    public ObjectId getObjectId() {
-        return objectId;
+    public Long getId() {
+        return id;
     }
 
-    public void setObjectId(ObjectId objectId) {
-        this.objectId = objectId;
+    public void setIf(Long id) {
+        this.id = id;
     }
 
     public String getType() {
@@ -52,11 +55,11 @@ public class FoodContribution {
     }
 
     public String getContributor_name() {
-        return contributor_name;
+        return contributorName;
     }
 
-    public void setContributor_name(String contributor_name) {
-        this.contributor_name = contributor_name;
+    public void setContributor_name(String contributorName) {
+        this.contributorName = contributorName;
     }
 
     public double getQuantity() {

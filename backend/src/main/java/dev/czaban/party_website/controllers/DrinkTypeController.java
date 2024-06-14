@@ -27,7 +27,7 @@ public class DrinkTypeController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<DrinkType>> AllDrinkType(){
+    public ResponseEntity<Iterable<DrinkType>> AllDrinkType(){
         return  new ResponseEntity<>(drinkTypes.getAllDrinkType(), HttpStatus.OK);
     }
 

@@ -1,36 +1,37 @@
 package dev.czaban.party_website.models.food;
 
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "food_types")
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 public class FoodType {
 
     @Id
-    private ObjectId id;
-    private String foodType;
+    @GeneratedValue
+    private Long id;
+    private String type;
     private String name;
 
-    public ObjectId getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
     public String getFoodType() {
-        return foodType;
+        return type;
     }
 
     public void setFoodType(String drinkType) {
-        this.foodType = drinkType;
+        this.type = drinkType;
     }
 
     public String getName() {

@@ -1,20 +1,24 @@
 package dev.czaban.party_website.models;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.annotation.Id;
 
-@Document(collection = "users")
+
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
 
     @Id // @generatedValue is not available for mongoDB
-    private ObjectId id;
+    @GeneratedValue
+    private Long id;
     private String username;
     private String password;
+    @Column(name = "contributor_name")
     private String contributorName;
     private String roles;
 
@@ -25,11 +29,11 @@ public class User {
         this.roles = roles;
     }
 
-    public ObjectId getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

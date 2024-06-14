@@ -1,20 +1,21 @@
 package dev.czaban.party_website.models.drink;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
-@Document(collection = "drink_contributions")
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 public class DrinkContribution {
 
     @Id
-    private ObjectId id;
+    @GeneratedValue
+    private Long id;
 
     @NotNull(message = "type is mandatory")
     private DrinkType type; //maybe enum
@@ -25,7 +26,7 @@ public class DrinkContribution {
 
     @NotEmpty(message = "contributorName is mandatory")
     @Size(min = 1, max = 100, message="contributorName must be between 1 and 100 characters")
-    @Field("contributor_name")
+    @Column(name = "contributor_name")
     private String contributorName;
 
     @Size(max = 300, message="Description cannot be longer than 300 characters")
@@ -44,6 +45,8 @@ public class DrinkContribution {
 
     public void setType(DrinkType type) {
         this.type = type;
+
+
     }
 
     public double getQuantity() {
@@ -70,11 +73,11 @@ public class DrinkContribution {
         this.description = description;
     }
 
-    public ObjectId getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(Long id) {
         this.id = id;
     }
 }
