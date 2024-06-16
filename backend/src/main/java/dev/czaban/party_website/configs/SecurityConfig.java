@@ -55,7 +55,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/token").permitAll();
-                    auth.requestMatchers("/api/contributions/beers").permitAll();
+                    auth.requestMatchers("/api/contributions").permitAll();
                     auth.requestMatchers("/api/admin/users").permitAll();
                     //auth.requestMatchers("/api/contributions").permitAll();
                     auth.anyRequest().authenticated();

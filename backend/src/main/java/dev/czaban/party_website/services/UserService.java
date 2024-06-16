@@ -40,7 +40,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         logger.info("creating user: {} in DB", user.getUsername());
         try{
-            userRepository.insert(user);
+            userRepository.save(user);
             logger.info("creating user: {} in DB successful", user.getUsername());
             return true;
         } catch (Exception e){

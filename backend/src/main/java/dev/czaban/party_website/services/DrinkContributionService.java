@@ -45,7 +45,7 @@ public class DrinkContributionService {
         DrinkContribution dc = new DrinkContribution(drinkTypes.getDrinkType(json.get("type").asText()), json.get("quantity").asDouble(), json.get("description").asText(), json.get("contributorName").asText());
         logger.info("inserting to DB");
         try{
-            drinkContributionRepository.insert(dc);
+            drinkContributionRepository.save(dc);
             logger.info("insertion to DB Successful");
             return true;
         } catch (Exception e){
