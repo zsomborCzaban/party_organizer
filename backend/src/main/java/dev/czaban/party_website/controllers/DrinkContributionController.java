@@ -1,9 +1,9 @@
 package dev.czaban.party_website.controllers;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import dev.czaban.party_website.services.DrinkContributionService;
+import dev.czaban.party_website.services.drink.DrinkContributionService;
 import dev.czaban.party_website.models.drink.DrinkContribution;
-import jakarta.validation.Valid;
+import dev.czaban.party_website.services.drink.DrinkTypeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -21,15 +21,17 @@ import java.util.Map;
 public class DrinkContributionController {
 
     private final DrinkContributionService drinkContributionService;
+    private final DrinkTypeService drinkTypeService;
     private final Logger logger = LoggerFactory.getLogger(DrinkContributionController.class);
 
-    public DrinkContributionController(DrinkContributionService drinkContributionService) {
+    public DrinkContributionController(DrinkContributionService drinkContributionService, DrinkTypeService drinkTypeService) {
         this.drinkContributionService = drinkContributionService;
+        this.drinkTypeService = drinkTypeService;
     }
 
     @GetMapping("/{type}")
     public ResponseEntity<List<DrinkContribution>> getContributionsByType(@PathVariable String type){
-        if(!drinkContributionService.isValidType(type)){
+        if(!drinkTypeService.isValidDrinkType(type)){
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST); //todo: return message
         }
         return  new ResponseEntity<>(drinkContributionService.allContributionWithType(type), HttpStatus.OK);

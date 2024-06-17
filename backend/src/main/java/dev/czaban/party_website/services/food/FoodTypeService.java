@@ -1,31 +1,35 @@
-package dev.czaban.party_website.models.food;
+package dev.czaban.party_website.services.food;
 
-import dev.czaban.party_website.models.drink.DrinkType;
-import dev.czaban.party_website.repositories.DrinkTypeRepository;
+import dev.czaban.party_website.models.food.FoodType;
 import dev.czaban.party_website.repositories.FoodTypeRepository;
-import dev.czaban.party_website.services.DrinkContributionService;
+import dev.czaban.party_website.services.drink.DrinkContributionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.stream.Collectors;
 
-public class FoodTypes {
+@Service
+public class FoodTypeService {
     private final FoodTypeRepository foodTypeRepository;
     private final Logger logger = LoggerFactory.getLogger(DrinkContributionService.class);
     private final HashMap<String, FoodType> foodTypes = new HashMap<>();
 
-    private FoodTypes(FoodTypeRepository foodTypeRepository){
+    private FoodTypeService(FoodTypeRepository foodTypeRepository){
         this.foodTypeRepository = foodTypeRepository;
         foodTypeRepository.findAll().forEach(c ->  foodTypes.put(c.getFoodType(), c));
     }
 
-    public boolean isValidDrinkType(String foodType){
+    public boolean isValidFoodType(String foodType){
         return foodTypes.containsKey(foodType);
     }
 
     public FoodType getFoodType(String foodType){
         return foodTypes.get(foodType);
+    }
+
+    public Collection<FoodType> getAllDrinkType(){
+        return foodTypes.values();
     }
 }

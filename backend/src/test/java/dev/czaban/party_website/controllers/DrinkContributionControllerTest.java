@@ -2,7 +2,7 @@ package dev.czaban.party_website.controllers;
 
 import dev.czaban.party_website.configs.SecurityConfig;
 import dev.czaban.party_website.repositories.UserRepository;
-import dev.czaban.party_website.services.DrinkContributionService;
+import dev.czaban.party_website.services.drink.DrinkContributionService;
 import dev.czaban.party_website.services.JpaUserDetailsService;
 import dev.czaban.party_website.services.TokenService;
 import org.junit.jupiter.api.Test;

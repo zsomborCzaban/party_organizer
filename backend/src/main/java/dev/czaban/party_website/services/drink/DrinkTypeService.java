@@ -1,24 +1,24 @@
-package dev.czaban.party_website.models.drink;
+package dev.czaban.party_website.services.drink;
 
+
+import dev.czaban.party_website.models.drink.DrinkType;
 import dev.czaban.party_website.repositories.DrinkTypeRepository;
-import dev.czaban.party_website.services.DrinkContributionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 
-@Component   //by default components and beans are singleton, so no need to implement it :(
-public class DrinkTypes {
+@Service
+public class DrinkTypeService {
 
     //private static DrinkTypes instance = new DrinkTypes();
     private final DrinkTypeRepository drinkTypeRepository;
     private final Logger logger = LoggerFactory.getLogger(DrinkContributionService.class);
     private final HashMap<String, DrinkType> drinkTypes = new HashMap<>();
 
-    private DrinkTypes(DrinkTypeRepository drinkTypeRepository){
+    private DrinkTypeService(DrinkTypeRepository drinkTypeRepository){
         this.drinkTypeRepository = drinkTypeRepository;
         drinkTypeRepository.findAll().forEach(c -> drinkTypes.put(c.getDrinkType(), c));
     }
@@ -31,7 +31,8 @@ public class DrinkTypes {
         return drinkTypes.get(drinkType);
     }
 
-    public List<DrinkType> getAllDrinkType(){
-        return drinkTypeRepository.findAll();
+    public Collection<DrinkType> getAllDrinkType(){
+        return drinkTypes.values();
     }
+
 }
