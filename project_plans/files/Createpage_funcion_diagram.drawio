@@ -1,0 +1,34 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36" border="50" scale="3" compressed="false" locked="false" version="24.7.16">
+  <diagram name="Blank" id="YmL12bMKpDGza6XwsDPr">
+    <mxGraphModel dx="1916" dy="584" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" background="none" math="1" shadow="0">
+      <root>
+        <mxCell id="X5NqExCQtvZxIxQ7pmgY-0" />
+        <mxCell id="1" parent="X5NqExCQtvZxIxQ7pmgY-0" />
+        <mxCell id="1vSAdR6641GovA7WgB2n-21" value="Create party page" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-246" y="231" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="1vSAdR6641GovA7WgB2n-22" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;" edge="1" parent="1" target="1vSAdR6641GovA7WgB2n-23">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="-184" y="749" as="sourcePoint" />
+            <mxPoint x="-187" y="323" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="1vSAdR6641GovA7WgB2n-23" value="2 rész" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="-266" y="315" width="173" height="39" as="geometry" />
+        </mxCell>
+        <mxCell id="1vSAdR6641GovA7WgB2n-28" value="Szimpla form, ahol meg kell adni a party adataid" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="-523" y="345" width="174" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="1vSAdR6641GovA7WgB2n-29" value="Sima oldal / talan modal" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="70" y="338" width="87" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="1vSAdR6641GovA7WgB2n-30" value="Sikeres party csinalas utan, itt lehetoseg lesz invitalni embereket ra&lt;br&gt;&lt;br&gt;Lesz masolhato party link" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="19" y="437" width="184" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="1vSAdR6641GovA7WgB2n-31" value="helyszin&lt;br&gt;ido&lt;br&gt;drink es food requirmentek specifikalasa" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="-560" y="424.5" width="232" height="55" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
