@@ -3,7 +3,8 @@ package main
 import (
 	"github.com/gorilla/mux"
 	"github.com/rs/zerolog/log"
-	"github.com/zsomborCzaban/party_organizer/services/creation/party/interfaces"
+	drinkRequirementInterfaces "github.com/zsomborCzaban/party_organizer/services/creation/drink_requirement/interfaces"
+	partyInterfaces "github.com/zsomborCzaban/party_organizer/services/creation/party/interfaces"
 	"net/http"
 )
 
@@ -12,7 +13,8 @@ func main() {
 
 	apiRouter := router.PathPrefix("/api/v0").Subrouter()
 
-	interfaces.NewPartyRouter(apiRouter)
+	partyInterfaces.NewPartyRouter(apiRouter)
+	drinkRequirementInterfaces.NewDrinkRequirementRouter(apiRouter)
 
 	log.Fatal().Err(http.ListenAndServe(":8080", router))
 }

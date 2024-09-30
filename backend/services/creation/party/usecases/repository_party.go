@@ -28,7 +28,7 @@ func (p PartyRepository) GetParty(id uint) (*domains.Party, error) {
 		nil
 }
 
-func (p PartyRepository) UpdateParty(*domains.PartyDTO) (*domains.Party, error) {
+func (p PartyRepository) UpdateParty(partyDTO *domains.PartyDTO) (*domains.Party, error) {
 	//TODO implement me
 	return &domains.Party{
 			Model: gorm.Model{ID: 23},
