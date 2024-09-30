@@ -23,13 +23,11 @@ func NewPartyController() domains.IPartyController {
 }
 
 func (pc PartyController) CreateController(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("gets here")
 	var createPartyReq domains.PartyDTO
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&createPartyReq)
 	if err != nil {
-		fmt.Println("fails here")
-		br := domains.ErrorBadRequest(domains.BadRequest)
+		br := domains.ErrorBadRequest(err.Error())
 
 		//todo: implement response helper that has logger as param
 		br.Send(w)

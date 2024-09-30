@@ -32,7 +32,7 @@ func (val *Validator) CustomErrorMessage(err validator.FieldError) string {
 	case "required":
 		return fmt.Sprintf("%s is required", err.Field())
 	case "min":
-		return fmt.Sprintf("%s must be at least %s characters long", err.Field())
+		return fmt.Sprintf("%s must be at least %s characters long", err.Field(), err.Param())
 	default:
 		return fmt.Sprintf("%s is not valid", err.Field())
 	}

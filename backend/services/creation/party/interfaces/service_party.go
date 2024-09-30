@@ -1,6 +1,7 @@
 package interfaces
 
 import (
+	"fmt"
 	"github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
 )
 
@@ -18,8 +19,11 @@ func NewPartyService(repository domains.IPartyRepository, validator domains.Vali
 
 func (ps PartyService) CreateParty(partyDTO domains.PartyDTO) domains.IResponse {
 	errors := ps.Validator.Validate(partyDTO)
+	fmt.Println("it gets here")
+	fmt.Println(fmt.Sprintf("errors: %s", errors))
 	if errors != nil {
-		return domains.ErrorValidation(partyDTO)
+		fmt.Println("gets inhere")
+		return domains.ErrorValidation(errors)
 	}
 
 	party, err := ps.PartyRepository.CreateParty(&partyDTO)
@@ -27,7 +31,7 @@ func (ps PartyService) CreateParty(partyDTO domains.PartyDTO) domains.IResponse 
 		return domains.ErrorInternalServerError(err)
 	}
 
-	return domains.Success(party)
+	return domains.Success(party.TransformToPartyDTO())
 }
 
 func (ps PartyService) GetParty(id uint) domains.IResponse {
@@ -37,7 +41,7 @@ func (ps PartyService) GetParty(id uint) domains.IResponse {
 		return domains.ErrorInternalServerError(err)
 	}
 
-	return domains.Success(party)
+	return domains.Success(party.TransformToPartyDTO())
 }
 
 func (ps PartyService) UpdateParty(partyDTO domains.PartyDTO) domains.IResponse {
@@ -51,7 +55,7 @@ func (ps PartyService) UpdateParty(partyDTO domains.PartyDTO) domains.IResponse 
 		return domains.ErrorInternalServerError(err)
 	}
 
-	return domains.Success(party)
+	return domains.Success(party.TransformToPartyDTO())
 }
 
 func (ps PartyService) DeleteParty(id uint) domains.IResponse {
@@ -59,5 +63,5 @@ func (ps PartyService) DeleteParty(id uint) domains.IResponse {
 	if err != nil {
 		return domains.ErrorInternalServerError(err)
 	}
-	return domains.Success(party)
+	return domains.Success(party.TransformToPartyDTO())
 }
