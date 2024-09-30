@@ -13,12 +13,12 @@ func (p PartyRepository) CreateParty(partyDTO *domains.PartyDTO) (*domains.Party
 	panic("implement me")
 }
 
-func (p PartyRepository) UpdateParty(id uint) (*domains.Party, error) {
+func (p PartyRepository) GetParty(id uint) (*domains.Party, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (p PartyRepository) GetParty(*domains.PartyDTO) (*domains.Party, error) {
+func (p PartyRepository) UpdateParty(*domains.PartyDTO) (*domains.Party, error) {
 	//TODO implement me
 	panic("implement me")
 }
