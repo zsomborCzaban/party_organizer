@@ -1,0 +1,3 @@
+# Todos
+ - validate the foraign key ids (that they exists) when creating an entity with foraign key id in it
+ - on deleting an entity create a callback for the otther entities (example: when deleting a party, delete every contribution to it too) - (maybe not needed, bc when a party is deletet were not gonna access any of its entities. altough it might be needed for other entites. also a trash collector would be good if were only going to delete parties)

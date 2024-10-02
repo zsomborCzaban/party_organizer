@@ -1,8 +1,8 @@
 package domains
 
 type IPartyRepository interface {
-	CreateParty(*PartyDTO) (*Party, error)
+	CreateParty(*Party) error
 	GetParty(uint) (*Party, error)
-	UpdateParty(*PartyDTO) (*Party, error)
-	DeleteParty(uint) (*Party, error)
+	UpdateParty(*Party) error
+	DeleteParty(*Party) error
 }

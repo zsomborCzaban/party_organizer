@@ -3,10 +3,8 @@ package interfaces
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
 	"github.com/zsomborCzaban/party_organizer/services/creation/drink_requirement/domains"
-	"github.com/zsomborCzaban/party_organizer/services/creation/drink_requirement/usecases"
 	"net/http"
 	"strconv"
 )
@@ -15,10 +13,9 @@ type DrinkRequirementController struct {
 	DrinkRequirementService domains.IDrinkRequirementService
 }
 
-func NewDrinkRequirementController() domains.IDrinkRequirementController {
+func NewDrinkRequirementController(service domains.IDrinkRequirementService) domains.IDrinkRequirementController {
 	return &DrinkRequirementController{
-		DrinkRequirementService: NewDrinkRequirementService(usecases.NewDrinkRequirementRepository(),
-			*domains.NewValidator(validator.New())),
+		DrinkRequirementService: service,
 	}
 }
 
@@ -91,7 +88,7 @@ func (dc DrinkRequirementController) DeleteController(w http.ResponseWriter, r *
 		return
 	}
 
-	resp := dc.DrinkRequirementService.GetDrinkRequirement(uint(id))
+	resp := dc.DrinkRequirementService.DeleteDrinkRequirement(uint(id))
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging

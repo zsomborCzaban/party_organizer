@@ -1,14 +1,15 @@
 package interfaces
 
-import "github.com/gorilla/mux"
+import (
+	"github.com/gorilla/mux"
+	"github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
+)
 
-func NewPartyRouter(router *mux.Router) {
+func NewPartyRouter(router *mux.Router, controller domains.IPartyController) {
 	r := router.PathPrefix("/party").Subrouter()
 
-	partyController := NewPartyController()
-
-	r.HandleFunc("/", partyController.CreateController).Methods("POST")
-	r.HandleFunc("/{id}", partyController.GetController).Methods("GET")
-	r.HandleFunc("/", partyController.UpdateController).Methods("PUT")
-	r.HandleFunc("/{id}", partyController.DeleteController).Methods("DELETE")
+	r.HandleFunc("/", controller.CreateController).Methods("POST")
+	r.HandleFunc("/{id}", controller.GetController).Methods("GET")
+	r.HandleFunc("/", controller.UpdateController).Methods("PUT")
+	r.HandleFunc("/{id}", controller.DeleteController).Methods("DELETE")
 }
