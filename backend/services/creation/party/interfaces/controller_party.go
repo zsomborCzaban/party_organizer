@@ -3,10 +3,8 @@ package interfaces
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
 	"github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
-	"github.com/zsomborCzaban/party_organizer/services/creation/party/usecases"
 	"net/http"
 	"strconv"
 )
@@ -15,10 +13,9 @@ type PartyController struct {
 	PartyService domains.IPartyService
 }
 
-func NewPartyController() domains.IPartyController {
+func NewPartyController(service domains.IPartyService) domains.IPartyController {
 	return &PartyController{
-		PartyService: NewPartyService(usecases.NewPartiesRepository(),
-			*domains.NewValidator(validator.New())),
+		PartyService: service,
 	}
 }
 
@@ -91,7 +88,7 @@ func (pc PartyController) DeleteController(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	resp := pc.PartyService.GetParty(uint(id))
+	resp := pc.PartyService.DeleteParty(uint(id))
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging

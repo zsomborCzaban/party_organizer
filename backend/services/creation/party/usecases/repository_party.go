@@ -1,47 +1,69 @@
 package usecases
 
 import (
+	"errors"
+	"github.com/zsomborCzaban/party_organizer/db"
 	"github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
-	"gorm.io/gorm"
 )
 
-type PartyRepository struct{}
-
-func NewPartiesRepository() domains.IPartyRepository {
-	return &PartyRepository{}
+type PartyRepository struct {
+	dbAccess db.IDatabaseAccess
 }
 
-func (p PartyRepository) CreateParty(partyDTO *domains.PartyDTO) (*domains.Party, error) {
+func NewPartyRepository(databaseAccessManager db.IDatabaseAccessManager) domains.IPartyRepository {
+	entityProvider := EntityProvider{}
+	databaseAccess := databaseAccessManager.RegisterEntity("partyProvider", entityProvider)
 
-	return &domains.Party{
-			Place: "itt",
-		},
-		nil
+	return &PartyRepository{
+		dbAccess: databaseAccess,
+	}
 }
 
-func (p PartyRepository) GetParty(id uint) (*domains.Party, error) {
-	//TODO implement me
-	return &domains.Party{
-			Model: gorm.Model{ID: 23},
-			Place: "itt",
-		},
-		nil
+func (pr PartyRepository) CreateParty(party *domains.Party) error {
+	err := pr.dbAccess.Create(party)
+	if err != nil {
+		return err
+	}
+	return nil
+
 }
 
-func (p PartyRepository) UpdateParty(partyDTO *domains.PartyDTO) (*domains.Party, error) {
-	//TODO implement me
-	return &domains.Party{
-			Model: gorm.Model{ID: 23},
-			Place: "itt",
-		},
-		nil
+func (pr PartyRepository) GetParty(id uint) (*domains.Party, error) {
+	party, err := pr.dbAccess.FindById(id)
+	if err != nil {
+		return nil, err
+	}
+
+	party2, err2 := party.(*domains.Party)
+	if !err2 {
+		return nil, errors.New("failed to convert database entity to party")
+	}
+	return party2, nil
 }
 
-func (p PartyRepository) DeleteParty(id uint) (*domains.Party, error) {
-	//TODO implement me
-	return &domains.Party{
-			Model: gorm.Model{ID: 23},
-			Place: "itt",
-		},
-		nil
+func (pr PartyRepository) UpdateParty(party *domains.Party) error {
+	err := pr.dbAccess.Update(party)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (pr PartyRepository) DeleteParty(party *domains.Party) error {
+	err := pr.dbAccess.Delete(party)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+type EntityProvider struct {
+}
+
+func (e EntityProvider) Create() interface{} {
+	return &domains.Party{}
+}
+
+func (e EntityProvider) CreateArray() interface{} {
+	return &[]domains.Party{}
 }

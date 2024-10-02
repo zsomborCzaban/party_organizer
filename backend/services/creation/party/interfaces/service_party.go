@@ -1,16 +1,16 @@
 package interfaces
 
 import (
-	"fmt"
 	"github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
+	"gorm.io/gorm"
 )
 
 type PartyService struct {
 	PartyRepository domains.IPartyRepository
-	Validator       domains.Validator
+	Validator       domains.IValidator
 }
 
-func NewPartyService(repository domains.IPartyRepository, validator domains.Validator) domains.IPartyService {
+func NewPartyService(repository domains.IPartyRepository, validator domains.IValidator) domains.IPartyService {
 	return &PartyService{
 		PartyRepository: repository,
 		Validator:       validator,
@@ -19,19 +19,18 @@ func NewPartyService(repository domains.IPartyRepository, validator domains.Vali
 
 func (ps PartyService) CreateParty(partyDTO domains.PartyDTO) domains.IResponse {
 	errors := ps.Validator.Validate(partyDTO)
-	fmt.Println("it gets here")
-	fmt.Println(fmt.Sprintf("errors: %s", errors))
 	if errors != nil {
-		fmt.Println("gets inhere")
 		return domains.ErrorValidation(errors)
 	}
 
-	party, err := ps.PartyRepository.CreateParty(&partyDTO)
+	party := partyDTO.TransformToParty()
+
+	err := ps.PartyRepository.CreateParty(party)
 	if err != nil {
 		return domains.ErrorInternalServerError(err)
 	}
 
-	return domains.Success(party.TransformToPartyDTO())
+	return domains.Success("create_success")
 }
 
 func (ps PartyService) GetParty(id uint) domains.IResponse {
@@ -50,18 +49,25 @@ func (ps PartyService) UpdateParty(partyDTO domains.PartyDTO) domains.IResponse 
 		return domains.ErrorValidation(errors)
 	}
 
-	party, err := ps.PartyRepository.UpdateParty(&partyDTO)
+	party := partyDTO.TransformToParty()
+
+	err := ps.PartyRepository.UpdateParty(party)
 	if err != nil {
 		return domains.ErrorInternalServerError(err)
 	}
 
-	return domains.Success(party.TransformToPartyDTO())
+	return domains.Success("update_success")
 }
 
 func (ps PartyService) DeleteParty(id uint) domains.IResponse {
-	party, err := ps.PartyRepository.DeleteParty(id)
+	//bc the repository layer only checks for id
+	party := &domains.Party{
+		Model: gorm.Model{ID: id},
+	}
+
+	err := ps.PartyRepository.DeleteParty(party)
 	if err != nil {
 		return domains.ErrorInternalServerError(err)
 	}
-	return domains.Success(party.TransformToPartyDTO())
+	return domains.Success("delete_success")
 }

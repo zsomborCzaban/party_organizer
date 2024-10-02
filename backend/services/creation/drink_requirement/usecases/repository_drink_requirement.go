@@ -1,51 +1,69 @@
 package usecases
 
 import (
+	"errors"
+	"github.com/zsomborCzaban/party_organizer/db"
 	"github.com/zsomborCzaban/party_organizer/services/creation/drink_requirement/domains"
 )
 
-type DrinkRequirementRepository struct{}
-
-func NewDrinkRequirementRepository() domains.IDrinkRequirementRepository {
-	return &DrinkRequirementRepository{}
+type DrinkRequirementRepository struct {
+	dbAccess db.IDatabaseAccess
 }
 
-func (d DrinkRequirementRepository) CreateDrinkRequirement(drinkRequirementDTO *domains.DrinkRequirementDTO) (*domains.DrinkRequirement, error) {
+func NewDrinkRequirementRepository(databaseAccessManager db.IDatabaseAccessManager) domains.IDrinkRequirementRepository {
+	entityProvider := EntityProvider{}
+	databaseAccess := databaseAccessManager.RegisterEntity("drinkRequirementProvider", entityProvider)
 
-	return &domains.DrinkRequirement{
-			Type:           "vodka",
-			TargetQuantity: 4,
-			QuantityMark:   "L",
-		},
-		nil
+	return &DrinkRequirementRepository{
+		dbAccess: databaseAccess,
+	}
 }
 
-func (d DrinkRequirementRepository) GetDrinkRequirement(id uint) (*domains.DrinkRequirement, error) {
-	//TODO implement me
-	return &domains.DrinkRequirement{
-			Type:           "vodka",
-			TargetQuantity: 4,
-			QuantityMark:   "L",
-		},
-		nil
+func (pr DrinkRequirementRepository) CreateDrinkRequirement(drinkRequirement *domains.DrinkRequirement) error {
+	err := pr.dbAccess.Create(drinkRequirement)
+	if err != nil {
+		return err
+	}
+	return nil
+
 }
 
-func (d DrinkRequirementRepository) UpdateDrinkRequirement(drinkRequirementDTO *domains.DrinkRequirementDTO) (*domains.DrinkRequirement, error) {
-	//TODO implement me
-	return &domains.DrinkRequirement{
-			Type:           "vodka",
-			TargetQuantity: 4,
-			QuantityMark:   "L",
-		},
-		nil
+func (pr DrinkRequirementRepository) GetDrinkRequirement(id uint) (*domains.DrinkRequirement, error) {
+	drinkRequirement, err := pr.dbAccess.FindById(id)
+	if err != nil {
+		return nil, err
+	}
+
+	drinkRequirement2, err2 := drinkRequirement.(*domains.DrinkRequirement)
+	if !err2 {
+		return nil, errors.New("failed to convert database entity to drinkRequirement")
+	}
+	return drinkRequirement2, nil
 }
 
-func (d DrinkRequirementRepository) DeleteDrinkRequirement(id uint) (*domains.DrinkRequirement, error) {
-	//TODO implement me
-	return &domains.DrinkRequirement{
-			Type:           "vodka",
-			TargetQuantity: 4,
-			QuantityMark:   "L",
-		},
-		nil
+func (pr DrinkRequirementRepository) UpdateDrinkRequirement(drinkRequirement *domains.DrinkRequirement) error {
+	err := pr.dbAccess.Update(drinkRequirement)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (pr DrinkRequirementRepository) DeleteDrinkRequirement(drinkRequirement *domains.DrinkRequirement) error {
+	err := pr.dbAccess.Delete(drinkRequirement)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+type EntityProvider struct {
+}
+
+func (e EntityProvider) Create() interface{} {
+	return &domains.DrinkRequirement{}
+}
+
+func (e EntityProvider) CreateArray() interface{} {
+	return &[]domains.DrinkRequirement{}
 }

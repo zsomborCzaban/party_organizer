@@ -1,8 +1,8 @@
 package domains
 
 type IDrinkRequirementRepository interface {
-	CreateDrinkRequirement(*DrinkRequirementDTO) (*DrinkRequirement, error)
+	CreateDrinkRequirement(*DrinkRequirement) error
 	GetDrinkRequirement(uint) (*DrinkRequirement, error)
-	UpdateDrinkRequirement(*DrinkRequirementDTO) (*DrinkRequirement, error)
-	DeleteDrinkRequirement(uint) (*DrinkRequirement, error)
+	UpdateDrinkRequirement(*DrinkRequirement) error
+	DeleteDrinkRequirement(*DrinkRequirement) error
 }
