@@ -3,6 +3,7 @@ package db
 import (
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 type GormDatabaseAccessManager struct {
@@ -10,8 +11,10 @@ type GormDatabaseAccessManager struct {
 	DBAccessRegistry map[string]IDatabaseAccess
 }
 
-func CreateGormDatabaseAccessManager(dbConnectionUrl string) IDatabaseAccessManager {
-	db, err := gorm.Open(sqlite.Open(dbConnectionUrl), &gorm.Config{})
+func CreateGormDatabaseAccessManager(dbConnectionUrl string, newLogger logger.Interface) IDatabaseAccessManager {
+	db, err := gorm.Open(sqlite.Open(dbConnectionUrl), &gorm.Config{
+		Logger: newLogger,
+	})
 	if err != nil {
 		panic("failed to connect to database: " + err.Error())
 	}

@@ -1,4 +1,4 @@
-package domains
+package api
 
 type FieldError struct {
 	Field string      `json:"field"`

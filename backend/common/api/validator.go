@@ -1,4 +1,4 @@
-package domains
+package api
 
 import (
 	"fmt"

@@ -4,35 +4,65 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
 	"github.com/rs/zerolog/log"
+	"github.com/zsomborCzaban/party_organizer/common/api"
 	"github.com/zsomborCzaban/party_organizer/db"
-	drinkRequirementDomains "github.com/zsomborCzaban/party_organizer/services/creation/drink_requirement/domains"
 	drinkRequirementInterfaces "github.com/zsomborCzaban/party_organizer/services/creation/drink_requirement/interfaces"
 	drinkRequirementUsecases "github.com/zsomborCzaban/party_organizer/services/creation/drink_requirement/usecases"
-	partyDomains "github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
+	foodRequirementInterfaces "github.com/zsomborCzaban/party_organizer/services/creation/food_requirement/interfaces"
+	foodRequirementUsecases "github.com/zsomborCzaban/party_organizer/services/creation/food_requirement/usecases"
 	partyInterfaces "github.com/zsomborCzaban/party_organizer/services/creation/party/interfaces"
 	partyUsecases "github.com/zsomborCzaban/party_organizer/services/creation/party/usecases"
+	"github.com/zsomborCzaban/party_organizer/services/user/interfaces"
+	"github.com/zsomborCzaban/party_organizer/services/user/usecases"
+	"gorm.io/gorm/logger"
+	log2 "log"
 	"net/http"
+	"os"
+	"time"
 )
 
 func main() {
-	dbAccess := db.CreateGormDatabaseAccessManager("local.db")
+	newLogger := logger.New(
+		log2.New(os.Stdout, "\r\n", log2.LstdFlags), //io writer
+		logger.Config{
+			SlowThreshold:             time.Second,
+			LogLevel:                  logger.Info,
+			IgnoreRecordNotFoundError: false,
+			ParameterizedQueries:      true,
+			Colorful:                  true,
+		},
+	)
+
+	dbAccess := db.CreateGormDatabaseAccessManager("local.db", newLogger)
 
 	router := mux.NewRouter()
 
 	apiRouter := router.PathPrefix("/api/v0").Subrouter()
 
 	partyRepository := partyUsecases.NewPartyRepository(dbAccess)
-	partyValidator := partyDomains.NewValidator(validator.New())
+	partyValidator := api.NewValidator(validator.New())
 	partyService := partyInterfaces.NewPartyService(partyRepository, partyValidator)
 	partyController := partyInterfaces.NewPartyController(partyService)
 
 	drinkRequirementRepository := drinkRequirementUsecases.NewDrinkRequirementRepository(dbAccess)
-	drinkRequirementValidator := drinkRequirementDomains.NewValidator(validator.New())
+	drinkRequirementValidator := api.NewValidator(validator.New())
 	drinkRequirementService := drinkRequirementInterfaces.NewDrinkRequirementService(drinkRequirementRepository, drinkRequirementValidator)
 	drinkRequirementController := drinkRequirementInterfaces.NewDrinkRequirementController(drinkRequirementService)
 
+	foodRequirementRepository := foodRequirementUsecases.NewFoodRequirementRepository(dbAccess)
+	foodRequirementValidator := api.NewValidator(validator.New())
+	foodRequirementService := foodRequirementInterfaces.NewFoodRequirementService(foodRequirementRepository, foodRequirementValidator)
+	foodRequirementController := foodRequirementInterfaces.NewFoodRequirementController(foodRequirementService)
+
+	userRepository := usecases.NewUserRepository(dbAccess)
+	userValidator := api.NewValidator(validator.New())
+	userService := interfaces.NewUserService(userRepository, userValidator)
+	userController := interfaces.NewUserController(userService)
+
 	partyInterfaces.NewPartyRouter(apiRouter, partyController)
 	drinkRequirementInterfaces.NewDrinkRequirementRouter(apiRouter, drinkRequirementController)
+	foodRequirementInterfaces.NewFoodRequirementRouter(apiRouter, foodRequirementController)
+	interfaces.NewUserRouter(apiRouter, userController)
 
 	log.Fatal().Err(http.ListenAndServe(":8080", router))
 }

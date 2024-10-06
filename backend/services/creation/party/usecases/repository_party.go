@@ -7,7 +7,7 @@ import (
 )
 
 type PartyRepository struct {
-	dbAccess db.IDatabaseAccess
+	DbAccess db.IDatabaseAccess
 }
 
 func NewPartyRepository(databaseAccessManager db.IDatabaseAccessManager) domains.IPartyRepository {
@@ -15,12 +15,12 @@ func NewPartyRepository(databaseAccessManager db.IDatabaseAccessManager) domains
 	databaseAccess := databaseAccessManager.RegisterEntity("partyProvider", entityProvider)
 
 	return &PartyRepository{
-		dbAccess: databaseAccess,
+		DbAccess: databaseAccess,
 	}
 }
 
 func (pr PartyRepository) CreateParty(party *domains.Party) error {
-	err := pr.dbAccess.Create(party)
+	err := pr.DbAccess.Create(party)
 	if err != nil {
 		return err
 	}
@@ -29,7 +29,7 @@ func (pr PartyRepository) CreateParty(party *domains.Party) error {
 }
 
 func (pr PartyRepository) GetParty(id uint) (*domains.Party, error) {
-	party, err := pr.dbAccess.FindById(id)
+	party, err := pr.DbAccess.FindById(id)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +42,7 @@ func (pr PartyRepository) GetParty(id uint) (*domains.Party, error) {
 }
 
 func (pr PartyRepository) UpdateParty(party *domains.Party) error {
-	err := pr.dbAccess.Update(party)
+	err := pr.DbAccess.Update(party)
 	if err != nil {
 		return err
 	}
@@ -50,7 +50,7 @@ func (pr PartyRepository) UpdateParty(party *domains.Party) error {
 }
 
 func (pr PartyRepository) DeleteParty(party *domains.Party) error {
-	err := pr.dbAccess.Delete(party)
+	err := pr.DbAccess.Delete(party)
 	if err != nil {
 		return err
 	}

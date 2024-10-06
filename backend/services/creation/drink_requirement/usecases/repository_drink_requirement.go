@@ -7,7 +7,7 @@ import (
 )
 
 type DrinkRequirementRepository struct {
-	dbAccess db.IDatabaseAccess
+	DbAccess db.IDatabaseAccess
 }
 
 func NewDrinkRequirementRepository(databaseAccessManager db.IDatabaseAccessManager) domains.IDrinkRequirementRepository {
@@ -15,12 +15,12 @@ func NewDrinkRequirementRepository(databaseAccessManager db.IDatabaseAccessManag
 	databaseAccess := databaseAccessManager.RegisterEntity("drinkRequirementProvider", entityProvider)
 
 	return &DrinkRequirementRepository{
-		dbAccess: databaseAccess,
+		DbAccess: databaseAccess,
 	}
 }
 
 func (pr DrinkRequirementRepository) CreateDrinkRequirement(drinkRequirement *domains.DrinkRequirement) error {
-	err := pr.dbAccess.Create(drinkRequirement)
+	err := pr.DbAccess.Create(drinkRequirement)
 	if err != nil {
 		return err
 	}
@@ -29,7 +29,7 @@ func (pr DrinkRequirementRepository) CreateDrinkRequirement(drinkRequirement *do
 }
 
 func (pr DrinkRequirementRepository) GetDrinkRequirement(id uint) (*domains.DrinkRequirement, error) {
-	drinkRequirement, err := pr.dbAccess.FindById(id)
+	drinkRequirement, err := pr.DbAccess.FindById(id)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +42,7 @@ func (pr DrinkRequirementRepository) GetDrinkRequirement(id uint) (*domains.Drin
 }
 
 func (pr DrinkRequirementRepository) UpdateDrinkRequirement(drinkRequirement *domains.DrinkRequirement) error {
-	err := pr.dbAccess.Update(drinkRequirement)
+	err := pr.DbAccess.Update(drinkRequirement)
 	if err != nil {
 		return err
 	}
@@ -50,7 +50,7 @@ func (pr DrinkRequirementRepository) UpdateDrinkRequirement(drinkRequirement *do
 }
 
 func (pr DrinkRequirementRepository) DeleteDrinkRequirement(drinkRequirement *domains.DrinkRequirement) error {
-	err := pr.dbAccess.Delete(drinkRequirement)
+	err := pr.DbAccess.Delete(drinkRequirement)
 	if err != nil {
 		return err
 	}

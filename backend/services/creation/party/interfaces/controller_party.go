@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
+	"github.com/zsomborCzaban/party_organizer/common/api"
 	"github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
 	"net/http"
 	"strconv"
@@ -24,7 +25,7 @@ func (pc PartyController) CreateController(w http.ResponseWriter, r *http.Reques
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&createPartyReq)
 	if err != nil {
-		br := domains.ErrorBadRequest(err.Error())
+		br := api.ErrorBadRequest(err.Error())
 
 		//todo: implement response helper that has logger as param
 		br.Send(w)
@@ -44,7 +45,7 @@ func (pc PartyController) GetController(w http.ResponseWriter, r *http.Request) 
 	vars := mux.Vars(r)
 	id, err := strconv.ParseUint(vars["id"], 10, 32)
 	if err != nil {
-		br := domains.ErrorBadRequest(domains.BadRequest)
+		br := api.ErrorBadRequest(domains.BadRequest)
 
 		br.Send(w)
 		return
@@ -63,7 +64,7 @@ func (pc PartyController) UpdateController(w http.ResponseWriter, r *http.Reques
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&updatePartyReq)
 	if err != nil {
-		br := domains.ErrorBadRequest(domains.BadRequest)
+		br := api.ErrorBadRequest(domains.BadRequest)
 
 		//todo: implement response helper that has logger as param
 		br.Send(w)
@@ -82,7 +83,7 @@ func (pc PartyController) DeleteController(w http.ResponseWriter, r *http.Reques
 	vars := mux.Vars(r)
 	id, err := strconv.ParseUint(vars["id"], 10, 32)
 	if err != nil {
-		br := domains.ErrorBadRequest(domains.BadRequest)
+		br := api.ErrorBadRequest(domains.BadRequest)
 
 		br.Send(w)
 		return

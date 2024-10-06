@@ -1,4 +1,4 @@
-package domains
+package api
 
 import (
 	"encoding/json"
@@ -76,14 +76,14 @@ func ErrorBadRequest(error string) IResponse {
 
 func ErrorNotFound(field, entity string) IResponse {
 	ve := NewValidationErrors()
-	ve.CollectValidationError(field, PartyNotFound, entity)
+	ve.CollectValidationError(field, entity+" was not found", entity)
 
 	return Error(http.StatusNotFound, ve.Errors)
 }
 
 func ErrorInvalidCredentials() IResponse {
 	ve := NewValidationErrors()
-	ve.CollectValidationError("", InvalidCredentials, nil)
+	ve.CollectValidationError("", "invalid credentials", nil)
 
 	return Error(http.StatusNotAcceptable, ve.Errors)
 }

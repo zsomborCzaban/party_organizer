@@ -1,65 +1,66 @@
 package interfaces
 
 import (
+	"github.com/zsomborCzaban/party_organizer/common/api"
 	"github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
 	"gorm.io/gorm"
 )
 
 type PartyService struct {
 	PartyRepository domains.IPartyRepository
-	Validator       domains.IValidator
+	Validator       api.IValidator
 }
 
-func NewPartyService(repository domains.IPartyRepository, validator domains.IValidator) domains.IPartyService {
+func NewPartyService(repository domains.IPartyRepository, validator api.IValidator) domains.IPartyService {
 	return &PartyService{
 		PartyRepository: repository,
 		Validator:       validator,
 	}
 }
 
-func (ps PartyService) CreateParty(partyDTO domains.PartyDTO) domains.IResponse {
+func (ps PartyService) CreateParty(partyDTO domains.PartyDTO) api.IResponse {
 	errors := ps.Validator.Validate(partyDTO)
 	if errors != nil {
-		return domains.ErrorValidation(errors)
+		return api.ErrorValidation(errors)
 	}
 
 	party := partyDTO.TransformToParty()
 
 	err := ps.PartyRepository.CreateParty(party)
 	if err != nil {
-		return domains.ErrorInternalServerError(err)
+		return api.ErrorInternalServerError(err)
 	}
 
-	return domains.Success("create_success")
+	return api.Success("create_success")
 }
 
-func (ps PartyService) GetParty(id uint) domains.IResponse {
+func (ps PartyService) GetParty(id uint) api.IResponse {
 	party, err := ps.PartyRepository.GetParty(id)
 
 	if err != nil {
-		return domains.ErrorInternalServerError(err)
+		return api.ErrorInternalServerError(err)
 	}
 
-	return domains.Success(party.TransformToPartyDTO())
+	return api.Success(party.TransformToPartyDTO())
 }
 
-func (ps PartyService) UpdateParty(partyDTO domains.PartyDTO) domains.IResponse {
+func (ps PartyService) UpdateParty(partyDTO domains.PartyDTO) api.IResponse {
 	errors := ps.Validator.Validate(partyDTO)
 	if errors != nil {
-		return domains.ErrorValidation(errors)
+		return api.ErrorValidation(errors)
 	}
 
 	party := partyDTO.TransformToParty()
 
 	err := ps.PartyRepository.UpdateParty(party)
 	if err != nil {
-		return domains.ErrorInternalServerError(err)
+		return api.ErrorInternalServerError(err)
 	}
 
-	return domains.Success("update_success")
+	return api.Success("update_success")
 }
 
-func (ps PartyService) DeleteParty(id uint) domains.IResponse {
+func (ps PartyService) DeleteParty(id uint) api.IResponse {
 	//bc the repository layer only checks for id
 	party := &domains.Party{
 		Model: gorm.Model{ID: id},
@@ -67,7 +68,7 @@ func (ps PartyService) DeleteParty(id uint) domains.IResponse {
 
 	err := ps.PartyRepository.DeleteParty(party)
 	if err != nil {
-		return domains.ErrorInternalServerError(err)
+		return api.ErrorInternalServerError(err)
 	}
-	return domains.Success("delete_success")
+	return api.Success("delete_success")
 }
