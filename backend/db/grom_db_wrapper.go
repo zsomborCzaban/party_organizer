@@ -51,3 +51,9 @@ func (dbWrapper *GormDBWrapper) ProcessWhereStatements(conds []QueryParameter) {
 		}
 	}
 }
+
+//func (dbWrapper *GormDBWrapper) AppendAssociation(entity, associatedEntity interface{}, associationName string) error {
+//	association := dbWrapper.DB.Model(entity).Association(associationName)
+//	err := association.Append(associatedEntity)
+//	return err
+//}

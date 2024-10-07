@@ -72,3 +72,8 @@ func (dbHandler DatabaseAccessImpl) Query(conds []QueryParameter) (interface{}, 
 	}
 	return entities, nil
 }
+
+//func (dbHandler DatabaseAccessImpl) AppendAssociation(entity, associatedEntity interface{}, associationName string) error {
+//	dbHandler.DB.NewSession()
+//	return dbHandler.DB.AppendAssociation(&entity, &associatedEntity, associationName)
+//}

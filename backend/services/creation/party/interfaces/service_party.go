@@ -93,3 +93,11 @@ func (ps PartyService) GetPartiesByParticipantId(id uint) api.IResponse {
 
 	return api.Success(parties)
 }
+
+func (ps PartyService) AddUserToParty(partyId, userId uint) api.IResponse {
+	if err := ps.PartyRepository.AddUserToParty(partyId, userId); err != nil {
+		return api.ErrorInternalServerError(err)
+	}
+
+	return api.Success("user added to party")
+}

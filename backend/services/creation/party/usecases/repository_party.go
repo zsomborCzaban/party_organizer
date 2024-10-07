@@ -5,19 +5,41 @@ import (
 	"fmt"
 	"github.com/zsomborCzaban/party_organizer/db"
 	"github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
+	userDomain "github.com/zsomborCzaban/party_organizer/services/user/domains"
 )
 
 type PartyRepository struct {
-	DbAccess db.IDatabaseAccess
+	DbAccess       db.IDatabaseAccess
+	UserRepository userDomain.IUserRepository
 }
 
-func NewPartyRepository(databaseAccessManager db.IDatabaseAccessManager) domains.IPartyRepository {
+func NewPartyRepository(databaseAccessManager db.IDatabaseAccessManager, ur userDomain.IUserRepository) domains.IPartyRepository {
 	entityProvider := EntityProvider{}
 	databaseAccess := databaseAccessManager.RegisterEntity("partyProvider", entityProvider)
 
 	return &PartyRepository{
-		DbAccess: databaseAccess,
+		DbAccess:       databaseAccess,
+		UserRepository: ur,
 	}
+}
+
+func (pr PartyRepository) AddUserToParty(partyId, userId uint) error {
+	party, err := pr.GetParty(partyId)
+	if err != nil {
+		return err
+	}
+
+	user, err2 := pr.UserRepository.FindById(userId)
+	if err2 != nil {
+		return err2
+	}
+
+	party.Participants = append(party.Participants, *user)
+	if err3 := pr.UpdateParty(party); err3 != nil {
+		return err3
+	}
+
+	return nil
 }
 
 func (pr PartyRepository) GetPartiesByOrganizerId(id uint) (*[]domains.Party, error) {

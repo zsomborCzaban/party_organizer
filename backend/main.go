@@ -39,11 +39,6 @@ func main() {
 
 	apiRouter := router.PathPrefix("/api/v0").Subrouter()
 
-	partyRepository := partyUsecases.NewPartyRepository(dbAccess)
-	partyValidator := api.NewValidator(validator.New())
-	partyService := partyInterfaces.NewPartyService(partyRepository, partyValidator)
-	partyController := partyInterfaces.NewPartyController(partyService)
-
 	drinkRequirementRepository := drinkRequirementUsecases.NewDrinkRequirementRepository(dbAccess)
 	drinkRequirementValidator := api.NewValidator(validator.New())
 	drinkRequirementService := drinkRequirementInterfaces.NewDrinkRequirementService(drinkRequirementRepository, drinkRequirementValidator)
@@ -58,6 +53,11 @@ func main() {
 	userValidator := api.NewValidator(validator.New())
 	userService := interfaces.NewUserService(userRepository, userValidator)
 	userController := interfaces.NewUserController(userService)
+
+	partyRepository := partyUsecases.NewPartyRepository(dbAccess, userRepository)
+	partyValidator := api.NewValidator(validator.New())
+	partyService := partyInterfaces.NewPartyService(partyRepository, partyValidator)
+	partyController := partyInterfaces.NewPartyController(partyService)
 
 	partyInterfaces.NewPartyRouter(apiRouter, partyController)
 	drinkRequirementInterfaces.NewDrinkRequirementRouter(apiRouter, drinkRequirementController)

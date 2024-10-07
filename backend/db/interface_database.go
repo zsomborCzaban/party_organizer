@@ -3,6 +3,7 @@ package db
 type IDatabase interface {
 	NewSession()
 	AutoMigrate(dst ...interface{}) error
+	//AppendAssociation(entity, associatedEntity interface{}, associationName string) error
 
 	Create(value interface{}) error
 	First(dest interface{}, conds ...interface{}) error

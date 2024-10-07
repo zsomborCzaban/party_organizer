@@ -8,4 +8,5 @@ type IDatabaseAccess interface {
 	Delete(entity interface{}) error
 
 	Query(conds []QueryParameter) (interface{}, error)
+	//AppendAssociation(entity, associatedEntity interface{}, associationName string) error
 }

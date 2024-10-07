@@ -1,7 +1,7 @@
 package domains
 
 import (
-	"github.com/lib/pq"
+	"github.com/zsomborCzaban/party_organizer/services/user/domains"
 	"gorm.io/gorm"
 	"time"
 )
@@ -9,20 +9,20 @@ import (
 type Party struct {
 	gorm.Model
 
-	Place          string        `json:"place"`
-	StartTime      time.Time     `json:"start_time"`
-	Name           string        `json:"name"`
-	OrganizerID    uint          `json:"organizer_id"`
-	ParticipantIDs pq.Int64Array `json:"participant_ids" gorm:"type:integer[]"`
+	Place        string         `json:"place"`
+	StartTime    time.Time      `json:"start_time"`
+	Name         string         `json:"name"`
+	OrganizerID  uint           `json:"organizer_id"`
+	Participants []domains.User `gorm:"many2many:party_participants;"`
 }
 
 func (p *Party) TransformToPartyDTO() *PartyDTO {
 	return &PartyDTO{
-		ID:             p.ID,
-		Place:          p.Place,
-		StartTime:      p.StartTime,
-		Name:           p.Name,
-		OrganizerID:    p.OrganizerID,
-		ParticipantIDs: p.ParticipantIDs,
+		ID:           p.ID,
+		Place:        p.Place,
+		StartTime:    p.StartTime,
+		Name:         p.Name,
+		OrganizerID:  p.OrganizerID,
+		Participants: p.Participants,
 	}
 }
