@@ -71,6 +71,16 @@ func (pc PartyController) UpdateController(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
+	vars := mux.Vars(r)
+	id, err2 := strconv.ParseUint(vars["id"], 10, 32)
+	if err2 != nil {
+		br := api.ErrorBadRequest(domains.BadRequest)
+
+		br.Send(w)
+		return
+	}
+	updatePartyReq.ID = uint(id)
+
 	resp := pc.PartyService.UpdateParty(updatePartyReq)
 	couldSend := resp.Send(w)
 	if !couldSend {
@@ -90,6 +100,42 @@ func (pc PartyController) DeleteController(w http.ResponseWriter, r *http.Reques
 	}
 
 	resp := pc.PartyService.DeleteParty(uint(id))
+	couldSend := resp.Send(w)
+	if !couldSend {
+		//todo: handle logging
+		return
+	}
+}
+
+func (pc PartyController) GetPartiesByOrganizerId(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, err := strconv.ParseUint(vars["id"], 10, 32)
+	if err != nil {
+		br := api.ErrorBadRequest(domains.BadRequest)
+
+		br.Send(w)
+		return
+	}
+
+	resp := pc.PartyService.GetPartiesByOrganizerId(uint(id))
+	couldSend := resp.Send(w)
+	if !couldSend {
+		//todo: handle logging
+		return
+	}
+}
+
+func (pc PartyController) GetPartiesByParticipantId(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, err := strconv.ParseUint(vars["id"], 10, 32)
+	if err != nil {
+		br := api.ErrorBadRequest(domains.BadRequest)
+
+		br.Send(w)
+		return
+	}
+
+	resp := pc.PartyService.GetPartiesByParticipantId(uint(id))
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging

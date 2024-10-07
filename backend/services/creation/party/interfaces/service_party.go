@@ -72,3 +72,24 @@ func (ps PartyService) DeleteParty(id uint) api.IResponse {
 	}
 	return api.Success("delete_success")
 }
+
+func (ps PartyService) GetPartiesByOrganizerId(id uint) api.IResponse {
+	parties, err := ps.PartyRepository.GetPartiesByOrganizerId(id)
+
+	if err != nil {
+		return api.ErrorInternalServerError(err)
+	}
+
+	//maybe transform to dto before
+	return api.Success(parties)
+}
+
+func (ps PartyService) GetPartiesByParticipantId(id uint) api.IResponse {
+	parties, err := ps.PartyRepository.GetPartiesByParticipantId(id)
+
+	if err != nil {
+		return api.ErrorInternalServerError(err)
+	}
+
+	return api.Success(parties)
+}
