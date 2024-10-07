@@ -10,6 +10,8 @@ func NewDatabaseAccessImpl(dbEntityProvider IEntityProvider, db IDatabase) Datab
 }
 
 func (dbHandler DatabaseAccessImpl) Create(entity interface{}) error {
+	dbHandler.DB.NewSession()
+
 	err := dbHandler.DB.Create(entity)
 	if err != nil {
 		return NewDBError(err.Error())
@@ -18,6 +20,8 @@ func (dbHandler DatabaseAccessImpl) Create(entity interface{}) error {
 }
 
 func (dbHandler DatabaseAccessImpl) FindById(id interface{}) (interface{}, error) {
+	dbHandler.DB.NewSession()
+
 	result := dbHandler.DBEntityProvider.Create()
 	err := dbHandler.DB.First(result, id)
 	if err != nil {
@@ -27,6 +31,8 @@ func (dbHandler DatabaseAccessImpl) FindById(id interface{}) (interface{}, error
 }
 
 func (dbHandler DatabaseAccessImpl) Update(entity interface{}) error {
+	dbHandler.DB.NewSession()
+
 	err := dbHandler.DB.Save(entity)
 	if err != nil {
 		return NewDBError(err.Error())
@@ -35,6 +41,8 @@ func (dbHandler DatabaseAccessImpl) Update(entity interface{}) error {
 }
 
 func (dbHandler DatabaseAccessImpl) FindAll() (interface{}, error) {
+	dbHandler.DB.NewSession()
+
 	entities := dbHandler.DBEntityProvider.CreateArray()
 	err := dbHandler.DB.Find(entities)
 	if err != nil {
@@ -44,6 +52,8 @@ func (dbHandler DatabaseAccessImpl) FindAll() (interface{}, error) {
 }
 
 func (dbHandler DatabaseAccessImpl) Delete(entity interface{}) error {
+	dbHandler.DB.NewSession()
+
 	err := dbHandler.DB.Delete(entity)
 	if err != nil {
 		return NewDBError(err.Error())
@@ -52,6 +62,7 @@ func (dbHandler DatabaseAccessImpl) Delete(entity interface{}) error {
 }
 
 func (dbHandler DatabaseAccessImpl) Query(conds []QueryParameter) (interface{}, error) {
+	dbHandler.DB.NewSession()
 	dbHandler.DB.ProcessWhereStatements(conds)
 
 	entities := dbHandler.DBEntityProvider.CreateArray()

@@ -13,6 +13,10 @@ func NewGormDBWrapper(dbEntity interface{}, db *gorm.DB) *GormDBWrapper {
 	return &GormDBWrapper{DB: db}
 }
 
+func (dbWrapper *GormDBWrapper) NewSession() {
+	dbWrapper.DB = dbWrapper.DB.Session(&gorm.Session{NewDB: true})
+}
+
 func (dbWrapper *GormDBWrapper) AutoMigrate(dst ...interface{}) error {
 	return dbWrapper.DB.AutoMigrate(dst)
 }
