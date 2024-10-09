@@ -4,8 +4,16 @@ import (
 	"errors"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/zsomborCzaban/party_organizer/common/env"
+	"strconv"
+	"strings"
 	"time"
 )
+
+//type JWTUserClaims struct {
+//	ID       string `json:"id"`
+//	Username string `json:"username"`
+//	jwt.RegisteredClaims
+//}
 
 const ONE_DAY_IN_SECONDS = 86400
 const JWT_EXPIRATION_TIMEOUT_ENV_VAR_KEY = "JWT_EXPIRATION_TIMEOUT_KEY"
@@ -58,4 +66,26 @@ func WithClaims(subject string, additionalClaims map[string]string) (*string, er
 	}
 
 	return &tokenString, err
+}
+
+// It's assumed that this is called after the jwt has been validated successfully
+func GetIdFromJWT(bearer string) (uint, error) {
+	tokenString := strings.Split(bearer, " ")
+
+	token, err := jwt.Parse(tokenString[1], ParseToken)
+	if err != nil || !token.Valid {
+		return 0, errors.New("Error while parsing jwt")
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return 0, errors.New("Error while parsing the claims of jwt")
+	}
+
+	idUint64, err := strconv.ParseUint(claims["id"].(string), 10, 32)
+	if err != nil {
+		return 0, errors.New("Error while parsing the claims of the jwt")
+	}
+
+	return uint(idUint64), nil
 }

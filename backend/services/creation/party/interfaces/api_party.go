@@ -2,13 +2,14 @@ package interfaces
 
 import (
 	"github.com/gorilla/mux"
+	"github.com/zsomborCzaban/party_organizer/common/jwt"
 	"github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
 )
 
 func NewPartyRouter(router *mux.Router, controller domains.IPartyController) {
 	r := router.PathPrefix("/party").Subrouter()
 
-	r.Use(ValidateJWTMiddleware)
+	r.Use(jwt.ValidateJWTMiddleware)
 
 	r.HandleFunc("/", controller.CreateController).Methods("POST")
 	r.HandleFunc("/{id}", controller.GetController).Methods("GET")

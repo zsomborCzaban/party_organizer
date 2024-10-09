@@ -1,4 +1,4 @@
-package interfaces
+package jwt
 
 import (
 	"errors"

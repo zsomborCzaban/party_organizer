@@ -8,7 +8,7 @@ type IPartyService interface {
 	AddUserToParty(partyId, userId uint) api.IResponse
 
 	CreateParty(PartyDTO) api.IResponse
-	GetParty(uint) api.IResponse
-	UpdateParty(PartyDTO) api.IResponse
+	GetParty(uint) api.IResponse        //if the user is organizer or participant
+	UpdateParty(PartyDTO) api.IResponse //if the user os organizer
 	DeleteParty(uint) api.IResponse
 }
