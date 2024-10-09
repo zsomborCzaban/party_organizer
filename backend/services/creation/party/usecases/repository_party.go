@@ -67,11 +67,15 @@ func (pr PartyRepository) GetPartiesByOrganizerId(id uint) (*[]domains.Party, er
 }
 
 func (pr PartyRepository) GetPartiesByParticipantId(id uint) (*[]domains.Party, error) {
-	queryParams := []db.QueryParameter{
-		{Field: "participant_ids", Operator: "IN", Value: id},
+	queryCond := db.Many2ManyQueryParameter{
+		QueriedTable:            "parties",
+		Many2ManyTable:          "party_participants",
+		M2MQueriedColumnName:    "party_id",
+		M2MConditionColumnName:  "user_id",
+		M2MConditionColumnValue: id,
 	}
 
-	fetchedParties, fetchedError := pr.DbAccess.Query(queryParams)
+	fetchedParties, fetchedError := pr.DbAccess.Many2ManyQueryId(queryCond)
 	if fetchedError != nil {
 		//we should return errors from the databaselayer
 		return nil, errors.New(fmt.Sprintf("Error while fetching parties for PARICIPANT.id: %d, this should be only temporary. Error: %s", id, fetchedError.Error()))

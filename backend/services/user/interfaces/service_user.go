@@ -70,3 +70,25 @@ func (us UserService) Register(registerRequest domains.RegisterRequest) api.IRes
 
 	return api.Success("register_success")
 }
+
+func (us UserService) AddFriend(friendId, userId uint) api.IResponse {
+	if friendId == userId {
+		return api.ErrorBadRequest("You cannot be friends with yourself")
+	}
+
+	if err := us.UserRepository.AddFriend(friendId, userId); err != nil {
+		return api.ErrorInternalServerError(err)
+	}
+
+	return api.Success("friend_added")
+}
+
+func (us UserService) GetFriends(userId uint) api.IResponse {
+	//todo: parse to dto to avoid password leakingy
+	users, err := us.UserRepository.GetFriends(userId)
+	if err != nil {
+		return api.ErrorInternalServerError(err)
+	}
+
+	return api.Success(users)
+}

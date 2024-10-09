@@ -11,4 +11,5 @@ type IDatabase interface {
 	Save(value interface{}) error
 	Delete(value interface{}, conds ...interface{}) error
 	ProcessWhereStatements(conds []QueryParameter)
+	Many2ManyQueryId(dest interface{}, cond Many2ManyQueryParameter) error
 }

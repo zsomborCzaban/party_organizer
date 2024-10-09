@@ -70,6 +70,68 @@ func (ur UserRepository) CreateUser(user *domains.User) error {
 	return nil
 }
 
+func (ur UserRepository) AddFriend(userId, friendId uint) error {
+	user, err := ur.FindById(userId)
+	if err != nil {
+		return err
+	}
+
+	friend, err2 := ur.FindById(friendId)
+	if err2 != nil {
+		return err2
+	}
+
+	//should use transaction here for data integrity
+	user.Friends = append(user.Friends, *friend)
+	if err3 := ur.UpdateUser(user); err3 != nil {
+		return err3
+	}
+
+	friend.Friends = append(friend.Friends, *user)
+	if err4 := ur.UpdateUser(friend); err4 != nil {
+		return err4
+	}
+
+	return nil
+}
+
+func (ur UserRepository) UpdateUser(user *domains.User) error {
+	err := ur.DbAccess.Update(user)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (ur UserRepository) GetFriends(userId uint) (*[]domains.User, error) {
+	cond := db.Many2ManyQueryParameter{
+		QueriedTable:            "users",
+		Many2ManyTable:          "user_friends",
+		M2MQueriedColumnName:    "user_id",
+		M2MConditionColumnName:  "friend_id",
+		M2MConditionColumnValue: userId,
+		//OrActive:                true,
+		//OrConditionColumnName:   "friend_id",
+		//OrConditionColumnValue:  userId,
+	}
+
+	fetchedUsers, fetchedError := ur.DbAccess.Many2ManyQueryId(cond)
+	if fetchedError != nil {
+		return nil, fetchedError
+	}
+
+	users, err := fetchedUsers.(*[]domains.User)
+	if !err {
+		return nil, errors.New("failed to convert fetched friends to *[]User type")
+	}
+
+	if users == nil {
+		return nil, errors.New("friends was nil")
+	}
+
+	return users, nil
+}
+
 func NewUserEntityProvider() *UserEntityProvider { return &UserEntityProvider{} }
 
 func (provider *UserEntityProvider) Create() interface{} { return &domains.User{} }

@@ -77,3 +77,14 @@ func (dbHandler DatabaseAccessImpl) Query(conds []QueryParameter) (interface{}, 
 //	dbHandler.DB.NewSession()
 //	return dbHandler.DB.AppendAssociation(&entity, &associatedEntity, associationName)
 //}
+
+func (dbHandler DatabaseAccessImpl) Many2ManyQueryId(cond Many2ManyQueryParameter) (interface{}, error) {
+	dbHandler.DB.NewSession()
+
+	entities := dbHandler.DBEntityProvider.CreateArray()
+	err := dbHandler.DB.Many2ManyQueryId(entities, cond)
+	if err != nil {
+		return entities, NewDBError(err.Error())
+	}
+	return entities, nil
+}

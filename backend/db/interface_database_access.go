@@ -9,4 +9,5 @@ type IDatabaseAccess interface {
 
 	Query(conds []QueryParameter) (interface{}, error)
 	//AppendAssociation(entity, associatedEntity interface{}, associationName string) error
+	Many2ManyQueryId(cond Many2ManyQueryParameter) (interface{}, error)
 }

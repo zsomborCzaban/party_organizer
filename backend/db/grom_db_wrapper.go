@@ -57,3 +57,20 @@ func (dbWrapper *GormDBWrapper) ProcessWhereStatements(conds []QueryParameter) {
 //	err := association.Append(associatedEntity)
 //	return err
 //}
+
+func (dbWrapper *GormDBWrapper) Many2ManyQueryId(dest interface{}, cond Many2ManyQueryParameter) error {
+	if !cond.OrActive {
+		query := fmt.Sprintf(
+			"SELECT * FROM %s WHERE id IN (SELECT %s FROM %s WHERE %s = ?)",
+			cond.QueriedTable, cond.M2MQueriedColumnName, cond.Many2ManyTable, cond.M2MConditionColumnName,
+		)
+		return dbWrapper.DB.Raw(query, cond.M2MConditionColumnValue).Scan(dest).Error
+	} else {
+		query := fmt.Sprintf(
+			"SELECT * FROM %s WHERE id IN (SELECT %s FROM %s WHERE %s = ? OR %s = ?)",
+			cond.QueriedTable, cond.M2MQueriedColumnName, cond.Many2ManyTable, cond.M2MConditionColumnName, cond.OrConditionColumnName,
+		)
+		return dbWrapper.DB.Raw(query, cond.M2MConditionColumnValue, cond.OrConditionColumnValue).Scan(dest).Error
+	}
+	//return dbWrapper.DB.Model(model).Preload(preload, "id = ?", 3).Find(dest).Error
+}
