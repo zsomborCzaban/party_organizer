@@ -8,6 +8,8 @@ import (
 func NewPartyRouter(router *mux.Router, controller domains.IPartyController) {
 	r := router.PathPrefix("/party").Subrouter()
 
+	r.Use(ValidateJWTMiddleware)
+
 	r.HandleFunc("/", controller.CreateController).Methods("POST")
 	r.HandleFunc("/{id}", controller.GetController).Methods("GET")
 	r.HandleFunc("/{id}", controller.UpdateController).Methods("PUT")

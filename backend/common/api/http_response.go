@@ -87,3 +87,10 @@ func ErrorInvalidCredentials() IResponse {
 
 	return Error(http.StatusNotAcceptable, ve.Errors)
 }
+
+func ErrorUnauthorized(message string) IResponse {
+	ve := NewValidationErrors()
+	ve.CollectValidationError("", message, nil)
+
+	return Error(http.StatusUnauthorized, ve.Errors)
+}
