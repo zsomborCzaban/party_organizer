@@ -5,4 +5,5 @@ type IFoodRequirementRepository interface {
 	GetFoodRequirement(uint) (*FoodRequirement, error)
 	UpdateFoodRequirement(*FoodRequirement) error
 	DeleteFoodRequirement(*FoodRequirement) error
+	GetByPartyId(uint) (*[]FoodRequirement, error)
 }

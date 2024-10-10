@@ -19,8 +19,8 @@ func NewFoodRequirementRepository(databaseAccessManager db.IDatabaseAccessManage
 	}
 }
 
-func (pr FoodRequirementRepository) CreateFoodRequirement(foodRequirement *domains.FoodRequirement) error {
-	err := pr.DbAccess.Create(foodRequirement)
+func (fr FoodRequirementRepository) CreateFoodRequirement(foodRequirement *domains.FoodRequirement) error {
+	err := fr.DbAccess.Create(foodRequirement)
 	if err != nil {
 		return err
 	}
@@ -28,8 +28,8 @@ func (pr FoodRequirementRepository) CreateFoodRequirement(foodRequirement *domai
 
 }
 
-func (pr FoodRequirementRepository) GetFoodRequirement(id uint) (*domains.FoodRequirement, error) {
-	foodRequirement, err := pr.DbAccess.FindById(id)
+func (fr FoodRequirementRepository) GetFoodRequirement(id uint) (*domains.FoodRequirement, error) {
+	foodRequirement, err := fr.DbAccess.FindById(id)
 	if err != nil {
 		return nil, err
 	}
@@ -41,20 +41,43 @@ func (pr FoodRequirementRepository) GetFoodRequirement(id uint) (*domains.FoodRe
 	return foodRequirement2, nil
 }
 
-func (pr FoodRequirementRepository) UpdateFoodRequirement(foodRequirement *domains.FoodRequirement) error {
-	err := pr.DbAccess.Update(foodRequirement)
+func (fr FoodRequirementRepository) UpdateFoodRequirement(foodRequirement *domains.FoodRequirement) error {
+	err := fr.DbAccess.Update(foodRequirement)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (pr FoodRequirementRepository) DeleteFoodRequirement(foodRequirement *domains.FoodRequirement) error {
-	err := pr.DbAccess.Delete(foodRequirement)
+func (fr FoodRequirementRepository) DeleteFoodRequirement(foodRequirement *domains.FoodRequirement) error {
+	err := fr.DbAccess.Delete(foodRequirement)
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func (fr FoodRequirementRepository) GetByPartyId(id uint) (*[]domains.FoodRequirement, error) {
+	queryParams := []db.QueryParameter{
+		{Field: "party_id", Operator: "=", Value: id},
+	}
+
+	fetchedFoodReqs, fetchedError := fr.DbAccess.Query(queryParams)
+	if fetchedError != nil {
+		return nil, fetchedError
+	}
+
+	foodReqs, err := fetchedFoodReqs.(*[]domains.FoodRequirement)
+	if !err {
+		return nil, errors.New("unable to parse fetched data to DrinkRequirements")
+	}
+
+	//not sure if parties can be nil after the db function call
+	if foodReqs == nil {
+		return nil, errors.New("Error. DrinkRequirements were nil")
+	}
+
+	return foodReqs, nil
 }
 
 type EntityProvider struct {

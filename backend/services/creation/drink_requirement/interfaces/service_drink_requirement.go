@@ -103,5 +103,4 @@ func (ds DrinkRequirementService) GetByPartyId(partyId, userId uint) api.IRespon
 	}
 
 	return api.Success(drinkReqs)
-
 }

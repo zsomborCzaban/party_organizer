@@ -56,7 +56,7 @@ func main() {
 
 	foodRequirementRepository := foodRequirementUsecases.NewFoodRequirementRepository(dbAccess)
 	foodRequirementValidator := api.NewValidator(validator.New())
-	foodRequirementService := foodRequirementInterfaces.NewFoodRequirementService(foodRequirementRepository, foodRequirementValidator)
+	foodRequirementService := foodRequirementInterfaces.NewFoodRequirementService(foodRequirementRepository, foodRequirementValidator, partyRepository)
 	foodRequirementController := foodRequirementInterfaces.NewFoodRequirementController(foodRequirementService)
 
 	partyInterfaces.NewPartyRouter(apiRouter, partyController)
