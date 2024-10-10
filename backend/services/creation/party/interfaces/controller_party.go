@@ -65,7 +65,7 @@ func (pc PartyController) UpdateController(w http.ResponseWriter, r *http.Reques
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&updatePartyReq)
 	if err != nil {
-		br := api.ErrorBadRequest(domains.BadRequest)
+		br := api.ErrorBadRequest(err.Error())
 
 		//todo: implement response helper that has logger as param
 		br.Send(w)
@@ -74,16 +74,16 @@ func (pc PartyController) UpdateController(w http.ResponseWriter, r *http.Reques
 
 	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
 	if err2 != nil {
-		br := api.ErrorBadRequest(domains.BadRequest)
+		br := api.ErrorBadRequest(err2.Error())
 
 		br.Send(w)
 		return
 	}
 
 	vars := mux.Vars(r)
-	id, err2 := strconv.ParseUint(vars["id"], 10, 32)
-	if err2 != nil {
-		br := api.ErrorBadRequest(domains.BadRequest)
+	id, err3 := strconv.ParseUint(vars["id"], 10, 32)
+	if err3 != nil {
+		br := api.ErrorBadRequest(err3.Error())
 
 		br.Send(w)
 		return

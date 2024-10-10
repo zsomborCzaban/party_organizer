@@ -13,7 +13,7 @@ func NewFoodRequirementRouter(router *mux.Router, controller domains.IFoodRequir
 
 	r.HandleFunc("/", controller.CreateController).Methods("POST")
 	r.HandleFunc("/{id}", controller.GetController).Methods("GET")
-	r.HandleFunc("/", controller.UpdateController).Methods("PUT")
+	r.HandleFunc("/{id}", controller.UpdateController).Methods("PUT")
 	r.HandleFunc("/{id}", controller.DeleteController).Methods("DELETE")
 
 	r.HandleFunc("/getByPartyId/{party_id}", controller.GetByPartyIdController).Methods("GET")

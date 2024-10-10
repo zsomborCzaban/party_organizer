@@ -58,7 +58,9 @@ func (ds DrinkRequirementService) GetDrinkRequirement(id uint) api.IResponse {
 	return api.Success(drinkRequirement.TransformToDrinkRequirementDTO())
 }
 
-func (ds DrinkRequirementService) UpdateDrinkRequirement(drinkRequirementDTO domains.DrinkRequirementDTO) api.IResponse {
+func (ds DrinkRequirementService) UpdateDrinkRequirement(drinkRequirementDTO domains.DrinkRequirementDTO, userId uint) api.IResponse {
+	//this wont be used!
+
 	err := ds.Validator.Validate(drinkRequirementDTO)
 	if err != nil {
 		return api.ErrorValidation(err)

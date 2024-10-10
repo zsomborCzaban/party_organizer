@@ -58,7 +58,9 @@ func (fs FoodRequirementService) GetFoodRequirement(id uint) api.IResponse {
 	return api.Success(foodRequirement.TransformToFoodRequirementDTO())
 }
 
-func (fs FoodRequirementService) UpdateFoodRequirement(foodRequirementDTO domains.FoodRequirementDTO) api.IResponse {
+func (fs FoodRequirementService) UpdateFoodRequirement(foodRequirementDTO domains.FoodRequirementDTO, userId uint) api.IResponse {
+	//this wont be used!
+
 	errors := fs.Validator.Validate(foodRequirementDTO)
 	if errors != nil {
 		return api.ErrorValidation(errors)
