@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/zsomborCzaban/party_organizer/common/api"
+	"github.com/zsomborCzaban/party_organizer/common/jwt"
 	"github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
 	"net/http"
 	"strconv"
@@ -71,6 +72,14 @@ func (pc PartyController) UpdateController(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
+	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	if err2 != nil {
+		br := api.ErrorBadRequest(domains.BadRequest)
+
+		br.Send(w)
+		return
+	}
+
 	vars := mux.Vars(r)
 	id, err2 := strconv.ParseUint(vars["id"], 10, 32)
 	if err2 != nil {
@@ -81,7 +90,7 @@ func (pc PartyController) UpdateController(w http.ResponseWriter, r *http.Reques
 	}
 	updatePartyReq.ID = uint(id)
 
-	resp := pc.PartyService.UpdateParty(updatePartyReq)
+	resp := pc.PartyService.UpdateParty(updatePartyReq, userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging
@@ -108,16 +117,15 @@ func (pc PartyController) DeleteController(w http.ResponseWriter, r *http.Reques
 }
 
 func (pc PartyController) GetPartiesByOrganizerId(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	id, err := strconv.ParseUint(vars["id"], 10, 32)
+	userId, err := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
 	if err != nil {
-		br := api.ErrorBadRequest(domains.BadRequest)
+		br := api.ErrorBadRequest(err.Error())
 
 		br.Send(w)
 		return
 	}
 
-	resp := pc.PartyService.GetPartiesByOrganizerId(uint(id))
+	resp := pc.PartyService.GetPartiesByOrganizerId(userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging
@@ -126,16 +134,15 @@ func (pc PartyController) GetPartiesByOrganizerId(w http.ResponseWriter, r *http
 }
 
 func (pc PartyController) GetPartiesByParticipantId(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	id, err := strconv.ParseUint(vars["id"], 10, 32)
+	userId, err := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
 	if err != nil {
-		br := api.ErrorBadRequest(domains.BadRequest)
+		br := api.ErrorBadRequest(err.Error())
 
 		br.Send(w)
 		return
 	}
 
-	resp := pc.PartyService.GetPartiesByParticipantId(uint(id))
+	resp := pc.PartyService.GetPartiesByParticipantId(userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging
@@ -153,7 +160,15 @@ func (pc PartyController) AddUserToParty(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	resp := pc.PartyService.AddUserToParty(uint(partyId), 3)
+	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	if err2 != nil {
+		br := api.ErrorBadRequest(err2.Error())
+
+		br.Send(w)
+		return
+	}
+
+	resp := pc.PartyService.AddUserToParty(uint(partyId), userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging

@@ -34,8 +34,8 @@ func (ps PartyService) CreateParty(partyDTO domains.PartyDTO) api.IResponse {
 	return api.Success("create_success")
 }
 
-func (ps PartyService) GetParty(id uint) api.IResponse {
-	party, err := ps.PartyRepository.GetParty(id)
+func (ps PartyService) GetParty(partyId uint) api.IResponse {
+	party, err := ps.PartyRepository.GetParty(partyId)
 
 	if err != nil {
 		return api.ErrorInternalServerError(err)
@@ -44,17 +44,21 @@ func (ps PartyService) GetParty(id uint) api.IResponse {
 	return api.Success(party.TransformToPartyDTO())
 }
 
-func (ps PartyService) UpdateParty(partyDTO domains.PartyDTO) api.IResponse {
-	errors := ps.Validator.Validate(partyDTO)
-	if errors != nil {
-		return api.ErrorValidation(errors)
+func (ps PartyService) UpdateParty(partyDTO domains.PartyDTO, userId uint) api.IResponse {
+	err := ps.Validator.Validate(partyDTO)
+	if err != nil {
+		return api.ErrorValidation(err)
+	}
+
+	if partyDTO.OrganizerID != userId && userId != 0 {
+		return api.ErrorUnauthorized("cannot update other people's party")
 	}
 
 	party := partyDTO.TransformToParty()
 
-	err := ps.PartyRepository.UpdateParty(party)
-	if err != nil {
-		return api.ErrorInternalServerError(err)
+	err2 := ps.PartyRepository.UpdateParty(party)
+	if err2 != nil {
+		return api.ErrorInternalServerError(err2)
 	}
 
 	return api.Success("update_success")
