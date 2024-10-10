@@ -3,8 +3,9 @@ package domains
 import "github.com/zsomborCzaban/party_organizer/common/api"
 
 type IDrinkRequirementService interface {
-	CreateDrinkRequirement(DrinkRequirementDTO) api.IResponse
+	CreateDrinkRequirement(dr DrinkRequirementDTO, userId uint) api.IResponse
 	GetDrinkRequirement(uint) api.IResponse
 	UpdateDrinkRequirement(DrinkRequirementDTO) api.IResponse
 	DeleteDrinkRequirement(uint) api.IResponse
+	GetByPartyId(partyId, userId uint) api.IResponse
 }

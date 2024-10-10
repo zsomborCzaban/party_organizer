@@ -2,9 +2,9 @@ package interfaces
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/zsomborCzaban/party_organizer/common/api"
+	"github.com/zsomborCzaban/party_organizer/common/jwt"
 	"github.com/zsomborCzaban/party_organizer/services/creation/drink_requirement/domains"
 	"net/http"
 	"strconv"
@@ -31,9 +31,16 @@ func (dc DrinkRequirementController) CreateController(w http.ResponseWriter, r *
 		br.Send(w)
 		return
 	}
-	fmt.Println("didnt fail there")
 
-	resp := dc.DrinkRequirementService.CreateDrinkRequirement(createDrinkRequirementReq)
+	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	if err2 != nil {
+		br := api.ErrorBadRequest(domains.BadRequest)
+
+		br.Send(w)
+		return
+	}
+
+	resp := dc.DrinkRequirementService.CreateDrinkRequirement(createDrinkRequirementReq, userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging
@@ -90,6 +97,32 @@ func (dc DrinkRequirementController) DeleteController(w http.ResponseWriter, r *
 	}
 
 	resp := dc.DrinkRequirementService.DeleteDrinkRequirement(uint(id))
+	couldSend := resp.Send(w)
+	if !couldSend {
+		//todo: handle logging
+		return
+	}
+}
+
+func (dc DrinkRequirementController) GetByPartyIdController(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	partyId, err := strconv.ParseUint(vars["party_id"], 10, 32)
+	if err != nil {
+		br := api.ErrorBadRequest(domains.BadRequest)
+
+		br.Send(w)
+		return
+	}
+
+	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	if err2 != nil {
+		br := api.ErrorBadRequest(domains.BadRequest)
+
+		br.Send(w)
+		return
+	}
+
+	resp := dc.DrinkRequirementService.GetByPartyId(uint(partyId), userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging

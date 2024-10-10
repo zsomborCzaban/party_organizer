@@ -39,16 +39,6 @@ func main() {
 
 	apiRouter := router.PathPrefix("/api/v0").Subrouter()
 
-	drinkRequirementRepository := drinkRequirementUsecases.NewDrinkRequirementRepository(dbAccess)
-	drinkRequirementValidator := api.NewValidator(validator.New())
-	drinkRequirementService := drinkRequirementInterfaces.NewDrinkRequirementService(drinkRequirementRepository, drinkRequirementValidator)
-	drinkRequirementController := drinkRequirementInterfaces.NewDrinkRequirementController(drinkRequirementService)
-
-	foodRequirementRepository := foodRequirementUsecases.NewFoodRequirementRepository(dbAccess)
-	foodRequirementValidator := api.NewValidator(validator.New())
-	foodRequirementService := foodRequirementInterfaces.NewFoodRequirementService(foodRequirementRepository, foodRequirementValidator)
-	foodRequirementController := foodRequirementInterfaces.NewFoodRequirementController(foodRequirementService)
-
 	userRepository := usecases.NewUserRepository(dbAccess)
 	userValidator := api.NewValidator(validator.New())
 	userService := interfaces.NewUserService(userRepository, userValidator)
@@ -58,6 +48,16 @@ func main() {
 	partyValidator := api.NewValidator(validator.New())
 	partyService := partyInterfaces.NewPartyService(partyRepository, partyValidator)
 	partyController := partyInterfaces.NewPartyController(partyService)
+
+	drinkRequirementRepository := drinkRequirementUsecases.NewDrinkRequirementRepository(dbAccess)
+	drinkRequirementValidator := api.NewValidator(validator.New())
+	drinkRequirementService := drinkRequirementInterfaces.NewDrinkRequirementService(drinkRequirementRepository, drinkRequirementValidator, partyRepository)
+	drinkRequirementController := drinkRequirementInterfaces.NewDrinkRequirementController(drinkRequirementService)
+
+	foodRequirementRepository := foodRequirementUsecases.NewFoodRequirementRepository(dbAccess)
+	foodRequirementValidator := api.NewValidator(validator.New())
+	foodRequirementService := foodRequirementInterfaces.NewFoodRequirementService(foodRequirementRepository, foodRequirementValidator)
+	foodRequirementController := foodRequirementInterfaces.NewFoodRequirementController(foodRequirementService)
 
 	partyInterfaces.NewPartyRouter(apiRouter, partyController)
 	drinkRequirementInterfaces.NewDrinkRequirementRouter(apiRouter, drinkRequirementController)

@@ -1,17 +1,19 @@
 package domains
 
 import (
+	"github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
 	"gorm.io/gorm"
 )
 
 type FoodRequirement struct {
 	gorm.Model
 
-	PartyID        uint   `json:"party_id"`
-	Type           string `json:"type"`
-	TargetQuantity int    `json:"target_quantity"`
-	QuantityMark   string `json:"quantity_mark"`
-	Description    string `json:"description"`
+	PartyID        uint          `json:"party_id"`
+	Party          domains.Party `json:"party"`
+	Type           string        `json:"type"`
+	TargetQuantity int           `json:"target_quantity"`
+	QuantityMark   string        `json:"quantity_mark"`
+	Description    string        `json:"description"`
 }
 
 func (fr *FoodRequirement) TransformToFoodRequirementDTO() *FoodRequirementDTO {

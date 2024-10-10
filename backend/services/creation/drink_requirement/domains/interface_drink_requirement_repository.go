@@ -5,4 +5,5 @@ type IDrinkRequirementRepository interface {
 	GetDrinkRequirement(uint) (*DrinkRequirement, error)
 	UpdateDrinkRequirement(*DrinkRequirement) error
 	DeleteDrinkRequirement(*DrinkRequirement) error
+	GetByPartyId(uint) (*[]DrinkRequirement, error)
 }
