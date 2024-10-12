@@ -20,9 +20,10 @@ func NewFriendInviteService(repo domains.IFriendInviteRepository, userRepo userD
 }
 
 func (fs FriendInviteService) Accept(invitorId, userId uint) api.IResponse {
-	if userId == invitorId {
-		return api.ErrorBadRequest("cannot accept yourself")
-	}
+	//should exists in database
+	//if userId == invitorId {
+	//	return api.ErrorBadRequest("cannot accept yourself")
+	//}
 
 	invite, err := fs.FriendInviteRepository.FindByIds(invitorId, userId)
 	if err != nil {
@@ -33,12 +34,14 @@ func (fs FriendInviteService) Accept(invitorId, userId uint) api.IResponse {
 		return api.ErrorBadRequest("Cannot accept already declined friends. Try inviting them")
 	}
 
+	if invite.State == domains.ACCEPTED {
+		return api.Success(invite)
+	}
+
 	//todo: put this in a transaction
-	if invite.State != domains.ACCEPTED {
-		invite.State = domains.ACCEPTED
-		if err2 := fs.FriendInviteRepository.Update(invite); err2 != nil {
-			return api.ErrorInternalServerError(err2.Error())
-		}
+	invite.State = domains.ACCEPTED
+	if err2 := fs.FriendInviteRepository.Update(invite); err2 != nil {
+		return api.ErrorInternalServerError(err2.Error())
 	}
 
 	if err2 := fs.UserRepository.AddFriend(invitorId, userId); err2 != nil {
@@ -49,10 +52,6 @@ func (fs FriendInviteService) Accept(invitorId, userId uint) api.IResponse {
 }
 
 func (fs FriendInviteService) Decline(invitorId, userId uint) api.IResponse {
-	if userId == invitorId {
-		return api.ErrorBadRequest("cannot decline yourself")
-	}
-
 	invite, err := fs.FriendInviteRepository.FindByIds(invitorId, userId)
 	if err != nil {
 		return api.ErrorInternalServerError(err.Error())
@@ -62,11 +61,13 @@ func (fs FriendInviteService) Decline(invitorId, userId uint) api.IResponse {
 		return api.ErrorBadRequest("Cannot decline already accepted friends. Try deleting them")
 	}
 
-	if invite.State != domains.DECLINED {
-		invite.State = domains.DECLINED
-		if err2 := fs.FriendInviteRepository.Update(invite); err2 != nil {
-			return api.ErrorInternalServerError(err2.Error())
-		}
+	if invite.State == domains.DECLINED {
+		return api.Success(invite)
+	}
+
+	invite.State = domains.DECLINED
+	if err2 := fs.FriendInviteRepository.Update(invite); err2 != nil {
+		return api.ErrorInternalServerError(err2.Error())
 	}
 
 	return api.Success(invite)
@@ -99,11 +100,13 @@ func (fs FriendInviteService) Invite(invitedId, userId uint) api.IResponse {
 		return api.ErrorBadRequest("User already accepted the invite")
 	}
 
-	if invite.State == domains.DECLINED {
-		invite.State = domains.PENDING
-		if err2 := fs.FriendInviteRepository.Update(invite); err2 != nil {
-			return api.ErrorInternalServerError(err2.Error())
-		}
+	if invite.State == domains.PENDING {
+		return api.Success(invite)
+	}
+
+	invite.State = domains.PENDING
+	if err2 := fs.FriendInviteRepository.Update(invite); err2 != nil {
+		return api.ErrorInternalServerError(err2.Error())
 	}
 
 	return api.Success(invite)

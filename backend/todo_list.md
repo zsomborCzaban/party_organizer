@@ -10,3 +10,5 @@ updatek fixelese
 dto-k removolasa a useren kivul
 
 admin user should have id 1, otherwise it will create buggs
+
+auth party service (description in comments)
