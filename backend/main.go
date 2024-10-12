@@ -47,8 +47,8 @@ func main() {
 	userService := userInterfaces.NewUserService(userRepository, vali)
 	userController := userInterfaces.NewUserController(userService)
 
-	partyRepository := partyUsecases.NewPartyRepository(dbAccess, userRepository)
-	partyService := partyInterfaces.NewPartyService(partyRepository, vali)
+	partyRepository := partyUsecases.NewPartyRepository(dbAccess)
+	partyService := partyInterfaces.NewPartyService(partyRepository, vali, userRepository)
 	partyController := partyInterfaces.NewPartyController(partyService)
 
 	drinkRequirementRepository := drinkRequirementUsecases.NewDrinkRequirementRepository(dbAccess)

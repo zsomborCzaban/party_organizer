@@ -9,29 +9,22 @@ import (
 )
 
 type PartyRepository struct {
-	DbAccess       db.IDatabaseAccess
-	UserRepository userDomain.IUserRepository
+	DbAccess db.IDatabaseAccess
 }
 
-func NewPartyRepository(databaseAccessManager db.IDatabaseAccessManager, ur userDomain.IUserRepository) domains.IPartyRepository {
+func NewPartyRepository(databaseAccessManager db.IDatabaseAccessManager) domains.IPartyRepository {
 	entityProvider := EntityProvider{}
 	databaseAccess := databaseAccessManager.RegisterEntity("partyProvider", entityProvider)
 
 	return &PartyRepository{
-		DbAccess:       databaseAccess,
-		UserRepository: ur,
+		DbAccess: databaseAccess,
 	}
 }
 
-func (pr PartyRepository) AddUserToParty(partyId, userId uint) error {
+func (pr PartyRepository) AddUserToParty(partyId uint, user *userDomain.User) error {
 	party, err := pr.GetParty(partyId)
 	if err != nil {
 		return err
-	}
-
-	user, err2 := pr.UserRepository.FindById(userId)
-	if err2 != nil {
-		return err2
 	}
 
 	party.Participants = append(party.Participants, *user)

@@ -3,17 +3,20 @@ package interfaces
 import (
 	"github.com/zsomborCzaban/party_organizer/common/api"
 	"github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
+	userDomain "github.com/zsomborCzaban/party_organizer/services/user/domains"
 	"gorm.io/gorm"
 )
 
 type PartyService struct {
 	PartyRepository domains.IPartyRepository
+	UserRepository  userDomain.IUserRepository
 	Validator       api.IValidator
 }
 
-func NewPartyService(repository domains.IPartyRepository, validator api.IValidator) domains.IPartyService {
+func NewPartyService(repo domains.IPartyRepository, validator api.IValidator, userRepo userDomain.IUserRepository) domains.IPartyService {
 	return &PartyService{
-		PartyRepository: repository,
+		PartyRepository: repo,
+		UserRepository:  userRepo,
 		Validator:       validator,
 	}
 }
@@ -100,8 +103,13 @@ func (ps PartyService) GetPartiesByParticipantId(id uint) api.IResponse {
 }
 
 func (ps PartyService) AddUserToParty(partyId, userId uint) api.IResponse {
-	if err := ps.PartyRepository.AddUserToParty(partyId, userId); err != nil {
+	user, err := ps.UserRepository.FindById(userId)
+	if err != nil {
 		return api.ErrorInternalServerError(err.Error())
+	}
+
+	if err2 := ps.PartyRepository.AddUserToParty(partyId, user); err2 != nil {
+		return api.ErrorInternalServerError(err2.Error())
 	}
 
 	return api.Success("user added to party")
