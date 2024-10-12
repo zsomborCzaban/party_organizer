@@ -11,7 +11,7 @@ func NewDrinkRequirementRouter(router *mux.Router, controller domains.IDrinkRequ
 
 	r.Use(jwt.ValidateJWTMiddleware)
 
-	r.HandleFunc("/", controller.CreateController).Methods("POST")
+	r.HandleFunc("", controller.CreateController).Methods("POST")
 	r.HandleFunc("/{id}", controller.GetController).Methods("GET")
 	r.HandleFunc("/{id}", controller.UpdateController).Methods("PUT")
 	r.HandleFunc("/{id}", controller.DeleteController).Methods("DELETE")
