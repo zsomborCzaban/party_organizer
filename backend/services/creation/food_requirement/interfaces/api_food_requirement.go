@@ -7,7 +7,7 @@ import (
 )
 
 func NewFoodRequirementRouter(router *mux.Router, controller domains.IFoodRequirementController) {
-	r := router.PathPrefix("/food_requirement").Subrouter()
+	r := router.PathPrefix("/foodRequirement").Subrouter()
 
 	r.Use(jwt.ValidateJWTMiddleware)
 
