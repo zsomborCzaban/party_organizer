@@ -8,9 +8,9 @@ import (
 type FriendInvitation struct {
 	gorm.Model
 
-	InvitatorId uint
-	Invitator   domains.User
-	InvitedId   uint
-	Invited     domains.User
-	State       string //Pending, Accepted, Declined
+	InvitorId uint
+	Invitor   domains.User
+	InvitedId uint
+	Invited   domains.User
+	State     string //Pending, Accepted, Declined
 }

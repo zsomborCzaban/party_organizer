@@ -6,3 +6,5 @@
 
 
 updatek fixelese
+
+dto-k removolasa a useren kivul
