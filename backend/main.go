@@ -12,8 +12,10 @@ import (
 	foodRequirementUsecases "github.com/zsomborCzaban/party_organizer/services/creation/food_requirement/usecases"
 	partyInterfaces "github.com/zsomborCzaban/party_organizer/services/creation/party/interfaces"
 	partyUsecases "github.com/zsomborCzaban/party_organizer/services/creation/party/usecases"
-	"github.com/zsomborCzaban/party_organizer/services/user/interfaces"
-	"github.com/zsomborCzaban/party_organizer/services/user/usecases"
+	friendInvitationInterfaces "github.com/zsomborCzaban/party_organizer/services/invitation/friend_invite/interfaces"
+	friendInvitationUsecases "github.com/zsomborCzaban/party_organizer/services/invitation/friend_invite/usecases"
+	userInterfaces "github.com/zsomborCzaban/party_organizer/services/user/interfaces"
+	userUsecases "github.com/zsomborCzaban/party_organizer/services/user/usecases"
 	"gorm.io/gorm/logger"
 	log2 "log"
 	"net/http"
@@ -39,30 +41,33 @@ func main() {
 
 	apiRouter := router.PathPrefix("/api/v0").Subrouter()
 
-	userRepository := usecases.NewUserRepository(dbAccess)
-	userValidator := api.NewValidator(validator.New())
-	userService := interfaces.NewUserService(userRepository, userValidator)
-	userController := interfaces.NewUserController(userService)
+	vali := api.NewValidator(validator.New())
+
+	userRepository := userUsecases.NewUserRepository(dbAccess)
+	userService := userInterfaces.NewUserService(userRepository, vali)
+	userController := userInterfaces.NewUserController(userService)
 
 	partyRepository := partyUsecases.NewPartyRepository(dbAccess, userRepository)
-	partyValidator := api.NewValidator(validator.New())
-	partyService := partyInterfaces.NewPartyService(partyRepository, partyValidator)
+	partyService := partyInterfaces.NewPartyService(partyRepository, vali)
 	partyController := partyInterfaces.NewPartyController(partyService)
 
 	drinkRequirementRepository := drinkRequirementUsecases.NewDrinkRequirementRepository(dbAccess)
-	drinkRequirementValidator := api.NewValidator(validator.New())
-	drinkRequirementService := drinkRequirementInterfaces.NewDrinkRequirementService(drinkRequirementRepository, drinkRequirementValidator, partyRepository)
+	drinkRequirementService := drinkRequirementInterfaces.NewDrinkRequirementService(drinkRequirementRepository, vali, partyRepository)
 	drinkRequirementController := drinkRequirementInterfaces.NewDrinkRequirementController(drinkRequirementService)
 
 	foodRequirementRepository := foodRequirementUsecases.NewFoodRequirementRepository(dbAccess)
-	foodRequirementValidator := api.NewValidator(validator.New())
-	foodRequirementService := foodRequirementInterfaces.NewFoodRequirementService(foodRequirementRepository, foodRequirementValidator, partyRepository)
+	foodRequirementService := foodRequirementInterfaces.NewFoodRequirementService(foodRequirementRepository, vali, partyRepository)
 	foodRequirementController := foodRequirementInterfaces.NewFoodRequirementController(foodRequirementService)
 
+	friendInviteRepository := friendInvitationUsecases.NewFriendInviteRepository(dbAccess, userRepository)
+	friendInviteService := friendInvitationInterfaces.NewFriendInviteService(friendInviteRepository)
+	friendInviteController := friendInvitationInterfaces.NewFriendInviteController(friendInviteService)
+
+	userInterfaces.NewUserRouter(apiRouter, userController)
 	partyInterfaces.NewPartyRouter(apiRouter, partyController)
 	drinkRequirementInterfaces.NewDrinkRequirementRouter(apiRouter, drinkRequirementController)
 	foodRequirementInterfaces.NewFoodRequirementRouter(apiRouter, foodRequirementController)
-	interfaces.NewUserRouter(apiRouter, userController)
+	friendInvitationInterfaces.NewFriendInvitationRouter(apiRouter, friendInviteController)
 
 	log.Fatal().Err(http.ListenAndServe(":8080", router))
 }
