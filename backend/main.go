@@ -67,7 +67,7 @@ func main() {
 	partyInterfaces.NewPartyRouter(apiRouter, partyController)
 	drinkRequirementInterfaces.NewDrinkRequirementRouter(apiRouter, drinkRequirementController)
 	foodRequirementInterfaces.NewFoodRequirementRouter(apiRouter, foodRequirementController)
-	friendInvitationInterfaces.NewFriendInvitationRouter(apiRouter, friendInviteController)
+	friendInvitationInterfaces.NewFriendInviteRouter(apiRouter, friendInviteController)
 
 	log.Fatal().Err(http.ListenAndServe(":8080", router))
 }
