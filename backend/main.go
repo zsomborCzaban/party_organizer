@@ -59,8 +59,8 @@ func main() {
 	foodRequirementService := foodRequirementInterfaces.NewFoodRequirementService(foodRequirementRepository, vali, partyRepository)
 	foodRequirementController := foodRequirementInterfaces.NewFoodRequirementController(foodRequirementService)
 
-	friendInviteRepository := friendInvitationUsecases.NewFriendInviteRepository(dbAccess, userRepository)
-	friendInviteService := friendInvitationInterfaces.NewFriendInviteService(friendInviteRepository)
+	friendInviteRepository := friendInvitationUsecases.NewFriendInviteRepository(dbAccess)
+	friendInviteService := friendInvitationInterfaces.NewFriendInviteService(friendInviteRepository, userRepository)
 	friendInviteController := friendInvitationInterfaces.NewFriendInviteController(friendInviteService)
 
 	userInterfaces.NewUserRouter(apiRouter, userController)
