@@ -14,4 +14,6 @@ func NewFriendInviteRouter(router *mux.Router, controller domains.IFriendInviteC
 	r.HandleFunc("/accept/{invitor_id}", controller.Accept).Methods("GET")
 	r.HandleFunc("/decline/{invitor_id}", controller.Decline).Methods("GET")
 	r.HandleFunc("/invite/{invited_id}", controller.Invite).Methods("GET")
+
+	r.HandleFunc("/getPendingInvites", controller.GetPendingInvites).Methods("GET")
 }

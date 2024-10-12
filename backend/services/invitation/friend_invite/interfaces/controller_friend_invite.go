@@ -94,3 +94,20 @@ func (fc FriendInviteController) Invite(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 }
+
+func (fc FriendInviteController) GetPendingInvites(w http.ResponseWriter, r *http.Request) {
+	userId, err := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	if err != nil {
+		br := api.ErrorBadRequest(err.Error())
+
+		br.Send(w)
+		return
+	}
+
+	resp := fc.FriendInviteService.GetPendingInvites(userId)
+	couldSend := resp.Send(w)
+	if !couldSend {
+		//todo: log here
+		return
+	}
+}

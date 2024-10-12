@@ -6,4 +6,6 @@ type IFriendInviteService interface {
 	Invite(invitedId, userId uint) api.IResponse
 	Accept(invitorId, userId uint) api.IResponse
 	Decline(invitorId, userId uint) api.IResponse
+
+	GetPendingInvites(uint) api.IResponse
 }

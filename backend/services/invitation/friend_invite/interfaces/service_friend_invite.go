@@ -151,3 +151,12 @@ func (fs FriendInviteService) ReverseInvite(invitation *domains.FriendInvite) ap
 	}
 	return api.Success(invitation)
 }
+
+func (fs FriendInviteService) GetPendingInvites(userId uint) api.IResponse {
+	invites, err := fs.FriendInviteRepository.FindPendingByInvitedId(userId)
+	if err != nil {
+		return api.ErrorInternalServerError(err.Error())
+	}
+
+	return api.Success(invites)
+}

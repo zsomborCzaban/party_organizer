@@ -47,7 +47,7 @@ func (fr FriendInviteRepository) FindByIds(invitorId, invitedId uint) (*domains.
 	//possible is database state is invalid and more than 1 invite is found
 	invites, err := fetchedInvites.(*[]domains.FriendInvite)
 	if !err {
-		return nil, errors.New("error, fetched invites cannot be transformed to *[]FriendInvite")
+		return nil, errors.New(domains.FAILED_PARSE_TO_ARRAY)
 	}
 
 	if len(*invites) > 1 {
@@ -61,6 +61,25 @@ func (fr FriendInviteRepository) FindByIds(invitorId, invitedId uint) (*domains.
 	invite := &(*invites)[0]
 
 	return invite, nil
+}
+
+func (fr FriendInviteRepository) FindPendingByInvitedId(invitedId uint) (*[]domains.FriendInvite, error) {
+	queryParams := []db.QueryParameter{
+		{Field: "state", Operator: "=", Value: domains.PENDING},
+		{Field: "invited_id", Operator: "=", Value: invitedId},
+	}
+
+	fetchedInvites, fetchedError := fr.DbAccess.Query(queryParams)
+	if fetchedError != nil {
+		return nil, fetchedError
+	}
+
+	invites, err := fetchedInvites.(*[]domains.FriendInvite)
+	if !err {
+		return nil, errors.New(domains.FAILED_PARSE_TO_ARRAY)
+	}
+
+	return invites, nil
 }
 
 type EntityProvider struct {
