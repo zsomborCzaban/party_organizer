@@ -14,7 +14,7 @@ type FriendInviteRepository struct {
 
 func NewFriendInviteRepository(databaseAccessManager db.IDatabaseAccessManager, ur userDomain.IUserRepository) domains.IFriendInviteRepository {
 	entityProvider := EntityProvider{}
-	databaseAccess := databaseAccessManager.RegisterEntity("partyProvider", entityProvider)
+	databaseAccess := databaseAccessManager.RegisterEntity("friendInviteProvider", entityProvider)
 
 	return &FriendInviteRepository{
 		DbAccess:       databaseAccess,
@@ -22,7 +22,7 @@ func NewFriendInviteRepository(databaseAccessManager db.IDatabaseAccessManager, 
 	}
 }
 
-func (fr FriendInviteRepository) Create(invitation *domains.FriendInvitation) error {
+func (fr FriendInviteRepository) Create(invitation *domains.FriendInvite) error {
 	invitor, err := fr.UserRepository.FindById(invitation.InvitorId)
 	if err != nil {
 		return err
@@ -42,14 +42,14 @@ func (fr FriendInviteRepository) Create(invitation *domains.FriendInvitation) er
 	return nil
 }
 
-func (fr FriendInviteRepository) Update(invitation *domains.FriendInvitation) error {
+func (fr FriendInviteRepository) Update(invitation *domains.FriendInvite) error {
 	if err := fr.DbAccess.Update(invitation); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (fr FriendInviteRepository) FindByIds(invitorId, invitedId uint) (*domains.FriendInvitation, error) {
+func (fr FriendInviteRepository) FindByIds(invitorId, invitedId uint) (*domains.FriendInvite, error) {
 	queryParams := []db.QueryParameter{
 		{Field: "invitor_id", Operator: "=", Value: invitorId},
 		{Field: "invited_id", Operator: "=", Value: invitedId},
@@ -61,9 +61,9 @@ func (fr FriendInviteRepository) FindByIds(invitorId, invitedId uint) (*domains.
 	}
 
 	//possible is database state is invalid and more than 1 invite is found
-	invite, err := fetchedInvite.(*domains.FriendInvitation)
+	invite, err := fetchedInvite.(*domains.FriendInvite)
 	if !err {
-		return nil, errors.New("error, fetched invites cannot be transformed to *[]FriendInvitation")
+		return nil, errors.New("error, fetched invites cannot be transformed to *[]FriendInvite")
 	}
 
 	//not sure if parties can be nil after the db function call
@@ -78,9 +78,9 @@ type EntityProvider struct {
 }
 
 func (e EntityProvider) Create() interface{} {
-	return &domains.FriendInvitation{}
+	return &domains.FriendInvite{}
 }
 
 func (e EntityProvider) CreateArray() interface{} {
-	return &[]domains.FriendInvitation{}
+	return &[]domains.FriendInvite{}
 }

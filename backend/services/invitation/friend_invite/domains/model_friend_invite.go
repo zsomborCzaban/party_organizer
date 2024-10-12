@@ -5,7 +5,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type FriendInvitation struct {
+type FriendInvite struct {
 	gorm.Model
 
 	InvitorId uint

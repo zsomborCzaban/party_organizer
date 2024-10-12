@@ -54,7 +54,7 @@ func (fs FriendInviteService) Invite(invitedId, userId uint) api.IResponse {
 	}
 
 	if err != nil && err.Error() == "error, invite was nil" {
-		invitation := &domains.FriendInvitation{
+		invitation := &domains.FriendInvite{
 			InvitorId: userId,
 			InvitedId: invitedId,
 			State:     "Pending",
