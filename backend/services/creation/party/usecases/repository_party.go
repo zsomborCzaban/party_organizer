@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/zsomborCzaban/party_organizer/db"
 	"github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
-	userDomain "github.com/zsomborCzaban/party_organizer/services/user/domains"
+	userDomain "github.com/zsomborCzaban/party_organizer/services/user/user/domains"
 )
 
 type PartyRepository struct {
