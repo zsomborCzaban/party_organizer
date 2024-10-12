@@ -2,7 +2,7 @@ package interfaces
 
 import (
 	"github.com/gorilla/mux"
-	"github.com/zsomborCzaban/party_organizer/services/user/user/domains"
+	"github.com/zsomborCzaban/party_organizer/services/user/domains"
 )
 
 func NewUserRouter(router *mux.Router, controller domains.IUserController) {

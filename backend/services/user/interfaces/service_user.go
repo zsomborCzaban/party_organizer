@@ -2,23 +2,23 @@ package interfaces
 
 import (
 	"github.com/zsomborCzaban/party_organizer/common/api"
-	domains2 "github.com/zsomborCzaban/party_organizer/services/user/user/domains"
+	"github.com/zsomborCzaban/party_organizer/services/user/domains"
 	"net/http"
 )
 
 type UserService struct {
-	UserRepository domains2.IUserRepository
+	UserRepository domains.IUserRepository
 	Validator      api.IValidator
 }
 
-func NewUserService(userRepository domains2.IUserRepository, validator api.IValidator) *UserService {
+func NewUserService(userRepository domains.IUserRepository, validator api.IValidator) *UserService {
 	return &UserService{
 		UserRepository: userRepository,
 		Validator:      validator,
 	}
 }
 
-func (us UserService) Login(loginRequest domains2.LoginRequest) api.IResponse {
+func (us UserService) Login(loginRequest domains.LoginRequest) api.IResponse {
 	if err1 := us.Validator.Validate(loginRequest); err1 != nil {
 		return api.ErrorValidation(err1.Errors)
 	}
@@ -40,11 +40,11 @@ func (us UserService) Login(loginRequest domains2.LoginRequest) api.IResponse {
 	}
 
 	return api.Success(
-		domains2.JWTData{Jwt: *jwt},
+		domains.JWTData{Jwt: *jwt},
 	)
 }
 
-func (us UserService) Register(registerRequest domains2.RegisterRequest) api.IResponse {
+func (us UserService) Register(registerRequest domains.RegisterRequest) api.IResponse {
 	if err1 := us.Validator.Validate(registerRequest); err1 != nil {
 		return api.ErrorValidation(err1.Errors)
 	}
@@ -55,7 +55,7 @@ func (us UserService) Register(registerRequest domains2.RegisterRequest) api.IRe
 		errorUserAlreadyExists.CollectValidationError("username", "username already taken", registerRequest.Username)
 		return api.Error(http.StatusBadRequest, errorUserAlreadyExists.Errors)
 	}
-	if err2.Error() != domains2.UserNotFound+registerRequest.Username {
+	if err2.Error() != domains.UserNotFound+registerRequest.Username {
 		return api.ErrorInternalServerError(err2.Error())
 	}
 
