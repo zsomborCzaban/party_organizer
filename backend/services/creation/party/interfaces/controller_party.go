@@ -2,7 +2,6 @@ package interfaces
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/zsomborCzaban/party_organizer/common/api"
 	"github.com/zsomborCzaban/party_organizer/common/jwt"
@@ -32,9 +31,16 @@ func (pc PartyController) CreateController(w http.ResponseWriter, r *http.Reques
 		br.Send(w)
 		return
 	}
-	fmt.Println("didnt fail there")
 
-	resp := pc.PartyService.CreateParty(createPartyReq)
+	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	if err2 != nil {
+		br := api.ErrorBadRequest(err2.Error())
+
+		br.Send(w)
+		return
+	}
+
+	resp := pc.PartyService.CreateParty(createPartyReq, userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging

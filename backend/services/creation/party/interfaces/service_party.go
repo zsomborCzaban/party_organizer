@@ -18,17 +18,18 @@ func NewPartyService(repository domains.IPartyRepository, validator api.IValidat
 	}
 }
 
-func (ps PartyService) CreateParty(partyDTO domains.PartyDTO) api.IResponse {
+func (ps PartyService) CreateParty(partyDTO domains.PartyDTO, userId uint) api.IResponse {
 	errors := ps.Validator.Validate(partyDTO)
 	if errors != nil {
 		return api.ErrorValidation(errors)
 	}
 
 	party := partyDTO.TransformToParty()
+	party.OrganizerID = userId
 
 	err := ps.PartyRepository.CreateParty(party)
 	if err != nil {
-		return api.ErrorInternalServerError(err)
+		return api.ErrorInternalServerError(err.Error())
 	}
 
 	return api.Success("create_success")
@@ -38,7 +39,7 @@ func (ps PartyService) GetParty(partyId uint) api.IResponse {
 	party, err := ps.PartyRepository.GetParty(partyId)
 
 	if err != nil {
-		return api.ErrorInternalServerError(err)
+		return api.ErrorInternalServerError(err.Error())
 	}
 
 	return api.Success(party.TransformToPartyDTO())
@@ -58,7 +59,7 @@ func (ps PartyService) UpdateParty(partyDTO domains.PartyDTO, userId uint) api.I
 
 	err2 := ps.PartyRepository.UpdateParty(party)
 	if err2 != nil {
-		return api.ErrorInternalServerError(err2)
+		return api.ErrorInternalServerError(err2.Error())
 	}
 
 	return api.Success("update_success")
@@ -72,7 +73,7 @@ func (ps PartyService) DeleteParty(id uint) api.IResponse {
 
 	err := ps.PartyRepository.DeleteParty(party)
 	if err != nil {
-		return api.ErrorInternalServerError(err)
+		return api.ErrorInternalServerError(err.Error())
 	}
 	return api.Success("delete_success")
 }
@@ -81,7 +82,7 @@ func (ps PartyService) GetPartiesByOrganizerId(id uint) api.IResponse {
 	parties, err := ps.PartyRepository.GetPartiesByOrganizerId(id)
 
 	if err != nil {
-		return api.ErrorInternalServerError(err)
+		return api.ErrorInternalServerError(err.Error())
 	}
 
 	//maybe transform to dto before
@@ -92,7 +93,7 @@ func (ps PartyService) GetPartiesByParticipantId(id uint) api.IResponse {
 	parties, err := ps.PartyRepository.GetPartiesByParticipantId(id)
 
 	if err != nil {
-		return api.ErrorInternalServerError(err)
+		return api.ErrorInternalServerError(err.Error())
 	}
 
 	return api.Success(parties)
@@ -100,7 +101,7 @@ func (ps PartyService) GetPartiesByParticipantId(id uint) api.IResponse {
 
 func (ps PartyService) AddUserToParty(partyId, userId uint) api.IResponse {
 	if err := ps.PartyRepository.AddUserToParty(partyId, userId); err != nil {
-		return api.ErrorInternalServerError(err)
+		return api.ErrorInternalServerError(err.Error())
 	}
 
 	return api.Success("user added to party")

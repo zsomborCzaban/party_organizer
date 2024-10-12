@@ -7,8 +7,8 @@ type IPartyService interface {
 	GetPartiesByParticipantId(uint) api.IResponse
 	AddUserToParty(partyId, userId uint) api.IResponse
 
-	CreateParty(PartyDTO) api.IResponse
+	CreateParty(PartyDTO PartyDTO, userId uint) api.IResponse
 	GetParty(uint) api.IResponse //authenticate this
 	UpdateParty(partyDTO PartyDTO, userId uint) api.IResponse
-	DeleteParty(uint) api.IResponse
+	DeleteParty(uint) api.IResponse //auth this
 }
