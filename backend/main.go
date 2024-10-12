@@ -12,8 +12,8 @@ import (
 	foodRequirementUsecases "github.com/zsomborCzaban/party_organizer/services/creation/food_requirement/usecases"
 	partyInterfaces "github.com/zsomborCzaban/party_organizer/services/creation/party/interfaces"
 	partyUsecases "github.com/zsomborCzaban/party_organizer/services/creation/party/usecases"
-	"github.com/zsomborCzaban/party_organizer/services/user/interfaces"
-	"github.com/zsomborCzaban/party_organizer/services/user/usecases"
+	interfaces2 "github.com/zsomborCzaban/party_organizer/services/user/user/interfaces"
+	"github.com/zsomborCzaban/party_organizer/services/user/user/usecases"
 	"gorm.io/gorm/logger"
 	log2 "log"
 	"net/http"
@@ -41,8 +41,8 @@ func main() {
 
 	userRepository := usecases.NewUserRepository(dbAccess)
 	userValidator := api.NewValidator(validator.New())
-	userService := interfaces.NewUserService(userRepository, userValidator)
-	userController := interfaces.NewUserController(userService)
+	userService := interfaces2.NewUserService(userRepository, userValidator)
+	userController := interfaces2.NewUserController(userService)
 
 	partyRepository := partyUsecases.NewPartyRepository(dbAccess, userRepository)
 	partyValidator := api.NewValidator(validator.New())
@@ -62,7 +62,7 @@ func main() {
 	partyInterfaces.NewPartyRouter(apiRouter, partyController)
 	drinkRequirementInterfaces.NewDrinkRequirementRouter(apiRouter, drinkRequirementController)
 	foodRequirementInterfaces.NewFoodRequirementRouter(apiRouter, foodRequirementController)
-	interfaces.NewUserRouter(apiRouter, userController)
+	interfaces2.NewUserRouter(apiRouter, userController)
 
 	log.Fatal().Err(http.ListenAndServe(":8080", router))
 }
