@@ -55,7 +55,7 @@ func (fs FoodRequirementService) GetFoodRequirement(id uint) api.IResponse {
 		return api.ErrorInternalServerError(err)
 	}
 
-	return api.Success(foodRequirement.TransformToFoodRequirementDTO())
+	return api.Success(foodRequirement)
 }
 
 func (fs FoodRequirementService) UpdateFoodRequirement(foodRequirementDTO domains.FoodRequirementDTO, userId uint) api.IResponse {

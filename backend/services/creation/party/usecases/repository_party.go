@@ -87,6 +87,8 @@ func (pr PartyRepository) GetPartiesByParticipantId(id uint) (*[]domains.Party, 
 	return parties, nil
 }
 
+//func (pr PartyRepository) FindUserInParty(userId, partyId uint)
+
 func (pr PartyRepository) CreateParty(party *domains.Party) error {
 	err := pr.DbAccess.Create(party)
 	if err != nil {

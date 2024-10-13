@@ -13,7 +13,7 @@ func NewPartyInviteRouter(router *mux.Router, controller domains.IPartyInviteCon
 
 	r.HandleFunc("/accept/{party_id}", controller.Accept).Methods("GET")
 	r.HandleFunc("/decline/{party_id}", controller.Decline).Methods("GET")
-	r.HandleFunc("/invite/{invitedUser_id}/{party_id}", controller.Invite).Methods("GET")
+	r.HandleFunc("/invite/{party_id}/{invitedUser_id}", controller.Invite).Methods("GET")
 
 	r.HandleFunc("/getPendingInvites", controller.GetPendingInvites).Methods("GET")
 }

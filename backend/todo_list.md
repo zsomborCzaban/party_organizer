@@ -11,4 +11,6 @@ dto-k removolasa a useren kivul
 
 admin user should have id 1, otherwise it will create buggs
 
-auth party service (description in comments)
+auth party service (description in comments in api_party_service)
+
+At update check of original record's organizer/creator ids have been changed
