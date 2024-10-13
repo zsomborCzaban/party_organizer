@@ -87,7 +87,15 @@ func (pr PartyRepository) GetPartiesByParticipantId(id uint) (*[]domains.Party, 
 	return parties, nil
 }
 
-//func (pr PartyRepository) FindUserInParty(userId, partyId uint)
+//func (pr PartyRepository) FindUserInParty(userId, partyId uint) error {
+//	queryCond := db.Many2ManyQueryParameter{
+//		QueriedTable:            "parties",
+//		Many2ManyTable:          "party_participants",
+//		M2MQueriedColumnName:    "party_id",
+//		M2MConditionColumnName:  "user_id",
+//		M2MConditionColumnValue: id,
+//	}
+//}
 
 func (pr PartyRepository) CreateParty(party *domains.Party) error {
 	err := pr.DbAccess.Create(party)

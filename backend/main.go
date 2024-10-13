@@ -14,6 +14,8 @@ import (
 	partyUsecases "github.com/zsomborCzaban/party_organizer/services/creation/party/usecases"
 	drinkContributionInterfaces "github.com/zsomborCzaban/party_organizer/services/interaction/drink_contributions/interfaces"
 	drinkContributionUsecases "github.com/zsomborCzaban/party_organizer/services/interaction/drink_contributions/usecases"
+	foodContributionInterfaces "github.com/zsomborCzaban/party_organizer/services/interaction/food_contributions/interfaces"
+	foodContributionUsecases "github.com/zsomborCzaban/party_organizer/services/interaction/food_contributions/usecases"
 	friendInvitationInterfaces "github.com/zsomborCzaban/party_organizer/services/invitation/friend_invite/interfaces"
 	friendInvitationUsecases "github.com/zsomborCzaban/party_organizer/services/invitation/friend_invite/usecases"
 	partyInvitationInterfaces "github.com/zsomborCzaban/party_organizer/services/invitation/party_invite/interfaces"
@@ -75,6 +77,10 @@ func main() {
 	drinkContributionService := drinkContributionInterfaces.NewDrinkContributionService(drinkContributionRepository, vali, userRepository, partyRepository, drinkRequirementRepository)
 	drinkContributionController := drinkContributionInterfaces.NewDrinkContributionController(drinkContributionService)
 
+	foodContributionRepository := foodContributionUsecases.NewFoodContributionRepository(dbAccess)
+	foodContributionService := foodContributionInterfaces.NewFoodContributionService(foodContributionRepository, vali, userRepository, partyRepository, foodRequirementRepository)
+	foodContributionController := foodContributionInterfaces.NewFoodContributionController(foodContributionService)
+
 	userInterfaces.NewUserRouter(apiRouter, userController)
 	partyInterfaces.NewPartyRouter(apiRouter, partyController)
 	drinkRequirementInterfaces.NewDrinkRequirementRouter(apiRouter, drinkRequirementController)
@@ -82,6 +88,7 @@ func main() {
 	friendInvitationInterfaces.NewFriendInviteRouter(apiRouter, friendInviteController)
 	partyInvitationInterfaces.NewPartyInviteRouter(apiRouter, partyInviteController)
 	drinkContributionInterfaces.NewDrinkContributionRouter(apiRouter, drinkContributionController)
+	foodContributionInterfaces.NewFoodContributionRouter(apiRouter, foodContributionController)
 
 	log.Fatal().Err(http.ListenAndServe(":8080", router))
 }
