@@ -8,5 +8,6 @@ type IDrinkContributionController interface {
 	Delete(w http.ResponseWriter, r *http.Request)
 
 	GetByPartyIdAndContributorId(w http.ResponseWriter, r *http.Request)
-	GetByPartyIdAndRequirementId(w http.ResponseWriter, r *http.Request)
+	GetByRequirementId(w http.ResponseWriter, r *http.Request)
+	GetByPartyId(w http.ResponseWriter, r *http.Request)
 }

@@ -10,5 +10,6 @@ type IDrinkContributionService interface {
 	Delete(contributionId, userId uint) api.IResponse
 
 	GetByPartyIdAndContributorId(partyId, contributorId, userId uint) api.IResponse
-	GetByPartyIdAndRequirementId(partyId, requirementId, userId uint) api.IResponse
+	GetByRequirementId(requirementId, userId uint) api.IResponse
+	GetByPartyId(partyId, userId uint) api.IResponse
 }

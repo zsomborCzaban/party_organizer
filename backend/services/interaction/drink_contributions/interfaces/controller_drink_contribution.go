@@ -144,7 +144,34 @@ func (dc DrinkContributionController) GetByPartyIdAndContributorId(w http.Respon
 	}
 }
 
-func (dc DrinkContributionController) GetByPartyIdAndRequirementId(w http.ResponseWriter, r *http.Request) {
+func (dc DrinkContributionController) GetByRequirementId(w http.ResponseWriter, r *http.Request) {
+	userId, err := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	if err != nil {
+		br := api.ErrorBadRequest(err.Error())
+
+		br.Send(w)
+		return
+	}
+
+	vars := mux.Vars(r)
+
+	requirementId, err3 := strconv.ParseUint(vars["requirement_id"], 10, 32)
+	if err3 != nil {
+		br := api.ErrorBadRequest(err3.Error())
+
+		br.Send(w)
+		return
+	}
+
+	resp := dc.ContributionService.GetByRequirementId(uint(requirementId), userId)
+	couldSend := resp.Send(w)
+	if !couldSend {
+		//todo: handle logging
+		return
+	}
+}
+
+func (dc DrinkContributionController) GetByPartyId(w http.ResponseWriter, r *http.Request) {
 	userId, err := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
 	if err != nil {
 		br := api.ErrorBadRequest(err.Error())
@@ -162,15 +189,7 @@ func (dc DrinkContributionController) GetByPartyIdAndRequirementId(w http.Respon
 		return
 	}
 
-	requirementId, err3 := strconv.ParseUint(vars["requirement_id"], 10, 32)
-	if err3 != nil {
-		br := api.ErrorBadRequest(err3.Error())
-
-		br.Send(w)
-		return
-	}
-
-	resp := dc.ContributionService.GetByPartyIdAndRequirementId(uint(partyId), uint(requirementId), userId)
+	resp := dc.ContributionService.GetByPartyId(uint(partyId), userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging

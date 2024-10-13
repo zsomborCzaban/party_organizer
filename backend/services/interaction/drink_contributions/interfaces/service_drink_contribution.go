@@ -143,11 +143,25 @@ func (ds DrinkContributionService) GetByPartyIdAndContributorId(partyId, contrib
 	return api.Success(contributions)
 }
 
-func (ds DrinkContributionService) GetByPartyIdAndRequirementId(partyId, requirementId, userId uint) api.IResponse {
+func (ds DrinkContributionService) GetByRequirementId(requirementId, userId uint) api.IResponse {
 	//todo: check if user in party
 
-	columnNames := []string{"party_id", "requirement_id"}
-	values := []interface{}{partyId, requirementId}
+	columnNames := []string{"drink_req_id"}
+	values := []interface{}{requirementId}
+
+	contributions, err := ds.ContributionRepository.FindAllBy(columnNames, values)
+	if err != nil {
+		return api.ErrorInternalServerError(err.Error())
+	}
+
+	return api.Success(contributions)
+}
+
+func (ds DrinkContributionService) GetByPartyId(partyId, userId uint) api.IResponse {
+	//todo: check if user in party
+
+	columnNames := []string{"party_id"}
+	values := []interface{}{partyId}
 
 	contributions, err := ds.ContributionRepository.FindAllBy(columnNames, values)
 	if err != nil {

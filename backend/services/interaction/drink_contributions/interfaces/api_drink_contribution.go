@@ -16,5 +16,6 @@ func NewDrinkContributionRouter(router *mux.Router, controller domains.IDrinkCon
 	r.HandleFunc("/{id}", controller.Delete).Methods("DELETE")
 
 	r.HandleFunc("/getByPartyAndContributor/{party_id}/{contributor_id}", controller.GetByPartyIdAndContributorId).Methods("GET")
-	r.HandleFunc("/getByPartyAndRequirement/{party_id}/{requirement_id}", controller.GetByPartyIdAndRequirementId).Methods("GET")
+	r.HandleFunc("/getByRequirement/{requirement_id}", controller.GetByRequirementId).Methods("GET")
+	r.HandleFunc("/getByParty/{party_id}", controller.GetByPartyId).Methods("GET")
 }
