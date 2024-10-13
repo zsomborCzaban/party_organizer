@@ -9,7 +9,7 @@ type DrinkRequirement struct {
 	gorm.Model
 
 	PartyID        uint          `json:"party_id"`
-	Party          domains.Party `json:"party"`
+	Party          domains.Party `json:"-"`
 	Type           string        `json:"type"`
 	TargetQuantity int           `json:"target_quantity"`
 	QuantityMark   string        `json:"quantity_mark"`

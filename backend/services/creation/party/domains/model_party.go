@@ -13,7 +13,7 @@ type Party struct {
 	StartTime    time.Time      `json:"start_time"`
 	Name         string         `json:"name"`
 	OrganizerID  uint           `json:"organizer_id"`
-	Participants []domains.User `gorm:"many2many:party_participants;"`
+	Participants []domains.User `json:"-" gorm:"many2many:party_participants;"`
 }
 
 func (p *Party) TransformToPartyDTO() *PartyDTO {

@@ -8,7 +8,7 @@ type User struct {
 	gorm.Model
 
 	Username string `json:"username"`
-	Password string `json:"password"` //it is raw []bytes and not encoded to human-readable format.
+	Password string `json:"-"` //it is raw []bytes and not encoded to human-readable format.
 	Email    string `json:"email"`
 	Friends  []User `gorm:"many2many:user_friends;"`
 	//OrganizedParties []domains.Party `json:"organized_parties"`
