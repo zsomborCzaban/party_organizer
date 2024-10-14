@@ -38,7 +38,7 @@ func (ds DrinkContributionService) Create(contribution domains.DrinkContribution
 		return api.ErrorBadRequest(err2.Error())
 	}
 
-	party, err3 := ds.PartyRepository.GetParty(contribution.PartyId)
+	party, err3 := ds.PartyRepository.FindById(contribution.PartyId)
 	if err3 != nil {
 		return api.ErrorBadRequest(err3.Error())
 	}
@@ -81,7 +81,7 @@ func (ds DrinkContributionService) Update(contribution domains.DrinkContribution
 		return api.ErrorBadRequest(err3.Error())
 	}
 
-	party, err4 := ds.PartyRepository.GetParty(contribution.PartyId)
+	party, err4 := ds.PartyRepository.FindById(contribution.PartyId)
 	if err4 != nil {
 		return api.ErrorBadRequest(err4.Error())
 	}

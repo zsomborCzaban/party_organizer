@@ -29,7 +29,7 @@ func (ds DrinkRequirementService) CreateDrinkRequirement(drinkRequirementDTO dom
 
 	drinkRequirement := drinkRequirementDTO.TransformToDrinkRequirement()
 
-	party, err2 := ds.PartyRepository.GetParty(drinkRequirement.PartyID)
+	party, err2 := ds.PartyRepository.FindById(drinkRequirement.PartyID)
 	if err2 != nil {
 		return api.ErrorBadRequest("Party id doesnt exists")
 	}
@@ -90,7 +90,7 @@ func (ds DrinkRequirementService) DeleteDrinkRequirement(id uint) api.IResponse 
 }
 
 func (ds DrinkRequirementService) GetByPartyId(partyId, userId uint) api.IResponse {
-	party, err := ds.PartyRepository.GetParty(partyId)
+	party, err := ds.PartyRepository.FindById(partyId)
 	if err != nil {
 		return api.ErrorBadRequest("party not found")
 	}

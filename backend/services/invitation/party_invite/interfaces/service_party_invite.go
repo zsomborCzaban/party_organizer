@@ -1,7 +1,6 @@
 package interfaces
 
 import (
-	"fmt"
 	"github.com/zsomborCzaban/party_organizer/common/api"
 	partyDomains "github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
 	"github.com/zsomborCzaban/party_organizer/services/invitation/party_invite/domains"
@@ -114,17 +113,17 @@ func (ps PartyInviteService) Invite(invitedId, invitorId, partyId uint) api.IRes
 func (ps PartyInviteService) CreateInvitation(invitedId, invitorId, partyId uint) api.IResponse {
 	invitor, err := ps.UserRepository.FindById(invitorId)
 	if err != nil {
-		return api.ErrorBadRequest(fmt.Sprintf("cannot find user with id: %d", invitorId))
+		return api.ErrorBadRequest(err.Error())
 	}
 
 	party, err2 := ps.PartyRepository.FindById(partyId)
 	if err2 != nil {
-		return api.ErrorBadRequest(fmt.Sprintf("cannot find party with id: %d", partyId))
+		return api.ErrorBadRequest(err2.Error())
 	}
 
 	invited, err3 := ps.UserRepository.FindById(invitedId)
 	if err3 != nil {
-		return api.ErrorBadRequest(fmt.Sprintf("cannot find user with id: %d", invitedId))
+		return api.ErrorBadRequest(err3.Error())
 	}
 
 	//would be faster is this would be on top. but the code is more clear this way
@@ -155,4 +154,92 @@ func (ps PartyInviteService) GetPendingInvites(userId uint) api.IResponse {
 	}
 
 	return api.Success(invites)
+}
+
+func (ps PartyInviteService) JoinPublicParty(partyId, userId uint) api.IResponse {
+	party, err := ps.PartyRepository.FindById(partyId)
+	if err != nil {
+		return api.ErrorBadRequest(err.Error())
+	}
+
+	user, err2 := ps.UserRepository.FindById(userId)
+	if err2 != nil {
+		return api.ErrorBadRequest(err2.Error())
+	}
+
+	//todo: check if user already in party
+
+	invite, err3 := ps.PartyInviteRepository.FindByIds(userId, partyId)
+	if err3 != nil {
+		invite = &domains.PartyInvite{
+			InvitorId: party.OrganizerID,
+			Invitor:   party.Organizer,
+			InvitedId: userId,
+			Invited:   *user,
+			PartyId:   partyId,
+			Party:     *party,
+		}
+	}
+	invite.State = domains.ACCEPTED
+
+	//todo: put this in transaction
+	err4 := ps.PartyInviteRepository.Save(invite)
+	if err4 != nil {
+		return api.ErrorInternalServerError(err4.Error())
+	}
+
+	err5 := ps.PartyRepository.AddUserToParty(party, user)
+	if err5 != nil {
+		//todo: rollback
+		return api.ErrorInternalServerError(err5.Error())
+	}
+	return api.Success(party)
+
+}
+
+func (ps PartyInviteService) JoinPrivateParty(partyId, userId uint, accessCode string) api.IResponse {
+	party, err := ps.PartyRepository.FindById(partyId)
+	if err != nil {
+		return api.ErrorBadRequest(err.Error())
+	}
+
+	if !party.AccessCodeEnabled {
+		return api.ErrorBadRequest("accessCode is not enabled for party")
+	}
+
+	if party.AccessCode != accessCode {
+		return api.ErrorUnauthorized("invalid accessCode")
+	}
+
+	user, err2 := ps.UserRepository.FindById(userId)
+	if err2 != nil {
+		return api.ErrorBadRequest(err2.Error())
+	}
+
+	//todo: check if user already in party
+
+	invite, err3 := ps.PartyInviteRepository.FindByIds(userId, partyId)
+	if err3 != nil {
+		invite = &domains.PartyInvite{
+			InvitorId: party.OrganizerID,
+			Invitor:   party.Organizer,
+			InvitedId: userId,
+			Invited:   *user,
+			PartyId:   partyId,
+			Party:     *party,
+		}
+	}
+	invite.State = domains.ACCEPTED
+
+	//todo: put this in transaction
+	err4 := ps.PartyInviteRepository.Save(invite)
+	if err4 != nil {
+		return api.ErrorInternalServerError(err4.Error())
+	}
+	if err5 := ps.PartyRepository.AddUserToParty(party, user); err5 != nil {
+		//todo: rollback
+		return api.ErrorInternalServerError(err5.Error())
+	}
+	return api.Success(party)
+
 }

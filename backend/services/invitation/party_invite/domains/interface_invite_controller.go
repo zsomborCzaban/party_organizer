@@ -8,4 +8,7 @@ type IPartyInviteController interface {
 	Decline(w http.ResponseWriter, r *http.Request)
 
 	GetPendingInvites(w http.ResponseWriter, r *http.Request)
+
+	JoinPublicParty(w http.ResponseWriter, r *http.Request)
+	JoinPrivateParty(w http.ResponseWriter, r *http.Request)
 }

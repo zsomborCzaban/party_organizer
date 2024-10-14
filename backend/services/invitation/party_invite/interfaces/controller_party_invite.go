@@ -119,3 +119,63 @@ func (fc PartyInviteController) GetPendingInvites(w http.ResponseWriter, r *http
 		return
 	}
 }
+
+func (fc PartyInviteController) JoinPublicParty(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	partyId, err := strconv.ParseUint(vars["party_id"], 10, 32)
+	if err != nil {
+		br := api.ErrorBadRequest(err.Error())
+
+		br.Send(w)
+		return
+	}
+
+	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	if err2 != nil {
+		br := api.ErrorBadRequest(err2.Error())
+
+		br.Send(w)
+		return
+	}
+
+	resp := fc.PartyInviteService.JoinPublicParty(uint(partyId), userId)
+	couldSend := resp.Send(w)
+	if !couldSend {
+		//todo: handle logging
+		return
+	}
+}
+
+func (fc PartyInviteController) JoinPrivateParty(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	partyId, err := strconv.ParseUint(vars["party_id"], 10, 32)
+	if err != nil {
+		br := api.ErrorBadRequest(err.Error())
+
+		br.Send(w)
+		return
+	}
+
+	accessCode := vars["access_code"]
+	if accessCode != "" {
+		br := api.ErrorBadRequest("missing access_code")
+
+		br.Send(w)
+		return
+	}
+
+	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	if err2 != nil {
+		br := api.ErrorBadRequest(err2.Error())
+
+		br.Send(w)
+		return
+	}
+
+	resp := fc.PartyInviteService.JoinPrivateParty(uint(partyId), userId, accessCode)
+	couldSend := resp.Send(w)
+	if !couldSend {
+		//todo: handle logging
+		return
+	}
+}

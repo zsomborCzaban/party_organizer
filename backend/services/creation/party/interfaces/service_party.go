@@ -3,25 +3,21 @@ package interfaces
 import (
 	"github.com/zsomborCzaban/party_organizer/common/api"
 	"github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
-	partyInvitationDomains "github.com/zsomborCzaban/party_organizer/services/invitation/party_invite/domains"
-	partyInvitationUsecases "github.com/zsomborCzaban/party_organizer/services/invitation/party_invite/usecases"
 	userDomain "github.com/zsomborCzaban/party_organizer/services/user/domains"
 	"gorm.io/gorm"
 )
 
 type PartyService struct {
-	PartyRepository       domains.IPartyRepository
-	PartyInviteRepository partyInvitationDomains.IPartyInviteRepository
-	UserRepository        userDomain.IUserRepository
-	Validator             api.IValidator
+	PartyRepository domains.IPartyRepository
+	UserRepository  userDomain.IUserRepository
+	Validator       api.IValidator
 }
 
-func NewPartyService(repo domains.IPartyRepository, validator api.IValidator, userRepo userDomain.IUserRepository, partyInvitesRepo partyInvitationUsecases.PartyInviteRepository) domains.IPartyService {
+func NewPartyService(repo domains.IPartyRepository, validator api.IValidator, userRepo userDomain.IUserRepository) domains.IPartyService {
 	return &PartyService{
-		PartyRepository:       repo,
-		PartyInviteRepository: partyInvitesRepo,
-		UserRepository:        userRepo,
-		Validator:             validator,
+		PartyRepository: repo,
+		UserRepository:  userRepo,
+		Validator:       validator,
 	}
 }
 
@@ -119,94 +115,6 @@ func (ps PartyService) GetPartiesByParticipantId(id uint) api.IResponse {
 	}
 
 	return api.Success(parties)
-}
-
-func (ps PartyService) JoinPublicParty(partyId, userId uint) api.IResponse {
-	party, err := ps.PartyRepository.FindById(partyId)
-	if err != nil {
-		return api.ErrorBadRequest(err.Error())
-	}
-
-	user, err2 := ps.UserRepository.FindById(userId)
-	if err2 != nil {
-		return api.ErrorBadRequest(err2.Error())
-	}
-
-	//todo: check if user already in party
-
-	//todo: put this in transaction
-	if err3 := ps.PartyRepository.AddUserToParty(party, user); err3 != nil {
-		return api.ErrorInternalServerError(err3.Error())
-	}
-
-	invite, err4 := ps.PartyInviteRepository.FindByIds(userId, partyId)
-	if err4 != nil {
-		invite = &partyInvitationDomains.PartyInvite{
-			InvitorId: party.OrganizerID,
-			Invitor:   party.Organizer,
-			InvitedId: userId,
-			Invited:   *user,
-			PartyId:   partyId,
-			Party:     *party,
-		}
-	}
-	invite.State = partyInvitationDomains.ACCEPTED
-
-	err5 := ps.PartyInviteRepository.Save(invite)
-	if err5 != nil {
-		//todo: rollback
-		return api.ErrorInternalServerError(err5.Error())
-	}
-	return api.Success(party)
-
-}
-
-func (ps PartyService) JoinPrivateParty(partyId, userId uint, accessCode string) api.IResponse {
-	party, err := ps.PartyRepository.FindById(partyId)
-	if err != nil {
-		return api.ErrorBadRequest(err.Error())
-	}
-
-	if !party.AccessCodeEnabled {
-		return api.ErrorBadRequest("accessCode is not enabled for party")
-	}
-
-	if party.AccessCode != accessCode {
-		return api.ErrorUnauthorized("invalid accessCode")
-	}
-
-	user, err2 := ps.UserRepository.FindById(userId)
-	if err2 != nil {
-		return api.ErrorBadRequest(err2.Error())
-	}
-
-	//todo: check if user already in party
-
-	//todo: put this in transaction
-	if err3 := ps.PartyRepository.AddUserToParty(party, user); err3 != nil {
-		return api.ErrorInternalServerError(err3.Error())
-	}
-
-	invite, err4 := ps.PartyInviteRepository.FindByIds(userId, partyId)
-	if err4 != nil {
-		invite = &partyInvitationDomains.PartyInvite{
-			InvitorId: party.OrganizerID,
-			Invitor:   party.Organizer,
-			InvitedId: userId,
-			Invited:   *user,
-			PartyId:   partyId,
-			Party:     *party,
-		}
-	}
-	invite.State = partyInvitationDomains.ACCEPTED
-
-	err5 := ps.PartyInviteRepository.Save(invite)
-	if err5 != nil {
-		//todo: rollback
-		return api.ErrorInternalServerError(err5.Error())
-	}
-	return api.Success(party)
-
 }
 
 func (ps PartyService) AddUserToParty(partyId, userId uint) api.IResponse {

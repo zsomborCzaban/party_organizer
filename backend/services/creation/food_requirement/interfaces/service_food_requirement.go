@@ -29,7 +29,7 @@ func (fs FoodRequirementService) CreateFoodRequirement(foodRequirementDTO domain
 
 	foodRequirement := foodRequirementDTO.TransformToFoodRequirement()
 
-	party, err2 := fs.PartyRepository.GetParty(foodRequirement.PartyID)
+	party, err2 := fs.PartyRepository.FindById(foodRequirement.PartyID)
 	if err2 != nil {
 		return api.ErrorBadRequest("partyId does not exists")
 	}
@@ -90,7 +90,7 @@ func (fs FoodRequirementService) DeleteFoodRequirement(id uint) api.IResponse {
 }
 
 func (fs FoodRequirementService) GetByPartyId(partyId, userId uint) api.IResponse {
-	party, err := fs.PartyRepository.GetParty(partyId)
+	party, err := fs.PartyRepository.FindById(partyId)
 	if err != nil {
 		return api.ErrorBadRequest("party not found")
 	}
