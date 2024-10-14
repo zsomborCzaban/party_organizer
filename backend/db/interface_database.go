@@ -9,6 +9,7 @@ type IDatabase interface {
 	First(dest interface{}, conds ...interface{}) error
 	Find(dest interface{}, conds ...interface{}) error
 	Update(value interface{}) error
+	Save(value interface{}) error
 	Delete(value interface{}, conds ...interface{}) error
 	ProcessWhereStatements(conds []QueryParameter)
 	Many2ManyQueryId(dest interface{}, cond Many2ManyQueryParameter) error

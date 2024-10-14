@@ -29,6 +29,16 @@ func (dbHandler DatabaseAccessImpl) FindById(id interface{}) (interface{}, error
 	return result, nil
 }
 
+func (dbHandler DatabaseAccessImpl) Save(entity interface{}) error {
+	dbHandler.DB.NewSession()
+
+	err := dbHandler.DB.Save(entity)
+	if err != nil {
+		return NewDBError(err.Error())
+	}
+	return nil
+}
+
 func (dbHandler DatabaseAccessImpl) Update(entity interface{}) error {
 	dbHandler.DB.NewSession()
 

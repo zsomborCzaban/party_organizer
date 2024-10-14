@@ -33,6 +33,10 @@ func (dbWrapper *GormDBWrapper) Update(entity interface{}) error {
 	return dbWrapper.DB.Model(entity).Omit("id", "created_at", "deleted_at").Updates(entity).Error
 }
 
+func (dbWrapper *GormDBWrapper) Save(entity interface{}) error {
+	return dbWrapper.DB.Omit("created_at", "deleted_at").Save(entity).Error
+}
+
 func (dbWrapper *GormDBWrapper) Find(dest interface{}, conds ...interface{}) error {
 	return dbWrapper.DB.Find(dest, conds).Error
 }

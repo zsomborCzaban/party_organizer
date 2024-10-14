@@ -48,8 +48,13 @@ func (ps PartyInviteService) Accept(invitedId, partyId uint) api.IResponse {
 		return api.ErrorInternalServerError(err3.Error())
 	}
 
-	if err4 := ps.PartyRepository.AddUserToParty(partyId, invitedUser); err4 != nil {
-		return api.ErrorInternalServerError(err4.Error())
+	party, err4 := ps.PartyRepository.FindById(partyId)
+	if err4 != nil {
+		return api.ErrorBadRequest(err4.Error())
+	}
+
+	if err5 := ps.PartyRepository.AddUserToParty(party, invitedUser); err4 != nil {
+		return api.ErrorInternalServerError(err5.Error())
 	}
 
 	return api.Success(invite)
@@ -112,7 +117,7 @@ func (ps PartyInviteService) CreateInvitation(invitedId, invitorId, partyId uint
 		return api.ErrorBadRequest(fmt.Sprintf("cannot find user with id: %d", invitorId))
 	}
 
-	party, err2 := ps.PartyRepository.GetParty(partyId)
+	party, err2 := ps.PartyRepository.FindById(partyId)
 	if err2 != nil {
 		return api.ErrorBadRequest(fmt.Sprintf("cannot find party with id: %d", partyId))
 	}

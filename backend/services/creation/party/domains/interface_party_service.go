@@ -3,8 +3,11 @@ package domains
 import "github.com/zsomborCzaban/party_organizer/common/api"
 
 type IPartyService interface {
+	GetPublicParties() api.IResponse
 	GetPartiesByOrganizerId(uint) api.IResponse
 	GetPartiesByParticipantId(uint) api.IResponse
+	JoinPublicParty(partyId, userId uint) api.IResponse
+	JoinPrivateParty(partyId, userId uint, accessCode string) api.IResponse
 	AddUserToParty(partyId, userId uint) api.IResponse //auth this. only party organizer can add to party
 
 	CreateParty(PartyDTO PartyDTO, userId uint) api.IResponse

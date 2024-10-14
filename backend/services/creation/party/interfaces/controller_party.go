@@ -122,6 +122,22 @@ func (pc PartyController) DeleteController(w http.ResponseWriter, r *http.Reques
 	}
 }
 
+func (pc PartyController) GetPublicParties(w http.ResponseWriter, r *http.Request) {
+	if _, err := jwt.GetIdFromJWT(r.Header.Get("Authorization")); err != nil {
+		br := api.ErrorBadRequest(err.Error())
+
+		br.Send(w)
+		return
+	}
+
+	resp := pc.PartyService.GetPublicParties()
+	couldSend := resp.Send(w)
+	if !couldSend {
+		//todo: handle logging
+		return
+	}
+}
+
 func (pc PartyController) GetPartiesByOrganizerId(w http.ResponseWriter, r *http.Request) {
 	userId, err := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
 	if err != nil {
@@ -156,9 +172,69 @@ func (pc PartyController) GetPartiesByParticipantId(w http.ResponseWriter, r *ht
 	}
 }
 
+func (pc PartyController) JoinPublicParty(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	partyId, err := strconv.ParseUint(vars["party_id"], 10, 32)
+	if err != nil {
+		br := api.ErrorBadRequest(domains.BadRequest)
+
+		br.Send(w)
+		return
+	}
+
+	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	if err2 != nil {
+		br := api.ErrorBadRequest(err2.Error())
+
+		br.Send(w)
+		return
+	}
+
+	resp := pc.PartyService.JoinPublicParty(uint(partyId), userId)
+	couldSend := resp.Send(w)
+	if !couldSend {
+		//todo: handle logging
+		return
+	}
+}
+
+func (pc PartyController) JoinPrivateParty(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	partyId, err := strconv.ParseUint(vars["party_id"], 10, 32)
+	if err != nil {
+		br := api.ErrorBadRequest(domains.BadRequest)
+
+		br.Send(w)
+		return
+	}
+
+	accessCode := vars["access_code"]
+	if accessCode != "" {
+		br := api.ErrorBadRequest(domains.BadRequest)
+
+		br.Send(w)
+		return
+	}
+
+	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	if err2 != nil {
+		br := api.ErrorBadRequest(err2.Error())
+
+		br.Send(w)
+		return
+	}
+
+	resp := pc.PartyService.JoinPrivateParty(uint(partyId), userId, accessCode)
+	couldSend := resp.Send(w)
+	if !couldSend {
+		//todo: handle logging
+		return
+	}
+}
+
 func (pc PartyController) AddUserToParty(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	partyId, err := strconv.ParseUint(vars["id"], 10, 32)
+	partyId, err := strconv.ParseUint(vars["party_id"], 10, 32)
 	if err != nil {
 		br := api.ErrorBadRequest(domains.BadRequest)
 

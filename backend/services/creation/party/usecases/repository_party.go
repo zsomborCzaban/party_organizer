@@ -21,18 +21,37 @@ func NewPartyRepository(databaseAccessManager db.IDatabaseAccessManager) domains
 	}
 }
 
-func (pr PartyRepository) AddUserToParty(partyId uint, user *userDomain.User) error {
-	party, err := pr.GetParty(partyId)
-	if err != nil {
-		return err
-	}
-
+func (pr PartyRepository) AddUserToParty(party *domains.Party, user *userDomain.User) error {
 	party.Participants = append(party.Participants, *user)
 	if err3 := pr.UpdateParty(party); err3 != nil {
 		return err3
 	}
 
 	return nil
+}
+
+func (pr PartyRepository) GetPublicParties() (*[]domains.Party, error) {
+	queryParams := []db.QueryParameter{
+		{Field: "private", Operator: "=", Value: false},
+	}
+
+	fetchedParties, fetchedError := pr.DbAccess.Query(queryParams)
+	if fetchedError != nil {
+		//we should return errors from the databaselayer
+		return nil, errors.New(fmt.Sprintf("Error while fetching public parties. this should be only temporary. Error: %s", fetchedError.Error()))
+	}
+
+	parties, err := fetchedParties.(*[]domains.Party)
+	if !err {
+		return nil, errors.New("error. fetched parties cannot be transormed to *[]Party")
+	}
+
+	//not sure if parties can be nil after the db function call
+	if parties == nil {
+		return nil, errors.New("error. Parties were nil")
+	}
+
+	return parties, nil
 }
 
 func (pr PartyRepository) GetPartiesByOrganizerId(id uint) (*[]domains.Party, error) {
@@ -106,7 +125,7 @@ func (pr PartyRepository) CreateParty(party *domains.Party) error {
 
 }
 
-func (pr PartyRepository) GetParty(id uint) (*domains.Party, error) {
+func (pr PartyRepository) FindById(id uint) (*domains.Party, error) {
 	party, err := pr.DbAccess.FindById(id)
 	if err != nil {
 		return nil, err

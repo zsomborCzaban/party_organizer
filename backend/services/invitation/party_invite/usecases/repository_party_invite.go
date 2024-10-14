@@ -19,27 +19,34 @@ func NewPartyInviteRepository(databaseAccessManager db.IDatabaseAccessManager) d
 	}
 }
 
-func (fr PartyInviteRepository) Create(invitation *domains.PartyInvite) error {
-	if err3 := fr.DbAccess.Create(invitation); err3 != nil {
+func (pr PartyInviteRepository) Create(invitation *domains.PartyInvite) error {
+	if err3 := pr.DbAccess.Create(invitation); err3 != nil {
 		return err3
 	}
 	return nil
 }
 
-func (fr PartyInviteRepository) Update(invitation *domains.PartyInvite) error {
-	if err := fr.DbAccess.Update(invitation); err != nil {
+func (pr PartyInviteRepository) Update(invitation *domains.PartyInvite) error {
+	if err := pr.DbAccess.Update(invitation); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (fr PartyInviteRepository) FindByIds(invitedId, partyId uint) (*domains.PartyInvite, error) {
+func (pr PartyInviteRepository) Save(invitation *domains.PartyInvite) error {
+	if err := pr.DbAccess.Save(invitation); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (pr PartyInviteRepository) FindByIds(invitedId, partyId uint) (*domains.PartyInvite, error) {
 	queryParams := []db.QueryParameter{
 		{Field: "invited_id", Operator: "=", Value: invitedId},
 		{Field: "party_id", Operator: "=", Value: partyId},
 	}
 
-	fetchedInvites, fetchedError := fr.DbAccess.Query(queryParams)
+	fetchedInvites, fetchedError := pr.DbAccess.Query(queryParams)
 	if fetchedError != nil {
 		return nil, errors.New("error, unexpected error while querying PartyInvite table")
 	}
@@ -62,13 +69,13 @@ func (fr PartyInviteRepository) FindByIds(invitedId, partyId uint) (*domains.Par
 	return invite, nil
 }
 
-func (fr PartyInviteRepository) FindPendingByInvitedId(invitedId uint) (*[]domains.PartyInvite, error) {
+func (pr PartyInviteRepository) FindPendingByInvitedId(invitedId uint) (*[]domains.PartyInvite, error) {
 	queryParams := []db.QueryParameter{
 		{Field: "state", Operator: "=", Value: domains.PENDING},
 		{Field: "invited_id", Operator: "=", Value: invitedId},
 	}
 
-	fetchedInvites, fetchedError := fr.DbAccess.Query(queryParams)
+	fetchedInvites, fetchedError := pr.DbAccess.Query(queryParams)
 	if fetchedError != nil {
 		return nil, fetchedError
 	}
