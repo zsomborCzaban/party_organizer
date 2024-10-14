@@ -12,8 +12,7 @@ func NewDatabaseAccessImpl(dbEntityProvider IEntityProvider, db IDatabase) Datab
 func (dbHandler DatabaseAccessImpl) Create(entity interface{}) error {
 	dbHandler.DB.NewSession()
 
-	err := dbHandler.DB.Create(entity)
-	if err != nil {
+	if err := dbHandler.DB.Create(entity); err != nil {
 		return NewDBError(err.Error())
 	}
 	return nil
@@ -33,8 +32,7 @@ func (dbHandler DatabaseAccessImpl) FindById(id interface{}) (interface{}, error
 func (dbHandler DatabaseAccessImpl) Update(entity interface{}) error {
 	dbHandler.DB.NewSession()
 
-	err := dbHandler.DB.Save(entity)
-	if err != nil {
+	if err := dbHandler.DB.Update(entity); err != nil {
 		return NewDBError(err.Error())
 	}
 	return nil

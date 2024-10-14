@@ -29,8 +29,8 @@ func (dbWrapper *GormDBWrapper) First(dest interface{}, conds ...interface{}) er
 	return dbWrapper.DB.First(dest, conds).Error
 }
 
-func (dbWrapper *GormDBWrapper) Save(entity interface{}) error {
-	return dbWrapper.DB.Save(entity).Error
+func (dbWrapper *GormDBWrapper) Update(entity interface{}) error {
+	return dbWrapper.DB.Model(entity).Omit("id", "created_at", "deleted_at").Updates(entity).Error
 }
 
 func (dbWrapper *GormDBWrapper) Find(dest interface{}, conds ...interface{}) error {
