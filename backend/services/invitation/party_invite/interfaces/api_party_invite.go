@@ -7,7 +7,7 @@ import (
 )
 
 func NewPartyInviteRouter(router *mux.Router, controller domains.IPartyInviteController) {
-	r := router.PathPrefix("/partyAttendance").Subrouter()
+	r := router.PathPrefix("/partyAttendanceManager").Subrouter()
 
 	r.Use(jwt.ValidateJWTMiddleware)
 

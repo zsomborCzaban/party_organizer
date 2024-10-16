@@ -8,12 +8,14 @@ dto-k removolasa a useren kivul
 
 admin user should have id 1, otherwise it will create buggs
 
-auth party service (description in comments in api_party_service)
-
-At update check of original record's organizer/creator ids have been changed
-
 refactor party_invites tabel to be the join table for party_participants
 
 implement omitupdates?
 
-contributions doesnt need party objectum
+auto delete on parties after they have been hosted
+
+leave and kick from party implementation
+
+delete parties (maybe)
+
+rename party_invites to partyAttandanceManager

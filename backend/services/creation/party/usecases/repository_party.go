@@ -23,8 +23,24 @@ func NewPartyRepository(databaseAccessManager db.IDatabaseAccessManager) domains
 
 func (pr PartyRepository) AddUserToParty(party *domains.Party, user *userDomain.User) error {
 	party.Participants = append(party.Participants, *user)
-	if err3 := pr.UpdateParty(party); err3 != nil {
-		return err3
+	if err := pr.UpdateParty(party); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (pr PartyRepository) RemoveUserFromParty(party *domains.Party, user *userDomain.User) error {
+	var participants []userDomain.User
+	for _, participant := range party.Participants {
+		if participant.ID != user.ID {
+			participants = append(participants, *user)
+		}
+	}
+
+	party.Participants = participants
+	if err := pr.UpdateParty(party); err != nil {
+		return err
 	}
 
 	return nil
