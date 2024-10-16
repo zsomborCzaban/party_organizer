@@ -6,4 +6,5 @@ const (
 	FailedValidation    = "request failed validation"
 	InternalServerError = "internal server error"
 	InvalidCredentials  = "invalid or insufficient credentials"
+	UNAUTHORIZED        = "you are not authorized for this action"
 )

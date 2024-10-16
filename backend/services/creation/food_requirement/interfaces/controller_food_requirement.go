@@ -114,7 +114,7 @@ func (fc FoodRequirementController) UpdateController(w http.ResponseWriter, r *h
 
 func (fc FoodRequirementController) DeleteController(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	id, err := strconv.ParseUint(vars["id"], 10, 32)
+	foodReqId, err := strconv.ParseUint(vars["id"], 10, 32)
 	if err != nil {
 		br := api.ErrorBadRequest(domains.BadRequest)
 
@@ -122,7 +122,15 @@ func (fc FoodRequirementController) DeleteController(w http.ResponseWriter, r *h
 		return
 	}
 
-	resp := fc.FoodRequirementService.DeleteFoodRequirement(uint(id))
+	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	if err2 != nil {
+		br := api.ErrorBadRequest(err2.Error())
+
+		br.Send(w)
+		return
+	}
+
+	resp := fc.FoodRequirementService.DeleteFoodRequirement(uint(foodReqId), userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging

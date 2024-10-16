@@ -4,20 +4,22 @@ import (
 	"github.com/zsomborCzaban/party_organizer/common/api"
 	"github.com/zsomborCzaban/party_organizer/services/creation/drink_requirement/domains"
 	partyDomains "github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
-	"gorm.io/gorm"
+	drinkContributionDomains "github.com/zsomborCzaban/party_organizer/services/interaction/drink_contributions/domains"
 )
 
 type DrinkRequirementService struct {
-	DrinkRequirementRepository domains.IDrinkRequirementRepository
-	Validator                  api.IValidator
-	PartyRepository            partyDomains.IPartyRepository
+	DrinkRequirementRepository  domains.IDrinkRequirementRepository
+	Validator                   api.IValidator
+	PartyRepository             partyDomains.IPartyRepository
+	DrinkContributionRepository drinkContributionDomains.IDrinkContributionRepository
 }
 
-func NewDrinkRequirementService(repository domains.IDrinkRequirementRepository, validator api.IValidator, partyRepository partyDomains.IPartyRepository) domains.IDrinkRequirementService {
+func NewDrinkRequirementService(repository domains.IDrinkRequirementRepository, validator api.IValidator, partyRepository partyDomains.IPartyRepository, drinkContributionRepository drinkContributionDomains.IDrinkContributionRepository) domains.IDrinkRequirementService {
 	return &DrinkRequirementService{
-		DrinkRequirementRepository: repository,
-		Validator:                  validator,
-		PartyRepository:            partyRepository,
+		DrinkRequirementRepository:  repository,
+		Validator:                   validator,
+		PartyRepository:             partyRepository,
+		DrinkContributionRepository: drinkContributionRepository,
 	}
 }
 
@@ -79,16 +81,24 @@ func (ds DrinkRequirementService) UpdateDrinkRequirement(drinkRequirementDTO dom
 	return api.Success("update_success")
 }
 
-func (ds DrinkRequirementService) DeleteDrinkRequirement(id uint) api.IResponse {
-	//will only be called by autodelete
-	//bc the repository layer only checks for id
-	drinkRequirement := &domains.DrinkRequirement{
-		Model: gorm.Model{ID: id},
+func (ds DrinkRequirementService) DeleteDrinkRequirement(drinkReqId, userId uint) api.IResponse {
+	drinkRequirement, err := ds.DrinkRequirementRepository.FindById(drinkReqId)
+	if err != nil {
+		return api.ErrorBadRequest(err.Error())
 	}
 
-	err := ds.DrinkRequirementRepository.DeleteDrinkRequirement(drinkRequirement)
-	if err != nil {
-		return api.ErrorInternalServerError(err)
+	if !drinkRequirement.Party.CanBeOrganizedBy(userId) {
+		return api.ErrorUnauthorized(domains.UNAUTHORIZED)
+	}
+
+	//todo: put this in transaction
+	if err2 := ds.DrinkContributionRepository.DeleteByReqId(drinkReqId); err2 != nil {
+		return api.ErrorInternalServerError(err2.Error())
+	}
+
+	err3 := ds.DrinkRequirementRepository.DeleteDrinkRequirement(drinkRequirement)
+	if err3 != nil {
+		return api.ErrorInternalServerError(err3)
 	}
 	return api.Success("delete_success")
 }

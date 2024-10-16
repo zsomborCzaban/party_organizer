@@ -5,12 +5,13 @@ type IDatabase interface {
 	AutoMigrate(dst ...interface{}) error
 	//AppendAssociation(entity, associatedEntity interface{}, associationName string) error
 
-	Create(value interface{}) error
+	Create(entity interface{}) error
 	First(dest interface{}, conds ...interface{}) error
 	Find(dest interface{}, conds ...interface{}) error
-	Update(value interface{}) error
-	Save(value interface{}) error
-	Delete(value interface{}, conds ...interface{}) error
+	Update(entity interface{}) error
+	Save(entity interface{}) error
+	Delete(entity interface{}, conds ...interface{}) error
+	//DeleteAssociation(entity interface{}, association string) error
 	ProcessWhereStatements(conds []QueryParameter)
 	Many2ManyQueryId(dest interface{}, cond Many2ManyQueryParameter) error
 }

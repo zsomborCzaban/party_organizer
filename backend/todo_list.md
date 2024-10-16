@@ -15,3 +15,5 @@ At update check of original record's organizer/creator ids have been changed
 refactor party_invites tabel to be the join table for party_participants
 
 implement omitupdates?
+
+contributions doesnt need party objectum

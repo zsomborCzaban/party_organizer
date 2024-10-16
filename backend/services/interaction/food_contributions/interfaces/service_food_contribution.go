@@ -54,7 +54,6 @@ func (ds FoodContributionService) Create(contribution domains.FoodContribution, 
 
 	contribution.ContributorId = userId
 	contribution.Contributor = *contributor
-	contribution.Party = party
 	contribution.FoodReq = *foodReq
 
 	if err5 := ds.ContributionRepository.Create(&contribution); err5 != nil {
@@ -96,7 +95,6 @@ func (ds FoodContributionService) Update(contribution domains.FoodContribution, 
 	contribution.ContributorId = oldContribution.ContributorId
 	contribution.Contributor = oldContribution.Contributor
 	contribution.PartyId = party.ID
-	contribution.Party = party
 	contribution.FoodReq = *foodReq
 
 	if err6 := ds.ContributionRepository.Create(&contribution); err6 != nil {
@@ -112,7 +110,7 @@ func (ds FoodContributionService) Delete(contributionId, userId uint) api.IRespo
 		return api.ErrorBadRequest(err.Error())
 	}
 
-	if userId != contribution.ContributorId && userId != contribution.Party.OrganizerID && userId != adminUser.ADMIN_USER_ID {
+	if userId != contribution.ContributorId && userId != contribution.FoodReq.Party.OrganizerID && userId != adminUser.ADMIN_USER_ID {
 		return api.ErrorUnauthorized("cannot delete other people's contribution")
 	}
 

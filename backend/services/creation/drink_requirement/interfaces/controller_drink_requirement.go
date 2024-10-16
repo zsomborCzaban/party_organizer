@@ -113,7 +113,7 @@ func (dc DrinkRequirementController) UpdateController(w http.ResponseWriter, r *
 
 func (dc DrinkRequirementController) DeleteController(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	id, err := strconv.ParseUint(vars["id"], 10, 32)
+	drinkReqId, err := strconv.ParseUint(vars["id"], 10, 32)
 	if err != nil {
 		br := api.ErrorBadRequest(domains.BadRequest)
 
@@ -121,7 +121,15 @@ func (dc DrinkRequirementController) DeleteController(w http.ResponseWriter, r *
 		return
 	}
 
-	resp := dc.DrinkRequirementService.DeleteDrinkRequirement(uint(id))
+	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	if err2 != nil {
+		br := api.ErrorBadRequest(err2.Error())
+
+		br.Send(w)
+		return
+	}
+
+	resp := dc.DrinkRequirementService.DeleteDrinkRequirement(uint(drinkReqId), userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging

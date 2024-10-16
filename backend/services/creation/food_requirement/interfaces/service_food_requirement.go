@@ -4,20 +4,22 @@ import (
 	"github.com/zsomborCzaban/party_organizer/common/api"
 	"github.com/zsomborCzaban/party_organizer/services/creation/food_requirement/domains"
 	partyDomains "github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
-	"gorm.io/gorm"
+	foodContributionDomains "github.com/zsomborCzaban/party_organizer/services/interaction/food_contributions/domains"
 )
 
 type FoodRequirementService struct {
-	FoodRequirementRepository domains.IFoodRequirementRepository
-	Validator                 api.IValidator
-	PartyRepository           partyDomains.IPartyRepository
+	FoodRequirementRepository  domains.IFoodRequirementRepository
+	Validator                  api.IValidator
+	PartyRepository            partyDomains.IPartyRepository
+	FoodContributionRepository foodContributionDomains.IFoodContributionRepository
 }
 
-func NewFoodRequirementService(repository domains.IFoodRequirementRepository, validator api.IValidator, partyRepository partyDomains.IPartyRepository) domains.IFoodRequirementService {
+func NewFoodRequirementService(repository domains.IFoodRequirementRepository, validator api.IValidator, partyRepository partyDomains.IPartyRepository, foodContributionRepository foodContributionDomains.IFoodContributionRepository) domains.IFoodRequirementService {
 	return &FoodRequirementService{
-		FoodRequirementRepository: repository,
-		Validator:                 validator,
-		PartyRepository:           partyRepository,
+		FoodRequirementRepository:  repository,
+		Validator:                  validator,
+		PartyRepository:            partyRepository,
+		FoodContributionRepository: foodContributionRepository,
 	}
 }
 
@@ -80,16 +82,24 @@ func (fs FoodRequirementService) UpdateFoodRequirement(foodRequirementDTO domain
 	return api.Success("update_success")
 }
 
-func (fs FoodRequirementService) DeleteFoodRequirement(id uint) api.IResponse {
-	//will only be called by the auto delete
-	//bc the repository layer only checks for id
-	foodRequirement := &domains.FoodRequirement{
-		Model: gorm.Model{ID: id},
+func (fs FoodRequirementService) DeleteFoodRequirement(foodReqId, userId uint) api.IResponse {
+	foodRequirement, err := fs.FoodRequirementRepository.FindById(foodReqId)
+	if err != nil {
+		return api.ErrorBadRequest(err.Error())
 	}
 
-	err := fs.FoodRequirementRepository.DeleteFoodRequirement(foodRequirement)
-	if err != nil {
-		return api.ErrorInternalServerError(err)
+	if !foodRequirement.Party.CanBeOrganizedBy(userId) {
+		return api.ErrorUnauthorized(domains.UNAUTHORIZED)
+	}
+
+	//todo: put this in transaction
+	if err2 := fs.FoodContributionRepository.DeleteByReqId(foodReqId); err2 != nil {
+		return api.ErrorInternalServerError(err2.Error())
+	}
+
+	err3 := fs.FoodRequirementRepository.DeleteFoodRequirement(foodRequirement)
+	if err3 != nil {
+		return api.ErrorInternalServerError(err3)
 	}
 	return api.Success("delete_success")
 }

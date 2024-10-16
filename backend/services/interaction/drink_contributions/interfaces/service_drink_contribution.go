@@ -54,7 +54,6 @@ func (ds DrinkContributionService) Create(contribution domains.DrinkContribution
 
 	contribution.ContributorId = userId
 	contribution.Contributor = *contributor
-	contribution.Party = party
 	contribution.PartyId = party.ID
 	contribution.DrinkReq = *drinkReq
 
@@ -80,7 +79,7 @@ func (ds DrinkContributionService) Update(contribution domains.DrinkContribution
 	if err3 != nil {
 		return api.ErrorBadRequest(err3.Error())
 	}
-	party := oldContribution.Party
+	party := drinkReq.Party
 
 	if !party.CanBeAccessedBy(userId) {
 		return api.ErrorUnauthorized(domains.NO_ACCESS_TO_PARTY)
@@ -97,7 +96,6 @@ func (ds DrinkContributionService) Update(contribution domains.DrinkContribution
 	contribution.ContributorId = oldContribution.ContributorId
 	contribution.Contributor = oldContribution.Contributor
 	contribution.PartyId = party.ID
-	contribution.Party = party
 	contribution.DrinkReq = *drinkReq
 
 	if err6 := ds.ContributionRepository.Create(&contribution); err6 != nil {
@@ -113,7 +111,7 @@ func (ds DrinkContributionService) Delete(contributionId, userId uint) api.IResp
 		return api.ErrorBadRequest(err.Error())
 	}
 
-	if userId != contribution.ContributorId && userId != contribution.Party.OrganizerID && userId != adminUser.ADMIN_USER_ID {
+	if userId != contribution.ContributorId && userId != contribution.DrinkReq.Party.OrganizerID && userId != adminUser.ADMIN_USER_ID {
 		return api.ErrorUnauthorized("cannot delete other people's contribution")
 	}
 

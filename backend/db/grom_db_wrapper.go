@@ -41,9 +41,13 @@ func (dbWrapper *GormDBWrapper) Find(dest interface{}, conds ...interface{}) err
 	return dbWrapper.DB.Find(dest, conds).Error
 }
 
-func (dbWrapper *GormDBWrapper) Delete(value interface{}, conds ...interface{}) error {
-	return dbWrapper.DB.Delete(value, conds).Error
+func (dbWrapper *GormDBWrapper) Delete(entity interface{}, conds ...interface{}) error {
+	return dbWrapper.DB.Delete(entity, conds).Error
 }
+
+//func (dbWrapper *GormDBWrapper) DeleteAssociation(entity interface{}, association string) error {
+//	return dbWrapper.DB.Model(entity).Association(association).Unscoped().Clear()
+//}
 
 func (dbWrapper *GormDBWrapper) ProcessWhereStatements(conds []QueryParameter) {
 	for _, queryParam := range conds {

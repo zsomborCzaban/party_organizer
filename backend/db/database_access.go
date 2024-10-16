@@ -69,6 +69,27 @@ func (dbHandler DatabaseAccessImpl) Delete(entity interface{}) error {
 	return nil
 }
 
+func (dbHandler DatabaseAccessImpl) BatchDelete(conds []QueryParameter) error {
+	dbHandler.DB.NewSession()
+	dbHandler.DB.ProcessWhereStatements(conds)
+
+	entity := dbHandler.DBEntityProvider.Create()
+	err := dbHandler.DB.Delete(entity)
+	if err != nil {
+		return NewDBError(err.Error())
+	}
+	return nil
+}
+
+//func (dbHandler DatabaseAccessImpl) DeleteAssociation(entity interface{}, association string) error {
+//	dbHandler.DB.NewSession()
+//
+//	if err := dbHandler.DB.DeleteAssociation(entity, association); err != nil {
+//		return NewDBError(err.Error())
+//	}
+//	return nil
+//}
+
 func (dbHandler DatabaseAccessImpl) Query(conds []QueryParameter) (interface{}, error) {
 	dbHandler.DB.NewSession()
 	dbHandler.DB.ProcessWhereStatements(conds)

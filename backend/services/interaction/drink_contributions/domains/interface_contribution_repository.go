@@ -5,6 +5,7 @@ type IDrinkContributionRepository interface {
 	Update(*DrinkContribution) error
 	Delete(*DrinkContribution) error
 
+	DeleteByReqId(foodReqId uint) error
 	FindAllBy(columnNames []string, values []interface{}) (*[]DrinkContribution, error)
 	FindById(uint) (*DrinkContribution, error)
 }

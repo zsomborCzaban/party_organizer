@@ -50,35 +50,30 @@ func main() {
 	vali := api.NewValidator(validator.New())
 
 	userRepository := userUsecases.NewUserRepository(dbAccess)
-	userService := userInterfaces.NewUserService(userRepository, vali)
-	userController := userInterfaces.NewUserController(userService)
-
 	partyRepository := partyUsecases.NewPartyRepository(dbAccess)
-	partyService := partyInterfaces.NewPartyService(partyRepository, vali, userRepository)
-	partyController := partyInterfaces.NewPartyController(partyService)
-
 	drinkRequirementRepository := drinkRequirementUsecases.NewDrinkRequirementRepository(dbAccess)
-	drinkRequirementService := drinkRequirementInterfaces.NewDrinkRequirementService(drinkRequirementRepository, vali, partyRepository)
-	drinkRequirementController := drinkRequirementInterfaces.NewDrinkRequirementController(drinkRequirementService)
-
 	foodRequirementRepository := foodRequirementUsecases.NewFoodRequirementRepository(dbAccess)
-	foodRequirementService := foodRequirementInterfaces.NewFoodRequirementService(foodRequirementRepository, vali, partyRepository)
-	foodRequirementController := foodRequirementInterfaces.NewFoodRequirementController(foodRequirementService)
-
 	friendInviteRepository := friendInvitationUsecases.NewFriendInviteRepository(dbAccess)
-	friendInviteService := friendInvitationInterfaces.NewFriendInviteService(friendInviteRepository, userRepository)
-	friendInviteController := friendInvitationInterfaces.NewFriendInviteController(friendInviteService)
-
 	partyInviteRepository := partyInvitationUsecases.NewPartyInviteRepository(dbAccess)
-	partyInviteService := partyInvitationInterfaces.NewPartyInviteService(partyInviteRepository, userRepository, partyRepository)
-	partyInviteController := partyInvitationInterfaces.NewPartyInviteController(partyInviteService)
-
 	drinkContributionRepository := drinkContributionUsecases.NewDrinkContributionRepository(dbAccess)
-	drinkContributionService := drinkContributionInterfaces.NewDrinkContributionService(drinkContributionRepository, vali, userRepository, partyRepository, drinkRequirementRepository)
-	drinkContributionController := drinkContributionInterfaces.NewDrinkContributionController(drinkContributionService)
-
 	foodContributionRepository := foodContributionUsecases.NewFoodContributionRepository(dbAccess)
+
+	userService := userInterfaces.NewUserService(userRepository, vali)
+	partyService := partyInterfaces.NewPartyService(partyRepository, vali, userRepository)
+	drinkRequirementService := drinkRequirementInterfaces.NewDrinkRequirementService(drinkRequirementRepository, vali, partyRepository, drinkContributionRepository)
+	foodRequirementService := foodRequirementInterfaces.NewFoodRequirementService(foodRequirementRepository, vali, partyRepository, foodContributionRepository)
+	friendInviteService := friendInvitationInterfaces.NewFriendInviteService(friendInviteRepository, userRepository)
+	partyInviteService := partyInvitationInterfaces.NewPartyInviteService(partyInviteRepository, userRepository, partyRepository)
+	drinkContributionService := drinkContributionInterfaces.NewDrinkContributionService(drinkContributionRepository, vali, userRepository, partyRepository, drinkRequirementRepository)
 	foodContributionService := foodContributionInterfaces.NewFoodContributionService(foodContributionRepository, vali, userRepository, partyRepository, foodRequirementRepository)
+
+	userController := userInterfaces.NewUserController(userService)
+	partyController := partyInterfaces.NewPartyController(partyService)
+	drinkRequirementController := drinkRequirementInterfaces.NewDrinkRequirementController(drinkRequirementService)
+	foodRequirementController := foodRequirementInterfaces.NewFoodRequirementController(foodRequirementService)
+	friendInviteController := friendInvitationInterfaces.NewFriendInviteController(friendInviteService)
+	partyInviteController := partyInvitationInterfaces.NewPartyInviteController(partyInviteService)
+	drinkContributionController := drinkContributionInterfaces.NewDrinkContributionController(drinkContributionService)
 	foodContributionController := foodContributionInterfaces.NewFoodContributionController(foodContributionService)
 
 	userInterfaces.NewUserRouter(apiRouter, userController)
