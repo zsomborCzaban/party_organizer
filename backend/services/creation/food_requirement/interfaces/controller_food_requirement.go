@@ -50,7 +50,7 @@ func (fc FoodRequirementController) CreateController(w http.ResponseWriter, r *h
 
 func (fc FoodRequirementController) GetController(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	id, err := strconv.ParseUint(vars["id"], 10, 32)
+	foodReqId, err := strconv.ParseUint(vars["id"], 10, 32)
 	if err != nil {
 		br := api.ErrorBadRequest(domains.BadRequest)
 
@@ -58,7 +58,15 @@ func (fc FoodRequirementController) GetController(w http.ResponseWriter, r *http
 		return
 	}
 
-	resp := fc.FoodRequirementService.GetFoodRequirement(uint(id))
+	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	if err2 != nil {
+		br := api.ErrorBadRequest(domains.BadRequest)
+
+		br.Send(w)
+		return
+	}
+
+	resp := fc.FoodRequirementService.GetFoodRequirement(uint(foodReqId), userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging

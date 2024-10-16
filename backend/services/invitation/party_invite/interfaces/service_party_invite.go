@@ -167,7 +167,9 @@ func (ps PartyInviteService) JoinPublicParty(partyId, userId uint) api.IResponse
 		return api.ErrorBadRequest(err2.Error())
 	}
 
-	//todo: check if user already in party
+	if party.HasParticipant(userId) {
+		return api.Success(party)
+	}
 
 	invite, err3 := ps.PartyInviteRepository.FindByIds(userId, partyId)
 	if err3 != nil {
@@ -216,7 +218,9 @@ func (ps PartyInviteService) JoinPrivateParty(partyId, userId uint, accessCode s
 		return api.ErrorBadRequest(err2.Error())
 	}
 
-	//todo: check if user already in party
+	if party.HasParticipant(userId) {
+		return api.Success(party)
+	}
 
 	invite, err3 := ps.PartyInviteRepository.FindByIds(userId, partyId)
 	if err3 != nil {

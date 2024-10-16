@@ -28,7 +28,7 @@ func (fr FoodRequirementRepository) CreateFoodRequirement(foodRequirement *domai
 
 }
 
-func (fr FoodRequirementRepository) GetFoodRequirement(id uint) (*domains.FoodRequirement, error) {
+func (fr FoodRequirementRepository) FindById(id uint) (*domains.FoodRequirement, error) {
 	foodRequirement, err := fr.DbAccess.FindById(id)
 	if err != nil {
 		return nil, err

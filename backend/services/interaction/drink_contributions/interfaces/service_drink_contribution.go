@@ -38,24 +38,24 @@ func (ds DrinkContributionService) Create(contribution domains.DrinkContribution
 		return api.ErrorBadRequest(err2.Error())
 	}
 
-	party, err3 := ds.PartyRepository.FindById(contribution.PartyId)
+	drinkReq, err3 := ds.DrinkReqRepository.FindById(contribution.DrinkReqId)
 	if err3 != nil {
 		return api.ErrorBadRequest(err3.Error())
 	}
+	party := drinkReq.Party
 
-	drinkReq, err4 := ds.DrinkReqRepository.GetDrinkRequirement(contribution.DrinkReqId)
-	if err4 != nil {
-		return api.ErrorBadRequest(err4.Error())
+	if !party.CanBeAccessedBy(userId) {
+		return api.ErrorUnauthorized(domains.NO_ACCESS_TO_PARTY)
 	}
 
-	//todo: check if the user is in the party
 	if drinkReq.PartyID != contribution.PartyId {
 		return api.ErrorBadRequest("drink requirement doesnt belong to party")
 	}
 
 	contribution.ContributorId = userId
 	contribution.Contributor = *contributor
-	contribution.Party = *party
+	contribution.Party = party
+	contribution.PartyId = party.ID
 	contribution.DrinkReq = *drinkReq
 
 	if err5 := ds.ContributionRepository.Create(&contribution); err5 != nil {
@@ -76,22 +76,16 @@ func (ds DrinkContributionService) Update(contribution domains.DrinkContribution
 		return api.ErrorBadRequest(err2.Error())
 	}
 
-	contributor, err3 := ds.UserRepository.FindById(userId)
+	drinkReq, err3 := ds.DrinkReqRepository.FindById(contribution.DrinkReqId)
 	if err3 != nil {
 		return api.ErrorBadRequest(err3.Error())
 	}
+	party := oldContribution.Party
 
-	party, err4 := ds.PartyRepository.FindById(contribution.PartyId)
-	if err4 != nil {
-		return api.ErrorBadRequest(err4.Error())
+	if !party.CanBeAccessedBy(userId) {
+		return api.ErrorUnauthorized(domains.NO_ACCESS_TO_PARTY)
 	}
 
-	drinkReq, err5 := ds.DrinkReqRepository.GetDrinkRequirement(contribution.DrinkReqId)
-	if err5 != nil {
-		return api.ErrorBadRequest(err5.Error())
-	}
-
-	//todo: check if the user is in the party
 	if oldContribution.ContributorId != userId && userId != adminUser.ADMIN_USER_ID {
 		return api.ErrorBadRequest("cannot update other people's contribution")
 	}
@@ -100,9 +94,10 @@ func (ds DrinkContributionService) Update(contribution domains.DrinkContribution
 		return api.ErrorBadRequest("drink requirement doesnt belong to party")
 	}
 
-	contribution.ContributorId = userId
-	contribution.Contributor = *contributor
-	contribution.Party = *party
+	contribution.ContributorId = oldContribution.ContributorId
+	contribution.Contributor = oldContribution.Contributor
+	contribution.PartyId = party.ID
+	contribution.Party = party
 	contribution.DrinkReq = *drinkReq
 
 	if err6 := ds.ContributionRepository.Create(&contribution); err6 != nil {
@@ -118,7 +113,7 @@ func (ds DrinkContributionService) Delete(contributionId, userId uint) api.IResp
 		return api.ErrorBadRequest(err.Error())
 	}
 
-	if contribution.ContributorId != userId && userId != adminUser.ADMIN_USER_ID {
+	if userId != contribution.ContributorId && userId != contribution.Party.OrganizerID && userId != adminUser.ADMIN_USER_ID {
 		return api.ErrorUnauthorized("cannot delete other people's contribution")
 	}
 
@@ -130,7 +125,14 @@ func (ds DrinkContributionService) Delete(contributionId, userId uint) api.IResp
 }
 
 func (ds DrinkContributionService) GetByPartyIdAndContributorId(partyId, contributorId, userId uint) api.IResponse {
-	//todo: check if user in party
+	party, err := ds.PartyRepository.FindById(partyId)
+	if err != nil {
+		return api.ErrorBadRequest(err.Error())
+	}
+
+	if party.CanBeAccessedBy(userId) {
+		return api.ErrorUnauthorized(domains.NO_ACCESS_TO_PARTY)
+	}
 
 	columnNames := []string{"party_id", "contributor_id"}
 	values := []interface{}{partyId, contributorId}
@@ -144,7 +146,14 @@ func (ds DrinkContributionService) GetByPartyIdAndContributorId(partyId, contrib
 }
 
 func (ds DrinkContributionService) GetByRequirementId(requirementId, userId uint) api.IResponse {
-	//todo: check if user in party
+	requirement, err := ds.DrinkReqRepository.FindById(requirementId)
+	if err != nil {
+		return api.ErrorBadRequest(err.Error())
+	}
+
+	if requirement.Party.CanBeAccessedBy(userId) {
+		return api.ErrorUnauthorized(domains.NO_ACCESS_TO_PARTY)
+	}
 
 	columnNames := []string{"drink_req_id"}
 	values := []interface{}{requirementId}
@@ -158,7 +167,14 @@ func (ds DrinkContributionService) GetByRequirementId(requirementId, userId uint
 }
 
 func (ds DrinkContributionService) GetByPartyId(partyId, userId uint) api.IResponse {
-	//todo: check if user in party
+	party, err := ds.PartyRepository.FindById(partyId)
+	if err != nil {
+		return api.ErrorBadRequest(err.Error())
+	}
+
+	if party.CanBeAccessedBy(userId) {
+		return api.ErrorUnauthorized(domains.NO_ACCESS_TO_PARTY)
+	}
 
 	columnNames := []string{"party_id"}
 	values := []interface{}{partyId}

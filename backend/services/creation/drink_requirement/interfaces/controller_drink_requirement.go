@@ -50,7 +50,7 @@ func (dc DrinkRequirementController) CreateController(w http.ResponseWriter, r *
 
 func (dc DrinkRequirementController) GetController(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	id, err := strconv.ParseUint(vars["id"], 10, 32)
+	drinkReqId, err := strconv.ParseUint(vars["id"], 10, 32)
 	if err != nil {
 		br := api.ErrorBadRequest(domains.BadRequest)
 
@@ -58,7 +58,15 @@ func (dc DrinkRequirementController) GetController(w http.ResponseWriter, r *htt
 		return
 	}
 
-	resp := dc.DrinkRequirementService.GetDrinkRequirement(uint(id))
+	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	if err2 != nil {
+		br := api.ErrorBadRequest(domains.BadRequest)
+
+		br.Send(w)
+		return
+	}
+
+	resp := dc.DrinkRequirementService.GetDrinkRequirement(uint(drinkReqId), userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging

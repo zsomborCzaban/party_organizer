@@ -9,11 +9,11 @@ import (
 )
 
 type PartyRepository struct {
-	DbAccess db.IDatabaseAccess
+	DbAccess db.IDatabaseAccess //party DbAccess
 }
 
 func NewPartyRepository(databaseAccessManager db.IDatabaseAccessManager) domains.IPartyRepository {
-	entityProvider := EntityProvider{}
+	entityProvider := PartyEntityProvider{}
 	databaseAccess := databaseAccessManager.RegisterEntity("partyProvider", entityProvider)
 
 	return &PartyRepository{
@@ -154,13 +154,13 @@ func (pr PartyRepository) DeleteParty(party *domains.Party) error {
 	return nil
 }
 
-type EntityProvider struct {
+type PartyEntityProvider struct {
 }
 
-func (e EntityProvider) Create() interface{} {
+func (e PartyEntityProvider) Create() interface{} {
 	return &domains.Party{}
 }
 
-func (e EntityProvider) CreateArray() interface{} {
+func (e PartyEntityProvider) CreateArray() interface{} {
 	return &[]domains.Party{}
 }

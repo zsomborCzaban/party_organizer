@@ -58,7 +58,15 @@ func (pc PartyController) GetController(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	resp := pc.PartyService.GetParty(uint(id))
+	userId, err := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	if err != nil {
+		br := api.ErrorBadRequest(err.Error())
+
+		br.Send(w)
+		return
+	}
+
+	resp := pc.PartyService.GetParty(uint(id), userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging

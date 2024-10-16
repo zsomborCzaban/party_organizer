@@ -34,7 +34,7 @@ func (ds DrinkRequirementService) CreateDrinkRequirement(drinkRequirementDTO dom
 		return api.ErrorBadRequest("Party id doesnt exists")
 	}
 
-	if party.OrganizerID != userId && userId != 0 {
+	if party.CanBeOrganizedBy(userId) {
 		return api.ErrorUnauthorized("cannot create drinkRequirements for other peoples party")
 	}
 
@@ -48,11 +48,14 @@ func (ds DrinkRequirementService) CreateDrinkRequirement(drinkRequirementDTO dom
 	return api.Success(drinkRequirement.TransformToDrinkRequirementDTO())
 }
 
-func (ds DrinkRequirementService) GetDrinkRequirement(id uint) api.IResponse {
-	drinkRequirement, err := ds.DrinkRequirementRepository.GetDrinkRequirement(id)
-
+func (ds DrinkRequirementService) GetDrinkRequirement(drinkReqId, userId uint) api.IResponse {
+	drinkRequirement, err := ds.DrinkRequirementRepository.FindById(drinkReqId)
 	if err != nil {
 		return api.ErrorInternalServerError(err)
+	}
+
+	if !drinkRequirement.Party.CanBeAccessedBy(userId) {
+		return api.ErrorUnauthorized("you are not in the party")
 	}
 
 	return api.Success(drinkRequirement.TransformToDrinkRequirementDTO())
@@ -77,6 +80,7 @@ func (ds DrinkRequirementService) UpdateDrinkRequirement(drinkRequirementDTO dom
 }
 
 func (ds DrinkRequirementService) DeleteDrinkRequirement(id uint) api.IResponse {
+	//will only be called by autodelete
 	//bc the repository layer only checks for id
 	drinkRequirement := &domains.DrinkRequirement{
 		Model: gorm.Model{ID: id},
@@ -95,8 +99,8 @@ func (ds DrinkRequirementService) GetByPartyId(partyId, userId uint) api.IRespon
 		return api.ErrorBadRequest("party not found")
 	}
 
-	if party.OrganizerID != userId && userId != 0 {
-		return api.ErrorUnauthorized("you are not the party organizer")
+	if !party.CanBeAccessedBy(userId) {
+		return api.ErrorUnauthorized("you are not in the party")
 	}
 
 	drinkReqs, err3 := ds.DrinkRequirementRepository.GetByPartyId(partyId)

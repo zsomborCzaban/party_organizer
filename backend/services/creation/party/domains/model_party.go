@@ -1,6 +1,7 @@
 package domains
 
 import (
+	"github.com/zsomborCzaban/party_organizer/common/adminUser"
 	"github.com/zsomborCzaban/party_organizer/services/user/domains"
 	"gorm.io/gorm"
 	"time"
@@ -31,4 +32,25 @@ func (p *Party) TransformToPartyDTO() *PartyDTO {
 		AccessCode:        p.AccessCode,
 		OrganizerID:       p.OrganizerID,
 	}
+}
+
+func (p *Party) CanBeAccessedBy(userId uint) bool {
+	return !p.Private || p.HasParticipant(userId) || userId == adminUser.ADMIN_USER_ID
+}
+
+func (p *Party) CanBeOrganizedBy(userId uint) bool {
+	return p.OrganizerID == userId || userId == adminUser.ADMIN_USER_ID
+}
+
+func (p *Party) HasParticipant(userId uint) bool {
+	if p.OrganizerID == userId {
+		return true
+	}
+
+	for _, participant := range p.Participants {
+		if participant.ID == userId {
+			return true
+		}
+	}
+	return false
 }

@@ -28,7 +28,7 @@ func (dr DrinkRequirementRepository) CreateDrinkRequirement(drinkRequirement *do
 
 }
 
-func (dr DrinkRequirementRepository) GetDrinkRequirement(id uint) (*domains.DrinkRequirement, error) {
+func (dr DrinkRequirementRepository) FindById(id uint) (*domains.DrinkRequirement, error) {
 	drinkRequirement, err := dr.DbAccess.FindById(id)
 	if err != nil {
 		return nil, err

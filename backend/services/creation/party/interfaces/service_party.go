@@ -44,11 +44,14 @@ func (ps PartyService) CreateParty(partyDTO domains.PartyDTO, userId uint) api.I
 	return api.Success(party)
 }
 
-func (ps PartyService) GetParty(partyId uint) api.IResponse {
+func (ps PartyService) GetParty(partyId, userId uint) api.IResponse {
 	party, err := ps.PartyRepository.FindById(partyId)
-
 	if err != nil {
 		return api.ErrorInternalServerError(err.Error())
+	}
+
+	if !party.CanBeAccessedBy(userId) {
+		return api.ErrorUnauthorized("you have to be in the party for private parties")
 	}
 
 	return api.Success(party.TransformToPartyDTO())

@@ -34,7 +34,7 @@ func (fs FoodRequirementService) CreateFoodRequirement(foodRequirementDTO domain
 		return api.ErrorBadRequest("partyId does not exists")
 	}
 
-	if foodRequirement.PartyID != userId && userId != 0 {
+	if !party.CanBeOrganizedBy(userId) {
 		return api.ErrorUnauthorized("cannot create foodRequirement for other people's party")
 	}
 
@@ -48,8 +48,12 @@ func (fs FoodRequirementService) CreateFoodRequirement(foodRequirementDTO domain
 	return api.Success(foodRequirement.TransformToFoodRequirementDTO())
 }
 
-func (fs FoodRequirementService) GetFoodRequirement(id uint) api.IResponse {
-	foodRequirement, err := fs.FoodRequirementRepository.GetFoodRequirement(id)
+func (fs FoodRequirementService) GetFoodRequirement(foodReqId, userId uint) api.IResponse {
+	foodRequirement, err := fs.FoodRequirementRepository.FindById(foodReqId)
+
+	if foodRequirement.Party.CanBeAccessedBy(userId) {
+		return api.ErrorUnauthorized("you are not in the party")
+	}
 
 	if err != nil {
 		return api.ErrorInternalServerError(err)
@@ -77,6 +81,7 @@ func (fs FoodRequirementService) UpdateFoodRequirement(foodRequirementDTO domain
 }
 
 func (fs FoodRequirementService) DeleteFoodRequirement(id uint) api.IResponse {
+	//will only be called by the auto delete
 	//bc the repository layer only checks for id
 	foodRequirement := &domains.FoodRequirement{
 		Model: gorm.Model{ID: id},
@@ -95,8 +100,8 @@ func (fs FoodRequirementService) GetByPartyId(partyId, userId uint) api.IRespons
 		return api.ErrorBadRequest("party not found")
 	}
 
-	if party.OrganizerID != userId && userId != 0 {
-		return api.ErrorUnauthorized("you are not the party organizer")
+	if !party.CanBeAccessedBy(userId) {
+		return api.ErrorUnauthorized("you are not in the party")
 	}
 
 	foodReqs, err3 := fs.FoodRequirementRepository.GetByPartyId(partyId)
