@@ -7,6 +7,7 @@ type IPartyRepository interface {
 	GetPartiesByParticipantId(uint) (*[]Party, error)
 	GetPublicParties() (*[]Party, error)
 	AddUserToParty(*Party, *userDomain.User) error
+	RemoveUserFromParty(*Party, *userDomain.User) error
 
 	CreateParty(*Party) error
 	FindById(uint) (*Party, error)

@@ -48,12 +48,9 @@ func (ds FoodContributionService) Create(contribution domains.FoodContribution, 
 		return api.ErrorUnauthorized(domains.NO_ACCESS_TO_PARTY)
 	}
 
-	if foodReq.PartyID != contribution.PartyId {
-		return api.ErrorBadRequest("food requirement doesnt belong to party")
-	}
-
 	contribution.ContributorId = userId
 	contribution.Contributor = *contributor
+	contribution.PartyId = party.ID
 	contribution.FoodReq = *foodReq
 
 	if err5 := ds.ContributionRepository.Create(&contribution); err5 != nil {

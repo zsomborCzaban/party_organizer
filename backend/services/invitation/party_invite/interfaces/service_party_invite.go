@@ -3,21 +3,27 @@ package interfaces
 import (
 	"github.com/zsomborCzaban/party_organizer/common/api"
 	partyDomains "github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
+	drinkContributionDomains "github.com/zsomborCzaban/party_organizer/services/interaction/drink_contributions/domains"
+	foodContributionDomains "github.com/zsomborCzaban/party_organizer/services/interaction/food_contributions/domains"
 	"github.com/zsomborCzaban/party_organizer/services/invitation/party_invite/domains"
 	userDomain "github.com/zsomborCzaban/party_organizer/services/user/domains"
 )
 
 type PartyInviteService struct {
-	PartyInviteRepository domains.IPartyInviteRepository
-	UserRepository        userDomain.IUserRepository
-	PartyRepository       partyDomains.IPartyRepository
+	PartyInviteRepository       domains.IPartyInviteRepository
+	UserRepository              userDomain.IUserRepository
+	PartyRepository             partyDomains.IPartyRepository
+	FoodContributionRepository  foodContributionDomains.IFoodContributionRepository
+	DrinkContributionRepository drinkContributionDomains.IDrinkContributionRepository
 }
 
-func NewPartyInviteService(repo domains.IPartyInviteRepository, userRepo userDomain.IUserRepository, partyRepo partyDomains.IPartyRepository) domains.IPartyInviteService {
+func NewPartyInviteService(repo domains.IPartyInviteRepository, userRepo userDomain.IUserRepository, partyRepo partyDomains.IPartyRepository, fContrRepo foodContributionDomains.IFoodContributionRepository, dContrRepo drinkContributionDomains.IDrinkContributionRepository) domains.IPartyInviteService {
 	return &PartyInviteService{
-		PartyInviteRepository: repo,
-		UserRepository:        userRepo,
-		PartyRepository:       partyRepo,
+		PartyInviteRepository:       repo,
+		UserRepository:              userRepo,
+		PartyRepository:             partyRepo,
+		FoodContributionRepository:  fContrRepo,
+		DrinkContributionRepository: dContrRepo,
 	}
 }
 
@@ -35,13 +41,6 @@ func (ps PartyInviteService) Accept(invitedId, partyId uint) api.IResponse {
 		return api.Success(invite)
 	}
 
-	//todo: put this in a transaction
-
-	invite.State = domains.ACCEPTED
-	if err2 := ps.PartyInviteRepository.Update(invite); err2 != nil {
-		return api.ErrorInternalServerError(err2.Error())
-	}
-
 	invitedUser, err3 := ps.UserRepository.FindById(invitedId)
 	if err3 != nil {
 		return api.ErrorInternalServerError(err3.Error())
@@ -52,8 +51,14 @@ func (ps PartyInviteService) Accept(invitedId, partyId uint) api.IResponse {
 		return api.ErrorBadRequest(err4.Error())
 	}
 
-	if err5 := ps.PartyRepository.AddUserToParty(party, invitedUser); err4 != nil {
+	//todo: put this in a transaction
+	invite.State = domains.ACCEPTED
+	if err5 := ps.PartyInviteRepository.Update(invite); err5 != nil {
 		return api.ErrorInternalServerError(err5.Error())
+	}
+
+	if err6 := ps.PartyRepository.AddUserToParty(party, invitedUser); err6 != nil {
+		return api.ErrorInternalServerError(err6.Error())
 	}
 
 	return api.Success(invite)
@@ -245,5 +250,50 @@ func (ps PartyInviteService) JoinPrivateParty(partyId, userId uint, accessCode s
 		return api.ErrorInternalServerError(err5.Error())
 	}
 	return api.Success(party)
+}
 
+func (ps PartyInviteService) Kick(kickedId, userId, partyId uint) api.IResponse {
+	kickedUser, err := ps.UserRepository.FindById(kickedId)
+	if err != nil {
+		return api.ErrorInternalServerError(err.Error())
+	}
+
+	party, err3 := ps.PartyRepository.FindById(partyId)
+	if err3 != nil {
+		return api.ErrorBadRequest(err3.Error())
+	}
+
+	if !party.CanBeOrganizedBy(userId) && kickedId != userId {
+		return api.ErrorUnauthorized(domains.UNAUTHORIZED)
+	}
+	if party.OrganizerID == kickedId {
+		return api.ErrorUnauthorized("The organizer cannot leave the party.")
+	}
+	if !party.HasParticipant(kickedId) {
+		return api.Success("user kicked successfully")
+	}
+
+	invite, err4 := ps.PartyInviteRepository.FindByIds(kickedId, partyId)
+	if err4 != nil {
+		return api.ErrorInternalServerError(err4.Error())
+	}
+
+	//todo: put this in a transaction
+	if err5 := ps.FoodContributionRepository.DeleteByContributorId(kickedId); err5 != nil {
+		return api.ErrorInternalServerError(err5.Error())
+	}
+	if err6 := ps.DrinkContributionRepository.DeleteByContributorId(kickedId); err6 != nil {
+		return api.ErrorInternalServerError(err6.Error())
+	}
+
+	if err7 := ps.PartyRepository.RemoveUserFromParty(party, kickedUser); err7 != nil {
+		return api.ErrorInternalServerError(err7.Error())
+	}
+
+	invite.State = domains.DECLINED
+	if err8 := ps.PartyInviteRepository.Update(invite); err8 != nil {
+		return api.ErrorInternalServerError(err8.Error())
+	}
+
+	return api.Success("user kicked successfully")
 }

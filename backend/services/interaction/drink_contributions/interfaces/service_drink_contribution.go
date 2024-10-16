@@ -48,10 +48,6 @@ func (ds DrinkContributionService) Create(contribution domains.DrinkContribution
 		return api.ErrorUnauthorized(domains.NO_ACCESS_TO_PARTY)
 	}
 
-	if drinkReq.PartyID != contribution.PartyId {
-		return api.ErrorBadRequest("drink requirement doesnt belong to party")
-	}
-
 	contribution.ContributorId = userId
 	contribution.Contributor = *contributor
 	contribution.PartyId = party.ID

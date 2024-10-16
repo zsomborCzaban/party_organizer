@@ -11,8 +11,8 @@ type PartyDTO struct {
 	Place             string         `json:"place,omitempty" validate:"required,min=3"`
 	StartTime         time.Time      `json:"start_time,omitempty" validate:"required"`
 	Name              string         `json:"name,omitempty" validate:"required"`
-	Private           bool           `json:"is_private" validate:"required"`
-	AccessCodeEnabled bool           `json:"access_code_enabled" validate:"required"`
+	Private           bool           `json:"is_private"`
+	AccessCodeEnabled bool           `json:"access_code_enabled"`
 	AccessCode        string         `json:"access_code"`
 	OrganizerID       uint           `json:"organizer_id,omitempty"`
 	Participants      []domains.User `json:"participants"`

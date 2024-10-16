@@ -36,7 +36,7 @@ func (ds DrinkRequirementService) CreateDrinkRequirement(drinkRequirementDTO dom
 		return api.ErrorBadRequest("Party id doesnt exists")
 	}
 
-	if party.CanBeOrganizedBy(userId) {
+	if !party.CanBeOrganizedBy(userId) {
 		return api.ErrorUnauthorized("cannot create drinkRequirements for other peoples party")
 	}
 

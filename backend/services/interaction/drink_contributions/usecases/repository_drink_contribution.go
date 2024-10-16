@@ -55,6 +55,20 @@ func (dr DrinkContributionRepository) DeleteByReqId(drinkReqId uint) error {
 	return nil
 }
 
+func (dr DrinkContributionRepository) DeleteByContributorId(contributorId uint) error {
+	conds := []db.QueryParameter{{
+		Field:    "contributor_id",
+		Operator: "=",
+		Value:    contributorId,
+	},
+	}
+
+	if err := dr.DbAccess.BatchDelete(conds); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (dr DrinkContributionRepository) FindById(id uint) (*domains.DrinkContribution, error) {
 	fetchedContribution, fetchedErr := dr.DbAccess.FindById(id)
 	if fetchedErr != nil {

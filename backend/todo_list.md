@@ -19,3 +19,8 @@ leave and kick from party implementation
 delete parties (maybe)
 
 rename party_invites to partyAttandanceManager
+
+fix party.hasParticipant
+
+
+tanulsag: model-t masik folderbe tenni mint, hogy lehessen back referenceket csinalni

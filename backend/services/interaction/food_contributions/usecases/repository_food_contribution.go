@@ -55,6 +55,20 @@ func (dr FoodContributionRepository) DeleteByReqId(foodReqId uint) error {
 	return nil
 }
 
+func (dr FoodContributionRepository) DeleteByContributorId(contributorId uint) error {
+	conds := []db.QueryParameter{{
+		Field:    "contributor_id",
+		Operator: "=",
+		Value:    contributorId,
+	},
+	}
+
+	if err := dr.DbAccess.BatchDelete(conds); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (dr FoodContributionRepository) FindById(id uint) (*domains.FoodContribution, error) {
 	fetchedContribution, fetchedErr := dr.DbAccess.FindById(id)
 	if fetchedErr != nil {

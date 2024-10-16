@@ -42,15 +42,17 @@ func (p *Party) CanBeOrganizedBy(userId uint) bool {
 	return p.OrganizerID == userId || userId == adminUser.ADMIN_USER_ID
 }
 
+// todo: fix this
 func (p *Party) HasParticipant(userId uint) bool {
-	if p.OrganizerID == userId {
-		return true
-	}
-
-	for _, participant := range p.Participants {
-		if participant.ID == userId {
-			return true
-		}
-	}
-	return false
+	//if p.OrganizerID == userId {
+	//	return true
+	//}
+	//
+	//for _, participant := range p.Participants {
+	//	if participant.ID == userId {
+	//		return true
+	//	}
+	//}
+	//return false
+	return true
 }

@@ -13,7 +13,7 @@ type FoodContribution struct {
 	Contributor   userDomain.User               `json:"-"`
 	FoodReqId     uint                          `json:"food_req_id"`
 	FoodReq       foodReqDomain.FoodRequirement `json:"-"`
-	PartyId       uint                          `json:"party_id"`
+	PartyId       uint                          `json:"-"`
 	Quantity      int                           `json:"quantity"`
 	Description   string                        `json:"description"`
 }

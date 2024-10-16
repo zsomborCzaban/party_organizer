@@ -120,6 +120,40 @@ func (fc PartyInviteController) GetPendingInvites(w http.ResponseWriter, r *http
 	}
 }
 
+func (fc PartyInviteController) Kick(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	partyId, err := strconv.ParseUint(vars["party_id"], 10, 32)
+	if err != nil {
+		br := api.ErrorBadRequest(err.Error())
+
+		br.Send(w)
+		return
+	}
+
+	kickedId, err2 := strconv.ParseUint(vars["kicked_id"], 10, 32)
+	if err2 != nil {
+		br := api.ErrorBadRequest(err2.Error())
+
+		br.Send(w)
+		return
+	}
+
+	userId, err3 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	if err3 != nil {
+		br := api.ErrorBadRequest(err3.Error())
+
+		br.Send(w)
+		return
+	}
+
+	resp := fc.PartyInviteService.Kick(uint(kickedId), userId, uint(partyId))
+	couldSend := resp.Send(w)
+	if !couldSend {
+		//todo: handle logging
+		return
+	}
+}
+
 func (fc PartyInviteController) JoinPublicParty(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	partyId, err := strconv.ParseUint(vars["party_id"], 10, 32)
