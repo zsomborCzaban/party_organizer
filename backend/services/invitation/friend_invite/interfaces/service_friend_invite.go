@@ -38,14 +38,24 @@ func (fs FriendInviteService) Accept(invitorId, userId uint) api.IResponse {
 		return api.Success(invite)
 	}
 
-	//todo: put this in a transaction
-	invite.State = domains.ACCEPTED
-	if err2 := fs.FriendInviteRepository.Update(invite); err2 != nil {
-		return api.ErrorInternalServerError(err2.Error())
+	invitor, err2 := fs.UserRepository.FindById(invitorId)
+	if err2 != nil {
+		return api.ErrorBadRequest(err2.Error())
 	}
 
-	if err2 := fs.UserRepository.AddFriend(invitorId, userId); err2 != nil {
-		return api.ErrorInternalServerError(err2.Error())
+	user, err3 := fs.UserRepository.FindById(userId)
+	if err3 != nil {
+		return api.ErrorBadRequest(err3.Error())
+	}
+
+	//todo: put this in a transaction
+	invite.State = domains.ACCEPTED
+	if err4 := fs.FriendInviteRepository.Update(invite); err4 != nil {
+		return api.ErrorInternalServerError(err4.Error())
+	}
+
+	if err5 := fs.UserRepository.AddFriend(invitor, user); err5 != nil {
+		return api.ErrorInternalServerError(err5.Error())
 	}
 
 	return api.Success(invite)
@@ -162,4 +172,48 @@ func (fs FriendInviteService) GetPendingInvites(userId uint) api.IResponse {
 	}
 
 	return api.Success(invites)
+}
+
+func (fs FriendInviteService) RemoveFriend(userId, friendId uint) api.IResponse {
+	user, err := fs.UserRepository.FindById(userId)
+	if err != nil {
+		return api.ErrorBadRequest(err.Error())
+	}
+
+	friend, err2 := fs.UserRepository.FindById(friendId)
+	if err2 != nil {
+		return api.ErrorBadRequest(err2.Error())
+	}
+
+	if !user.HasFriend(friendId) {
+		return api.Success("removed friends successfully")
+	}
+
+	invite, _ := fs.FriendInviteRepository.FindByIds(userId, friendId)
+	rInvite, _ := fs.FriendInviteRepository.FindByIds(friendId, userId)
+
+	if invite != nil {
+		return fs.RemoveFriendAndInvite(user, friend, invite)
+	}
+
+	if rInvite != nil {
+		return fs.RemoveFriendAndInvite(user, friend, rInvite)
+	}
+
+	//should only get here if the database state is bad
+	return api.ErrorInternalServerError("error while removing friend")
+}
+
+func (fs FriendInviteService) RemoveFriendAndInvite(user, friend *userDomain.User, invite *domains.FriendInvite) api.IResponse {
+	if err := fs.UserRepository.RemoveFriend(user, friend); err != nil {
+		return api.ErrorInternalServerError(err.Error())
+	}
+
+	//state is always ACCEPTED before, bc the user has the friend
+	invite.State = domains.DECLINED
+	if err2 := fs.FriendInviteRepository.Update(invite); err2 != nil {
+		return api.ErrorInternalServerError(err2.Error())
+	}
+
+	return api.Success("removed friend successfully")
 }

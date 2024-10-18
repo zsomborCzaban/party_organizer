@@ -111,3 +111,29 @@ func (fc FriendInviteController) GetPendingInvites(w http.ResponseWriter, r *htt
 		return
 	}
 }
+
+func (fc FriendInviteController) RemoveFriend(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	friendId, err := strconv.ParseUint(vars["friend_id"], 10, 32)
+	if err != nil {
+		br := api.ErrorBadRequest(err.Error())
+
+		br.Send(w)
+		return
+	}
+
+	userId, err := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	if err != nil {
+		br := api.ErrorBadRequest(err.Error())
+
+		br.Send(w)
+		return
+	}
+
+	resp := fc.FriendInviteService.RemoveFriend(userId, uint(friendId))
+	couldSend := resp.Send(w)
+	if !couldSend {
+		//todo: log here
+		return
+	}
+}

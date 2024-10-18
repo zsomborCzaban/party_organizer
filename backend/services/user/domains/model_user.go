@@ -23,3 +23,12 @@ func (u *User) TransformToUserDTO() *UserDTO {
 		//OrganizedParties: u.OrganizedParties,
 	}
 }
+
+func (u *User) HasFriend(friendId uint) bool {
+	for _, friend := range u.Friends {
+		if friend.ID == friendId {
+			return true
+		}
+	}
+	return false
+}

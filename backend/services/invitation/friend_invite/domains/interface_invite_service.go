@@ -8,4 +8,5 @@ type IFriendInviteService interface {
 	Decline(invitorId, userId uint) api.IResponse
 
 	GetPendingInvites(uint) api.IResponse
+	RemoveFriend(userId, friendId uint) api.IResponse
 }

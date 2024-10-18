@@ -8,4 +8,5 @@ type IFriendInviteController interface {
 	Decline(w http.ResponseWriter, r *http.Request)
 
 	GetPendingInvites(w http.ResponseWriter, r *http.Request)
+	RemoveFriend(w http.ResponseWriter, r *http.Request)
 }
