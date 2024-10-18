@@ -2,7 +2,7 @@ package db
 
 type IDatabaseAccess interface {
 	Create(entity interface{}) error
-	FindById(id interface{}) (interface{}, error)
+	FindById(id interface{}, associations ...string) (interface{}, error)
 	FindAll() (interface{}, error)
 	Save(entity interface{}) error
 	Update(entity interface{}) error

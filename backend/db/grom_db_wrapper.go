@@ -3,6 +3,7 @@ package db
 import (
 	"fmt"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type GormDBWrapper struct {
@@ -81,4 +82,8 @@ func (dbWrapper *GormDBWrapper) Many2ManyQueryId(dest interface{}, cond Many2Man
 		return dbWrapper.DB.Raw(query, cond.M2MConditionColumnValue, cond.OrConditionColumnValue).Scan(dest).Error
 	}
 	//return dbWrapper.DB.Model(model).Preload(preload, "id = ?", 3).Find(dest).Error
+}
+
+func (dbWrapper *GormDBWrapper) Preload(association string) {
+	dbWrapper.DB = dbWrapper.DB.Preload(clause.Associations)
 }

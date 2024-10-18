@@ -1,3 +1,5 @@
+
+
 # Todos
  - validalni az a request adatokat (pl user email)
  - user registraciot kiboviteni megerosito emaillel es elfelejtett jelszoval
@@ -14,5 +16,10 @@ rename party_invites to partyAttandanceManager
 
 fix party.hasParticipant
 
+
+
+# doksi
+oldal terkep
+modellek kozotti kapcsolat
 
 tanulsag: model-t masik folderbe tenni mint, hogy lehessen back referenceket csinalni

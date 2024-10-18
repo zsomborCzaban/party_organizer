@@ -18,8 +18,12 @@ func (dbHandler DatabaseAccessImpl) Create(entity interface{}) error {
 	return nil
 }
 
-func (dbHandler DatabaseAccessImpl) FindById(id interface{}) (interface{}, error) {
+func (dbHandler DatabaseAccessImpl) FindById(id interface{}, associations ...string) (interface{}, error) {
 	dbHandler.DB.NewSession()
+
+	for _, association := range associations {
+		dbHandler.DB.Preload(association)
+	}
 
 	result := dbHandler.DBEntityProvider.Create()
 	err := dbHandler.DB.First(result, id)
