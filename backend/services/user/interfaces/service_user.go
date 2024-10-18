@@ -72,12 +72,23 @@ func (us UserService) Register(registerRequest domains.RegisterRequest) api.IRes
 }
 
 func (us UserService) AddFriend(friendId, userId uint) api.IResponse {
+	//wont be used
 	if friendId == userId {
 		return api.ErrorBadRequest("You cannot be friends with yourself")
+	} //unnecessary but good for safety
+
+	user, err := us.UserRepository.FindById(userId)
+	if err != nil {
+		return api.ErrorBadRequest(err.Error())
 	}
 
-	if err := us.UserRepository.AddFriend(friendId, userId); err != nil {
-		return api.ErrorInternalServerError(err)
+	friend, err := us.UserRepository.FindById(friendId)
+	if err != nil {
+		return api.ErrorBadRequest(err.Error())
+	}
+
+	if err3 := us.UserRepository.AddFriend(user, friend); err3 != nil {
+		return api.ErrorInternalServerError(err3)
 	}
 
 	return api.Success("friend_added")

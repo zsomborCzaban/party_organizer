@@ -94,6 +94,15 @@ func (dbHandler DatabaseAccessImpl) DeleteFromAssociation(entity interface{}, as
 	return nil
 }
 
+func (dbHandler DatabaseAccessImpl) AddToAssociation(entity interface{}, association string, associatedEntities interface{}) error {
+	dbHandler.DB.NewSession()
+
+	if err := dbHandler.DB.AddToAssociation(entity, association, associatedEntities); err != nil {
+		return NewDBError(err.Error())
+	}
+	return nil
+}
+
 func (dbHandler DatabaseAccessImpl) Query(conds []QueryParameter) (interface{}, error) {
 	dbHandler.DB.NewSession()
 	dbHandler.DB.ProcessWhereStatements(conds)

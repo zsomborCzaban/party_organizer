@@ -22,8 +22,7 @@ func NewPartyRepository(databaseAccessManager db.IDatabaseAccessManager) domains
 }
 
 func (pr PartyRepository) AddUserToParty(party *domains.Party, user *userDomain.User) error {
-	party.Participants = append(party.Participants, *user)
-	if err := pr.UpdateParty(party); err != nil {
+	if err := pr.DbAccess.AddToAssociation(party, "Participants", user); err != nil {
 		return err
 	}
 
@@ -31,19 +30,7 @@ func (pr PartyRepository) AddUserToParty(party *domains.Party, user *userDomain.
 }
 
 func (pr PartyRepository) RemoveUserFromParty(party *domains.Party, user *userDomain.User) error {
-	var participants []userDomain.User
-	for _, participant := range party.Participants {
-		if participant.ID != user.ID {
-			participants = append(participants, *user)
-		}
-	}
-
-	party.Participants = participants
-	if err := pr.UpdateParty(party); err != nil {
-		return err
-	}
-
-	return nil
+	return pr.DbAccess.DeleteFromAssociation(party, "Participants", user)
 }
 
 func (pr PartyRepository) GetPublicParties() (*[]domains.Party, error) {

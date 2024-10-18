@@ -70,27 +70,29 @@ func (ur UserRepository) CreateUser(user *domains.User) error {
 	return nil
 }
 
-func (ur UserRepository) AddFriend(userId, friendId uint) error {
-	user, err := ur.FindById(userId)
+func (ur UserRepository) AddFriend(user, friend *domains.User) error {
+	//should use transaction here for data integrity
+	//append both, so they are both ways in the join table. (simpler queries but double data, but for the current use case it's ok)
+	if err := ur.DbAccess.AddToAssociation(user, "Friends", friend); err != nil {
+		return err
+	}
+	if err2 := ur.DbAccess.AddToAssociation(friend, "Friends", user); err2 != nil {
+		return err2
+	}
+
+	return nil
+}
+
+func (ur UserRepository) RemoveFriend(user, friend *domains.User) error {
+	//todo: put this in transaction
+	err := ur.DbAccess.DeleteFromAssociation(user, "Friends", friend)
 	if err != nil {
 		return err
 	}
 
-	friend, err2 := ur.FindById(friendId)
-	if err2 != nil {
+	err2 := ur.DbAccess.DeleteFromAssociation(friend, "Friends", user)
+	if err != nil {
 		return err2
-	}
-
-	//should use transaction here for data integrity
-	//append both, so they are both ways in the join table. (simpler queries but double data, but for the current use case it's ok)
-	user.Friends = append(user.Friends, *friend)
-	if err3 := ur.UpdateUser(user); err3 != nil {
-		return err3
-	}
-
-	friend.Friends = append(friend.Friends, *user)
-	if err4 := ur.UpdateUser(friend); err4 != nil {
-		return err4
 	}
 
 	return nil

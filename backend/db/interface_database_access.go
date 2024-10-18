@@ -8,6 +8,7 @@ type IDatabaseAccess interface {
 	Update(entity interface{}) error
 	Delete(entity interface{}) error
 	DeleteFromAssociation(entity interface{}, association string, associatedEntities ...interface{}) error
+	AddToAssociation(entity interface{}, association string, associatedEntities ...interface{}) error
 	BatchDelete(conds []QueryParameter) error
 	Query(conds []QueryParameter) (interface{}, error)
 	//AppendAssociation(entity, associatedEntity interface{}, associationName string) error
