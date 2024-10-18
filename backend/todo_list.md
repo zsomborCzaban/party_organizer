@@ -14,9 +14,6 @@ delete parties (maybe)
 
 rename party_invites to partyAttandanceManager
 
-fix party.hasParticipant
-
-
 
 # doksi
 oldal terkep

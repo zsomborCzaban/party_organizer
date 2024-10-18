@@ -82,6 +82,7 @@ func (ur UserRepository) AddFriend(userId, friendId uint) error {
 	}
 
 	//should use transaction here for data integrity
+	//append both, so they are both ways in the join table. (simpler queries but double data, but for the current use case it's ok)
 	user.Friends = append(user.Friends, *friend)
 	if err3 := ur.UpdateUser(user); err3 != nil {
 		return err3

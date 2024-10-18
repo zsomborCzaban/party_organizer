@@ -46,9 +46,9 @@ func (dbWrapper *GormDBWrapper) Delete(entity interface{}, conds ...interface{})
 	return dbWrapper.DB.Delete(entity, conds).Error
 }
 
-//func (dbWrapper *GormDBWrapper) DeleteAssociation(entity interface{}, association string) error {
-//	return dbWrapper.DB.Model(entity).Association(association).Unscoped().Clear()
-//}
+func (dbWrapper *GormDBWrapper) DeleteFromAssociation(entity interface{}, association string, associatedEntities ...interface{}) error {
+	return dbWrapper.DB.Model(entity).Association(association).Delete(associatedEntities)
+}
 
 func (dbWrapper *GormDBWrapper) ProcessWhereStatements(conds []QueryParameter) {
 	for _, queryParam := range conds {

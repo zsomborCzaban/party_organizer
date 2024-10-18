@@ -12,7 +12,7 @@ func NewUserRouter(router *mux.Router, controller domains.IUserController) {
 	r.HandleFunc("/register", controller.RegisterController).Methods("POST")
 
 	//todo: authenticate these:
-	r.HandleFunc("/addFriend/{id}", controller.AddFriendController).Methods("GET")
+	r.HandleFunc("/addFriend/{id}", controller.AddFriendController).Methods("GET") //wont be used by user
 	r.HandleFunc("/getFriends", controller.GetFriendsController).Methods("GET")
 
 }
