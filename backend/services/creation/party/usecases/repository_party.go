@@ -22,15 +22,30 @@ func NewPartyRepository(databaseAccessManager db.IDatabaseAccessManager) domains
 }
 
 func (pr PartyRepository) AddUserToParty(party *domains.Party, user *userDomain.User) error {
-	if err := pr.DbAccess.AddToAssociation(party, "Participants", user); err != nil {
-		return err
-	}
+	//if err := pr.DbAccess.AddToAssociation(party, "Participants", user); err != nil {
+	//	return err
+	//}
 
-	return nil
+	party.Participants = append(party.Participants, *user)
+	return pr.DbAccess.Update(party)
 }
 
 func (pr PartyRepository) RemoveUserFromParty(party *domains.Party, user *userDomain.User) error {
-	return pr.DbAccess.DeleteFromAssociation(party, "Participants", user)
+	//return pr.DbAccess.DeleteFromAssociation(party, "Participants", user)
+
+	participants := []userDomain.User{}
+	for _, participant := range party.Participants {
+		if participant.ID != user.ID {
+			participants = append(participants, participant)
+		}
+	}
+
+	if err := pr.DbAccess.ClearAssociation(party, "Participants"); err != nil {
+		return err
+	}
+
+	party.Participants = participants
+	return pr.DbAccess.Update(party)
 }
 
 func (pr PartyRepository) GetPublicParties() (*[]domains.Party, error) {

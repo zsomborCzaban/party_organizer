@@ -11,8 +11,9 @@ type IDatabase interface {
 	Update(entity interface{}) error
 	Save(entity interface{}) error
 	Delete(entity interface{}, conds ...interface{}) error
-	DeleteFromAssociation(entity interface{}, association string, associatedEntities ...interface{}) error
 	AddToAssociation(entity interface{}, association string, associatedEntities ...interface{}) error
+	DeleteFromAssociation(entity interface{}, association string, associatedEntities ...interface{}) error
+	ClearAssociation(entity interface{}, association string) error
 	ProcessWhereStatements(conds []QueryParameter)
 	Preload(association string)
 	Many2ManyQueryId(dest interface{}, cond Many2ManyQueryParameter) error

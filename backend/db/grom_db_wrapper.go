@@ -3,7 +3,6 @@ package db
 import (
 	"fmt"
 	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 )
 
 type GormDBWrapper struct {
@@ -46,12 +45,16 @@ func (dbWrapper *GormDBWrapper) Delete(entity interface{}, conds ...interface{})
 	return dbWrapper.DB.Delete(entity, conds).Error
 }
 
+func (dbWrapper *GormDBWrapper) AddToAssociation(entity interface{}, association string, associatedEntities ...interface{}) error {
+	return dbWrapper.DB.Model(entity).Association(association).Append(associatedEntities[0])
+}
+
 func (dbWrapper *GormDBWrapper) DeleteFromAssociation(entity interface{}, association string, associatedEntities ...interface{}) error {
 	return dbWrapper.DB.Model(entity).Association(association).Delete(associatedEntities)
 }
 
-func (dbWrapper *GormDBWrapper) AddToAssociation(entity interface{}, association string, associatedEntities ...interface{}) error {
-	return dbWrapper.DB.Model(entity).Association(association).Append(associatedEntities)
+func (dbHandler *GormDBWrapper) ClearAssociation(entity interface{}, association string) error {
+	return dbHandler.DB.Model(entity).Association(association).Clear()
 }
 
 func (dbWrapper *GormDBWrapper) ProcessWhereStatements(conds []QueryParameter) {
@@ -89,5 +92,5 @@ func (dbWrapper *GormDBWrapper) Many2ManyQueryId(dest interface{}, cond Many2Man
 }
 
 func (dbWrapper *GormDBWrapper) Preload(association string) {
-	dbWrapper.DB = dbWrapper.DB.Preload(clause.Associations)
+	dbWrapper.DB = dbWrapper.DB.Preload(association)
 }

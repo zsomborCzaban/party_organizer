@@ -86,10 +86,20 @@ func (ur UserRepository) CreateUser(user *domains.User) error {
 func (ur UserRepository) AddFriend(user, friend *domains.User) error {
 	//should use transaction here for data integrity
 	//append both, so they are both ways in the join table. (simpler queries but double data, but for the current use case it's ok)
-	if err := ur.DbAccess.AddToAssociation(user, "Friends", friend); err != nil {
+	//if err := ur.DbAccess.AddToAssociation(user, "Friends", friend); err != nil {
+	//	return err
+	//}
+	//if err2 := ur.DbAccess.AddToAssociation(friend, "Friends", user); err2 != nil {
+	//	return err2
+	//}
+	//not nice workaround
+	user.Friends = append(user.Friends, *friend)
+	if err := ur.DbAccess.Update(user); err != nil {
 		return err
 	}
-	if err2 := ur.DbAccess.AddToAssociation(friend, "Friends", user); err2 != nil {
+
+	friend.Friends = append(friend.Friends, *user)
+	if err2 := ur.DbAccess.Update(friend); err2 != nil {
 		return err2
 	}
 
@@ -98,14 +108,44 @@ func (ur UserRepository) AddFriend(user, friend *domains.User) error {
 
 func (ur UserRepository) RemoveFriend(user, friend *domains.User) error {
 	//todo: put this in transaction
-	err := ur.DbAccess.DeleteFromAssociation(user, "Friends", friend)
-	if err != nil {
+	//if err := ur.DbAccess.DeleteFromAssociation(user, "Friends", friend); err != nil {
+	//	return err
+	//}
+	//
+	//if err2 := ur.DbAccess.DeleteFromAssociation(friend, "Friends", user); err != nil {
+	//	return err2
+	//}
+
+	friends := []domains.User{}
+	for _, userFriend := range user.Friends {
+		if userFriend.ID != friend.ID {
+			friends = append(friends, userFriend)
+		}
+	}
+
+	if err := ur.DbAccess.ClearAssociation(user, "Friends"); err != nil {
 		return err
 	}
 
-	err2 := ur.DbAccess.DeleteFromAssociation(friend, "Friends", user)
-	if err != nil {
+	user.Friends = friends
+	if err2 := ur.DbAccess.Update(user); err2 != nil {
 		return err2
+	}
+
+	friends = []domains.User{}
+	for _, friendFriend := range friend.Friends {
+		if friendFriend.ID != user.ID {
+			friends = append(friends, friendFriend)
+		}
+	}
+
+	if err3 := ur.DbAccess.ClearAssociation(friend, "Friends"); err3 != nil {
+		return err3
+	}
+
+	friend.Friends = friends
+	if err4 := ur.DbAccess.Update(friend); err4 != nil {
+		return err4
 	}
 
 	return nil

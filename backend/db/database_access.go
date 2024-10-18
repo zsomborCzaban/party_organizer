@@ -85,16 +85,7 @@ func (dbHandler DatabaseAccessImpl) BatchDelete(conds []QueryParameter) error {
 	return nil
 }
 
-func (dbHandler DatabaseAccessImpl) DeleteFromAssociation(entity interface{}, association string, associatedEntities interface{}) error {
-	dbHandler.DB.NewSession()
-
-	if err := dbHandler.DB.DeleteFromAssociation(entity, association, associatedEntities); err != nil {
-		return NewDBError(err.Error())
-	}
-	return nil
-}
-
-func (dbHandler DatabaseAccessImpl) AddToAssociation(entity interface{}, association string, associatedEntities interface{}) error {
+func (dbHandler DatabaseAccessImpl) AddToAssociation(entity interface{}, association string, associatedEntities ...interface{}) error {
 	dbHandler.DB.NewSession()
 
 	if err := dbHandler.DB.AddToAssociation(entity, association, associatedEntities); err != nil {
@@ -103,9 +94,30 @@ func (dbHandler DatabaseAccessImpl) AddToAssociation(entity interface{}, associa
 	return nil
 }
 
-func (dbHandler DatabaseAccessImpl) Query(conds []QueryParameter) (interface{}, error) {
+func (dbHandler DatabaseAccessImpl) DeleteFromAssociation(entity interface{}, association string, associatedEntities ...interface{}) error {
+	dbHandler.DB.NewSession()
+
+	if err := dbHandler.DB.DeleteFromAssociation(entity, association, associatedEntities); err != nil {
+		return NewDBError(err.Error())
+	}
+	return nil
+}
+func (dbHandler DatabaseAccessImpl) ClearAssociation(entity interface{}, association string) error {
+	dbHandler.DB.NewSession()
+
+	if err := dbHandler.DB.ClearAssociation(entity, association); err != nil {
+		return NewDBError(err.Error())
+	}
+	return nil
+}
+
+func (dbHandler DatabaseAccessImpl) Query(conds []QueryParameter, associations ...string) (interface{}, error) {
 	dbHandler.DB.NewSession()
 	dbHandler.DB.ProcessWhereStatements(conds)
+
+	for _, association := range associations {
+		dbHandler.DB.Preload(association)
+	}
 
 	entities := dbHandler.DBEntityProvider.CreateArray()
 	err := dbHandler.DB.Find(entities)
