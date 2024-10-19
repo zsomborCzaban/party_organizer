@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"github.com/zsomborCzaban/party_organizer/common/api"
+	"github.com/zsomborCzaban/party_organizer/common/jwt"
 	"github.com/zsomborCzaban/party_organizer/services/user/domains"
 	"net/http"
 	"strconv"
@@ -63,7 +64,15 @@ func (uc UserController) AddFriendController(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	resp := uc.UserService.AddFriend(uint(partyId), 3)
+	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	if err2 != nil {
+		br := api.ErrorBadRequest(err2.Error())
+
+		br.Send(w)
+		return
+	}
+
+	resp := uc.UserService.AddFriend(uint(partyId), userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging
@@ -72,7 +81,15 @@ func (uc UserController) AddFriendController(w http.ResponseWriter, r *http.Requ
 }
 
 func (uc UserController) GetFriendsController(w http.ResponseWriter, r *http.Request) {
-	resp := uc.UserService.GetFriends(3)
+	userId, err3 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	if err3 != nil {
+		br := api.ErrorBadRequest(err3.Error())
+
+		br.Send(w)
+		return
+	}
+
+	resp := uc.UserService.GetFriends(userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging

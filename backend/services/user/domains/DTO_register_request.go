@@ -6,9 +6,10 @@ import (
 )
 
 type RegisterRequest struct {
-	Username string `json:"username" validate:"required,min=3"`
-	Email    string `json:"email" validate:"required"`
-	Password string `json:"password" validate:"required,min=3"`
+	Username        string `json:"username" validate:"required,min=3"`
+	Email           string `json:"email" validate:"required,email"`
+	Password        string `json:"password" validate:"required,min=3,containsany=0123456789"`
+	PasswordConfirm string `json:"password_confirm" validate:"required,eqfield=Password"`
 }
 
 func (rq *RegisterRequest) TransformToUser() (*User, error) {

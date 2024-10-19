@@ -11,7 +11,7 @@ func NewUserRouter(router *mux.Router, controller domains.IUserController) {
 	r.HandleFunc("/login", controller.LoginController).Methods("POST")
 	r.HandleFunc("/register", controller.RegisterController).Methods("POST")
 
-	//todo: authenticate these:
+	//todo: authenticate these with middleware:
 	r.HandleFunc("/addFriend/{id}", controller.AddFriendController).Methods("GET") //wont be used by user
 	r.HandleFunc("/getFriends", controller.GetFriendsController).Methods("GET")
 

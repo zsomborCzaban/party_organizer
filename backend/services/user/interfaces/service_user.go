@@ -72,7 +72,7 @@ func (us UserService) Register(registerRequest domains.RegisterRequest) api.IRes
 }
 
 func (us UserService) AddFriend(friendId, userId uint) api.IResponse {
-	//wont be used
+	//wont be used by user
 	if friendId == userId {
 		return api.ErrorBadRequest("You cannot be friends with yourself")
 	} //unnecessary but good for safety
