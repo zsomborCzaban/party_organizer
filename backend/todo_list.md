@@ -22,3 +22,5 @@ modellek kozotti kapcsolat
 tanulsag: model-t masik folderbe tenni mint, hogy lehessen back referenceket csinalni
 
 usernek visszjelzees timeout utan
+
+sikeres register utan egy timer, hogy "you will be navigated to the login page in 5... 4, 3, 2, 1 bumm"
