@@ -13,6 +13,10 @@ func NewGormDBWrapper(dbEntity interface{}, db *gorm.DB) *GormDBWrapper {
 	return &GormDBWrapper{DB: db}
 }
 
+func (dbWrapper *GormDBWrapper) NewSession() {
+	dbWrapper.DB = dbWrapper.DB.Session(&gorm.Session{NewDB: true})
+}
+
 func (dbWrapper *GormDBWrapper) AutoMigrate(dst ...interface{}) error {
 	return dbWrapper.DB.AutoMigrate(dst)
 }
@@ -25,16 +29,32 @@ func (dbWrapper *GormDBWrapper) First(dest interface{}, conds ...interface{}) er
 	return dbWrapper.DB.First(dest, conds).Error
 }
 
+func (dbWrapper *GormDBWrapper) Update(entity interface{}) error {
+	return dbWrapper.DB.Model(entity).Omit("id", "created_at", "deleted_at").Updates(entity).Error
+}
+
 func (dbWrapper *GormDBWrapper) Save(entity interface{}) error {
-	return dbWrapper.DB.Save(entity).Error
+	return dbWrapper.DB.Omit("created_at", "deleted_at").Save(entity).Error
 }
 
 func (dbWrapper *GormDBWrapper) Find(dest interface{}, conds ...interface{}) error {
 	return dbWrapper.DB.Find(dest, conds).Error
 }
 
-func (dbWrapper *GormDBWrapper) Delete(value interface{}, conds ...interface{}) error {
-	return dbWrapper.DB.Delete(value, conds).Error
+func (dbWrapper *GormDBWrapper) Delete(entity interface{}, conds ...interface{}) error {
+	return dbWrapper.DB.Delete(entity, conds).Error
+}
+
+func (dbWrapper *GormDBWrapper) AddToAssociation(entity interface{}, association string, associatedEntities ...interface{}) error {
+	return dbWrapper.DB.Model(entity).Association(association).Append(associatedEntities[0])
+}
+
+func (dbWrapper *GormDBWrapper) DeleteFromAssociation(entity interface{}, association string, associatedEntities ...interface{}) error {
+	return dbWrapper.DB.Model(entity).Association(association).Delete(associatedEntities)
+}
+
+func (dbHandler *GormDBWrapper) ClearAssociation(entity interface{}, association string) error {
+	return dbHandler.DB.Model(entity).Association(association).Clear()
 }
 
 func (dbWrapper *GormDBWrapper) ProcessWhereStatements(conds []QueryParameter) {
@@ -46,4 +66,31 @@ func (dbWrapper *GormDBWrapper) ProcessWhereStatements(conds []QueryParameter) {
 			dbWrapper.DB = dbWrapper.DB.Where(queryParam.Value)
 		}
 	}
+}
+
+//func (dbWrapper *GormDBWrapper) AppendAssociation(entity, associatedEntity interface{}, associationName string) error {
+//	association := dbWrapper.DB.Model(entity).Association(associationName)
+//	err := association.Append(associatedEntity)
+//	return err
+//}
+
+func (dbWrapper *GormDBWrapper) Many2ManyQueryId(dest interface{}, cond Many2ManyQueryParameter) error {
+	if !cond.OrActive {
+		query := fmt.Sprintf(
+			"SELECT * FROM %s WHERE id IN (SELECT %s FROM %s WHERE %s = ?)",
+			cond.QueriedTable, cond.M2MQueriedColumnName, cond.Many2ManyTable, cond.M2MConditionColumnName,
+		)
+		return dbWrapper.DB.Raw(query, cond.M2MConditionColumnValue).Scan(dest).Error
+	} else {
+		query := fmt.Sprintf(
+			"SELECT * FROM %s WHERE id IN (SELECT %s FROM %s WHERE %s = ? OR %s = ?)",
+			cond.QueriedTable, cond.M2MQueriedColumnName, cond.Many2ManyTable, cond.M2MConditionColumnName, cond.OrConditionColumnName,
+		)
+		return dbWrapper.DB.Raw(query, cond.M2MConditionColumnValue, cond.OrConditionColumnValue).Scan(dest).Error
+	}
+	//return dbWrapper.DB.Model(model).Preload(preload, "id = ?", 3).Find(dest).Error
+}
+
+func (dbWrapper *GormDBWrapper) Preload(association string) {
+	dbWrapper.DB = dbWrapper.DB.Preload(association)
 }

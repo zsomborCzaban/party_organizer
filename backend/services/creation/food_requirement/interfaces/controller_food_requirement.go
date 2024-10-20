@@ -1,0 +1,164 @@
+package interfaces
+
+import (
+	"encoding/json"
+	"github.com/gorilla/mux"
+	"github.com/zsomborCzaban/party_organizer/common/api"
+	"github.com/zsomborCzaban/party_organizer/common/jwt"
+	"github.com/zsomborCzaban/party_organizer/services/creation/food_requirement/domains"
+	"net/http"
+	"strconv"
+)
+
+type FoodRequirementController struct {
+	FoodRequirementService domains.IFoodRequirementService
+}
+
+func NewFoodRequirementController(service domains.IFoodRequirementService) domains.IFoodRequirementController {
+	return &FoodRequirementController{
+		FoodRequirementService: service,
+	}
+}
+
+func (fc FoodRequirementController) CreateController(w http.ResponseWriter, r *http.Request) {
+	var createFoodRequirementReq domains.FoodRequirementDTO
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&createFoodRequirementReq)
+	if err != nil {
+		br := api.ErrorBadRequest(err.Error())
+
+		//todo: implement response helper that has logger as param
+		br.Send(w)
+		return
+	}
+
+	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	if err2 != nil {
+		br := api.ErrorBadRequest(domains.BadRequest)
+
+		br.Send(w)
+		return
+	}
+
+	resp := fc.FoodRequirementService.CreateFoodRequirement(createFoodRequirementReq, userId)
+	couldSend := resp.Send(w)
+	if !couldSend {
+		//todo: handle logging
+		return
+	}
+}
+
+func (fc FoodRequirementController) GetController(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	foodReqId, err := strconv.ParseUint(vars["id"], 10, 32)
+	if err != nil {
+		br := api.ErrorBadRequest(domains.BadRequest)
+
+		br.Send(w)
+		return
+	}
+
+	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	if err2 != nil {
+		br := api.ErrorBadRequest(domains.BadRequest)
+
+		br.Send(w)
+		return
+	}
+
+	resp := fc.FoodRequirementService.GetFoodRequirement(uint(foodReqId), userId)
+	couldSend := resp.Send(w)
+	if !couldSend {
+		//todo: handle logging
+		return
+	}
+}
+
+func (fc FoodRequirementController) UpdateController(w http.ResponseWriter, r *http.Request) {
+	var updateFoodRequirementReq domains.FoodRequirementDTO
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&updateFoodRequirementReq)
+	if err != nil {
+		br := api.ErrorBadRequest(domains.BadRequest)
+
+		//todo: implement response helper that has logger as param
+		br.Send(w)
+		return
+	}
+
+	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	if err2 != nil {
+		br := api.ErrorBadRequest(err2.Error())
+
+		br.Send(w)
+		return
+	}
+
+	vars := mux.Vars(r)
+	id, err3 := strconv.ParseUint(vars["id"], 10, 32)
+	if err3 != nil {
+		br := api.ErrorBadRequest(err3.Error())
+
+		br.Send(w)
+		return
+	}
+	updateFoodRequirementReq.ID = uint(id)
+
+	resp := fc.FoodRequirementService.UpdateFoodRequirement(updateFoodRequirementReq, userId)
+	couldSend := resp.Send(w)
+	if !couldSend {
+		//todo: handle logging
+		return
+	}
+}
+
+func (fc FoodRequirementController) DeleteController(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	foodReqId, err := strconv.ParseUint(vars["id"], 10, 32)
+	if err != nil {
+		br := api.ErrorBadRequest(domains.BadRequest)
+
+		br.Send(w)
+		return
+	}
+
+	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	if err2 != nil {
+		br := api.ErrorBadRequest(err2.Error())
+
+		br.Send(w)
+		return
+	}
+
+	resp := fc.FoodRequirementService.DeleteFoodRequirement(uint(foodReqId), userId)
+	couldSend := resp.Send(w)
+	if !couldSend {
+		//todo: handle logging
+		return
+	}
+}
+
+func (fc FoodRequirementController) GetByPartyIdController(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	partyId, err := strconv.ParseUint(vars["party_id"], 10, 32)
+	if err != nil {
+		br := api.ErrorBadRequest(domains.BadRequest)
+
+		br.Send(w)
+		return
+	}
+
+	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	if err2 != nil {
+		br := api.ErrorBadRequest(domains.BadRequest)
+
+		br.Send(w)
+		return
+	}
+
+	resp := fc.FoodRequirementService.GetByPartyId(uint(partyId), userId)
+	couldSend := resp.Send(w)
+	if !couldSend {
+		return
+	}
+}
