@@ -20,3 +20,5 @@ oldal terkep
 modellek kozotti kapcsolat
 
 tanulsag: model-t masik folderbe tenni mint, hogy lehessen back referenceket csinalni
+
+usernek visszjelzees timeout utan

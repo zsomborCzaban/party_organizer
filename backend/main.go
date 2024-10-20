@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
+	"github.com/rs/cors"
 	"github.com/rs/zerolog/log"
 	"github.com/zsomborCzaban/party_organizer/common/api"
 	"github.com/zsomborCzaban/party_organizer/db"
@@ -85,5 +86,14 @@ func main() {
 	drinkContributionInterfaces.NewDrinkContributionRouter(apiRouter, drinkContributionController)
 	foodContributionInterfaces.NewFoodContributionRouter(apiRouter, foodContributionController)
 
-	log.Fatal().Err(http.ListenAndServe(":8080", router))
+	corsOptions := cors.New(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:3000"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "OPTIONS", "DELETE"},
+		AllowedHeaders:   []string{"Authorization", "Accept", "Content-Type"},
+		AllowCredentials: true,
+	})
+
+	handler := corsOptions.Handler(router)
+
+	log.Fatal().Err(http.ListenAndServe(":8080", handler))
 }
