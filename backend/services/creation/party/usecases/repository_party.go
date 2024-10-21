@@ -53,7 +53,7 @@ func (pr PartyRepository) GetPublicParties() (*[]domains.Party, error) {
 		{Field: "private", Operator: "=", Value: false},
 	}
 
-	fetchedParties, fetchedError := pr.DbAccess.Query(queryParams)
+	fetchedParties, fetchedError := pr.DbAccess.Query(queryParams, "Organizer")
 	if fetchedError != nil {
 		//we should return errors from the databaselayer
 		return nil, errors.New(fmt.Sprintf("Error while fetching public parties. this should be only temporary. Error: %s", fetchedError.Error()))

@@ -17,7 +17,7 @@ type Party struct {
 	AccessCodeEnabled bool           `json:"access_code_enabled"`
 	AccessCode        string         `json:"access_code"`
 	OrganizerID       uint           `json:"organizer_id"`
-	Organizer         domains.User   `json:"-"`
+	Organizer         domains.User   `json:"organizer"`
 	Participants      []domains.User `json:"-" gorm:"many2many:party_participants;"`
 }
 
