@@ -9,11 +9,11 @@ import (
 type PartyInvite struct {
 	gorm.Model
 
-	InvitorId uint
-	Invitor   userDomain.User
-	InvitedId uint
-	Invited   userDomain.User
-	PartyId   uint
-	Party     partyDomains.Party
-	State     string
+	InvitorId uint               `json:"-"`
+	Invitor   userDomain.User    `json:"invitor"`
+	InvitedId uint               `json:"-"`
+	Invited   userDomain.User    `json:"-"`
+	PartyId   uint               `json:"-"`
+	Party     partyDomains.Party `json:"party"`
+	State     string             `json:"state"`
 }

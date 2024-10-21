@@ -71,7 +71,6 @@ const Discover = () => {
         },
         {
             title: '',
-            dataIndex: 'headcount',
             key: 'ID',
             render: (text: string, record: Party) => (
                 <button onClick={() => handleVisitClicked(record)}>Visit</button>
@@ -91,9 +90,6 @@ const Discover = () => {
         />)
     }
 
-    if (loading) return <div>Loading...</div>
-    if (error) return <div>Error: {error.message}</div>
-
     return (
         <div style={styles.outerContainer}>
             <OverViewNavBar/>
@@ -103,7 +99,9 @@ const Discover = () => {
 
                 {/* Scrollable Table using Ant Design Table */}
                 <div style={styles.tableContainer}>
-                    {renderPublicParties()}
+                    {loading && <div>Loading...</div>}
+                    {error && <div>Error: Some unexpected error happened</div>}
+                    {(!loading && !error) && renderPublicParties()}
                 </div>
 
                 <div style={styles.message}>

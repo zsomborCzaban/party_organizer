@@ -5,6 +5,7 @@ import Home from "../features/home/Home_temporary";
 import Login2 from "../features/authtentication/Login2";
 import Register from "../features/authtentication/Register";
 import Discover from "../features/overView/discover/Discover";
+import PartyPage from "../features/overView/partyPage/PartyPage";
 
 const AppRoutes = () => {
     return (
@@ -15,6 +16,9 @@ const AppRoutes = () => {
                 </Route>
                 <Route path="/overview/discover" element={<PrivateRoute />}>
                     <Route path="/overview/discover" element={<Discover/>}/>
+                </Route>
+                <Route path="/overview/party" element={<PrivateRoute />}>
+                    <Route path="/overview/party" element={<PartyPage />}/>
                 </Route>
                 <Route path="/login" element={<Login/>} />
                 <Route path="/login2" element={<Login2/>} />

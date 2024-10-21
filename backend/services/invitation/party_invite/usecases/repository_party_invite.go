@@ -75,7 +75,7 @@ func (pr PartyInviteRepository) FindPendingByInvitedId(invitedId uint) (*[]domai
 		{Field: "invited_id", Operator: "=", Value: invitedId},
 	}
 
-	fetchedInvites, fetchedError := pr.DbAccess.Query(queryParams)
+	fetchedInvites, fetchedError := pr.DbAccess.Query(queryParams, "Party", "Invitor")
 	if fetchedError != nil {
 		return nil, fetchedError
 	}
