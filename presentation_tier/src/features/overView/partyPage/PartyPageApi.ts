@@ -5,7 +5,8 @@ import {PartyInvite} from "./PartyInvite";
 const ATTENDED_PARTY_PATH = "http://localhost:8080/api/v0/party/getPartiesByParticipantId/"
 const ORGANIZED_PARTY_PATH = "http://localhost:8080/api/v0/party/getPartiesByOrganizerId/"
 const PENDING_PARTY_INVITES = "http://localhost:8080/api/v0/partyAttendanceManager/getPendingInvites/"
-const ACCEPT_INVITE = "localhost:8080/api/v0/partyAttendanceManager/accept/"
+const ACCEPT_INVITE = "http://localhost:8080/api/v0/partyAttendanceManager/accept/"
+const DECLINE_INVITE = "http://localhost:8080/api/v0/partyAttendanceManager/decline/"
 
 export const getAttendedParties = async (): Promise<Party[]> => {
     return new Promise<Party[]>((resolve, reject) => {
@@ -45,7 +46,21 @@ export const getPartyInvites = async (): Promise<PartyInvite[]> => {
 
 export const acceptInvite = async (invitorId: number): Promise<void> => {
     return new Promise<void>((resolve, reject) => {
-        get<void>(ACCEPT_INVITE + invitorId)
+        console.log(invitorId)
+        get<void>(ACCEPT_INVITE + invitorId.toString())
+            .then(() => {
+                return resolve();
+            })
+            .catch(err => {
+                return reject(err);
+            });
+    });
+};
+
+export const declineInvite = async (invitorId: number): Promise<void> => {
+    return new Promise<void>((resolve, reject) => {
+        console.log(invitorId)
+        get<void>(DECLINE_INVITE + invitorId.toString())
             .then(() => {
                 return resolve();
             })

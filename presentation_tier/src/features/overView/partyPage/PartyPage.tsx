@@ -9,7 +9,7 @@ import {loadOrganizedParties} from "./OrganizedPartySlice";
 import {loadAttendedParties} from "./AttendedPartySlice";
 import {loadPartyInvites} from "./PartyInviteSlice";
 import {PartyInvite} from "./PartyInvite";
-import {acceptInvite} from "./PartyPageApi";
+import {acceptInvite, declineInvite} from "./PartyPageApi";
 
 
 const PartyPage = () => {
@@ -47,20 +47,19 @@ const PartyPage = () => {
     }
 
     const handleInviteAccepted = (record: PartyInvite) => {
-        //record is good everything is shonw in it, but record.party is undefined
-
-        console.log(record); // allgood
-        console.log(record.Party) //undefined
-        // console.log(record.Party.ID)
-        // acceptInvite(record.Party.ID)
-        //     .then(() => {setReload(prev => !prev)} )
-        //     .catch(err => { //todo: handle err on the userinterface too
-        //         console.log("error while accepting invite: " + err)
-        //     });
+        acceptInvite(record.party.ID)
+            .then(() => {setReload(prev => !prev)} )
+            .catch(err => { //todo: handle err on the userinterface too
+                console.log("error while accepting invite: " + err)
+            });
     }
 
     const handleInviteDeclined = (record: PartyInvite) => {
-        console.log(record)
+        declineInvite(record.party.ID)
+            .then(() => {setReload(prev => !prev)} )
+            .catch(err => { //todo: handle err on the userinterface too
+                console.log("error while accepting invite: " + err)
+            });
     }
 
     const partyColumns = [
@@ -103,40 +102,40 @@ const PartyPage = () => {
         {
             title: 'Invited by',
             dataIndex: ['invitor', 'username'],
-            key: 'ID',
+            key: 'invited by',
         },
         {
             title: 'To party',
             dataIndex: ['party', 'name'],
-            key: 'ID',
+            key: 'to party',
         },
         {
             title: 'Place',
             dataIndex: ['party', 'place'],
-            key: 'ID',
+            key: 'place',
         },
         {
             title: 'Time',
             dataIndex: ['party', 'start_time'],
-            key: 'ID',
+            key: 'time',
         },
 
         {
             //todo: to be done in backend
             title: 'Headcount',
             dataIndex: ['party', 'headcount'],
-            key: 'ID',
+            key: 'headcount',
         },
         {
             title: '',
-            key: 'ID',
+            key: 'action 1',
             render: (text: string, record: PartyInvite) => (
                 <button onClick={() => handleInviteAccepted(record)}>Accept</button>
             ),
         },
         {
             title: '',
-            key: 'ID',
+            key: 'action 2',
             render: (text: string, record: PartyInvite) => (
             <button onClick={() => handleInviteDeclined(record)}>Decline</button>
         ),
@@ -154,7 +153,7 @@ const PartyPage = () => {
             return <div>There's no {type} parties at the moment :( </div>
         }
         return (<Table
-            dataSource={parties}
+            dataSource={parties.map(party => ({...party, key: party.ID}))}
             columns={partyColumns}
             pagination={false} // Disable pagination
             scroll={{y: 200}} // Set vertical scroll height
@@ -166,7 +165,7 @@ const PartyPage = () => {
             return <div>There's no invites at the moment :( </div>
         }
         return (<Table
-            dataSource={invites}
+            dataSource={invites.map(invite => ({...invite, key: invite.party.ID}))}
             columns={inviteColumns}
             pagination={false} // Disable pagination
             scroll={{y: 200}} // Set vertical scroll height

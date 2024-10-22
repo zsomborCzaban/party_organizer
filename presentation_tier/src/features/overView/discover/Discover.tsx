@@ -56,7 +56,7 @@ const Discover = () => {
         {
             title: 'Time',
             dataIndex: 'start_time',
-            key: 'time',
+            key: 'start_time',
         },
         {
             title: 'Organizer',
@@ -83,7 +83,7 @@ const Discover = () => {
             return <div>There's no public parties at the moment :( </div>
         }
         return (<Table
-            dataSource={parties}
+            dataSource={parties.map(party => ({...party, key: party.ID}))}
             columns={columns}
             pagination={false} // Disable pagination
             scroll={{y: 200}} // Set vertical scroll height
