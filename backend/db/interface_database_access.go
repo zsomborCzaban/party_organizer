@@ -9,9 +9,9 @@ type IDatabaseAccess interface {
 	Delete(entity interface{}) error
 	AddToAssociation(entity interface{}, association string, associatedEntities ...interface{}) error
 	DeleteFromAssociation(entity interface{}, association string, associatedEntities ...interface{}) error
-	ClearAssociation(entity interface{}, association string) error
+	ClearAssociation(entity interface{}, associations ...string) error
 	BatchDelete(conds []QueryParameter) error
 	Query(conds []QueryParameter, associations ...string) (interface{}, error)
 	//AppendAssociation(entity, associatedEntity interface{}, associationName string) error
-	Many2ManyQueryId(cond Many2ManyQueryParameter) (interface{}, error)
+	Many2ManyQueryId(cond Many2ManyQueryParameter, associations ...string) (interface{}, error)
 }

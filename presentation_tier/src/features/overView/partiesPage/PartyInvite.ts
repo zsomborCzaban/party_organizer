@@ -2,7 +2,7 @@ import {User} from "../User";
 import {Party} from "../Party";
 
 export interface PartyInvite {
-    id: number
+    ID: number
     invitor: User;
     party: Party
     party_id: number

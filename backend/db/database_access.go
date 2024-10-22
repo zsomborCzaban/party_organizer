@@ -102,12 +102,15 @@ func (dbHandler DatabaseAccessImpl) DeleteFromAssociation(entity interface{}, as
 	}
 	return nil
 }
-func (dbHandler DatabaseAccessImpl) ClearAssociation(entity interface{}, association string) error {
+func (dbHandler DatabaseAccessImpl) ClearAssociation(entity interface{}, associations ...string) error {
 	dbHandler.DB.NewSession()
 
-	if err := dbHandler.DB.ClearAssociation(entity, association); err != nil {
-		return NewDBError(err.Error())
+	for _, association := range associations {
+		if err := dbHandler.DB.ClearAssociation(entity, association); err != nil {
+			return NewDBError(err.Error())
+		}
 	}
+
 	return nil
 }
 
@@ -132,8 +135,12 @@ func (dbHandler DatabaseAccessImpl) Query(conds []QueryParameter, associations .
 //	return dbHandler.DB.AppendAssociation(&entity, &associatedEntity, associationName)
 //}
 
-func (dbHandler DatabaseAccessImpl) Many2ManyQueryId(cond Many2ManyQueryParameter) (interface{}, error) {
+func (dbHandler DatabaseAccessImpl) Many2ManyQueryId(cond Many2ManyQueryParameter, associations ...string) (interface{}, error) {
 	dbHandler.DB.NewSession()
+
+	for _, association := range associations {
+		dbHandler.DB.Preload(association)
+	}
 
 	entities := dbHandler.DBEntityProvider.CreateArray()
 	err := dbHandler.DB.Many2ManyQueryId(entities, cond)

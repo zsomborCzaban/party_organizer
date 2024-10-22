@@ -80,6 +80,7 @@ const PartyPage = () => {
         },
         {
             title: 'Organizer',
+            // dataIndex: ['organizer', 'username'],
             dataIndex: ['organizer', 'username'],
             key: 'organizer',
         },
@@ -142,12 +143,12 @@ const PartyPage = () => {
     },
     ];
 
-    console.log(invites)
-
     const renderParties = (type: string) => {
         let parties: Party[] = []
         if(type === "organized") parties = organizedParties
         if(type === "attended") parties = attendedParties
+
+        console.log(parties.map(party => ({...party, key: party.ID})))
 
         if(parties.length === 0){
             return <div>There's no {type} parties at the moment :( </div>

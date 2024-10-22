@@ -2,10 +2,10 @@ import {User} from "./User";
 
 export interface Party {
     ID: number;
-    Place: string;
-    Name: string;
-    StartTime: Date;
-    Private: Boolean;
-    OrganizerID: number;
-    Organizer: User;
+    place: string;
+    name: string;
+    start_time: Date;
+    private: Boolean;
+    organizer_id: number;
+    organizer: User;
 }
