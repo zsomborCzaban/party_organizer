@@ -79,7 +79,7 @@ const Discover = () => {
     ];
 
     const renderPublicParties = () => {
-        if(parties.length === 0){
+        if(!parties || parties.length === 0){
             return <div>There's no public parties at the moment :( </div>
         }
         return (<Table

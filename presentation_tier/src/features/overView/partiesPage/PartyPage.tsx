@@ -148,9 +148,7 @@ const PartyPage = () => {
         if(type === "organized") parties = organizedParties
         if(type === "attended") parties = attendedParties
 
-        console.log(parties.map(party => ({...party, key: party.ID})))
-
-        if(parties.length === 0){
+        if(!parties || parties.length === 0){
             return <div>There's no {type} parties at the moment :( </div>
         }
         return (<Table
@@ -162,7 +160,7 @@ const PartyPage = () => {
     }
 
     const renderInvites = () => {
-        if(invites.length === 0){
+        if(!invites || invites.length === 0){
             return <div>There's no invites at the moment :( </div>
         }
         return (<Table
