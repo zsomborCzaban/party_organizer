@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
 import publicPartySlice from "../features/overView/discover/PublicPartySlice";
-import organizedPartySlice from "../features/overView/partyPage/OrganizedPartySlice";
-import attendedPartySlice from "../features/overView/partyPage/AttendedPartySlice";
-import partyInviteSlice from "../features/overView/partyPage/PartyInviteSlice";
+import organizedPartySlice from "../features/overView/partiesPage/OrganizedPartySlice";
+import attendedPartySlice from "../features/overView/partiesPage/AttendedPartySlice";
+import partyInviteSlice from "../features/overView/partiesPage/PartyInviteSlice";
 
 export const store = configureStore({
  reducer: {

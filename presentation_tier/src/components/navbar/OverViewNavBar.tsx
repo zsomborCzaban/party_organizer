@@ -7,7 +7,7 @@ const OverViewNavBar: React.FC = () => {
             <nav style={styles.nav}>
                 <ul style={styles.navList}>
                     <li style={styles.navItem}><a href="/overview/discover" style={styles.link}>Discover</a></li>
-                    <li style={styles.navItem}><a href="/overview/party" style={styles.link}>Party</a></li>
+                    <li style={styles.navItem}><a href="/overview/parties" style={styles.link}>Parties</a></li>
                     <li style={styles.navItem}><a href="/overview/friends" style={styles.link}>Friends</a></li>
                     <li style={styles.navItem}><a href="/profile" style={styles.link}>Profile</a></li>
                 </ul>
