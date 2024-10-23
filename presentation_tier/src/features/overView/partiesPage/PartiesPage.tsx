@@ -45,6 +45,7 @@ const PartiesPage = () => {
     }
 
     const handleInviteAccepted = (record: PartyInvite) => {
+        if(!record.party.ID) return //todo: handle error message
         acceptInvite(record.party.ID)
             .then(() => {setReload(prev => !prev)} )
             .catch(err => { //todo: handle err on the userinterface too
@@ -53,6 +54,7 @@ const PartiesPage = () => {
     }
 
     const handleInviteDeclined = (record: PartyInvite) => {
+        if(!record.party.ID) return //todo: handle error message
         declineInvite(record.party.ID)
             .then(() => {setReload(prev => !prev)} )
             .catch(err => { //todo: handle err on the userinterface too

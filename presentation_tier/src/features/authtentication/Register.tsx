@@ -18,7 +18,7 @@ const Register: React.FC = () => {
     const [password, setPassword] = useState<string>('');
     const [email, setEmail] = useState('')
     const [confirmPassword, setConfirmPassword] = useState<string>('');
-    const [feedbacks, setFeedbackds] = useState<Feedbacks>({});
+    const [feedbacks, setFeedbacks] = useState<Feedbacks>({});
 
     // Validation logic
     const validate = (): boolean => {
@@ -48,7 +48,7 @@ const Register: React.FC = () => {
             valid = false;
         }
 
-        setFeedbackds(newFeedbacks);
+        setFeedbacks(newFeedbacks);
         return valid;
     };
 
@@ -68,7 +68,7 @@ const Register: React.FC = () => {
                 return
             }
         })
-        setFeedbackds(newFeedbacks)
+        setFeedbacks(newFeedbacks)
     }
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -85,7 +85,7 @@ const Register: React.FC = () => {
                 .then(() => {
                     const newFeedbacks: Feedbacks = {};
                     newFeedbacks.buttonSuccess = "registered successfully"
-                    setFeedbackds(newFeedbacks)
+                    setFeedbacks(newFeedbacks)
                 })
                 .catch((err: AxiosError<ApiResponse<void>>) => {
                     if(err.response){
@@ -94,7 +94,7 @@ const Register: React.FC = () => {
                     } else {
                         const newFeedbacks: Feedbacks = {};
                         newFeedbacks.buttonError = "unexpected error while registering"
-                        setFeedbackds(newFeedbacks)
+                        setFeedbacks(newFeedbacks)
                     }
                 })
         }

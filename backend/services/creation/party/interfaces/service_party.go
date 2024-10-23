@@ -54,6 +54,10 @@ func (ps PartyService) GetParty(partyId, userId uint) api.IResponse {
 		return api.ErrorUnauthorized("you have to be in the party for private parties")
 	}
 
+	if !party.CanBeOrganizedBy(userId) {
+		party.AccessCode = ""
+	}
+
 	return api.Success(party.TransformToPartyDTO())
 }
 

@@ -5,6 +5,8 @@ import attendedPartySlice from "../features/overView/partiesPage/AttendedPartySl
 import partyInviteSlice from "../features/overView/partiesPage/PartyInviteSlice";
 import friendInviteSlice from "../features/overView/friends/FriendInviteSlice";
 import friendSlice from "../features/overView/friends/FriendSlice";
+import selectedPartySlice from "../features/overView/PartySlice";
+
 
 export const store = configureStore({
  reducer: {
@@ -14,6 +16,7 @@ export const store = configureStore({
      partyInviteStore: partyInviteSlice,
      friendInviteStore: friendInviteSlice,
      friendStore: friendSlice,
+     selectedPartyStore: selectedPartySlice,
  },
 });
 

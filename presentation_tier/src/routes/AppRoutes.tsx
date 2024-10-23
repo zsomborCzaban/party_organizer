@@ -7,6 +7,8 @@ import Register from "../features/authtentication/Register";
 import Discover from "../features/overView/discover/Discover";
 import PartiesPage from "../features/overView/partiesPage/PartiesPage";
 import Friends from "../features/overView/friends/Friends";
+import CreateParty from "../features/createParty/CreateParty";
+import SetupParty from "../features/createParty/SetupParty";
 
 const AppRoutes = () => {
     return (
@@ -23,6 +25,12 @@ const AppRoutes = () => {
                 </Route>
                 <Route path="/overview/friends" element={<PrivateRoute />}>
                     <Route path="/overview/friends" element={<Friends />}/>
+                </Route>
+                <Route path="/createParty" element={<PrivateRoute />}>
+                    <Route path="/createParty" element={<CreateParty />}/>
+                </Route>
+                <Route path="/setupParty" element={<PrivateRoute />}>
+                    <Route path="/setupParty" element={<SetupParty />}/>
                 </Route>
                 <Route path="/login" element={<Login/>} />
                 <Route path="/login2" element={<Login2/>} />
