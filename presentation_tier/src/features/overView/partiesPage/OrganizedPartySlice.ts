@@ -1,6 +1,6 @@
 import {Party} from "../Party";
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {getOrganizedParties} from "./PartyPageApi";
+import {getOrganizedParties} from "./PartiesPageApi";
 
 export interface OrganizedPartySlice {
     parties: Party[];

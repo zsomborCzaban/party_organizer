@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {getPartyInvites} from "./PartyPageApi";
+import {getPartyInvites} from "./PartiesPageApi";
 import {PartyInvite} from "./PartyInvite";
 
 export interface PartyInviteSlice {

@@ -3,6 +3,8 @@ import publicPartySlice from "../features/overView/discover/PublicPartySlice";
 import organizedPartySlice from "../features/overView/partiesPage/OrganizedPartySlice";
 import attendedPartySlice from "../features/overView/partiesPage/AttendedPartySlice";
 import partyInviteSlice from "../features/overView/partiesPage/PartyInviteSlice";
+import friendInviteSlice from "../features/overView/friends/FriendInviteSlice";
+import friendSlice from "../features/overView/friends/FriendSlice";
 
 export const store = configureStore({
  reducer: {
@@ -10,6 +12,8 @@ export const store = configureStore({
      organizedPartyStore: organizedPartySlice,
      attendedPartyStore: attendedPartySlice,
      partyInviteStore: partyInviteSlice,
+     friendInviteStore: friendInviteSlice,
+     friendStore: friendSlice,
  },
 });
 

@@ -1,9 +1,7 @@
 import {User} from "../User";
-import {Party} from "../Party";
 
-export interface PartyInvite {
+export interface FriendInvite {
     ID: number
     invitor: User;
-    party: Party
     state: string
 }

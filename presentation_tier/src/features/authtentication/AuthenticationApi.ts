@@ -4,8 +4,8 @@ import {jwtDecode} from "jwt-decode";
 import apiClient, {post} from "../../api/Api";
 import {authService} from "../../auth/AuthService";
 
-const LOGIN_PATH = 'http://localhost:8080/api/v0/user/login';
-const REGISTER_PATH = 'http://localhost:8080/api/v0/user/register';
+const LOGIN_PATH = 'http://localhost:8080/api/v0/user/login/';
+const REGISTER_PATH = 'http://localhost:8080/api/v0/user/register/';
 
 export interface LoginRequestDataInterface {
     username: string;
@@ -23,7 +23,7 @@ const getJwtFromApiResponse = (apiResponse: AxiosResponse) => {
 
     const loginResponse: ApiResponse<LoginResponseDataInterface> = apiResponse.data
 
-    if(loginResponse.isError || loginResponse.code != 200) {
+    if(loginResponse.isError || loginResponse.code !== 200) {
         throw new Error(`invalid response status: ${loginResponse.code}; is error: ${loginResponse.errors}`,);
     }
 

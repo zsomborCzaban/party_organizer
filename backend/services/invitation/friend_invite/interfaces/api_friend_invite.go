@@ -7,7 +7,7 @@ import (
 )
 
 func NewFriendInviteRouter(router *mux.Router, controller domains.IFriendInviteController) {
-	r := router.PathPrefix("/friendInvite").Subrouter()
+	r := router.PathPrefix("/friendManager").Subrouter()
 
 	r.Use(jwt.ValidateJWTMiddleware)
 
@@ -15,6 +15,6 @@ func NewFriendInviteRouter(router *mux.Router, controller domains.IFriendInviteC
 	r.HandleFunc("/decline/{invitor_id}", controller.Decline).Methods("GET")
 	r.HandleFunc("/invite/{invited_id}", controller.Invite).Methods("GET")
 
-	r.HandleFunc("/getPendingInvites", controller.GetPendingInvites).Methods("GET")
+	r.HandleFunc("/getPendingInvites/", controller.GetPendingInvites).Methods("GET")
 	r.HandleFunc("/removeFriend/{friend_id}", controller.RemoveFriend).Methods("GET")
 }

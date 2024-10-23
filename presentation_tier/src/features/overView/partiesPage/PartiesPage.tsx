@@ -9,10 +9,10 @@ import {loadOrganizedParties} from "./OrganizedPartySlice";
 import {loadAttendedParties} from "./AttendedPartySlice";
 import {loadPartyInvites} from "./PartyInviteSlice";
 import {PartyInvite} from "./PartyInvite";
-import {acceptInvite, declineInvite} from "./PartyPageApi";
+import {acceptInvite, declineInvite} from "./PartiesPageApi";
 
 
-const PartyPage = () => {
+const PartiesPage = () => {
     const [reload, setReload] = useState(false);
 
     const dispatch = useDispatch<AppDispatch>()
@@ -93,7 +93,7 @@ const PartyPage = () => {
         {
             title: '',
             key: 'ID',
-            render: (text: string, record: Party) => (
+            render: (record: Party) => (
                 <button onClick={() => handleVisitClicked(record)}>Visit</button>
             ),
         },
@@ -130,14 +130,14 @@ const PartyPage = () => {
         {
             title: '',
             key: 'action 1',
-            render: (text: string, record: PartyInvite) => (
+            render: (record: PartyInvite) => (
                 <button onClick={() => handleInviteAccepted(record)}>Accept</button>
             ),
         },
         {
             title: '',
             key: 'action 2',
-            render: (text: string, record: PartyInvite) => (
+            render: (record: PartyInvite) => (
             <button onClick={() => handleInviteDeclined(record)}>Decline</button>
         ),
     },
@@ -248,4 +248,4 @@ const styles: { [key: string]: CSSProperties } = {
 };
 
 
-export default PartyPage;
+export default PartiesPage;

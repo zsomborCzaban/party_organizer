@@ -44,10 +44,9 @@ export const getPartyInvites = async (): Promise<PartyInvite[]> => {
     });
 };
 
-export const acceptInvite = async (invitorId: number): Promise<void> => {
+export const acceptInvite = async (partyID: number): Promise<void> => {
     return new Promise<void>((resolve, reject) => {
-        console.log(invitorId)
-        get<void>(ACCEPT_INVITE + invitorId.toString())
+        get<void>(ACCEPT_INVITE + partyID.toString())
             .then(() => {
                 return resolve();
             })
@@ -57,10 +56,9 @@ export const acceptInvite = async (invitorId: number): Promise<void> => {
     });
 };
 
-export const declineInvite = async (invitorId: number): Promise<void> => {
+export const declineInvite = async (partyID: number): Promise<void> => {
     return new Promise<void>((resolve, reject) => {
-        console.log(invitorId)
-        get<void>(DECLINE_INVITE + invitorId.toString())
+        get<void>(DECLINE_INVITE + partyID.toString())
             .then(() => {
                 return resolve();
             })
