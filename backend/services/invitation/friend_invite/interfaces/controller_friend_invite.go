@@ -71,9 +71,9 @@ func (fc FriendInviteController) Decline(w http.ResponseWriter, r *http.Request)
 
 func (fc FriendInviteController) Invite(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	invitedId, err := strconv.ParseUint(vars["invited_id"], 10, 32)
-	if err != nil {
-		br := api.ErrorBadRequest(err.Error())
+	invitedUsername, err := vars["username"]
+	if !err {
+		br := api.ErrorBadRequest("cannot parse given username")
 
 		br.Send(w)
 		return
@@ -87,7 +87,7 @@ func (fc FriendInviteController) Invite(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	resp := fc.FriendInviteService.Invite(uint(invitedId), userId)
+	resp := fc.FriendInviteService.Invite(invitedUsername, userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging

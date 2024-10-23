@@ -83,13 +83,18 @@ func (fs FriendInviteService) Decline(invitorId, userId uint) api.IResponse {
 	return api.Success(invite)
 }
 
-func (fs FriendInviteService) Invite(invitedId, userId uint) api.IResponse {
-	if userId == invitedId {
+func (fs FriendInviteService) Invite(invitedUsername string, userId uint) api.IResponse {
+	invited, err := fs.UserRepository.FindByUsername(invitedUsername)
+	if err != nil {
+		return api.ErrorBadRequest(err.Error())
+	}
+
+	if userId == invited.ID {
 		return api.ErrorBadRequest("cannot friend invite yourself")
 	}
 
 	//check reverse invite
-	reverseInvite, err := fs.FriendInviteRepository.FindByIds(invitedId, userId)
+	reverseInvite, _ := fs.FriendInviteRepository.FindByIds(invited.ID, userId)
 	if reverseInvite != nil && reverseInvite.State == domains.DECLINED {
 		return fs.ReverseInvite(reverseInvite)
 	}
@@ -98,12 +103,12 @@ func (fs FriendInviteService) Invite(invitedId, userId uint) api.IResponse {
 	}
 	//check reverse invite end
 
-	invite, err := fs.FriendInviteRepository.FindByIds(userId, invitedId)
-	if err != nil && err.Error() == domains.NOT_FOUND {
-		return fs.CreateInvitation(invitedId, userId)
+	invite, err2 := fs.FriendInviteRepository.FindByIds(userId, invited.ID)
+	if err2 != nil && err2.Error() == domains.NOT_FOUND {
+		return fs.CreateInvitation(invited.ID, userId)
 	}
-	if err != nil {
-		return api.ErrorInternalServerError(err.Error())
+	if err2 != nil {
+		return api.ErrorInternalServerError(err2.Error())
 	}
 
 	if invite.State == domains.ACCEPTED {
@@ -115,8 +120,8 @@ func (fs FriendInviteService) Invite(invitedId, userId uint) api.IResponse {
 	}
 
 	invite.State = domains.PENDING
-	if err2 := fs.FriendInviteRepository.Update(invite); err2 != nil {
-		return api.ErrorInternalServerError(err2.Error())
+	if err3 := fs.FriendInviteRepository.Update(invite); err3 != nil {
+		return api.ErrorInternalServerError(err3.Error())
 	}
 
 	return api.Success(invite)

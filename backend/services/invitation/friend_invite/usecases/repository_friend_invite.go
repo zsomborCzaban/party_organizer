@@ -69,7 +69,7 @@ func (fr FriendInviteRepository) FindPendingByInvitedId(invitedId uint) (*[]doma
 		{Field: "invited_id", Operator: "=", Value: invitedId},
 	}
 
-	fetchedInvites, fetchedError := fr.DbAccess.Query(queryParams, "Invited", "Invitor")
+	fetchedInvites, fetchedError := fr.DbAccess.Query(queryParams, "Invitor", "Invited")
 	if fetchedError != nil {
 		return nil, fetchedError
 	}

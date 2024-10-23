@@ -6,6 +6,7 @@ import Login2 from "../features/authtentication/Login2";
 import Register from "../features/authtentication/Register";
 import Discover from "../features/overView/discover/Discover";
 import PartiesPage from "../features/overView/partiesPage/PartiesPage";
+import Friends from "../features/overView/friends/Friends";
 
 const AppRoutes = () => {
     return (
@@ -19,6 +20,9 @@ const AppRoutes = () => {
                 </Route>
                 <Route path="/overview/parties" element={<PrivateRoute />}>
                     <Route path="/overview/parties" element={<PartiesPage />}/>
+                </Route>
+                <Route path="/overview/friends" element={<PrivateRoute />}>
+                    <Route path="/overview/friends" element={<Friends />}/>
                 </Route>
                 <Route path="/login" element={<Login/>} />
                 <Route path="/login2" element={<Login2/>} />

@@ -21,11 +21,9 @@ const PartiesPage = () => {
     const {parties: organizedParties, loading: organizedLoading, error: organizedError} = useSelector(
         (state: RootState) => state.organizedPartyStore
     )
-
     const {parties: attendedParties, loading: attendedLoading, error: attendedError} = useSelector(
         (state: RootState) => state.attendedPartyStore
     )
-
     const {invites, loading: inviteLoading, error: inviteError} = useSelector(
         (state: RootState) => state.partyInviteStore
     )
@@ -204,8 +202,8 @@ const PartiesPage = () => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 const styles: { [key: string]: CSSProperties } = {
     outerContainer: {
