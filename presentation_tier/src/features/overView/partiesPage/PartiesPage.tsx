@@ -10,6 +10,7 @@ import {loadAttendedParties} from "./AttendedPartySlice";
 import {loadPartyInvites} from "./PartyInviteSlice";
 import {PartyInvite} from "./PartyInvite";
 import {acceptInvite, declineInvite} from "./PartiesPageApi";
+import {setSelectedParty} from "../PartySlice";
 
 
 const PartiesPage = () => {
@@ -40,8 +41,8 @@ const PartiesPage = () => {
     const navigate = useNavigate()
 
     const handleVisitClicked = (record: Party) => {
-        console.log(record)
-        //todo: set selected party to record and navigate to the parties page
+        dispatch(setSelectedParty(record))
+        navigate("/visitParty/partyHome")
     }
 
     const handleInviteAccepted = (record: PartyInvite) => {

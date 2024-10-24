@@ -25,9 +25,8 @@ const Login2: React.FC = () => {
         e.preventDefault();
         login2(username, password)
             .then((responseData: InvalidCred[]) => {
-                console.log("thats the data: " + responseData)
                 if(!responseData){
-                   navigate("/")
+                   navigate("/overview/discover")
                 }
                 handleError(responseData)
             })

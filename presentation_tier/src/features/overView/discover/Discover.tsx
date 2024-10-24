@@ -9,6 +9,7 @@ import joinImage from '../../../midjourney_images/u5679648646_2_people_dancing_w
 import {useNavigate} from "react-router-dom";
 import {Party} from "../Party";
 import AccessCodeModal from "./AccessCodeModal";
+import {setSelectedParty} from "../PartySlice";
 
 
 const Discover = () => {
@@ -28,8 +29,8 @@ const Discover = () => {
 
 
     const handleVisitClicked = (record: Party) => {
-        console.log(record)
-        //todo: set selected party to record and navigate to the parties page
+        dispatch(setSelectedParty(record))
+        navigate("/visitParty/partyHome")
     }
     const handleCreate = () => {
         navigate("/createParty")
