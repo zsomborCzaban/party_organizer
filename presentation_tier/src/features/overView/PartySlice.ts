@@ -1,5 +1,8 @@
 import {Party} from "./Party";
 import {createSlice} from "@reduxjs/toolkit";
+import storage from 'redux-persist/lib/storage';
+import { persistReducer } from 'redux-persist';
+
 
 export interface SelectedPartySlice {
     selectedParty : Party | null;
@@ -8,6 +11,8 @@ export interface SelectedPartySlice {
 const initialState: SelectedPartySlice = {
     selectedParty: null,
 }
+
+
 
 const selectedPartySlice = createSlice({
         name: 'selectedParty',
@@ -19,5 +24,12 @@ const selectedPartySlice = createSlice({
         },
 });
 
-export default selectedPartySlice.reducer;
+const persistantConfig = {
+    key: 'selectedParty',
+    storage,
+};
+
+const persistedSelectedPartyReducer = persistReducer(persistantConfig, selectedPartySlice.reducer);
+
+export default persistedSelectedPartyReducer;
 export const setSelectedParty = selectedPartySlice.actions.setSelectedParty
