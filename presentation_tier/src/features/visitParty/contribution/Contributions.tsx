@@ -92,50 +92,48 @@ const Contributions = () => {
 
     return (
         <div style={styles.background}>
-        <div style={styles.outerContainer}>
-            <VisitPartyNavBar/>
-            <ContributeModal mode="drink" options={makeOptions(drinkRequirements)} visible={drinkModalVisible} onClose={() => {setDrinkModalVisible(false)}} />
-            <ContributeModal mode="food" options={makeOptions(foodRequirements)} visible={foodModalVisible} onClose={() => {setFoodModalVisible(false)}} />
-            <div style={styles.container}>
-                <div style={styles.outerCollapsible}>
-                    <Collapsible trigger="Drinks">
-                        <button style={styles.button} onClick={() => {handleContribute("drink")}}>Contribute</button>
-                        {drinkRequirements.map(req => (
-                            <div style={styles.collapsible}>
+            <div style={styles.outerContainer}>
+                <VisitPartyNavBar/>
+                <ContributeModal mode="drink" options={makeOptions(drinkRequirements)} visible={drinkModalVisible} onClose={() => {setDrinkModalVisible(false)}} />
+                <ContributeModal mode="food" options={makeOptions(foodRequirements)} visible={foodModalVisible} onClose={() => {setFoodModalVisible(false)}} />
+                <div style={styles.container}>
+                    <div style={styles.outerCollapsible}>
+                        <Collapsible trigger="Drinks" key={'drinks'}>
+                            <button style={styles.button} onClick={() => {handleContribute("drink")}}>Contribute</button>
+                            {drinkRequirements.map(req => (
+                                <div style={styles.collapsible} key={req.ID}>
+                                    <Collapsible trigger={req.type} key={req.ID}>
+                                        {drinkContributions
+                                            .filter(con => con.requirement_id === req.ID)
+                                            .map(contribution => {
+                                                return createContributionDiv(req, contribution)
+                                            })
+                                        }
+                                    </Collapsible>
+                                </div>
 
-                                <Collapsible trigger={req.type} key={req.ID}>
-                                    {drinkContributions
-                                        .filter(con => con.requirement_id === req.ID)
-                                        .map(contribution => {
-                                            return createContributionDiv(req, contribution)
-                                        })
-                                    }
-                                </Collapsible>
-                            </div>
-
-                        ))}
-                    </Collapsible>
+                            ))}
+                        </Collapsible>
+                    </div>
+                    <div style={styles.outerCollapsible}>
+                        <Collapsible trigger="Foods">
+                            <button style={styles.button} onClick={() => { handleContribute("food") } }> Contribute </button>
+                            {foodRequirements.map(req => (
+                                <div style={styles.collapsible} key={req.ID}>
+                                    <Collapsible trigger={req.type} key={req.ID}>
+                                        {foodContributions
+                                            .filter(con => con.requirement_id === req.ID)
+                                            .map(contribution => {
+                                                return createContributionDiv(req, contribution)
+                                            })
+                                        }
+                                    </Collapsible>
+                                </div>
+                            ))}
+                        </Collapsible>
+                    </div>
                 </div>
-                <div style={styles.outerCollapsible}>
-                    <Collapsible trigger="Foods">
-                        <button style={styles.button} onClick={() => { handleContribute("food") } }> Contribute </button>
-                        {foodRequirements.map(req => (
-                            <div style={styles.collapsible}>
-                                <Collapsible trigger={req.type} key={req.ID}>
-                                    {foodContributions
-                                        .filter(con => con.requirement_id === req.ID)
-                                        .map(contribution => {
-                                            return createContributionDiv(req, contribution)
-                                        })
-                                    }
-                                </Collapsible>
-                            </div>
-                        ))}
-                    </Collapsible>
-                </div>
-
             </div>
-        </div>
         </div>
     );
 }
