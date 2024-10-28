@@ -62,7 +62,7 @@ const styles: {[key: string]: React.CSSProperties} = {
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: '10px 20px',
-        backgroundColor: '#f8f9fa',
+        backgroundColor: 'rgba(33, 33, 33, 0.8)',
         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
     },
     tittleContainer: {
@@ -72,7 +72,7 @@ const styles: {[key: string]: React.CSSProperties} = {
     },
     title: {
         fontSize: '24px',
-        color: '#333',
+        color: '#007bff',
     },
     nav: {
         display: 'flex',

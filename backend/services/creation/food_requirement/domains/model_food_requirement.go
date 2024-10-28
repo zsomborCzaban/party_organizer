@@ -10,9 +10,9 @@ type FoodRequirement struct {
 
 	PartyID        uint          `json:"party_id"`
 	Party          domains.Party `json:"-"`
-	Type           string        `json:"type" validate:"required"`
-	TargetQuantity float32       `json:"target_quantity" validate:"required,gt=0"`
-	QuantityMark   string        `json:"quantity_mark" validate:"required"`
+	Type           string        `json:"type"`
+	TargetQuantity float32       `json:"target_quantity"`
+	QuantityMark   string        `json:"quantity_mark"`
 	Description    string        `json:"description"`
 }
 

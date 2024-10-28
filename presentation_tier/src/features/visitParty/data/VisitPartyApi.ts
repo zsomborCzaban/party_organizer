@@ -2,11 +2,12 @@ import {get} from "../../../api/Api";
 import {Requirement} from "./Requirement";
 import {Contribution} from "./Contribution";
 import {User} from "../../overView/User";
+import {post} from "../../../api/Api";
 
 const DRINK_REQUIREMENT_PATH = "http://localhost:8080/api/v0/drinkRequirement/getByPartyId/"
 const FOOD_REQUIREMENT_PATH = "http://localhost:8080/api/v0/foodRequirement/getByPartyId/"
-const DRINK_CONTRIBUTION_PATH = "http://localhost:8080/api/v0/drinkContribution/getByParty/"
-const FOOD_CONTRIBUTION_PATH = "http://localhost:8080/api/v0/foodContribution/getByParty/"
+const DRINK_CONTRIBUTION_PATH = "http://localhost:8080/api/v0/drinkContribution"
+const FOOD_CONTRIBUTION_PATH = "http://localhost:8080/api/v0/foodContribution"
 const PARTICIPANTS_PATH = "http://localhost:8080/api/v0/party/getParticipants/"
 
 export const getDrinkRequirements = async (partyId: number): Promise<Requirement[]> => {
@@ -35,7 +36,7 @@ export const getFoodRequirements = async (partyId: number): Promise<Requirement[
 
 export const getDrinkContributions = async (partyId: number): Promise<Contribution[]> => {
     return new Promise<Contribution[]>((resolve, reject) => {
-        get<Contribution[]>(DRINK_CONTRIBUTION_PATH + partyId)
+        get<Contribution[]>(DRINK_CONTRIBUTION_PATH + '/getByParty/' +partyId)
             .then((contributions: Contribution[]) => {
                 return resolve(contributions);
             })
@@ -47,7 +48,7 @@ export const getDrinkContributions = async (partyId: number): Promise<Contributi
 
 export const getFoodContributions = async (partyId: number): Promise<Contribution[]> => {
     return new Promise<Contribution[]>((resolve, reject) => {
-        get<Contribution[]>(FOOD_CONTRIBUTION_PATH + partyId)
+        get<Contribution[]>(FOOD_CONTRIBUTION_PATH + '/getByParty/' + partyId)
             .then((contributions: Contribution[]) => {
                 return resolve(contributions);
             })
@@ -62,6 +63,30 @@ export const getPartyParticipants = async (partyId: number): Promise<User[]> => 
         get<User[]>(PARTICIPANTS_PATH + partyId)
             .then((participants: User[]) => {
                 return resolve(participants);
+            })
+            .catch(err => {
+                return reject(err);
+            });
+    });
+};
+
+export const createDrinkContribution = async (requestBody: Contribution): Promise<Contribution> => {
+    return new Promise<Contribution>((resolve, reject) => {
+        post<Contribution>(DRINK_CONTRIBUTION_PATH, requestBody)
+            .then((contribution: Contribution) => {
+                return resolve(contribution);
+            })
+            .catch(err => {
+                return reject(err);
+            });
+    });
+};
+
+export const createFoodContribution = async (requestBody: Contribution): Promise<Contribution> => {
+    return new Promise<Contribution>((resolve, reject) => {
+        post<Contribution>(FOOD_CONTRIBUTION_PATH, requestBody)
+            .then((contribution: Contribution) => {
+                return resolve(contribution);
             })
             .catch(err => {
                 return reject(err);

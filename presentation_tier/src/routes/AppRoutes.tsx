@@ -9,7 +9,7 @@ import Friends from "../features/overView/friends/Friends";
 import CreateParty from "../features/createParty/CreateParty";
 import SetupParty from "../features/createParty/SetupParty";
 import PartyHome from "../features/visitParty/partyHome/PartyHome";
-import Contributions from "../features/visitParty/Contributions";
+import Contributions from "../features/visitParty/contribution/Contributions";
 import HallOfFame from "../features/visitParty/HallOfFame";
 import ManageParty from "../features/visitParty/ManageParty";
 
