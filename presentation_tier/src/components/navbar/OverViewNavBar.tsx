@@ -17,7 +17,7 @@ const OverViewNavBar: React.FC = () => {
 };
 
 // Inline styles
-const styles = {
+const styles: {[key: string]: React.CSSProperties} = {
     header: {
         display: 'flex',
         justifyContent: 'space-between',

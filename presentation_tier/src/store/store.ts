@@ -7,6 +7,11 @@ import friendInviteSlice from "../features/overView/friends/FriendInviteSlice";
 import friendSlice from "../features/overView/friends/FriendSlice";
 import persistedSelectedPartyReducer from "../features/overView/PartySlice";
 import { persistStore } from 'redux-persist';
+import drinkRequirementSlice from "../features/visitParty/data/Slices/DrinkRequirementSlice";
+import foodRequirementSlice from "../features/visitParty/data/Slices/FoodRequirementSlice";
+import drinkContributionSlice from "../features/visitParty/data/Slices/DrinkContributionSlice";
+import foodContributionSlice from "../features/visitParty/data/Slices/FoodContributionSlice";
+import partyParticipantSlice from "../features/visitParty/data/Slices/PartyParticipantSlice";
 
 export const store = configureStore({
     reducer: {
@@ -17,6 +22,11 @@ export const store = configureStore({
         friendInviteStore: friendInviteSlice,
         friendStore: friendSlice,
         selectedPartyStore: persistedSelectedPartyReducer,
+        drinkRequirementStore: drinkRequirementSlice,
+        foodRequirementStore: foodRequirementSlice,
+        drinkContributionStore: drinkContributionSlice,
+        foodContributionStore: foodContributionSlice,
+        partyParticipantStore: partyParticipantSlice,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

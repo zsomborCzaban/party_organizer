@@ -9,6 +9,9 @@ import Friends from "../features/overView/friends/Friends";
 import CreateParty from "../features/createParty/CreateParty";
 import SetupParty from "../features/createParty/SetupParty";
 import PartyHome from "../features/visitParty/partyHome/PartyHome";
+import Contributions from "../features/visitParty/Contributions";
+import HallOfFame from "../features/visitParty/HallOfFame";
+import ManageParty from "../features/visitParty/ManageParty";
 
 const AppRoutes = () => {
     return (
@@ -31,6 +34,15 @@ const AppRoutes = () => {
                 </Route>
                 <Route path="/visitParty/partyHome" element={<PrivateRoute />}>
                     <Route path="/visitParty/partyHome" element={<PartyHome />}/>
+                </Route>
+                <Route path="/visitParty/contributions" element={<PrivateRoute />}>
+                    <Route path="/visitParty/contributions" element={<Contributions />}/>
+                </Route>
+                <Route path="/visitParty/hallOfFame" element={<PrivateRoute />}>
+                    <Route path="/visitParty/hallOfFame" element={<HallOfFame />}/>
+                </Route>
+                <Route path="/visitParty/manageParty" element={<PrivateRoute />}>
+                    <Route path="/visitParty/manageParty" element={<ManageParty />}/>
                 </Route>
                 <Route path="/login" element={<Login/>} />
                 <Route path="/login2" element={<Login2/>} />

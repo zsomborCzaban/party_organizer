@@ -1,9 +1,28 @@
 import React, {CSSProperties} from "react";
 import VisitPartyNavBar from "../../../components/navbar/VisitPartyNavBar";
 import "bootstrap/dist/css/bootstrap.min.css";
+import {useNavigate} from "react-router-dom";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../store/store";
 
 
 const PartyHome: React.FC = () => {
+
+    const navigate = useNavigate()
+
+    const {selectedParty} = useSelector((state: RootState)=> state.selectedPartyStore)
+
+    if(!selectedParty){
+        console.log("error, no selected party")
+        navigate("/overview/discover")
+        return <div>error, selected party was null</div>
+    }
+
+    const handleContributeClick = () => {
+        navigate("/visitParty/Contributions")
+    }
+
+
     return (
         <div style={styles.outerContainer}>
             <VisitPartyNavBar/>
@@ -11,18 +30,19 @@ const PartyHome: React.FC = () => {
                 {/* Middle Section */}
                 <div style={styles.middleSection}>
                     {/* Title */}
-                    <h1 style={{fontSize: '48px', margin: '20px 0'}}>Big Title</h1>
+                    <h1 style={{fontSize: '48px', margin: '20px 0'}}>{selectedParty.name}</h1>
 
                     {/* Subtitle */}
-                    <p style={{fontSize: '18px', margin: '10px 0'}}>This is the smaller text below the title.</p>
+                    <p style={{fontSize: '18px', margin: '10px 0'}}>Contributions to the party.</p>
 
                     {/* Progress Bar */}
                     <div style={styles.progressBarContainer}>
-                        <div style={styles.progressBar}>60% Complete</div>
+                        <p style={styles.progressText}> 60% Complete</p>
+                        <div style={styles.progressBar}/>
                     </div>
 
                     {/* Button */}
-                    <button style={styles.button}>Click Me</button>
+                    <button style={styles.button} onClick={handleContributeClick}>Contribute</button>
                 </div>
 
                 {/* Bottom Row */}
@@ -40,7 +60,7 @@ const PartyHome: React.FC = () => {
                     {/* Link */}
                     <div>
                         <h5>
-                            <a href="#" style={styles.link}>Join Group Chat</a>
+                            <a href="" style={styles.link}>Join Group Chat</a>
                         </h5>
                     </div>
                 </div>
@@ -52,18 +72,20 @@ const PartyHome: React.FC = () => {
 const styles: { [key: string]: CSSProperties } = {
     outerContainer: {
         height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
     },
     container: {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        height: 'auto',
         flexGrow: '1',
         padding: '20px',
     },
     middleSection: {
         display: 'flex',
         flexDirection: 'column',
+        justifyContent: 'center',
         alignItems: 'center',
         textAlign: 'center',
         flexGrow: 1,
@@ -73,17 +95,25 @@ const styles: { [key: string]: CSSProperties } = {
         backgroundColor: '#e0e0e0',
         borderRadius: '10px',
         height: '20px',
-        position: 'relative' as 'relative',
-        margin: '20px 0',
+        position: 'relative',
+        margin: '10px 0 0 0',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: 'white',
     },
     progressBar: {
         width: '60%',
         backgroundColor: '#4caf50',
         borderRadius: '10px',
         height: '100%',
-        textAlign: 'center',
-        color: 'white',
-        lineHeight: '20px',
+        position: 'absolute',
+        left: 0,
+        top: 0,
+    },
+    progressText: {
+      zIndex: 1,
+        margin: 0,
     },
     bottomRow: {
         display: 'flex',

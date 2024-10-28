@@ -1,8 +1,11 @@
 package domains
 
-import "github.com/zsomborCzaban/party_organizer/common/api"
+import (
+	"github.com/zsomborCzaban/party_organizer/common/api"
+)
 
 type IPartyService interface {
+	GetParticipants(partyId, userId uint) api.IResponse
 	GetPublicParties() api.IResponse
 	GetPartiesByOrganizerId(uint) api.IResponse
 	GetPartiesByParticipantId(uint) api.IResponse

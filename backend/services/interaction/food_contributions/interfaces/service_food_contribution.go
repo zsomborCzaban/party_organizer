@@ -166,7 +166,7 @@ func (ds FoodContributionService) GetByPartyId(partyId, userId uint) api.IRespon
 		return api.ErrorBadRequest(err.Error())
 	}
 
-	if party.CanBeAccessedBy(userId) {
+	if !party.CanBeAccessedBy(userId) {
 		return api.ErrorUnauthorized(domains.NO_ACCESS_TO_PARTY)
 	}
 

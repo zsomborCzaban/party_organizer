@@ -124,6 +124,19 @@ func (ps PartyService) GetPartiesByParticipantId(id uint) api.IResponse {
 	return api.Success(parties)
 }
 
+func (ps PartyService) GetParticipants(partyId, userId uint) api.IResponse {
+	party, err := ps.PartyRepository.FindById(partyId)
+	if err != nil {
+		return api.ErrorBadRequest(err.Error())
+	}
+
+	if !party.CanBeAccessedBy(userId) {
+		return api.ErrorUnauthorized(err.Error())
+	}
+
+	return api.Success(append(party.Participants, party.Organizer))
+}
+
 func (ps PartyService) AddUserToParty(partyId, userId uint) api.IResponse {
 	party, err := ps.PartyRepository.FindById(partyId)
 	if err != nil {

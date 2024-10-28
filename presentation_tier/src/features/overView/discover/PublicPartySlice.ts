@@ -38,7 +38,7 @@ const publicPartySlice = createSlice({
             })
             .addCase(loadPublicParties.fulfilled, (state, action) => {
                 state.loading = false;
-                state.parties = action.payload!;
+                state.parties = action.payload ? action.payload : [];
                 state.error = null;
             })
             .addCase(loadPublicParties.rejected, (state, action) => {

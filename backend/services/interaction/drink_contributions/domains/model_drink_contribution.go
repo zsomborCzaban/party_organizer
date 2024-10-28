@@ -10,10 +10,10 @@ type DrinkContribution struct {
 	gorm.Model
 
 	ContributorId uint                            `json:"contributor_id"`
-	Contributor   userDomain.User                 `json:"-"`
-	DrinkReqId    uint                            `json:"drink_req_id" validate:"required"`
-	DrinkReq      drinkReqDomain.DrinkRequirement `json:"-"`
+	Contributor   userDomain.User                 `json:"contributor"`
+	DrinkReqId    uint                            `json:"requirement_id" validate:"required"`
+	DrinkReq      drinkReqDomain.DrinkRequirement `json:"requirement"`
 	PartyId       uint                            `json:"-"`
-	Quantity      int                             `json:"quantity" validate:"required,gt=0"`
+	Quantity      float32                         `json:"quantity" validate:"required,gt=0"`
 	Description   string                          `json:"description"`
 }

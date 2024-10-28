@@ -38,7 +38,7 @@ const friendSlice = createSlice({
             })
             .addCase(loadFriends.fulfilled, (state, action) => {
                 state.loading = false;
-                state.friends = action.payload!;
+                state.friends = action.payload ? action.payload : [];
                 state.error = null;
             })
             .addCase(loadFriends.rejected, (state, action) => {
