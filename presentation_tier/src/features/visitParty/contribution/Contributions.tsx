@@ -14,6 +14,8 @@ import {Contribution} from "../data/Contribution";
 import {Requirement} from "../data/Requirement";
 import backgroundImage from "../../../midjourney_images/cola-pepsi.png";
 import ContributeModal from "./ContributeModal";
+import {getUserId} from "../../../auth/AuthUserUtil";
+import {authService} from "../../../auth/AuthService";
 
 const Contributions = () => {
     const navigate = useNavigate()
@@ -26,6 +28,8 @@ const Contributions = () => {
     const [fReqContributionMap, setFReqContributionMap] = useState<Record<number, number>>({})
     const [fulfilledDReqs, setFulfilledDReqs] = useState(0)
     const [fulfilledFReqs, setFulfilledFReqs] = useState(0)
+    const [userId, setUserId] = useState(0)
+    const [isOrganizer, setIsOrganizer] = useState(false)
 
     const {selectedParty} = useSelector((state: RootState)=> state.selectedPartyStore)
 
@@ -56,12 +60,23 @@ const Contributions = () => {
     }, [participants]);
 
     useEffect( () => {
+        const currentUserId = getUserId()
+
+        if(!currentUserId) {
+            authService.handleUnauthorized()
+            return
+        }
+
         if(!selectedParty || !selectedParty.ID) return
         dispatch(loadDrinkRequirements(selectedParty.ID));
         dispatch(loadFoodRequirements(selectedParty.ID));
         dispatch(loadDrinkContributions(selectedParty.ID));
         dispatch(loadFoodContributions(selectedParty.ID));
         dispatch(loadPartyParticipants(selectedParty.ID))
+
+        setUserId(Number(currentUserId))
+        setIsOrganizer(selectedParty.organizer ? selectedParty.organizer.ID === Number(currentUserId) : false)
+
     }, []);
 
     useEffect(() => {
@@ -120,18 +135,36 @@ const Contributions = () => {
 
     const createContributionDiv = (req: Requirement, contribution: Contribution) => {
         let contributorName//not easily readable :( = contribution.contributor_id ? participantMap[contribution.contributor_id] ? participantMap[contribution.contributor_id].username : "" : ""
+        let contributorId
+
         if(contribution.contributor_id && participantMap[contribution.contributor_id]){
             contributorName = participantMap[contribution.contributor_id].username
+            contributorId = participantMap[contribution.contributor_id].ID
         } else {
             contributorName = ""
+            contributorId = 0
         }
 
-        return <div key={contribution.ID} style={styles.contribution}> {contributorName}: {contribution.quantity} {req.quantity_mark}, {contribution.description}</div>
+        return <div key={contribution.ID} style={styles.contribution}>
+                    <div>{contributorName}: {contribution.quantity} {req.quantity_mark}, {contribution.description}</div>
+                    { (contributorId == userId || isOrganizer) &&
+                            <div>
+                                <button style={styles.deleteButton} onClick={() => {
+                                    handleDeleteContribution(contribution)
+                                }}> Delete
+                                </button>
+                            </div>
+                    }
+                </div>
     }
 
     const handleContribute = (mode: string) => {
-        if(mode === "drink") setDModalVisible(true)
+        if (mode === "drink") setDModalVisible(true)
         if(mode === "food") setFModalVisible(true)
+    }
+
+    const handleDeleteContribution = (contribution: Contribution) => {
+
     }
 
     const makeOptions = (requirements: Requirement[]) => {
@@ -170,7 +203,7 @@ const Contributions = () => {
                     </div>
                     <div style={styles.outerCollapsible}>
                         <Collapsible trigger={`Foods ${fulfilledFReqs}/${fRequirements.length} fulfilled`}>
-                            <button style={styles.button} onClick={() => { handleContribute("food") } }> Contribute </button>
+                            <button  style={styles.button} onClick={()=> { handleContribute("food") } }> Contribute </button>
                             {fRequirements.map(req => (
                                 <div style={styles.collapsible} key={req.ID}>
                                     <Collapsible trigger={`${req.type} ${fReqContributionMap[req.ID || -1] || 0}/${req.target_quantity} ${req.quantity_mark}`} key={req.ID}>
@@ -217,6 +250,7 @@ const styles: { [key: string]: CSSProperties } = {
         background: 'linear-gradient(to top right, rgba(139, 0, 0, 0.8), rgba(0, 0, 139, 0.8))',
 },
     outerCollapsible: {
+        minHeight: '50px',
         marginBottom: '10px',
         background: 'linear-gradient(to top right, #8B0000, #00008B)',
         border: '1px solid #ddd',
@@ -226,6 +260,7 @@ const styles: { [key: string]: CSSProperties } = {
         fontWeight: 'bold',
     },
     collapsible: {
+        minHeight: '50px',
         marginBottom: '10px',
         backgroundColor: '#333333',
         border: '1px solid #ddd',
@@ -234,6 +269,11 @@ const styles: { [key: string]: CSSProperties } = {
         color: '#1E90FF',
     },
     contribution: {
+        display: 'flex',
+        minHeight: '50px',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
         padding: '5px 10px',
         margin: '5px 0',
         backgroundColor: '#4A4A4A',
@@ -249,6 +289,14 @@ const styles: { [key: string]: CSSProperties } = {
         borderRadius: '5px',
         cursor: 'pointer',
         margin: '20px 0px 20px 0px',
+    },
+    deleteButton: {
+        padding: '5px 20px',
+        backgroundColor: 'red',
+        color: 'white',
+        border: 'none',
+        borderRadius: '5px',
+        cursor: 'pointer',
     },
 };
 

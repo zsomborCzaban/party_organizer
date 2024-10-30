@@ -41,7 +41,7 @@ func (p *Party) TransformToPartyDTO() *PartyDTO {
 }
 
 func (p *Party) CanBeAccessedBy(userId uint) bool {
-	return !p.Private || p.HasParticipant(userId) || userId == adminUser.ADMIN_USER_ID
+	return p.HasParticipant(userId) || userId == adminUser.ADMIN_USER_ID //we dont check for private bc it only means anyone cna join them
 }
 
 func (p *Party) CanBeOrganizedBy(userId uint) bool {

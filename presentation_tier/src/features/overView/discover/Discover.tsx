@@ -10,6 +10,7 @@ import {useNavigate} from "react-router-dom";
 import {Party} from "../Party";
 import AccessCodeModal from "./AccessCodeModal";
 import {setSelectedParty} from "../PartySlice";
+import {joinPublicParty} from "./PublicPartyApi";
 
 
 const Discover = () => {
@@ -26,11 +27,20 @@ const Discover = () => {
     const navigate = useNavigate()
 
     const [modalVisible, setModalVisible] = useState(false)
+    const [unexpectedError, setUnexpectedError] = useState('')
 
 
     const handleVisitClicked = (record: Party) => {
-        dispatch(setSelectedParty(record))
-        navigate("/visitParty/partyHome")
+        joinPublicParty(record.ID || -1)
+            .then((joinedParty) => {
+                dispatch(setSelectedParty(joinedParty))
+                navigate("/visitParty/partyHome")
+            })
+            .catch(err => {
+                console.log("something unexpected happened")
+                setUnexpectedError("something unexpected happened while joining public party, try again later ")
+            })
+
     }
     const handleCreate = () => {
         navigate("/createParty")
@@ -115,6 +125,7 @@ const Discover = () => {
                     <div style={styles.joinButton} onClick={handleJoin}>Join</div>
                 </div>
                 <AccessCodeModal visible={modalVisible} onClose={closeModal} />
+                {unexpectedError && <div style={styles.errorFeedback}>{unexpectedError}</div>}
             </div>
         </div>
     )
@@ -193,6 +204,12 @@ const styles: { [key: string]: CSSProperties } = {
         height: '90%',
         border: 'none',
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+    },
+    errorFeedback: {
+        margin: '10px 0', // Space above and below the message
+        fontSize: '18px',
+        textAlign: 'left', // Center align the message
+        color: 'red', // Optional: a softer color for the message
     },
 };
 
