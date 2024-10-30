@@ -3,6 +3,10 @@ import {Input, Modal} from 'antd';
 import {ApiError} from "../../../api/ApiResponse";
 import {Contribution} from "../data/Contribution";
 import {createDrinkContribution, createFoodContribution} from "../data/VisitPartyApi";
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch, RootState} from "../../../store/store";
+import {loadDrinkContributions} from "../data/slices/DrinkContributionSlice";
+import {loadFoodContributions} from "../data/slices/FoodContributionSlice";
 
 interface ContributeModalProps {
     visible: boolean;
@@ -25,6 +29,23 @@ const ContributeModal: React.FC<ContributeModalProps> = ({ mode, options, visibl
     const [description, setDescription] = useState('');
     const [requirementId, setRequirementId] = useState(0);
     const [feedbacks, setFeedbacks] = useState<Feedbacks>({});
+    const [reloadDrink, setReloadDrink] = useState(false)
+    const [reloadFood, setReloadFood] = useState(false)
+
+    const dispatch = useDispatch<AppDispatch>()
+
+    const {selectedParty} = useSelector((state: RootState)=> state.selectedPartyStore)
+
+    useEffect(() => {
+        if(!selectedParty || !selectedParty.ID) return
+        dispatch(loadDrinkContributions(selectedParty.ID));
+    }, [reloadDrink]);
+
+    useEffect(() => {
+        if(!selectedParty || !selectedParty.ID) return
+        dispatch(loadFoodContributions(selectedParty.ID));
+    }, [reloadFood]);
+
 
     useEffect(() => {
         if (visible) {
@@ -79,7 +100,7 @@ const ContributeModal: React.FC<ContributeModalProps> = ({ mode, options, visibl
                 .then(createdContribution => {
                     newFeedbacks.buttonSuccess = "created successfully"
                     setFeedbacks(newFeedbacks)
-                    //todo: reload contributions
+                    setReloadDrink(prevState => !prevState)
                 })
                 .catch(err => {
                     if(err.response){
@@ -98,7 +119,7 @@ const ContributeModal: React.FC<ContributeModalProps> = ({ mode, options, visibl
                 .then(createdContribution => {
                     newFeedbacks.buttonSuccess = "created successfully"
                     setFeedbacks(newFeedbacks)
-                    //todo: reload contributions
+                    setReloadFood(prevState => !prevState)
                 })
                 .catch(err => {
                     if(err.response){

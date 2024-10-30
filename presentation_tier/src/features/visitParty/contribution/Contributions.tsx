@@ -19,27 +19,41 @@ const Contributions = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch<AppDispatch>()
 
-    const [participantMap, setparticipantMap] = useState<Record<string, User>>({});
-    const [drinkModalVisible, setDrinkModalVisible] = useState(false)
-    const [foodModalVisible, setFoodModalVisible] = useState(false)
+    const [participantMap, setParticipantMap] = useState<Record<string, User>>({});
+    const [dModalVisible, setDModalVisible] = useState(false)
+    const [fModalVisible, setFModalVisible] = useState(false)
+    const [dReqContributionMap, setDReqContributionMap] = useState<Record<number, number>>({})
+    const [fReqContributionMap, setFReqContributionMap] = useState<Record<number, number>>({})
+    const [fulfilledDReqs, setFulfilledDReqs] = useState(0)
+    const [fulfilledFReqs, setFulfilledFReqs] = useState(0)
 
     const {selectedParty} = useSelector((state: RootState)=> state.selectedPartyStore)
 
-    const {requirements: drinkRequirements, loading: DReqLoading, error: DReqError} = useSelector(
+    const {requirements: dRequirements, loading: DReqLoading, error: DReqError} = useSelector(
         (state: RootState) => state.drinkRequirementStore
     )
-    const {requirements: foodRequirements, loading: FReqLoading, error: FReqError} = useSelector(
+    const {requirements: fRequirements, loading: FReqLoading, error: FReqError} = useSelector(
         (state: RootState) => state.foodRequirementStore
     )
-    const {contributions: drinkContributions, loading: DConLoading, error: DConError} = useSelector(
+    const {contributions: dContributions, loading: DConLoading, error: DConError} = useSelector(
         (state: RootState) => state.drinkContributionStore
     )
-    const {contributions: foodContributions, loading: FConLoading, error: FConError} = useSelector(
+    const {contributions: fContributions, loading: FConLoading, error: FConError} = useSelector(
         (state: RootState) => state.foodContributionStore
     )
     const {participants, loading: participantsLoading, error: particiapntsError} = useSelector(
         (state: RootState) => state.partyParticipantStore
     )
+
+    useEffect(() => {
+        if(!participants) return
+        const newMap = participants.reduce((pMap: Record<number, User>, participant) => {
+            pMap[participant.ID] = participant;
+            return pMap
+        }, {})
+
+        setParticipantMap(newMap)
+    }, [participants]);
 
     useEffect( () => {
         if(!selectedParty || !selectedParty.ID) return
@@ -51,15 +65,52 @@ const Contributions = () => {
     }, []);
 
     useEffect(() => {
-        if(!participants) return
+        if(!dContributions || dContributions.length === 0) return
+        const reqContributionMap: Record<number, number> = {}
+        let fulfilled = 0
 
-        const newMap = participants.reduce((pMap: Record<number, User>, participant) => {
-            pMap[participant.ID] = participant;
-            return pMap
-        }, {})
+        dRequirements.forEach(req => {
+            dContributions.forEach(contriburion => {
+                if(contriburion.requirement_id !== req.ID) return
 
-        setparticipantMap(newMap)
-    }, [participants]);
+                const oldCount = reqContributionMap[req.ID] || 0
+                const newCount = oldCount + contriburion.quantity
+
+                reqContributionMap[req.ID] = newCount
+                if(newCount >= req.target_quantity && oldCount < req.target_quantity){
+                    fulfilled += 1
+                }
+            })
+        })
+
+        setDReqContributionMap(reqContributionMap)
+        setFulfilledDReqs(fulfilled)
+
+    }, [dContributions, dRequirements]);
+
+    useEffect(() => {
+        if(!fContributions || fContributions.length === 0) return
+        const reqContributionMap: Record<number, number> = {}
+        let fulfilled = 0
+
+        fRequirements.forEach(req => {
+            fContributions.forEach(contriburion => {
+                if(contriburion.requirement_id !== req.ID) return
+
+                const oldCount = reqContributionMap[req.ID] || 0
+                const newCount = oldCount + contriburion.quantity
+
+                reqContributionMap[req.ID] = newCount
+                if(newCount >= req.target_quantity && oldCount < req.target_quantity){
+                    fulfilled += 1
+                }
+            })
+        })
+
+        setFReqContributionMap(reqContributionMap)
+        setFulfilledFReqs(fulfilled)
+
+    }, [fContributions]);
 
     if(!selectedParty || !selectedParty.ID){
         console.log("error, no selected party or no id of party")
@@ -79,8 +130,8 @@ const Contributions = () => {
     }
 
     const handleContribute = (mode: string) => {
-        if(mode === "drink") setDrinkModalVisible(true)
-        if(mode === "food") setFoodModalVisible(true)
+        if(mode === "drink") setDModalVisible(true)
+        if(mode === "food") setFModalVisible(true)
     }
 
     const makeOptions = (requirements: Requirement[]) => {
@@ -90,20 +141,22 @@ const Contributions = () => {
         }, [])
     };
 
+    console.log(dReqContributionMap)
+
     return (
         <div style={styles.background}>
             <div style={styles.outerContainer}>
                 <VisitPartyNavBar/>
-                <ContributeModal mode="drink" options={makeOptions(drinkRequirements)} visible={drinkModalVisible} onClose={() => {setDrinkModalVisible(false)}} />
-                <ContributeModal mode="food" options={makeOptions(foodRequirements)} visible={foodModalVisible} onClose={() => {setFoodModalVisible(false)}} />
+                <ContributeModal mode="drink" options={makeOptions(dRequirements)} visible={dModalVisible} onClose={() => {setDModalVisible(false)}} />
+                <ContributeModal mode="food" options={makeOptions(fRequirements)} visible={fModalVisible} onClose={() => {setFModalVisible(false)}} />
                 <div style={styles.container}>
                     <div style={styles.outerCollapsible}>
-                        <Collapsible trigger="Drinks" key={'drinks'}>
+                        <Collapsible trigger={`Drinks ${fulfilledDReqs}/${dRequirements.length} fulfilled`} key={'drinks'}>
                             <button style={styles.button} onClick={() => {handleContribute("drink")}}>Contribute</button>
-                            {drinkRequirements.map(req => (
+                            {dRequirements.map(req => (
                                 <div style={styles.collapsible} key={req.ID}>
-                                    <Collapsible trigger={req.type} key={req.ID}>
-                                        {drinkContributions
+                                    <Collapsible trigger={`${req.type} ${dReqContributionMap[req.ID || -1] || 0}/${req.target_quantity} ${req.quantity_mark}`} key={req.ID}>
+                                        {dContributions
                                             .filter(con => con.requirement_id === req.ID)
                                             .map(contribution => {
                                                 return createContributionDiv(req, contribution)
@@ -116,12 +169,12 @@ const Contributions = () => {
                         </Collapsible>
                     </div>
                     <div style={styles.outerCollapsible}>
-                        <Collapsible trigger="Foods">
+                        <Collapsible trigger={`Foods ${fulfilledFReqs}/${fRequirements.length} fulfilled`}>
                             <button style={styles.button} onClick={() => { handleContribute("food") } }> Contribute </button>
-                            {foodRequirements.map(req => (
+                            {fRequirements.map(req => (
                                 <div style={styles.collapsible} key={req.ID}>
-                                    <Collapsible trigger={req.type} key={req.ID}>
-                                        {foodContributions
+                                    <Collapsible trigger={`${req.type} ${fReqContributionMap[req.ID || -1] || 0}/${req.target_quantity} ${req.quantity_mark}`} key={req.ID}>
+                                        {fContributions
                                             .filter(con => con.requirement_id === req.ID)
                                             .map(contribution => {
                                                 return createContributionDiv(req, contribution)

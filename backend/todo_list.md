@@ -7,8 +7,6 @@
 
 dto-k removolasa a useren kivul
 
-admin user should have id 1, otherwise it will create buggs
-
 auto delete on parties after they have been hosted
 delete parties (maybe)
 
@@ -29,3 +27,9 @@ validate party on backend
 
 a party sliceokat osszetenni 1 sliceá és fronenden szurni az eppen szuksegesekre
 pros: most epp jobb megoldas lenne, cons: ha hasznalunk graphql-t es egy requesttel lejon minden akkopr a mostani hatekonyabb megoldas mert ugyanannyi request, viszont amikor volatoztatunk 1 adatot akkor nem kell az egeszet ujra requestelni hanem csak azt a reszt es frontenden sem kell majd kulon szurni(altough picivel nagyobb maintain)
+
+profilkép a usereknek, és megjeleníteni a contribution és hall of fame oldalakon
+
+frontend: reload contributions after making one
+
+concurrent mapwrite errort fixelni backendben
