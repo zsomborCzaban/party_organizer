@@ -3,7 +3,7 @@ import VisitPartyNavBar from "../../../components/navbar/VisitPartyNavBar";
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../../store/store";
-import React, {CSSProperties, useEffect, useState} from "react";
+import React, {CSSProperties, useEffect, useRef, useState} from "react";
 import {loadDrinkRequirements} from "../data/slices/DrinkRequirementSlice";
 import {loadFoodRequirements} from "../data/slices/FoodRequirementSlice";
 import {loadDrinkContributions} from "../data/slices/DrinkContributionSlice";
@@ -16,20 +16,26 @@ import backgroundImage from "../../../midjourney_images/cola-pepsi.png";
 import ContributeModal from "./ContributeModal";
 import {getUserId} from "../../../auth/AuthUserUtil";
 import {authService} from "../../../auth/AuthService";
+import DeleteModal from "./DeleteModal";
 
 const Contributions = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch<AppDispatch>()
 
     const [participantMap, setParticipantMap] = useState<Record<string, User>>({});
-    const [dModalVisible, setDModalVisible] = useState(false)
-    const [fModalVisible, setFModalVisible] = useState(false)
     const [dReqContributionMap, setDReqContributionMap] = useState<Record<number, number>>({})
     const [fReqContributionMap, setFReqContributionMap] = useState<Record<number, number>>({})
     const [fulfilledDReqs, setFulfilledDReqs] = useState(0)
     const [fulfilledFReqs, setFulfilledFReqs] = useState(0)
+    const [dModalVisible, setDModalVisible] = useState(false)
+    const [fModalVisible, setFModalVisible] = useState(false)
+    const [deleteModalVisible, setDeleteModalVisible] = useState(false)
+    const [contributionIdToDelete, setContributionIdToDelete] = useState(0)
+    const [deleteMode, setDeleteMode] = useState('')
     const [userId, setUserId] = useState(0)
     const [isOrganizer, setIsOrganizer] = useState(false)
+
+    const initialFetchDone = useRef(false);
 
     const {selectedParty} = useSelector((state: RootState)=> state.selectedPartyStore)
 
@@ -60,6 +66,9 @@ const Contributions = () => {
     }, [participants]);
 
     useEffect( () => {
+        if (initialFetchDone.current) return;
+
+        initialFetchDone.current = true;
         const currentUserId = getUserId()
 
         if(!currentUserId) {
@@ -133,7 +142,7 @@ const Contributions = () => {
         return <div>error, selected party was null</div>
     }
 
-    const createContributionDiv = (req: Requirement, contribution: Contribution) => {
+    const createContributionDiv = (req: Requirement, contribution: Contribution, mode: string) => {
         let contributorName//not easily readable :( = contribution.contributor_id ? participantMap[contribution.contributor_id] ? participantMap[contribution.contributor_id].username : "" : ""
         let contributorId
 
@@ -150,7 +159,7 @@ const Contributions = () => {
                     { (contributorId == userId || isOrganizer) &&
                             <div>
                                 <button style={styles.deleteButton} onClick={() => {
-                                    handleDeleteContribution(contribution)
+                                    handleDeleteContribution(contribution, mode)
                                 }}> Delete
                                 </button>
                             </div>
@@ -163,8 +172,18 @@ const Contributions = () => {
         if(mode === "food") setFModalVisible(true)
     }
 
-    const handleDeleteContribution = (contribution: Contribution) => {
+    const handleDeleteContribution = (contribution: Contribution, mode: string) => {
+        if(mode === "drink"){
+            setDeleteMode("drink")
+            setContributionIdToDelete(contribution.ID || -1)
+            setDeleteModalVisible(true)
+        }
 
+        if(mode === "food"){
+            setDeleteMode("food")
+            setContributionIdToDelete(contribution.ID || -1)
+            setDeleteModalVisible(true)
+        }
     }
 
     const makeOptions = (requirements: Requirement[]) => {
@@ -182,6 +201,7 @@ const Contributions = () => {
                 <VisitPartyNavBar/>
                 <ContributeModal mode="drink" options={makeOptions(dRequirements)} visible={dModalVisible} onClose={() => {setDModalVisible(false)}} />
                 <ContributeModal mode="food" options={makeOptions(fRequirements)} visible={fModalVisible} onClose={() => {setFModalVisible(false)}} />
+                <DeleteModal visible={deleteModalVisible} onClose={() => setDeleteModalVisible(false)} mode={deleteMode} contributionId={contributionIdToDelete}/>
                 <div style={styles.container}>
                     <div style={styles.outerCollapsible}>
                         <Collapsible trigger={`Drinks ${fulfilledDReqs}/${dRequirements.length} fulfilled`} key={'drinks'}>
@@ -192,7 +212,7 @@ const Contributions = () => {
                                         {dContributions
                                             .filter(con => con.requirement_id === req.ID)
                                             .map(contribution => {
-                                                return createContributionDiv(req, contribution)
+                                                return createContributionDiv(req, contribution, "drink")
                                             })
                                         }
                                     </Collapsible>
@@ -210,7 +230,7 @@ const Contributions = () => {
                                         {fContributions
                                             .filter(con => con.requirement_id === req.ID)
                                             .map(contribution => {
-                                                return createContributionDiv(req, contribution)
+                                                return createContributionDiv(req, contribution, "food")
                                             })
                                         }
                                     </Collapsible>

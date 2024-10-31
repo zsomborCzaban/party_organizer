@@ -17,11 +17,7 @@ const initialState: DrinkContributionSlice = {
 export const loadDrinkContributions = createAsyncThunk(
     'data/loadDrinkContributions',
     async (partyId: number) => {
-        try {
-            return await getDrinkContributions(partyId);
-        } catch (err) {
-            console.log("err in loadDrinkContributions: " + err)
-        }
+        return getDrinkContributions(partyId)
     },
 );
 

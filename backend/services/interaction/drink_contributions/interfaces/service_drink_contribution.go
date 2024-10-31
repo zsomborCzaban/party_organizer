@@ -42,7 +42,11 @@ func (ds DrinkContributionService) Create(contribution domains.DrinkContribution
 	if err3 != nil {
 		return api.ErrorBadRequest(err3.Error())
 	}
-	party := drinkReq.Party
+
+	party, err4 := ds.PartyRepository.FindById(drinkReq.PartyID)
+	if err4 != nil {
+		return api.ErrorBadRequest(err4.Error())
+	}
 
 	if !party.CanBeAccessedBy(userId) {
 		return api.ErrorUnauthorized(domains.NO_ACCESS_TO_PARTY)

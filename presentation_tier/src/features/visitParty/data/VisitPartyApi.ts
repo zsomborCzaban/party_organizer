@@ -1,4 +1,4 @@
-import {get} from "../../../api/Api";
+import {DELETE, get} from "../../../api/Api";
 import {Requirement} from "./Requirement";
 import {Contribution} from "./Contribution";
 import {User} from "../../overView/User";
@@ -93,3 +93,27 @@ export const createFoodContribution = async (requestBody: Contribution): Promise
             });
     });
 };
+
+export const deleteDrinkContribution = async (contributionId: number): Promise<void> => {
+    return new Promise<void>((resolve, reject) => {
+        DELETE<void>(DRINK_CONTRIBUTION_PATH + "/" + contributionId.toString())
+            .then(() => {
+                return resolve();
+            })
+            .catch(err => {
+                return reject(err);
+            });
+    });
+}
+
+export const deleteFoodContribution = async (contributionId: number): Promise<void> => {
+    return new Promise<void>((resolve, reject) => {
+        DELETE<void>(FOOD_CONTRIBUTION_PATH + "/" + contributionId.toString())
+            .then(() => {
+                return resolve();
+            })
+            .catch(err => {
+                return reject(err);
+            });
+    });
+}

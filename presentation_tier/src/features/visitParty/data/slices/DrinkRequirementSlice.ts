@@ -17,11 +17,7 @@ const initialState: DrinkRequirementSlice = {
 export const loadDrinkRequirements = createAsyncThunk(
     'data/loadDrinkRequirements',
     async (partyId: number) => {
-        try {
-            return await getDrinkRequirements(partyId);
-        } catch (err) {
-            console.log("err in loadDrinkRequirements: " + err)
-        }
+        return getDrinkRequirements(partyId)
     },
 );
 

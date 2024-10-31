@@ -85,4 +85,22 @@ export const post = <T>(url: string, requestBody: object) => {
     });
 };
 
+export const DELETE = <T>(url: string) => {
+    return new Promise<T>((resolve, reject) => {
+        apiClient.delete<ApiResponse<T>>(url)
+            .then((response) => {
+                parseResponse<T>(response)
+                    .then((parsedResponse: T) => {
+                        return resolve(parsedResponse);
+                    })
+                    .catch((error) => {
+                        return reject(error);
+                    });
+            })
+            .catch((error) => {
+                return reject(error);
+            });
+    });
+};
+
 export default apiClient
