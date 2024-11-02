@@ -42,14 +42,14 @@ const VisitPartyNavBar: React.FC = () => {
             <nav style={styles.nav}>
                 <ul style={styles.navList}>
                     {userId === selectedParty.organizer.ID &&
-                        <li style={styles.navItem}><a href="/visitParty/manageParty" style={styles.link}>Manage
-                            Party</a></li>}
-                    <li style={styles.navItem}><a href="/visitParty/partyHome" style={styles.link}>Home</a></li>
-                    <li style={styles.navItem}><a href="/visitParty/contributions" style={styles.link}>Contributions</a>
+                        <li style={styles.navItem}><p onClick={() => navigate("/visitParty/manageParty")}  style={styles.link}>Manage
+                            Party</p></li>}
+                    <li style={styles.navItem}><p onClick={() => navigate("/visitParty/partyHome")}  style={styles.link}>Home</p></li>
+                    <li style={styles.navItem}><p onClick={() => navigate("/visitParty/contributions")}  style={styles.link}>Contributions</p>
                     </li>
-                    <li style={styles.navItem}><a href="/visitParty/hallOfFame" style={styles.link}>Hall Of Fame</a>
+                    <li style={styles.navItem}><p onClick={() => navigate("/visitParty/hallOfFame")}  style={styles.link}>Hall Of Fame</p>
                     </li>
-                    <li style={styles.navItem}><a href="/profile" style={styles.link}>Profile</a></li>
+                    <li style={styles.navItem}><p onClick={() => navigate("/profile")}  style={styles.link}>Profile</p></li>
                 </ul>
             </nav>
         </header>
@@ -87,6 +87,8 @@ const styles: {[key: string]: React.CSSProperties} = {
         margin: '0 15px',
     },
     link: {
+        margin: '0',
+        cursor: 'pointer',
         textDecoration: 'none',
         color: '#007bff',
         fontSize: '18px',

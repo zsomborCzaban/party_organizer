@@ -32,4 +32,7 @@ profilkép a usereknek, és megjeleníteni a contribution és hall of fame oldal
 
 dupla requestek javítása a overView frontenden
 
+navbar es profile kimozgatasa kivulre
+todo: useSelector party-t is kivul hasznalni
+
 concurrent mapwrite errort fixelni backendben
