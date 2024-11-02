@@ -1,5 +1,5 @@
 import React, {CSSProperties, useEffect, useState} from 'react';
-import { Input, Button, Table } from 'antd';
+import { Button, Table } from 'antd';
 import OverViewNavBar from "../../../components/navbar/OverViewNavBar";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../../store/store";
@@ -147,7 +147,7 @@ const Friends: React.FC = () => {
 
     return (
         <div style={styles.outerContainer}>
-            <OverViewNavBar/>
+            <OverViewNavBar onProfileClick={() => {console.log('a')}}/>
             <div style={styles.container}>
                 {/* Title and input section */}
                 <h2 style={styles.label}>Invite Friend</h2>

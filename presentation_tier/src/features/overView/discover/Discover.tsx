@@ -11,6 +11,8 @@ import {Party} from "../Party";
 import AccessCodeModal from "./AccessCodeModal";
 import {setSelectedParty} from "../PartySlice";
 import {joinPublicParty} from "./PublicPartyApi";
+import OverViewProfile from "../../../components/drawer/OverViewProfile";
+import {User} from "../User";
 
 
 const Discover = () => {
@@ -27,6 +29,7 @@ const Discover = () => {
     const navigate = useNavigate()
 
     const [modalVisible, setModalVisible] = useState(false)
+    const [profileOpen, setProfileOpen] = useState(false);
     const [unexpectedError, setUnexpectedError] = useState('')
 
 
@@ -101,9 +104,16 @@ const Discover = () => {
         />)
     }
 
+    const user: User = {
+        ID: 2,
+        username: 'heha',
+        email: "asdasd",
+    }
+
     return (
         <div style={styles.outerContainer}>
-            <OverViewNavBar/>
+            <OverViewNavBar onProfileClick={() => setProfileOpen(true)}/>
+            <OverViewProfile isOpen={profileOpen} onClose={() => setProfileOpen(false)} user={user} onLogout={()=>{console.log("logout")}}/>
             <div style={styles.container}>
 
                 <h2 style={styles.label}>Public Parties</h2>

@@ -1,6 +1,10 @@
 import React from 'react';
 
-const OverViewNavBar: React.FC = () => {
+type OverViewNavBarProps = {
+    onProfileClick: () => void;
+};
+
+const OverViewNavBar: React.FC<OverViewNavBarProps> = ({ onProfileClick }) => {
     return (
         <header style={styles.header}>
             <h1 style={styles.title}>Party Organizer</h1>
@@ -9,7 +13,12 @@ const OverViewNavBar: React.FC = () => {
                     <li style={styles.navItem}><a href="/overview/discover" style={styles.link}>Discover</a></li>
                     <li style={styles.navItem}><a href="/overview/parties" style={styles.link}>Parties</a></li>
                     <li style={styles.navItem}><a href="/overview/friends" style={styles.link}>Friends</a></li>
-                    <li style={styles.navItem}><a href="/profile" style={styles.link}>Profile</a></li>
+                    <li style={styles.navItem}><a style={styles.link}
+                        onClick={e => {
+                            e.preventDefault()
+                            onProfileClick()
+                        }}
+                    >Profile</a></li>
                 </ul>
             </nav>
         </header>
@@ -46,6 +55,7 @@ const styles: {[key: string]: React.CSSProperties} = {
         textDecoration: 'none',
         color: '#007bff',
         fontSize: '18px',
+        cursor: 'pointer',
     },
 };
 

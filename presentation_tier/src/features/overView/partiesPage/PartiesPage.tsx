@@ -174,7 +174,7 @@ const PartiesPage = () => {
 
     return (
         <div style={styles.outerContainer}>
-            <OverViewNavBar/>
+            <OverViewNavBar onProfileClick={() => {console.log('a')}}/>
             <div style={styles.container}>
 
                 <h2 style={styles.label}>Party Invites</h2>
