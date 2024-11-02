@@ -5,7 +5,11 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import {useNavigate} from "react-router-dom";
 
-const VisitPartyNavBar: React.FC = () => {
+type VisitPartyNavBarProps = {
+    onProfileClick: () => void;
+};
+
+const VisitPartyNavBar: React.FC<VisitPartyNavBarProps> = ({ onProfileClick }) => {
     const navigate = useNavigate()
     const {selectedParty} = useSelector((state: RootState)=> state.selectedPartyStore)
     if(!selectedParty){
@@ -49,7 +53,10 @@ const VisitPartyNavBar: React.FC = () => {
                     </li>
                     <li style={styles.navItem}><p onClick={() => navigate("/visitParty/hallOfFame")}  style={styles.link}>Hall Of Fame</p>
                     </li>
-                    <li style={styles.navItem}><p onClick={() => navigate("/profile")}  style={styles.link}>Profile</p></li>
+                    <li style={styles.navItem}><p style={styles.link} onClick={(e) => {
+                        e.preventDefault();
+                        onProfileClick();
+                    }}>Profile</p></li>
                 </ul>
             </nav>
         </header>

@@ -1,13 +1,16 @@
-import React, {CSSProperties} from "react";
+import React, {CSSProperties, useState} from "react";
 import VisitPartyNavBar from "../../../components/navbar/VisitPartyNavBar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import {useNavigate} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/store";
 import videoBackground from "../../../constants/party_video.mp4"
+import VisitPartyProfile from "../../../components/drawer/VisitPartyProfile";
+import {User} from "../../overView/User";
 
 
 const PartyHome: React.FC = () => {
+    const [profileOpen, setProfileOpen] = useState(false)
 
     const navigate = useNavigate()
 
@@ -23,6 +26,11 @@ const PartyHome: React.FC = () => {
         navigate("/visitParty/Contributions")
     }
 
+    const user: User = {
+        ID: 2,
+        username: 'heha',
+        email: "asdasd",
+    }
 
     return (
         <div style={styles.outerContainer}>
@@ -38,7 +46,8 @@ const PartyHome: React.FC = () => {
                 />
             {/*</div>*/}
 
-            <VisitPartyNavBar/>
+            <VisitPartyNavBar onProfileClick={() => setProfileOpen(true)}/>
+            <VisitPartyProfile isOpen={profileOpen} onClose={() => setProfileOpen(false)} currentParty={selectedParty} user={user} onLogout={()=>{console.log("logout")}} onLeaveParty={()=>{console.log("logout")}} />
             <div style={styles.container}>
                 {/* Middle Section */}
                 <div style={styles.middleSection}>

@@ -18,8 +18,8 @@ const OverViewNavBar: React.FC<OverViewNavBarProps> = ({ onProfileClick }) => {
                     <li style={styles.navItem}><p onClick={() => navigate("/overview/friends")} style={styles.link}>Friends</p></li>
                     <li style={styles.navItem}><p style={styles.link}
                         onClick={e => {
-                            e.preventDefault()
-                            onProfileClick()
+                            e.preventDefault();
+                            onProfileClick();
                         }}
                     >Profile</p></li>
                 </ul>

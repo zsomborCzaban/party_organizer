@@ -10,9 +10,10 @@ type DrawerProps = {
     currentParty: Party;
     user: User;
     onLogout: () => void;
+    onLeaveParty: () => void;
 };
 
-const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, user, currentParty, onLogout }) => {
+const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, user, currentParty, onLogout, onLeaveParty }) => {
     return (
         <div>
             {isOpen && (
@@ -53,12 +54,14 @@ const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, user, currentParty, on
                         <div style={styles.userData}>{user.email}</div>
                     </div>
 
-                    <Button type="primary" onClick={onLogout} style={styles.logoutButton}>
-                        Logout
-                    </Button>
-                    <Button type="default" onClick={onLogout} style={styles.logoutButton}>
-                        Leave Party
-                    </Button>
+                    <div style={styles.buttonContainer}>
+                        <Button type="primary" onClick={onLogout} style={styles.logoutButton}>
+                            Logout
+                        </Button>
+                        <Button type="primary" onClick={onLogout} style={styles.leavePartyButton}>
+                            Leave Party
+                        </Button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -120,14 +123,26 @@ const styles: { [key: string]: React.CSSProperties } = {
     userData: {
         marginLeft: '30px',
     },
+    buttonContainer: {
+        width: '100%',
+        marginTop: 'auto',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
     logoutButton: {
         // padding: '10px 20px',
         // border: 'none',
         // borderRadius: '5px',
         fontWeight: 'bold',
         fontSize: '18px',
-        width: '100%',
-        marginTop: 'auto',
+        width: '48%',
+    },
+    leavePartyButton: {
+        fontWeight: 'bold',
+        fontSize: '18px',
+        width: '48%',
+        backgroundColor: 'red',
     },
 };
 

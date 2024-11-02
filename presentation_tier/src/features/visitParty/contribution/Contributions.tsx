@@ -17,10 +17,13 @@ import ContributeModal from "./ContributeModal";
 import {getUserId} from "../../../auth/AuthUserUtil";
 import {authService} from "../../../auth/AuthService";
 import DeleteModal from "./DeleteModal";
+import VisitPartyProfile from "../../../components/drawer/VisitPartyProfile";
 
 const Contributions = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch<AppDispatch>()
+    const initialFetchDone = useRef(false);
+    const {selectedParty} = useSelector((state: RootState)=> state.selectedPartyStore)
 
     const [participantMap, setParticipantMap] = useState<Record<string, User>>({});
     const [dReqContributionMap, setDReqContributionMap] = useState<Record<number, number>>({})
@@ -34,10 +37,7 @@ const Contributions = () => {
     const [deleteMode, setDeleteMode] = useState('')
     const [userId, setUserId] = useState(0)
     const [isOrganizer, setIsOrganizer] = useState(false)
-
-    const initialFetchDone = useRef(false);
-
-    const {selectedParty} = useSelector((state: RootState)=> state.selectedPartyStore)
+    const [profileOpen, setProfileOpen] = useState(false)
 
     const {requirements: dRequirements, loading: DReqLoading, error: DReqError} = useSelector(
         (state: RootState) => state.drinkRequirementStore
@@ -193,12 +193,17 @@ const Contributions = () => {
         }, [])
     };
 
-    console.log(dReqContributionMap)
+    const user: User = {
+        ID: 3,
+        email: "realeamil@hellyeah.rofl",
+        username: "a girl has no name",
+    }
 
     return (
         <div style={styles.background}>
             <div style={styles.outerContainer}>
-                <VisitPartyNavBar/>
+                <VisitPartyNavBar onProfileClick={()=> setProfileOpen(true)}/>
+                <VisitPartyProfile isOpen={profileOpen} onClose={() => setProfileOpen(false)} currentParty={selectedParty} user={user} onLogout={() => console.log("logout")} onLeaveParty={() => console.log("leaveparty")} />
                 <ContributeModal mode="drink" options={makeOptions(dRequirements)} visible={dModalVisible} onClose={() => {setDModalVisible(false)}} />
                 <ContributeModal mode="food" options={makeOptions(fRequirements)} visible={fModalVisible} onClose={() => {setFModalVisible(false)}} />
                 <DeleteModal visible={deleteModalVisible} onClose={() => setDeleteModalVisible(false)} mode={deleteMode} contributionId={contributionIdToDelete}/>
