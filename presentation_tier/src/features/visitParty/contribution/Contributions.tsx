@@ -12,7 +12,7 @@ import {loadPartyParticipants} from "../data/slices/PartyParticipantSlice";
 import {User} from "../../overView/User";
 import {Contribution} from "../data/Contribution";
 import {Requirement} from "../data/Requirement";
-import backgroundImage from "../../../midjourney_images/cola-pepsi.png";
+import backgroundImage from "../../../constants/cola-pepsi.png";
 import ContributeModal from "./ContributeModal";
 import {getUserId} from "../../../auth/AuthUserUtil";
 import {authService} from "../../../auth/AuthService";

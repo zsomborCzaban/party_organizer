@@ -4,8 +4,8 @@ import {CSSProperties, useEffect, useState} from "react";
 import {loadPublicParties} from "./PublicPartySlice";
 import OverViewNavBar from "../../../components/navbar/OverViewNavBar";
 import { Table } from 'antd';
-import createImage from '../../../midjourney_images/u5679648646_httpss.mj.runKqg0SHl7m9w_make_a_picture_similar_t_2a92ccce-3fd5-4da4-8398-11898f188cd5_3.png'
-import joinImage from '../../../midjourney_images/u5679648646_2_people_dancing_with_a_galactic_lsd_like_trip_li_78e43cba-8023-4e69-9fa1-75bb9790bbe8_0.png'
+import createImage from '../../../constants/u5679648646_httpss.mj.runKqg0SHl7m9w_make_a_picture_similar_t_2a92ccce-3fd5-4da4-8398-11898f188cd5_3.png'
+import joinImage from '../../../constants/u5679648646_2_people_dancing_with_a_galactic_lsd_like_trip_li_78e43cba-8023-4e69-9fa1-75bb9790bbe8_0.png'
 import {useNavigate} from "react-router-dom";
 import {Party} from "../Party";
 import AccessCodeModal from "./AccessCodeModal";

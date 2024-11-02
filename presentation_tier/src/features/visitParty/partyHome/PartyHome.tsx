@@ -4,6 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import {useNavigate} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/store";
+import videoBackground from "../../../constants/party_video.mp4"
 
 
 const PartyHome: React.FC = () => {
@@ -25,6 +26,18 @@ const PartyHome: React.FC = () => {
 
     return (
         <div style={styles.outerContainer}>
+
+            {/*<div style={{ position: 'relative', width: '100%', height: '100vh', overflow: 'hidden' }}>*/}
+                <video
+                    src={videoBackground}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    style={styles.video}
+                />
+            {/*</div>*/}
+
             <VisitPartyNavBar/>
             <div style={styles.container}>
                 {/* Middle Section */}
@@ -74,6 +87,7 @@ const styles: { [key: string]: CSSProperties } = {
         height: '100vh',
         display: 'flex',
         flexDirection: 'column',
+        backgroundColor: 'rgba(0, 0, 0, 0.3)',
     },
     container: {
         display: 'flex',
@@ -89,6 +103,7 @@ const styles: { [key: string]: CSSProperties } = {
         alignItems: 'center',
         textAlign: 'center',
         flexGrow: 1,
+        color: 'white'
     },
     progressBarContainer: {
         width: '75%',
@@ -120,6 +135,7 @@ const styles: { [key: string]: CSSProperties } = {
         justifyContent: 'space-around',
         alignItems: 'center',
         paddingBottom: '20px',
+        color: '#007bff',
     },
     button: {
         padding: '10px 20px',
@@ -133,6 +149,15 @@ const styles: { [key: string]: CSSProperties } = {
     link: {
         color: '#007bff',
         textDecoration: 'none',
+    },
+    video: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        objectFit: 'cover',
+        zIndex: -1,
     }
 };
 

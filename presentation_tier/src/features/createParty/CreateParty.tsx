@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {Input, Button, DatePicker, Checkbox} from 'antd';
 import dayjs from "dayjs";
 import 'antd/dist/reset.css'
-import backgroundImage from '../../midjourney_images/blackhole.png'
+import backgroundImage from '../../constants/blackhole.png'
 import {Party} from "../overView/Party";
 import {useNavigate} from "react-router-dom";
 import {createParty} from "./CreatePartyApi";
