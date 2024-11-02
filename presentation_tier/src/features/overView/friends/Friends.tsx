@@ -8,6 +8,7 @@ import {loadFriends} from "./FriendSlice";
 import {acceptInvite, declineInvite, inviteFriend, removeFriend} from "./FriendPageApi";
 import {FriendInvite} from "./FriendInvite";
 import {User} from "../User";
+import OverViewProfile from "../../../components/drawer/OverViewProfile";
 
 const Friends: React.FC = () => {
     const [reloadInvites, setReloadInvites] = useState(false);
@@ -15,6 +16,7 @@ const Friends: React.FC = () => {
     const [username, setUsername] = useState('');
     const [inviteFeedbackSuccess, setInviteFeedbackSuccess] = useState('')
     const [inviteFeedbackError, setInviteFeedbackError] = useState('')
+    const [profileOpen, setProfileOpen] = useState(false)
 
     const dispatch = useDispatch<AppDispatch>()
 
@@ -145,9 +147,16 @@ const Friends: React.FC = () => {
         />)
     }
 
+    const user: User = {
+        ID: 2,
+        username: 'heha',
+        email: "asdasd",
+    }
+
     return (
         <div style={styles.outerContainer}>
-            <OverViewNavBar onProfileClick={() => {console.log('a')}}/>
+            <OverViewNavBar onProfileClick={() => setProfileOpen(true)}/>
+            <OverViewProfile isOpen={profileOpen} onClose={() => setProfileOpen(false)} user={user} onLogout={()=>{console.log("logout")}}/>
             <div style={styles.container}>
                 {/* Title and input section */}
                 <h2 style={styles.label}>Invite Friend</h2>

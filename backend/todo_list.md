@@ -30,6 +30,6 @@ pros: most epp jobb megoldas lenne, cons: ha hasznalunk graphql-t es egy request
 
 profilkép a usereknek, és megjeleníteni a contribution és hall of fame oldalakon
 
-frontend: reload contributions after making one
+dupla requestek javítása a overView frontenden
 
 concurrent mapwrite errort fixelni backendben

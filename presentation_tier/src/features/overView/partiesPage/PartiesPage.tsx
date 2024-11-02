@@ -1,6 +1,6 @@
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../../store/store";
-import {CSSProperties, useEffect, useState} from "react";
+import React, {CSSProperties, useEffect, useState} from "react";
 import OverViewNavBar from "../../../components/navbar/OverViewNavBar";
 import { Table } from 'antd';
 import {useNavigate} from "react-router-dom";
@@ -11,10 +11,13 @@ import {loadPartyInvites} from "./PartyInviteSlice";
 import {PartyInvite} from "./PartyInvite";
 import {acceptInvite, declineInvite} from "./PartiesPageApi";
 import {setSelectedParty} from "../PartySlice";
+import OverViewProfile from "../../../components/drawer/OverViewProfile";
+import {User} from "../User";
 
 
 const PartiesPage = () => {
     const [reload, setReload] = useState(false);
+    const [profileOpen, setProfileOpen] = useState(false)
 
     const dispatch = useDispatch<AppDispatch>()
 
@@ -172,9 +175,16 @@ const PartiesPage = () => {
         />)
     }
 
+    const user: User = {
+        ID: 2,
+        username: 'heha',
+        email: "asdasd",
+    }
+
     return (
         <div style={styles.outerContainer}>
-            <OverViewNavBar onProfileClick={() => {console.log('a')}}/>
+            <OverViewNavBar onProfileClick={() => setProfileOpen(true)}/>
+            <OverViewProfile isOpen={profileOpen} onClose={() => setProfileOpen(false)} user={user} onLogout={()=>{console.log("logout")}}/>
             <div style={styles.container}>
 
                 <h2 style={styles.label}>Party Invites</h2>
