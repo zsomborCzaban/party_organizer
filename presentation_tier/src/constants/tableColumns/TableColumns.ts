@@ -58,7 +58,7 @@ export const partyInviteTableColumns = [
     },
 ]
 
-export const friendInviteTableColumns =[
+export const userInviteTableColumns =[
     {
         title: 'Invited by',
         dataIndex: ['invitor', 'username'],
@@ -66,10 +66,28 @@ export const friendInviteTableColumns =[
     },
 ]
 
-export const friendTableColumns = [
+export const userTableColumns = [
     {
         title: 'Username',
         dataIndex: 'username',
         key: 'username'
     },
 ]
+
+export const requirementTableColumns = [
+    {
+        title: 'Type',
+        dataIndex: 'type',
+        key: 'type',
+    },
+    {
+        title: 'Target Quantity',
+        dataIndex: 'target_quantity',
+        key: 'target_quantity',
+    },
+    {
+        title: 'Quantity Mark',
+        dataIndex: 'quantity_mark',
+        key: 'quantity_mark',
+    },
+];

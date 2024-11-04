@@ -56,12 +56,6 @@ const Contributions = () => {
         (state: RootState) => state.partyParticipantStore
     )
 
-    if(!selectedParty || !selectedParty.ID){
-        console.log("error, no selected party or no id of party")
-        navigate("/overview/discover")
-        return <div>error, selected party was null</div>
-    }
-
     useEffect(() => {
         if(!participants) return
         const newMap = participants.reduce((pMap: Record<number, User>, participant) => {
@@ -83,7 +77,7 @@ const Contributions = () => {
             return
         }
 
-        if(!selectedParty.ID) return
+        if(!selectedParty || !selectedParty.ID) return
         dispatch(loadDrinkRequirements(selectedParty.ID));
         dispatch(loadFoodRequirements(selectedParty.ID));
         dispatch(loadDrinkContributions(selectedParty.ID));
@@ -94,19 +88,6 @@ const Contributions = () => {
         setIsOrganizer(selectedParty.organizer ? selectedParty.organizer.ID === currentUser.ID : false)
 
     }, []);
-
-    if(dReqLoading || fReqLoading){
-        return <div>Loading Requirements</div>
-    }
-
-    if(dConLoading || fConLoading){
-        return <div>Loading Contributions</div>
-    }
-
-    if(!user){
-        console.log("user was null")
-        return <div>Loading...</div>
-    }
 
     useEffect(() => {
         if(dContributions.length === 0) return
@@ -130,7 +111,7 @@ const Contributions = () => {
         setDReqContributionMap(reqContributionMap)
         setFulfilledDReqs(fulfilled)
 
-    }, [dContributions, dRequirements]);
+    }, [dContributions]);
 
     useEffect(() => {
         if(fContributions.length === 0) return
@@ -155,6 +136,25 @@ const Contributions = () => {
         setFulfilledFReqs(fulfilled)
 
     }, [fContributions]);
+
+    if(!selectedParty || !selectedParty.ID){
+        console.log("error, no selected party or no id of party")
+        navigate("/overview/discover")
+        return <div>error, selected party was null</div>
+    }
+
+    if(dReqLoading || fReqLoading){
+        return <div>Loading Requirements</div>
+    }
+
+    if(dConLoading || fConLoading){
+        return <div>Loading Contributions</div>
+    }
+
+    if(!user){
+        console.log("user was null")
+        return <div>Loading...</div>
+    }
 
     const createContributionDiv = (req: Requirement, contribution: Contribution, mode: string) => {
         let contributorName//not easily readable :( = contribution.contributor_id ? participantMap[contribution.contributor_id] ? participantMap[contribution.contributor_id].username : "" : ""
