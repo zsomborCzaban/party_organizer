@@ -15,6 +15,7 @@ import OverViewProfile from "../../../components/drawer/OverViewProfile";
 import {User} from "../User";
 import {getUser} from "../../../auth/AuthUserUtil";
 import {authService} from "../../../auth/AuthService";
+import {partyInviteTableColumns, partyTableColumns} from "../../../constants/tableColumns/TableColumns";
 
 
 const PartiesPage = () => {
@@ -77,34 +78,7 @@ const PartiesPage = () => {
             });
     }
 
-    const partyColumns = [
-        {
-            title: 'Name',
-            dataIndex: 'name',
-            key: 'name',
-        },
-        {
-            title: 'Place',
-            dataIndex: 'place',
-            key: 'place',
-        },
-        {
-            title: 'Time',
-            dataIndex: 'start_time',
-            key: 'time',
-        },
-        {
-            title: 'Organizer',
-            // dataIndex: ['organizer', 'username'],
-            dataIndex: ['organizer', 'username'],
-            key: 'organizer',
-        },
-        {
-            //todo: to be done in backend
-            title: 'Headcount',
-            dataIndex: 'headcount',
-            key: 'headcount',
-        },
+    const partyColumns = [...partyTableColumns,
         {
             title: '',
             key: 'ID',
@@ -114,34 +88,7 @@ const PartiesPage = () => {
         },
     ];
 
-    const inviteColumns = [
-        {
-            title: 'Invited by',
-            dataIndex: ['invitor', 'username'],
-            key: 'invited by',
-        },
-        {
-            title: 'To party',
-            dataIndex: ['party', 'name'],
-            key: 'to party',
-        },
-        {
-            title: 'Place',
-            dataIndex: ['party', 'place'],
-            key: 'place',
-        },
-        {
-            title: 'Time',
-            dataIndex: ['party', 'start_time'],
-            key: 'time',
-        },
-
-        {
-            //todo: to be done in backend
-            title: 'Headcount',
-            dataIndex: ['party', 'headcount'],
-            key: 'headcount',
-        },
+    const inviteColumns = [...partyInviteTableColumns,
         {
             title: '',
             key: 'action 1',

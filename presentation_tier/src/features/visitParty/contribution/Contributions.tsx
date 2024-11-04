@@ -22,8 +22,6 @@ import VisitPartyProfile from "../../../components/drawer/VisitPartyProfile";
 const Contributions = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch<AppDispatch>()
-    const initialFetchDone = useRef(false);
-    const {selectedParty} = useSelector((state: RootState)=> state.selectedPartyStore)
 
     const [participantMap, setParticipantMap] = useState<Record<string, User>>({});
     const [dReqContributionMap, setDReqContributionMap] = useState<Record<number, number>>({})
@@ -39,6 +37,9 @@ const Contributions = () => {
     const [isOrganizer, setIsOrganizer] = useState(false)
     const [profileOpen, setProfileOpen] = useState(false)
 
+    const initialFetchDone = useRef(false);
+
+    const {selectedParty} = useSelector((state: RootState)=> state.selectedPartyStore)
     const {requirements: dRequirements, loading: dReqLoading, error: DReqError} = useSelector(
         (state: RootState) => state.drinkRequirementStore
     )
@@ -54,6 +55,12 @@ const Contributions = () => {
     const {participants, loading: participantsLoading, error: particiapntsError} = useSelector(
         (state: RootState) => state.partyParticipantStore
     )
+
+    if(!selectedParty || !selectedParty.ID){
+        console.log("error, no selected party or no id of party")
+        navigate("/overview/discover")
+        return <div>error, selected party was null</div>
+    }
 
     useEffect(() => {
         if(!participants) return
@@ -76,7 +83,7 @@ const Contributions = () => {
             return
         }
 
-        if(!selectedParty || !selectedParty.ID) return
+        if(!selectedParty.ID) return
         dispatch(loadDrinkRequirements(selectedParty.ID));
         dispatch(loadFoodRequirements(selectedParty.ID));
         dispatch(loadDrinkContributions(selectedParty.ID));
@@ -94,6 +101,11 @@ const Contributions = () => {
 
     if(dConLoading || fConLoading){
         return <div>Loading Contributions</div>
+    }
+
+    if(!user){
+        console.log("user was null")
+        return <div>Loading...</div>
     }
 
     useEffect(() => {
@@ -143,17 +155,6 @@ const Contributions = () => {
         setFulfilledFReqs(fulfilled)
 
     }, [fContributions]);
-
-    if(!selectedParty || !selectedParty.ID){
-        console.log("error, no selected party or no id of party")
-        navigate("/overview/discover")
-        return <div>error, selected party was null</div>
-    }
-
-    if(!user){
-        console.log("user was null")
-        return <div>Loading...</div>
-    }
 
     const createContributionDiv = (req: Requirement, contribution: Contribution, mode: string) => {
         let contributorName//not easily readable :( = contribution.contributor_id ? participantMap[contribution.contributor_id] ? participantMap[contribution.contributor_id].username : "" : ""

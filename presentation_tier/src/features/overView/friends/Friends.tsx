@@ -11,6 +11,7 @@ import {User} from "../User";
 import OverViewProfile from "../../../components/drawer/OverViewProfile";
 import {getUser} from "../../../auth/AuthUserUtil";
 import {authService} from "../../../auth/AuthService";
+import {friendInviteTableColumns, friendTableColumns} from "../../../constants/tableColumns/TableColumns";
 
 const Friends: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>()
@@ -99,12 +100,7 @@ const Friends: React.FC = () => {
     }
 
 
-    const inviteColumns = [
-        {
-            title: 'Invited by',
-            dataIndex: ['invitor', 'username'],
-            key: 'username',
-        },
+    const inviteColumns = [...friendInviteTableColumns,
         {
             title: '',
             key: 'accept',
@@ -121,7 +117,7 @@ const Friends: React.FC = () => {
         },
     ];
 
-    const friendColumns = [
+    const friendColumns = [...friendTableColumns,
         {
             title: 'Username',
             dataIndex: 'username',

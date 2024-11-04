@@ -15,6 +15,7 @@ import OverViewProfile from "../../../components/drawer/OverViewProfile";
 import {User} from "../User";
 import {getUser} from "../../../auth/AuthUserUtil";
 import {authService} from "../../../auth/AuthService";
+import {partyTableColumns} from "../../../constants/tableColumns/TableColumns";
 
 
 const Discover = () => {
@@ -67,33 +68,7 @@ const Discover = () => {
         setModalVisible(false);
     };
 
-    const columns = [
-        {
-            title: 'Name',
-            dataIndex: 'name',
-            key: 'name',
-        },
-        {
-            title: 'Place',
-            dataIndex: 'place',
-            key: 'place',
-        },
-        {
-            title: 'Time',
-            dataIndex: 'start_time',
-            key: 'start_time',
-        },
-        {
-            title: 'Organizer',
-            dataIndex: ['organizer', 'username'],
-            key: 'organizer',
-        },
-        {
-            //todo: to be done in backend
-            title: 'Headcount',
-            dataIndex: 'headcount',
-            key: 'headcount',
-        },
+    const columns = [...partyTableColumns,
         {
             title: '',
             key: 'ID',
