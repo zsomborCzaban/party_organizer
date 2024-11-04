@@ -4,8 +4,8 @@ import {CSSProperties, useEffect, useState} from "react";
 import {loadPublicParties} from "./PublicPartySlice";
 import OverViewNavBar from "../../../components/navbar/OverViewNavBar";
 import { Table } from 'antd';
-import createImage from '../../../constants/u5679648646_httpss.mj.runKqg0SHl7m9w_make_a_picture_similar_t_2a92ccce-3fd5-4da4-8398-11898f188cd5_3.png'
-import joinImage from '../../../constants/u5679648646_2_people_dancing_with_a_galactic_lsd_like_trip_li_78e43cba-8023-4e69-9fa1-75bb9790bbe8_0.png'
+import createImage from '../../../constants/images/u5679648646_httpss.mj.runKqg0SHl7m9w_make_a_picture_similar_t_2a92ccce-3fd5-4da4-8398-11898f188cd5_3.png'
+import joinImage from '../../../constants/images/u5679648646_2_people_dancing_with_a_galactic_lsd_like_trip_li_78e43cba-8023-4e69-9fa1-75bb9790bbe8_0.png'
 import {useNavigate} from "react-router-dom";
 import {Party} from "../Party";
 import AccessCodeModal from "./AccessCodeModal";
@@ -13,10 +13,18 @@ import {setSelectedParty} from "../PartySlice";
 import {joinPublicParty} from "./PublicPartyApi";
 import OverViewProfile from "../../../components/drawer/OverViewProfile";
 import {User} from "../User";
+import {getUser} from "../../../auth/AuthUserUtil";
+import {authService} from "../../../auth/AuthService";
 
 
 const Discover = () => {
+    const navigate = useNavigate()
     const dispatch = useDispatch<AppDispatch>()
+
+    const [modalVisible, setModalVisible] = useState(false)
+    const [profileOpen, setProfileOpen] = useState(false);
+    const [unexpectedError, setUnexpectedError] = useState('')
+    const [user, setUser] = useState<User>()
 
     const {parties, loading, error} = useSelector(
         (state: RootState) => state.publicPartyStore
@@ -24,14 +32,15 @@ const Discover = () => {
 
     useEffect( () => {
         dispatch(loadPublicParties());
+        const currentUser = getUser()
+
+        if(!currentUser) {
+            authService.handleUnauthorized()
+            return
+        }
+
+        setUser(currentUser)
     }, []);
-
-    const navigate = useNavigate()
-
-    const [modalVisible, setModalVisible] = useState(false)
-    const [profileOpen, setProfileOpen] = useState(false);
-    const [unexpectedError, setUnexpectedError] = useState('')
-
 
     const handleVisitClicked = (record: Party) => {
         joinPublicParty(record.ID || -1)
@@ -45,9 +54,11 @@ const Discover = () => {
             })
 
     }
+
     const handleCreate = () => {
         navigate("/createParty")
     }
+
     const handleJoin = () =>{
         setModalVisible(true);
     }
@@ -104,10 +115,9 @@ const Discover = () => {
         />)
     }
 
-    const user: User = {
-        ID: 2,
-        username: 'heha',
-        email: "asdasd",
+    if(!user){
+        console.log("user was null")
+        return <div>Loading...</div>
     }
 
     return (
@@ -118,7 +128,6 @@ const Discover = () => {
 
                 <h2 style={styles.label}>Public Parties</h2>
 
-                {/* Scrollable Table using Ant Design Table */}
                 <div style={styles.tableContainer}>
                     {loading && <div>Loading...</div>}
                     {error && <div>Error: Some unexpected error happened</div>}
@@ -129,7 +138,6 @@ const Discover = () => {
                     Didn't find the right party? Don't worry, you can create your own!
                 </div>
 
-                {/* Rectangles (Create and Join) */}
                 <div style={styles.buttonsContainer}>
                     <div style={styles.createButton} onClick={handleCreate}>Create</div>
                     <div style={styles.joinButton} onClick={handleJoin}>Join</div>
@@ -143,14 +151,14 @@ const Discover = () => {
 
 const styles: { [key: string]: CSSProperties } = {
     outerContainer: {
-        height: '100vh', // Full viewport height
+        height: '100vh',
         display: 'flex',
         flexDirection: 'column',
     },
     container: {
         width: '80%',
         margin: '0 auto',
-        height: '100%', // Occupy the remaining height
+        height: '100%',
         display: 'flex',
         flexDirection: 'column',
     },
@@ -161,27 +169,27 @@ const styles: { [key: string]: CSSProperties } = {
         textAlign: 'left',
     },
     tableContainer: {
-        flexShrink: 0, // Prevent the table container from shrinking
+        flexShrink: 0,
         padding: '20px',
         marginBottom: '20px',
         border: '1px solid #ccc',
         borderRadius: '8px',
     },
     message: {
-        margin: '10px 0', // Space above and below the message
+        margin: '10px 0',
         fontSize: '18px',
-        textAlign: 'left', // Center align the message
-        color: '#555', // Optional: a softer color for the message
+        textAlign: 'left',
+        color: '#555',
     },
     buttonsContainer: {
         display: 'flex',
         justifyContent: 'space-between',
         padding: '0 20px',
-        flexGrow: 1, // Allow the buttons container to grow
+        flexGrow: 1,
     },
     createButton: {
         width: '48%',
-        backgroundImage: `url(${createImage})`, // Ensure the URL is set properly
+        backgroundImage: `url(${createImage})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         color: "white",
@@ -199,7 +207,7 @@ const styles: { [key: string]: CSSProperties } = {
     },
     joinButton: {
         width: '48%',
-        backgroundImage: `url(${joinImage})`, // Ensure the URL is set properly
+        backgroundImage: `url(${joinImage})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         color: "white",
@@ -216,10 +224,10 @@ const styles: { [key: string]: CSSProperties } = {
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
     },
     errorFeedback: {
-        margin: '10px 0', // Space above and below the message
+        margin: '10px 0',
         fontSize: '18px',
-        textAlign: 'left', // Center align the message
-        color: 'red', // Optional: a softer color for the message
+        textAlign: 'left',
+        color: 'red',
     },
 };
 

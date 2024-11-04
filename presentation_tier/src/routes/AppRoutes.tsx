@@ -11,7 +11,7 @@ import SetupParty from "../features/createParty/SetupParty";
 import PartyHome from "../features/visitParty/partyHome/PartyHome";
 import Contributions from "../features/visitParty/contribution/Contributions";
 import HallOfFame from "../features/visitParty/HallOfFame";
-import ManageParty from "../features/visitParty/ManageParty";
+import ManageParty from "../features/visitParty/manageParty/ManageParty";
 
 const AppRoutes = () => {
     return (

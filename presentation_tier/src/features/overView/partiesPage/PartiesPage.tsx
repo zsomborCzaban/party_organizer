@@ -13,13 +13,17 @@ import {acceptInvite, declineInvite} from "./PartiesPageApi";
 import {setSelectedParty} from "../PartySlice";
 import OverViewProfile from "../../../components/drawer/OverViewProfile";
 import {User} from "../User";
+import {getUser} from "../../../auth/AuthUserUtil";
+import {authService} from "../../../auth/AuthService";
 
 
 const PartiesPage = () => {
+    const dispatch = useDispatch<AppDispatch>()
+    const navigate = useNavigate()
+
     const [reload, setReload] = useState(false);
     const [profileOpen, setProfileOpen] = useState(false)
-
-    const dispatch = useDispatch<AppDispatch>()
+    const [user, setUser] = useState<User>()
 
     // the words after the ':' are not types but new names here
     const {parties: organizedParties, loading: organizedLoading, error: organizedError} = useSelector(
@@ -34,6 +38,14 @@ const PartiesPage = () => {
 
     useEffect( () => {
         dispatch(loadOrganizedParties());
+        const currentUser = getUser()
+
+        if(!currentUser) {
+            authService.handleUnauthorized()
+            return
+        }
+
+        setUser(currentUser)
     }, []);
 
     useEffect( () => {
@@ -41,7 +53,6 @@ const PartiesPage = () => {
         dispatch(loadPartyInvites());
     }, [reload]);
 
-    const navigate = useNavigate()
 
     const handleVisitClicked = (record: Party) => {
         dispatch(setSelectedParty(record))
@@ -175,10 +186,9 @@ const PartiesPage = () => {
         />)
     }
 
-    const user: User = {
-        ID: 2,
-        username: 'heha',
-        email: "asdasd",
+    if(!user){
+        console.log("user was null")
+        return <div>Loading...</div>
     }
 
     return (

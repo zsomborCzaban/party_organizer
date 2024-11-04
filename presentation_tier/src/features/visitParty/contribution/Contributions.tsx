@@ -12,9 +12,9 @@ import {loadPartyParticipants} from "../data/slices/PartyParticipantSlice";
 import {User} from "../../overView/User";
 import {Contribution} from "../data/Contribution";
 import {Requirement} from "../data/Requirement";
-import backgroundImage from "../../../constants/cola-pepsi.png";
+import backgroundImage from "../../../constants/images/cola-pepsi.png";
 import ContributeModal from "./ContributeModal";
-import {getUserId} from "../../../auth/AuthUserUtil";
+import {getUser} from "../../../auth/AuthUserUtil";
 import {authService} from "../../../auth/AuthService";
 import DeleteModal from "./DeleteModal";
 import VisitPartyProfile from "../../../components/drawer/VisitPartyProfile";
@@ -35,20 +35,20 @@ const Contributions = () => {
     const [deleteModalVisible, setDeleteModalVisible] = useState(false)
     const [contributionIdToDelete, setContributionIdToDelete] = useState(0)
     const [deleteMode, setDeleteMode] = useState('')
-    const [userId, setUserId] = useState(0)
+    const [user, setUser] = useState<User>()
     const [isOrganizer, setIsOrganizer] = useState(false)
     const [profileOpen, setProfileOpen] = useState(false)
 
-    const {requirements: dRequirements, loading: DReqLoading, error: DReqError} = useSelector(
+    const {requirements: dRequirements, loading: dReqLoading, error: DReqError} = useSelector(
         (state: RootState) => state.drinkRequirementStore
     )
-    const {requirements: fRequirements, loading: FReqLoading, error: FReqError} = useSelector(
+    const {requirements: fRequirements, loading: fReqLoading, error: FReqError} = useSelector(
         (state: RootState) => state.foodRequirementStore
     )
-    const {contributions: dContributions, loading: DConLoading, error: DConError} = useSelector(
+    const {contributions: dContributions, loading: dConLoading, error: DConError} = useSelector(
         (state: RootState) => state.drinkContributionStore
     )
-    const {contributions: fContributions, loading: FConLoading, error: FConError} = useSelector(
+    const {contributions: fContributions, loading: fConLoading, error: FConError} = useSelector(
         (state: RootState) => state.foodContributionStore
     )
     const {participants, loading: participantsLoading, error: particiapntsError} = useSelector(
@@ -69,9 +69,9 @@ const Contributions = () => {
         if (initialFetchDone.current) return;
 
         initialFetchDone.current = true;
-        const currentUserId = getUserId()
+        const currentUser = getUser()
 
-        if(!currentUserId) {
+        if(!currentUser) {
             authService.handleUnauthorized()
             return
         }
@@ -83,13 +83,21 @@ const Contributions = () => {
         dispatch(loadFoodContributions(selectedParty.ID));
         dispatch(loadPartyParticipants(selectedParty.ID))
 
-        setUserId(Number(currentUserId))
-        setIsOrganizer(selectedParty.organizer ? selectedParty.organizer.ID === Number(currentUserId) : false)
+        setUser(currentUser)
+        setIsOrganizer(selectedParty.organizer ? selectedParty.organizer.ID === currentUser.ID : false)
 
     }, []);
 
+    if(dReqLoading || fReqLoading){
+        return <div>Loading Requirements</div>
+    }
+
+    if(dConLoading || fConLoading){
+        return <div>Loading Contributions</div>
+    }
+
     useEffect(() => {
-        if(!dContributions || dContributions.length === 0) return
+        if(dContributions.length === 0) return
         const reqContributionMap: Record<number, number> = {}
         let fulfilled = 0
 
@@ -113,7 +121,7 @@ const Contributions = () => {
     }, [dContributions, dRequirements]);
 
     useEffect(() => {
-        if(!fContributions || fContributions.length === 0) return
+        if(fContributions.length === 0) return
         const reqContributionMap: Record<number, number> = {}
         let fulfilled = 0
 
@@ -142,6 +150,11 @@ const Contributions = () => {
         return <div>error, selected party was null</div>
     }
 
+    if(!user){
+        console.log("user was null")
+        return <div>Loading...</div>
+    }
+
     const createContributionDiv = (req: Requirement, contribution: Contribution, mode: string) => {
         let contributorName//not easily readable :( = contribution.contributor_id ? participantMap[contribution.contributor_id] ? participantMap[contribution.contributor_id].username : "" : ""
         let contributorId
@@ -156,7 +169,7 @@ const Contributions = () => {
 
         return <div key={contribution.ID} style={styles.contribution}>
                     <div>{contributorName}: {contribution.quantity} {req.quantity_mark}, {contribution.description}</div>
-                    { (contributorId == userId || isOrganizer) &&
+                    { (contributorId == user.ID || isOrganizer) &&
                             <div>
                                 <button style={styles.deleteButton} onClick={() => {
                                     handleDeleteContribution(contribution, mode)
@@ -192,12 +205,6 @@ const Contributions = () => {
             return opts
         }, [])
     };
-
-    const user: User = {
-        ID: 3,
-        email: "realeamil@hellyeah.rofl",
-        username: "a girl has no name",
-    }
 
     return (
         <div style={styles.background}>

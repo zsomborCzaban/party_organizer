@@ -9,16 +9,19 @@ import {acceptInvite, declineInvite, inviteFriend, removeFriend} from "./FriendP
 import {FriendInvite} from "./FriendInvite";
 import {User} from "../User";
 import OverViewProfile from "../../../components/drawer/OverViewProfile";
+import {getUser} from "../../../auth/AuthUserUtil";
+import {authService} from "../../../auth/AuthService";
 
 const Friends: React.FC = () => {
+    const dispatch = useDispatch<AppDispatch>()
+
     const [reloadInvites, setReloadInvites] = useState(false);
     const [reloadFriends, setReloadFriends] = useState(false);
-    const [username, setUsername] = useState('');
+    const [usernameInput, setUsernameInput] = useState('');
     const [inviteFeedbackSuccess, setInviteFeedbackSuccess] = useState('')
     const [inviteFeedbackError, setInviteFeedbackError] = useState('')
     const [profileOpen, setProfileOpen] = useState(false)
-
-    const dispatch = useDispatch<AppDispatch>()
+    const [user, setUser] = useState<User>()
 
     const {friends, loading: friendLoading, error: friendError} = useSelector(
         (state: RootState) => state.friendStore
@@ -26,6 +29,17 @@ const Friends: React.FC = () => {
     const {invites, loading: inviteLoading, error: inviteError} = useSelector(
         (state: RootState) => state.friendInviteStore
     )
+
+    useEffect(() => {
+        const currentUser = getUser()
+
+        if(!currentUser) {
+            authService.handleUnauthorized()
+            return
+        }
+
+        setUser(currentUser)
+    }, []);
 
     useEffect( () => {
         dispatch(loadFriendInvites());
@@ -39,14 +53,14 @@ const Friends: React.FC = () => {
         inviteFriend(inputUsername)
             .then(() => {
                 setInviteFeedbackSuccess("Invite sent!")
-                setUsername('')
+                setUsernameInput('')
                 setTimeout(() => {
                     setInviteFeedbackSuccess("")
                 }, 4000); // 4000 milliseconds = 4 seconds
             })
             .catch(err => {
                 setInviteFeedbackError("something went wrong")
-                setUsername('')
+                setUsernameInput('')
                 setTimeout(() => {
                     setInviteFeedbackError("")
                 }, 4000);
@@ -147,10 +161,9 @@ const Friends: React.FC = () => {
         />)
     }
 
-    const user: User = {
-        ID: 2,
-        username: 'heha',
-        email: "asdasd",
+    if(!user){
+        console.log("user was null")
+        return <div>Loading...</div>
     }
 
     return (
@@ -165,12 +178,12 @@ const Friends: React.FC = () => {
                     <input
                         type="text"
                         id="username"
-                        value={username}
+                        value={usernameInput}
                         placeholder="Enter username"
-                        onChange={(e) => setUsername(e.target.value)}
+                        onChange={(e) => setUsernameInput(e.target.value)}
                         style={styles.input}
                     />
-                    <Button type="primary" style={styles.button} onClick={() => handleInviteFriend(username)}>Invite</Button>
+                    <Button type="primary" style={styles.button} onClick={() => handleInviteFriend(usernameInput)}>Invite</Button>
                     {inviteFeedbackSuccess && <p style={styles.success}>{inviteFeedbackSuccess}</p>}
                     {inviteFeedbackError && <p style={styles.error}>{inviteFeedbackError}</p>}
                 </div>

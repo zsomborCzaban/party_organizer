@@ -1,20 +1,34 @@
-import React, {CSSProperties, useState} from "react";
+import React, {CSSProperties, useEffect, useState} from "react";
 import VisitPartyNavBar from "../../../components/navbar/VisitPartyNavBar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import {useNavigate} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/store";
-import videoBackground from "../../../constants/party_video.mp4"
+import videoBackground from "../../../constants/videos/party_video.mp4"
 import VisitPartyProfile from "../../../components/drawer/VisitPartyProfile";
 import {User} from "../../overView/User";
+import {getUser} from "../../../auth/AuthUserUtil";
+import {authService} from "../../../auth/AuthService";
 
 
 const PartyHome: React.FC = () => {
-    const [profileOpen, setProfileOpen] = useState(false)
-
     const navigate = useNavigate()
 
+    const [profileOpen, setProfileOpen] = useState(false)
+    const [user, setUser] = useState<User>()
+
     const {selectedParty} = useSelector((state: RootState)=> state.selectedPartyStore)
+
+    useEffect(() => {
+        const currentUser = getUser()
+
+        if(!currentUser) {
+            authService.handleUnauthorized()
+            return
+        }
+
+        setUser(currentUser)
+    }, []);
 
     if(!selectedParty){
         console.log("error, no selected party")
@@ -22,14 +36,13 @@ const PartyHome: React.FC = () => {
         return <div>error, selected party was null</div>
     }
 
-    const handleContributeClick = () => {
-        navigate("/visitParty/Contributions")
+    if(!user){
+        console.log("user was null")
+        return <div>Loading...</div>
     }
 
-    const user: User = {
-        ID: 2,
-        username: 'heha',
-        email: "asdasd",
+    const handleContributeClick = () => {
+        navigate("/visitParty/Contributions")
     }
 
     return (

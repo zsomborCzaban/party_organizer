@@ -28,6 +28,7 @@ func (u *UserDTO) GenerateJWT() (*string, error) {
 	idString := strconv.FormatUint(uint64(u.ID), 10)
 
 	return jwt.WithClaims(idString, map[string]string{
+		"email":    u.Email,
 		"username": u.Username,
 		"id":       idString,
 	})
