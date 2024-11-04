@@ -7,4 +7,5 @@ type IPartyInviteRepository interface {
 	Create(*PartyInvite) error
 
 	FindPendingByInvitedId(uint) (*[]PartyInvite, error)
+	FindPendingAndAcceptedByPartyId(uint) (*[]PartyInvite, error)
 }

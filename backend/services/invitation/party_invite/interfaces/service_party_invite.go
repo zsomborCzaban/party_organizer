@@ -160,6 +160,23 @@ func (ps PartyInviteService) GetPendingInvites(userId uint) api.IResponse {
 
 	return api.Success(invites)
 }
+func (ps PartyInviteService) GetPendingAndAcceptedInvites(partyId, userId uint) api.IResponse {
+	party, err := ps.PartyRepository.FindById(partyId)
+	if err != nil {
+		return api.ErrorBadRequest(err.Error())
+	}
+
+	if !party.CanBeOrganizedBy(userId) {
+		return api.ErrorUnauthorized("cannot organize this party")
+	}
+
+	invites, err := ps.PartyInviteRepository.FindPendingAndAcceptedByPartyId(partyId)
+	if err != nil {
+		return api.ErrorInternalServerError(err.Error())
+	}
+
+	return api.Success(invites)
+}
 
 func (ps PartyInviteService) JoinPublicParty(partyId, userId uint) api.IResponse {
 	party, err := ps.PartyRepository.FindById(partyId)

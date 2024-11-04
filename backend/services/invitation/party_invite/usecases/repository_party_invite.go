@@ -88,6 +88,25 @@ func (pr PartyInviteRepository) FindPendingByInvitedId(invitedId uint) (*[]domai
 	return invites, nil
 }
 
+func (pr PartyInviteRepository) FindPendingAndAcceptedByPartyId(partyId uint) (*[]domains.PartyInvite, error) {
+	queryParams := []db.QueryParameter{
+		{Field: "state", Operator: "!=", Value: domains.DECLINED},
+		{Field: "party_id", Operator: "=", Value: partyId},
+	}
+
+	fetchedInvites, fetchedError := pr.DbAccess.Query(queryParams, "Party", "Invitor")
+	if fetchedError != nil {
+		return nil, fetchedError
+	}
+
+	invites, err := fetchedInvites.(*[]domains.PartyInvite)
+	if !err {
+		return nil, errors.New(domains.FAILED_PARSE_TO_ARRAY)
+	}
+
+	return invites, nil
+}
+
 type EntityProvider struct {
 }
 

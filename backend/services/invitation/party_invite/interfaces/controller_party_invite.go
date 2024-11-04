@@ -120,6 +120,32 @@ func (fc PartyInviteController) GetPendingInvites(w http.ResponseWriter, r *http
 	}
 }
 
+func (fc PartyInviteController) GetPendingAndAcceptedInvites(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	userId, err := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	if err != nil {
+		br := api.ErrorBadRequest(err.Error())
+
+		br.Send(w)
+		return
+	}
+
+	partyId, err2 := strconv.ParseUint(vars["party_id"], 10, 32)
+	if err2 != nil {
+		br := api.ErrorBadRequest(err2.Error())
+
+		br.Send(w)
+		return
+	}
+
+	resp := fc.PartyInviteService.GetPendingAndAcceptedInvites(uint(partyId), userId)
+	couldSend := resp.Send(w)
+	if !couldSend {
+		//todo: log here
+		return
+	}
+}
+
 func (fc PartyInviteController) Kick(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	partyId, err := strconv.ParseUint(vars["party_id"], 10, 32)
