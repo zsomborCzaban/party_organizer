@@ -88,9 +88,9 @@ func (pr PartyInviteRepository) FindPendingByInvitedId(invitedId uint) (*[]domai
 	return invites, nil
 }
 
-func (pr PartyInviteRepository) FindPendingAndAcceptedByPartyId(partyId uint) (*[]domains.PartyInvite, error) {
+func (pr PartyInviteRepository) FindPendingByPartyId(partyId uint) (*[]domains.PartyInvite, error) {
 	queryParams := []db.QueryParameter{
-		{Field: "state", Operator: "!=", Value: domains.DECLINED},
+		{Field: "state", Operator: "=", Value: domains.PENDING},
 		{Field: "party_id", Operator: "=", Value: partyId},
 	}
 

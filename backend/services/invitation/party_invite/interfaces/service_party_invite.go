@@ -152,7 +152,7 @@ func (ps PartyInviteService) CreateInvitation(invitedId, invitorId, partyId uint
 	return api.Success(invitation)
 }
 
-func (ps PartyInviteService) GetPendingInvites(userId uint) api.IResponse {
+func (ps PartyInviteService) GetUserPendingInvites(userId uint) api.IResponse {
 	invites, err := ps.PartyInviteRepository.FindPendingByInvitedId(userId)
 	if err != nil {
 		return api.ErrorInternalServerError(err.Error())
@@ -160,7 +160,7 @@ func (ps PartyInviteService) GetPendingInvites(userId uint) api.IResponse {
 
 	return api.Success(invites)
 }
-func (ps PartyInviteService) GetPendingAndAcceptedInvites(partyId, userId uint) api.IResponse {
+func (ps PartyInviteService) GetPartyPendingInvites(partyId, userId uint) api.IResponse {
 	party, err := ps.PartyRepository.FindById(partyId)
 	if err != nil {
 		return api.ErrorBadRequest(err.Error())
@@ -170,7 +170,7 @@ func (ps PartyInviteService) GetPendingAndAcceptedInvites(partyId, userId uint) 
 		return api.ErrorUnauthorized("cannot organize this party")
 	}
 
-	invites, err := ps.PartyInviteRepository.FindPendingAndAcceptedByPartyId(partyId)
+	invites, err := ps.PartyInviteRepository.FindPendingByPartyId(partyId)
 	if err != nil {
 		return api.ErrorInternalServerError(err.Error())
 	}

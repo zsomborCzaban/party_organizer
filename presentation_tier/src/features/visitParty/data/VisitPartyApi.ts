@@ -3,12 +3,15 @@ import {Requirement} from "./Requirement";
 import {Contribution} from "./Contribution";
 import {User} from "../../overView/User";
 import {post} from "../../../api/Api";
+import {PartyInvite} from "../../overView/partiesPage/PartyInvite";
 
 const DRINK_REQUIREMENT_PATH = "http://localhost:8080/api/v0/drinkRequirement/getByPartyId/"
 const FOOD_REQUIREMENT_PATH = "http://localhost:8080/api/v0/foodRequirement/getByPartyId/"
 const DRINK_CONTRIBUTION_PATH = "http://localhost:8080/api/v0/drinkContribution"
 const FOOD_CONTRIBUTION_PATH = "http://localhost:8080/api/v0/foodContribution"
 const PARTICIPANTS_PATH = "http://localhost:8080/api/v0/party/getParticipants/"
+const PENDING_INVITES_PATH = "http://localhost:8080/api/v0/party/getPendingInvites/"
+
 
 export const getDrinkRequirements = async (partyId: number): Promise<Requirement[]> => {
     return new Promise<Requirement[]>((resolve, reject) => {
@@ -117,3 +120,15 @@ export const deleteFoodContribution = async (contributionId: number): Promise<vo
             });
     });
 }
+
+export const getPartyPendingInvites = async (partyId: number): Promise<PartyInvite[]> => {
+    return new Promise<PartyInvite[]>((resolve, reject) => {
+        get<PartyInvite[]>(PENDING_INVITES_PATH + partyId.toString())
+            .then((invites: PartyInvite[]) => {
+                return resolve(invites);
+            })
+            .catch(err => {
+                return reject(err);
+            });
+    });
+};

@@ -7,8 +7,8 @@ type IPartyInviteService interface {
 	Accept(invitedId, partyId uint) api.IResponse
 	Decline(invitedId, partyId uint) api.IResponse
 
-	GetPendingInvites(uint) api.IResponse
-	GetPendingAndAcceptedInvites(partyId, userId uint) api.IResponse
+	GetUserPendingInvites(uint) api.IResponse
+	GetPartyPendingInvites(partyId, userId uint) api.IResponse
 
 	Kick(kickedId, userId, partyId uint) api.IResponse
 	JoinPublicParty(partyId, userId uint) api.IResponse

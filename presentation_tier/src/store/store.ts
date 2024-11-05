@@ -12,6 +12,7 @@ import foodRequirementSlice from "../features/visitParty/data/slices/FoodRequire
 import drinkContributionSlice from "../features/visitParty/data/slices/DrinkContributionSlice";
 import foodContributionSlice from "../features/visitParty/data/slices/FoodContributionSlice";
 import partyParticipantSlice from "../features/visitParty/data/slices/PartyParticipantSlice";
+import partyPendingInviteSlice from "../features/visitParty/data/slices/PendingInvitesForPartySlice"
 
 export const store = configureStore({
     reducer: {
@@ -27,6 +28,7 @@ export const store = configureStore({
         drinkContributionStore: drinkContributionSlice,
         foodContributionStore: foodContributionSlice,
         partyParticipantStore: partyParticipantSlice,
+        partyPendingInviteStore: partyPendingInviteSlice,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

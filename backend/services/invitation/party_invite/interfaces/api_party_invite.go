@@ -15,8 +15,8 @@ func NewPartyInviteRouter(router *mux.Router, controller domains.IPartyInviteCon
 	r.HandleFunc("/decline/{party_id}", controller.Decline).Methods("GET")
 	r.HandleFunc("/invite/{party_id}/{invitedUser_id}", controller.Invite).Methods("GET")
 
-	r.HandleFunc("/getPendingInvites/", controller.GetPendingInvites).Methods("GET")
-	r.HandleFunc("/GetPendingAndAcceptedInvites/{party_id}", controller.GetPendingAndAcceptedInvites).Methods("GET")
+	r.HandleFunc("/getPendingInvites/", controller.GetUserPendingInvites).Methods("GET")
+	r.HandleFunc("/GetPendingAndAcceptedInvites/{party_id}", controller.GetPartyPendingInvites).Methods("GET")
 
 	r.HandleFunc("/kick/{party_id}/{kicked_id}", controller.Kick).Methods("GET")
 	r.HandleFunc("/joinPublicParty/{party_id}", controller.JoinPublicParty).Methods("GET") // this could be together with the private party join, but its more clearer this way

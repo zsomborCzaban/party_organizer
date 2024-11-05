@@ -103,7 +103,7 @@ func (fc PartyInviteController) Invite(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (fc PartyInviteController) GetPendingInvites(w http.ResponseWriter, r *http.Request) {
+func (fc PartyInviteController) GetUserPendingInvites(w http.ResponseWriter, r *http.Request) {
 	userId, err := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
 	if err != nil {
 		br := api.ErrorBadRequest(err.Error())
@@ -112,7 +112,7 @@ func (fc PartyInviteController) GetPendingInvites(w http.ResponseWriter, r *http
 		return
 	}
 
-	resp := fc.PartyInviteService.GetPendingInvites(userId)
+	resp := fc.PartyInviteService.GetUserPendingInvites(userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: log here
@@ -120,7 +120,7 @@ func (fc PartyInviteController) GetPendingInvites(w http.ResponseWriter, r *http
 	}
 }
 
-func (fc PartyInviteController) GetPendingAndAcceptedInvites(w http.ResponseWriter, r *http.Request) {
+func (fc PartyInviteController) GetPartyPendingInvites(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	userId, err := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
 	if err != nil {
@@ -138,7 +138,7 @@ func (fc PartyInviteController) GetPendingAndAcceptedInvites(w http.ResponseWrit
 		return
 	}
 
-	resp := fc.PartyInviteService.GetPendingAndAcceptedInvites(uint(partyId), userId)
+	resp := fc.PartyInviteService.GetPartyPendingInvites(uint(partyId), userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: log here
