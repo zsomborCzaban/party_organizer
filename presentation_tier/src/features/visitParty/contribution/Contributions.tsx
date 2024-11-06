@@ -143,13 +143,14 @@ const Contributions = () => {
         return <div>error, selected party was null</div>
     }
 
-    if(dReqLoading || fReqLoading){
-        return <div>Loading Requirements</div>
-    }
-
-    if(dConLoading || fConLoading){
-        return <div>Loading Contributions</div>
-    }
+    //this make the whole page reload on dispatches :(
+    // if(dReqLoading || fReqLoading){
+    //     return <div>Loading Requirements</div>
+    // }
+    //
+    // if(dConLoading || fConLoading){
+    //     return <div>Loading Contributions</div>
+    // }
 
     if(!user){
         console.log("user was null")
