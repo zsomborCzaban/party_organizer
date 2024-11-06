@@ -81,7 +81,7 @@ const ManageParty = () => {
             title: '',
             key: 'action 1',
             render: (record: User) => (
-                <Button onClick={() => handleKickParticipant(record)}>Kick</Button>
+                <Button style={styles.errorButton} onClick={() => handleKickParticipant(record)}>Kick</Button>
             ),
         },
     ]
@@ -91,7 +91,7 @@ const ManageParty = () => {
             title: '',
             key: 'action 1',
             render: (record: Requirement) => (
-                <Button onClick={() => handleDeleteRequirement(record, "drink")}>Delete</Button>
+                <Button style={styles.errorButton} onClick={() => handleDeleteRequirement(record, "drink")}>Delete</Button>
             ),
         },
     ]
@@ -101,7 +101,7 @@ const ManageParty = () => {
             title: '',
             key: 'action 1',
             render: (record: Requirement) => (
-                <Button onClick={() => handleDeleteRequirement(record, "food")}>Delete</Button>
+                <Button style={styles.errorButton} onClick={() => handleDeleteRequirement(record, "food")}>Delete</Button>
             ),
         },
     ]
@@ -196,87 +196,71 @@ const ManageParty = () => {
             });
     }
 
-    return <div style={styles.outerContainer}>
-        <VisitPartyNavBar onProfileClick={() => setProfileOpen(true)}/>
-        <VisitPartyProfile isOpen={profileOpen} onClose={() => setProfileOpen(false)} user={user} onLogout={() => {console.log("logout")}} currentParty={selectedParty} onLeaveParty={() => {}}/>
-        <CreateRequirementModal visible={requirementModalVisible} onClose={() => setRequirementModalVisible(false)} mode={requirementModalMode} />
-        <DeleteRequirementModal visible={deleteModalVisible} onClose={() => setDeleteModalVisible(false)} mode={deleteModalMode} requirementId={requirementToDelete} />
-        <div style={styles.container}>
+    return (
+        <div style={styles.outerContainer}>
+            <VisitPartyNavBar onProfileClick={() => setProfileOpen(true)}/>
+            <VisitPartyProfile isOpen={profileOpen} onClose={() => setProfileOpen(false)} user={user} onLogout={() => {console.log("logout")}} currentParty={selectedParty} onLeaveParty={() => {}}/>
+            <CreateRequirementModal visible={requirementModalVisible} onClose={() => setRequirementModalVisible(false)} mode={requirementModalMode} />
+            <DeleteRequirementModal visible={deleteModalVisible} onClose={() => setDeleteModalVisible(false)} mode={deleteModalMode} requirementId={requirementToDelete} />
+            <div style={styles.container}>
 
-            <h2>Invite</h2>
-            <div style={styles.inputContainer}>
-                <input
-                    type="text"
-                    id="username"
-                    value={usernameInput}
-                    placeholder="Enter username"
-                    onChange={(e) => setUsernameInput(e.target.value)}
-                    style={styles.input}
-                />
-                <Button type="primary" style={styles.button}
-                        onClick={() => handleInviteToParty(usernameInput)}>Invite</Button>
-                {inviteFeedbackSuccess && <p style={styles.success}>{inviteFeedbackSuccess}</p>}
-                {inviteFeedbackError && <p style={styles.error}>{inviteFeedbackError}</p>}
-            </div>
+                <h2>Invite</h2>
+                <div style={styles.inputContainer}>
+                    <input
+                        type="text"
+                        id="username"
+                        value={usernameInput}
+                        placeholder="Enter username"
+                        onChange={(e) => setUsernameInput(e.target.value)}
+                        style={styles.input}
+                    />
+                    <Button type="primary" style={styles.button}
+                            onClick={() => handleInviteToParty(usernameInput)}>Invite</Button>
+                    {inviteFeedbackSuccess && <p style={styles.success}>{inviteFeedbackSuccess}</p>}
+                    {inviteFeedbackError && <p style={styles.error}>{inviteFeedbackError}</p>}
+                </div>
 
 
-            <h2>Drink Requirements</h2>
-            <div style={styles.requirementContainer}>
-                <Button type="primary" style={styles.button} onClick={() => handleAddRequirement("drink")}>Add</Button>
-                <div style={styles.requirementTable}>
-                    {dReqLoading && <div>Loading...</div>}
-                    {dReqError && <div>Error: Some unexpected error happened</div>}
-                    {(!dReqLoading && !dReqError) && renderReqs(dRequirements, "drink")}
+                <h2>Drink Requirements</h2>
+                <div style={styles.requirementContainer}>
+                    <Button type="primary" style={styles.button} onClick={() => handleAddRequirement("drink")}>Add</Button>
+                    <div style={styles.requirementTable}>
+                        {dReqLoading && <div>Loading...</div>}
+                        {dReqError && <div>Error: Some unexpected error happened</div>}
+                        {(!dReqLoading && !dReqError) && renderReqs(dRequirements, "drink")}
+                    </div>
+                </div>
+
+                <h2>Food Requirements</h2>
+                <div style={styles.requirementContainer}>
+                    <Button type="primary" style={styles.button} onClick={() => handleAddRequirement("food")}>Add</Button>
+                    <div style={styles.requirementTable}>
+                        {fReqLoading && <div>Loading...</div>}
+                        {fReqError && <div>Error: Some unexpected error happened</div>}
+                        {(!fReqLoading && !fReqError) && renderReqs(fRequirements, "food")}
+                    </div>
+                </div>
+
+                <h2>Participants</h2>
+                <div style={styles.requirementContainer}>
+                    <div style={styles.requirementTable}>
+                        {participantLoading && <div>Loading...</div>}
+                        {participantError && <div>Error: Some unexpected error happened</div>}
+                        {(!participantLoading && !participantError) && renderParticipants()}
+                    </div>
+                </div>
+
+                <h2>Pending Invites</h2>
+                <div style={styles.requirementContainer}>
+                    <div style={styles.requirementTable}>
+                        {pendingInvitesLoading && <div>Loading...</div>}
+                        {pendingInvitesError && <div>Error: Some unexpected error happened</div>}
+                        {(!pendingInvitesLoading && !pendingInvitesError) && renderPendingInvites()}
+                    </div>
                 </div>
             </div>
-
-            <h2>Food Requirements</h2>
-            <div style={styles.requirementContainer}>
-                <Button type="primary" style={styles.button} onClick={() => handleAddRequirement("food")}>Add</Button>
-                <div style={styles.requirementTable}>
-                    {fReqLoading && <div>Loading...</div>}
-                    {fReqError && <div>Error: Some unexpected error happened</div>}
-                    {(!fReqLoading && !fReqError) && renderReqs(fRequirements, "food")}
-                </div>
-            </div>
-
-            <h2>Participants</h2>
-            <div style={styles.requirementContainer}>
-                <div style={styles.requirementTable}>
-                    {participantLoading && <div>Loading...</div>}
-                    {participantError && <div>Error: Some unexpected error happened</div>}
-                    {(!participantLoading && !participantError) && renderParticipants()}
-                </div>
-            </div>
-
-            <h2>Pending Invites</h2>
-            <div style={styles.requirementContainer}>
-                <div style={styles.requirementTable}>
-                    {pendingInvitesLoading && <div>Loading...</div>}
-                    {pendingInvitesError && <div>Error: Some unexpected error happened</div>}
-                    {(!pendingInvitesLoading && !pendingInvitesError) && renderPendingInvites()}
-                </div>
-            </div>
-
-            {/*<h2 style={styles.label}>Attended Parties</h2>*/}
-
-            {/*/!* Scrollable Table using Ant Design Table *!/*/}
-            {/*<div style={styles.tableContainer}>*/}
-            {/*    {attendedLoading && <div>Loading...</div>}*/}
-            {/*    {attendedError && <div>Error: Some unexpected error happened</div>}*/}
-            {/*    {(!attendedLoading && !attendedError) && renderParties("attended")}*/}
-            {/*</div>*/}
-
-            {/*<h2 style={styles.label}>Organized Parties</h2>*/}
-
-            {/*/!* Scrollable Table using Ant Design Table *!/*/}
-            {/*<div style={styles.tableContainer}>*/}
-            {/*    {organizedLoading && <div>Loading...</div>}*/}
-            {/*    {organizedError && <div>Error: Some unexpected error happened</div>}*/}
-            {/*    {(!organizedLoading && !organizedError) && renderParties("organized")}*/}
-            {/*</div>*/}
         </div>
-    </div>
+    )
 }
 
 const styles: { [key: string]: CSSProperties } = {
@@ -286,36 +270,84 @@ const styles: { [key: string]: CSSProperties } = {
         flexDirection: 'column',
     },
     container: {
-        width: '80%',
-        margin: '0 auto',
-        height: '100%', // Occupy the remaining height
-        display: 'flex',
-        flexDirection: 'column',
+        width: "80%",
+        margin: "20px auto",
+        padding: "20px",
+        display: "flex",
+        flexDirection: "column",
+        backgroundColor: "#f9f9f9",
+        borderRadius: "8px",
+        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
     },
-    label: {
-        margin: '10px',
-        fontSize: '24px',
-        fontWeight: 'bold',
-        textAlign: 'left',
+    h2: {
+        color: "#333",
+        fontSize: "1.8rem",
+        fontWeight: "bold",
+        textAlign: "left",
     },
-    tableContainer: {
-        flexShrink: 0, // Prevent the table container from shrinking
-        padding: '20px',
+    inputContainer: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+        marginBottom: "20px",
+        gap: "10px",
+    },
+    input: {
+        padding: "8px 12px",
+        fontSize: "1rem",
+        borderRadius: "5px",
+        border: "1px solid #ccc",
+        width: "60%",
+    },
+    button: {
+        width: 'auto',
+        minWidth: '120px',
+        padding: '10px 20px',
+        borderRadius: '5px',
         marginBottom: '20px',
-        border: '1px solid #ccc',
-        borderRadius: '8px',
+        fontWeight: 'bold',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
     },
-    message: {
-        margin: '10px 0', // Space above and below the message
-        fontSize: '18px',
-        textAlign: 'left', // Center align the message
-        color: '#555', // Optional: a softer color for the message
+    errorButton: {
+        backgroundColor: 'red',
+        textAlign: 'center',
+        borderRadius: '10px',
+        cursor: 'pointer',
+        color: 'white',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
     },
-    buttonsContainer: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        padding: '0 20px',
-        flexGrow: 1, // Allow the buttons container to grow
+    buttonHover: {
+        backgroundColor: "#45a049",
+    },
+    success: {
+        color: "green",
+        fontSize: "1rem",
+        marginTop: "5px",
+    },
+    error: {
+        color: "red",
+        fontSize: "1rem",
+        marginTop: "5px",
+    },
+    requirementContainer: {
+        marginTop: "10px",
+    },
+    requirementTable: {
+        border: "1px solid #ddd",
+        borderRadius: "8px",
+        padding: "10px",
+        backgroundColor: "#fff",
+        marginBottom: "30px"
+    },
+    loading: {
+        textAlign: "center",
+        fontSize: "1rem",
+        color: "#555",
+    },
+    errorMessage: {
+        textAlign: "center",
+        fontSize: "1rem",
+        color: "#555",
     },
 };
 
