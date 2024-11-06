@@ -18,7 +18,6 @@ func NewPartyRouter(router *mux.Router, controller domains.IPartyController) {
 
 	r.HandleFunc("/getPartiesByOrganizerId/", controller.GetPartiesByOrganizerId).Methods("GET")
 	r.HandleFunc("/getPartiesByParticipantId/", controller.GetPartiesByParticipantId).Methods("GET")
-	r.HandleFunc("/{party_id}/join/", controller.AddUserToParty).Methods("GET") //probably dont use this endpoint
 
 	r.HandleFunc("/getPublicParties/", controller.GetPublicParties).Methods("GET")
 	r.HandleFunc("/getParticipants/{party_id}", controller.GetParticipants).Methods("GET")

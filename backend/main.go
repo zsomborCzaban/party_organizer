@@ -46,7 +46,7 @@ func main() {
 
 	router := mux.NewRouter()
 
-	apiRouter := router.PathPrefix("/api/v0").Subrouter()
+	apiRouter := router.PathPrefix("/api/v1").Subrouter()
 
 	vali := api.NewValidator(validator.New())
 
