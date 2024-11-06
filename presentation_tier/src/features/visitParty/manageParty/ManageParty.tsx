@@ -18,7 +18,7 @@ import {
 import {Requirement} from "../data/Requirement";
 import {loadPartyParticipants} from "../data/slices/PartyParticipantSlice";
 import {loadPartyPendingInvites} from "../data/slices/PendingInvitesForPartySlice";
-import {inviteToParty} from "../data/VisitPartyApi";
+import {inviteToParty, kickFromParty} from "../data/VisitPartyApi";
 import CreateRequirementModal from "./CreateRequirementModal";
 import DeleteRequirementModal from "./DeleteRequirementModal";
 
@@ -185,7 +185,15 @@ const ManageParty = () => {
     }
 
     const handleKickParticipant = (user: User) => {
-
+        if(!selectedParty || !selectedParty.ID) return
+        kickFromParty(selectedParty.ID, user.ID)
+            .then(() => {
+                if(!selectedParty || !selectedParty.ID) return
+                dispatch(loadPartyParticipants(selectedParty.ID))
+            })
+            .catch(err => {
+                //todo: make a confirmaction modal and handle feedback
+            });
     }
 
     return <div style={styles.outerContainer}>

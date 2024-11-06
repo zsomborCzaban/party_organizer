@@ -10,6 +10,7 @@ const FOOD_REQUIREMENT_PATH = "http://localhost:8080/api/v0/foodRequirement"
 const DRINK_CONTRIBUTION_PATH = "http://localhost:8080/api/v0/drinkContribution"
 const FOOD_CONTRIBUTION_PATH = "http://localhost:8080/api/v0/foodContribution"
 const PARTICIPANTS_PATH = "http://localhost:8080/api/v0/party/getParticipants/"
+const PARTY_ATTENDANCE_MANAGER_PATH = "http://localhost:8080/api/v0/partyAttendanceManager"
 const PENDING_INVITES_PATH = "http://localhost:8080/api/v0/partyAttendanceManager/getPartyPendingInvites/"
 const INVITE_TO_PARTY_PATH = "http://localhost:8080/api/v0/partyAttendanceManager/invite/"
 
@@ -125,7 +126,7 @@ export const deleteFoodContribution = async (contributionId: number): Promise<vo
 
 export const getPartyPendingInvites = async (partyId: number): Promise<PartyInvite[]> => {
     return new Promise<PartyInvite[]>((resolve, reject) => {
-        get<PartyInvite[]>(PENDING_INVITES_PATH + partyId.toString())
+        get<PartyInvite[]>(PARTY_ATTENDANCE_MANAGER_PATH + "/getPartyPendingInvites/" + partyId.toString())
             .then((invites: PartyInvite[]) => {
                 return resolve(invites);
             })
@@ -135,11 +136,23 @@ export const getPartyPendingInvites = async (partyId: number): Promise<PartyInvi
     });
 };
 
-export const inviteToParty = async (partyId: number, username: string): Promise<PartyInvite[]> => {
-    return new Promise<PartyInvite[]>((resolve, reject) => {
-        get<PartyInvite[]>(INVITE_TO_PARTY_PATH + partyId.toString() + '/' + username)
-            .then((invites: PartyInvite[]) => {
-                return resolve(invites);
+export const inviteToParty = async (partyId: number, username: string): Promise<void> => {
+    return new Promise<void>((resolve, reject) => {
+        get<void>(PARTY_ATTENDANCE_MANAGER_PATH + "/invite/" + partyId.toString() + '/' + username)
+            .then(() => {
+                return resolve();
+            })
+            .catch(err => {
+                return reject(err);
+            });
+    });
+};
+
+export const kickFromParty = async (partyId: number, userId: number): Promise<void> => {
+    return new Promise<void>((resolve, reject) => {
+        get<void>(PARTY_ATTENDANCE_MANAGER_PATH + "/kick/" + partyId.toString() + '/' + userId.toString())
+            .then(() => {
+                return resolve();
             })
             .catch(err => {
                 return reject(err);

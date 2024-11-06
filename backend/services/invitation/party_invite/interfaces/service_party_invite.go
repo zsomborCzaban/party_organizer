@@ -277,7 +277,7 @@ func (ps PartyInviteService) JoinPrivateParty(partyId, userId uint, accessCode s
 func (ps PartyInviteService) Kick(kickedId, userId, partyId uint) api.IResponse {
 	kickedUser, err := ps.UserRepository.FindById(kickedId)
 	if err != nil {
-		return api.ErrorInternalServerError(err.Error())
+		return api.ErrorBadRequest(err.Error())
 	}
 
 	party, err3 := ps.PartyRepository.FindById(partyId)
