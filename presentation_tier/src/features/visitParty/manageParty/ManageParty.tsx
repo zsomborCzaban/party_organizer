@@ -20,6 +20,7 @@ import {loadPartyParticipants} from "../data/slices/PartyParticipantSlice";
 import {loadPartyPendingInvites} from "../data/slices/PendingInvitesForPartySlice";
 import {inviteToParty} from "../data/VisitPartyApi";
 import CreateRequirementModal from "./CreateRequirementModal";
+import DeleteRequirementModal from "./DeleteRequirementModal";
 
 const ManageParty = () => {
     const navigate = useNavigate()
@@ -27,11 +28,14 @@ const ManageParty = () => {
 
     const [user, setUser] = useState<User>()
     const [profileOpen, setProfileOpen] = useState(false)
-    const [usernameInput, setUsernameInput] = useState("")
-    const [inviteFeedbackSuccess, setInviteFeedbackSuccess] = useState("")
-    const [inviteFeedbackError, setInviteFeedbackError] = useState("")
+    const [usernameInput, setUsernameInput] = useState('')
+    const [inviteFeedbackSuccess, setInviteFeedbackSuccess] = useState('')
+    const [inviteFeedbackError, setInviteFeedbackError] = useState('')
     const [requirementModalVisible, setRequirementModalVisible] = useState(false)
-    const [requirementModalMode, setRequirementModalMode] = useState("")
+    const [requirementModalMode, setRequirementModalMode] = useState('')
+    const [deleteModalVisible, setDeleteModalVisible] = useState(false)
+    const [deleteModalMode, setDeleteModalMode] = useState('')
+    const [requirementToDelete, setRequirementToDelete] = useState(-1)
 
     const initialFetchDone = useRef(false);
 
@@ -82,13 +86,33 @@ const ManageParty = () => {
         },
     ]
 
-    const renderReqs = (requirements: Requirement[]) => {
+    const drinkRequirementColumns = [...requirementTableColumns,
+        {
+            title: '',
+            key: 'action 1',
+            render: (record: Requirement) => (
+                <Button onClick={() => handleDeleteRequirement(record, "drink")}>Delete</Button>
+            ),
+        },
+    ]
+
+    const foodRequirementColumns = [...requirementTableColumns,
+        {
+            title: '',
+            key: 'action 1',
+            render: (record: Requirement) => (
+                <Button onClick={() => handleDeleteRequirement(record, "food")}>Delete</Button>
+            ),
+        },
+    ]
+
+    const renderReqs = (requirements: Requirement[], mode: string) => {
         if(!requirements || requirements.length === 0){
             return <div>There's no drink requirements yet!</div>
         }
         return (<Table
             dataSource={requirements.map(req => ({...req, key: req.ID}))}
-            columns={requirementTableColumns}
+            columns={mode === 'drink' ? drinkRequirementColumns : foodRequirementColumns}
             pagination={false}
             scroll={{y: 200}}
         />)
@@ -128,14 +152,14 @@ const ManageParty = () => {
                 setInviteFeedbackSuccess("Invite sent!")
                 setUsernameInput('')
                 setTimeout(() => {
-                    setInviteFeedbackSuccess("")
+                    setInviteFeedbackSuccess('')
                 }, 3000);
             })
             .catch(err => {
                 setInviteFeedbackError("something went wrong")
                 setUsernameInput('')
                 setTimeout(() => {
-                    setInviteFeedbackError("")
+                    setInviteFeedbackError('')
                 }, 3000);
             });
     }
@@ -146,6 +170,20 @@ const ManageParty = () => {
         setRequirementModalVisible(true)
     }
 
+    const handleDeleteRequirement = (requirement: Requirement, mode: string) => {
+        if(mode === "drink"){
+            setDeleteModalMode("drink")
+            setRequirementToDelete(requirement.ID || -1)
+            setDeleteModalVisible(true)
+        }
+
+        if(mode === "food"){
+            setDeleteModalMode("food")
+            setRequirementToDelete(requirement.ID || -1)
+            setDeleteModalVisible(true)
+        }
+    }
+
     const handleKickParticipant = (user: User) => {
 
     }
@@ -154,6 +192,7 @@ const ManageParty = () => {
         <VisitPartyNavBar onProfileClick={() => setProfileOpen(true)}/>
         <VisitPartyProfile isOpen={profileOpen} onClose={() => setProfileOpen(false)} user={user} onLogout={() => {console.log("logout")}} currentParty={selectedParty} onLeaveParty={() => {}}/>
         <CreateRequirementModal visible={requirementModalVisible} onClose={() => setRequirementModalVisible(false)} mode={requirementModalMode} />
+        <DeleteRequirementModal visible={deleteModalVisible} onClose={() => setDeleteModalVisible(false)} mode={deleteModalMode} requirementId={requirementToDelete} />
         <div style={styles.container}>
 
             <h2>Invite</h2>
@@ -179,7 +218,7 @@ const ManageParty = () => {
                 <div style={styles.requirementTable}>
                     {dReqLoading && <div>Loading...</div>}
                     {dReqError && <div>Error: Some unexpected error happened</div>}
-                    {(!dReqLoading && !dReqError) && renderReqs(dRequirements)}
+                    {(!dReqLoading && !dReqError) && renderReqs(dRequirements, "drink")}
                 </div>
             </div>
 
@@ -189,7 +228,7 @@ const ManageParty = () => {
                 <div style={styles.requirementTable}>
                     {fReqLoading && <div>Loading...</div>}
                     {fReqError && <div>Error: Some unexpected error happened</div>}
-                    {(!fReqLoading && !fReqError) && renderReqs(fRequirements)}
+                    {(!fReqLoading && !fReqError) && renderReqs(fRequirements, "food")}
                 </div>
             </div>
 

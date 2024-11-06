@@ -170,3 +170,27 @@ export const createFoodRequirement = async (requestBody: Requirement): Promise<R
             });
     });
 };
+
+export const deleteDrinkRequirement = async (requirementId: number): Promise<void> => {
+    return new Promise<void>((resolve, reject) => {
+        DELETE<void>(DRINK_REQUIREMENT_PATH + "/" + requirementId.toString())
+            .then(() => {
+                return resolve();
+            })
+            .catch(err => {
+                return reject(err);
+            });
+    });
+}
+
+export const deleteFoodRequirement = async (requirementId: number): Promise<void> => {
+    return new Promise<void>((resolve, reject) => {
+        DELETE<void>(FOOD_REQUIREMENT_PATH + "/" + requirementId.toString())
+            .then(() => {
+                return resolve();
+            })
+            .catch(err => {
+                return reject(err);
+            });
+    });
+}
