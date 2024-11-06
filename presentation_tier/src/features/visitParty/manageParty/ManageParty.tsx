@@ -1,5 +1,3 @@
-import OverViewNavBar from "../../../components/navbar/OverViewNavBar";
-import OverViewProfile from "../../../components/drawer/OverViewProfile";
 import React, {CSSProperties, useEffect, useRef, useState} from "react";
 import VisitPartyNavBar from "../../../components/navbar/VisitPartyNavBar";
 import VisitPartyProfile from "../../../components/drawer/VisitPartyProfile";
@@ -10,13 +8,18 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../../store/store";
 import {useNavigate} from "react-router-dom";
 import {Button, Table} from "antd";
-import {inviteFriend} from "../../overView/friends/FriendPageApi";
 import {loadDrinkRequirements} from "../data/slices/DrinkRequirementSlice";
 import {loadFoodRequirements} from "../data/slices/FoodRequirementSlice";
-import {requirementTableColumns, userTableColumns} from "../../../constants/tableColumns/TableColumns";
+import {
+    invitedTableColumns,
+    requirementTableColumns,
+    userTableColumns
+} from "../../../constants/tableColumns/TableColumns";
 import {Requirement} from "../data/Requirement";
-import {PartyInvite} from "../../overView/partiesPage/PartyInvite";
 import {loadPartyParticipants} from "../data/slices/PartyParticipantSlice";
+import {loadPartyPendingInvites} from "../data/slices/PendingInvitesForPartySlice";
+import {inviteToParty} from "../data/VisitPartyApi";
+import CreateRequirementModal from "./CreateRequirementModal";
 
 const ManageParty = () => {
     const navigate = useNavigate()
@@ -27,10 +30,8 @@ const ManageParty = () => {
     const [usernameInput, setUsernameInput] = useState("")
     const [inviteFeedbackSuccess, setInviteFeedbackSuccess] = useState("")
     const [inviteFeedbackError, setInviteFeedbackError] = useState("")
-    const [addDrinkReqFeedbackSuccess, setAddDrinkReqFeedbackSuccess] = useState("")
-    const [addDrinkReqFeedbackError, setAddDrinkReqFeedbackError] = useState("")
-    const [addFoodReqFeedbackSuccess, setAddFoodReqFeedbackSuccess] = useState("")
-    const [addFoodReqFeedbackError, setAddFoodReqFeedbackError] = useState("")
+    const [requirementModalVisible, setRequirementModalVisible] = useState(false)
+    const [requirementModalMode, setRequirementModalMode] = useState("")
 
     const initialFetchDone = useRef(false);
 
@@ -38,6 +39,7 @@ const ManageParty = () => {
     const {requirements: dRequirements, loading: dReqLoading, error: dReqError} = useSelector((state: RootState) => state.drinkRequirementStore)
     const {requirements: fRequirements, loading: fReqLoading, error: fReqError} = useSelector((state: RootState) => state.foodRequirementStore)
     const {participants, loading: participantLoading, error: participantError} = useSelector((state: RootState) => state.partyParticipantStore)
+    const {pendingInvites, loading: pendingInvitesLoading, error: pendingInvitesError} = useSelector((state: RootState) => state.partyPendingInviteStore)
 
     useEffect(() => {
         if (initialFetchDone.current) return;
@@ -49,15 +51,17 @@ const ManageParty = () => {
             return
         }
 
+        //todo: reload these when needed
         if(!selectedParty || !selectedParty.ID) return
         dispatch(loadDrinkRequirements(selectedParty.ID))
         dispatch(loadFoodRequirements(selectedParty.ID))
         dispatch(loadPartyParticipants(selectedParty.ID))
+        dispatch(loadPartyPendingInvites(selectedParty.ID))
 
         setUser(currentUser)
     }, [])
 
-    if(!selectedParty){
+    if(!selectedParty || !selectedParty.ID){
         console.log("error, selected party was null")
         navigate("/overview/discover")
         return <div>Error selected party was null</div>
@@ -67,8 +71,6 @@ const ManageParty = () => {
         console.log("user was null")
         return <div>Loading...</div>
     }
-
-    const requirementColumns = requirementTableColumns
 
     const participantColumns = [...userTableColumns,
         {
@@ -86,7 +88,7 @@ const ManageParty = () => {
         }
         return (<Table
             dataSource={requirements.map(req => ({...req, key: req.ID}))}
-            columns={requirementColumns}
+            columns={requirementTableColumns}
             pagination={false}
             scroll={{y: 200}}
         />)
@@ -104,9 +106,25 @@ const ManageParty = () => {
         />)
     }
 
-    const handleInviteFriend = (inputUsername: string) => {
-        inviteFriend(inputUsername)
+    const renderPendingInvites = () => {
+        if(!pendingInvites || pendingInvites.length === 0){
+            return <div>There's no pending invites at the moment</div>
+        }
+        return (<Table
+            dataSource={pendingInvites.map(invite => ({...invite, key: invite.ID}))}
+            columns={invitedTableColumns}
+            pagination={false}
+            scroll={{y: 200}}
+        />)
+    }
+
+    const handleInviteToParty = (username: string) => {
+        if(!selectedParty || !selectedParty.ID) return
+        inviteToParty(selectedParty.ID, username)
             .then(() => {
+                if(!selectedParty || !selectedParty.ID) return
+                dispatch(loadPartyPendingInvites(selectedParty.ID))
+
                 setInviteFeedbackSuccess("Invite sent!")
                 setUsernameInput('')
                 setTimeout(() => {
@@ -122,8 +140,10 @@ const ManageParty = () => {
             });
     }
 
-    const handleAddRequirement = () => {
-
+    const handleAddRequirement = (mode: string) => {
+        if (mode === "drink") setRequirementModalMode("drink")
+        if(mode === "food") setRequirementModalMode("food")
+        setRequirementModalVisible(true)
     }
 
     const handleKickParticipant = (user: User) => {
@@ -133,6 +153,7 @@ const ManageParty = () => {
     return <div style={styles.outerContainer}>
         <VisitPartyNavBar onProfileClick={() => setProfileOpen(true)}/>
         <VisitPartyProfile isOpen={profileOpen} onClose={() => setProfileOpen(false)} user={user} onLogout={() => {console.log("logout")}} currentParty={selectedParty} onLeaveParty={() => {}}/>
+        <CreateRequirementModal visible={requirementModalVisible} onClose={() => setRequirementModalVisible(false)} mode={requirementModalMode} />
         <div style={styles.container}>
 
             <h2>Invite</h2>
@@ -146,7 +167,7 @@ const ManageParty = () => {
                     style={styles.input}
                 />
                 <Button type="primary" style={styles.button}
-                        onClick={() => handleInviteFriend(usernameInput)}>Invite</Button>
+                        onClick={() => handleInviteToParty(usernameInput)}>Invite</Button>
                 {inviteFeedbackSuccess && <p style={styles.success}>{inviteFeedbackSuccess}</p>}
                 {inviteFeedbackError && <p style={styles.error}>{inviteFeedbackError}</p>}
             </div>
@@ -154,9 +175,7 @@ const ManageParty = () => {
 
             <h2>Drink Requirements</h2>
             <div style={styles.requirementContainer}>
-                <Button type="primary" style={styles.button} onClick={() => handleAddRequirement()}>Add</Button>
-                {addDrinkReqFeedbackSuccess && <p style={styles.success}>{addDrinkReqFeedbackSuccess}</p>}
-                {addDrinkReqFeedbackError && <p style={styles.error}>{addDrinkReqFeedbackError}</p>}
+                <Button type="primary" style={styles.button} onClick={() => handleAddRequirement("drink")}>Add</Button>
                 <div style={styles.requirementTable}>
                     {dReqLoading && <div>Loading...</div>}
                     {dReqError && <div>Error: Some unexpected error happened</div>}
@@ -166,9 +185,7 @@ const ManageParty = () => {
 
             <h2>Food Requirements</h2>
             <div style={styles.requirementContainer}>
-                <Button type="primary" style={styles.button} onClick={() => handleAddRequirement()}>Add</Button>
-                {addFoodReqFeedbackSuccess && <p style={styles.success}>{addFoodReqFeedbackSuccess}</p>}
-                {addFoodReqFeedbackError && <p style={styles.error}>{addFoodReqFeedbackError}</p>}
+                <Button type="primary" style={styles.button} onClick={() => handleAddRequirement("food")}>Add</Button>
                 <div style={styles.requirementTable}>
                     {fReqLoading && <div>Loading...</div>}
                     {fReqError && <div>Error: Some unexpected error happened</div>}
@@ -182,6 +199,15 @@ const ManageParty = () => {
                     {participantLoading && <div>Loading...</div>}
                     {participantError && <div>Error: Some unexpected error happened</div>}
                     {(!participantLoading && !participantError) && renderParticipants()}
+                </div>
+            </div>
+
+            <h2>Pending Invites</h2>
+            <div style={styles.requirementContainer}>
+                <div style={styles.requirementTable}>
+                    {pendingInvitesLoading && <div>Loading...</div>}
+                    {pendingInvitesError && <div>Error: Some unexpected error happened</div>}
+                    {(!pendingInvitesLoading && !pendingInvitesError) && renderPendingInvites()}
                 </div>
             </div>
 

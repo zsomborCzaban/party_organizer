@@ -58,11 +58,23 @@ export const partyInviteTableColumns = [
     },
 ]
 
-export const userInviteTableColumns =[
+export const invitedByTableColumns =[
     {
         title: 'Invited by',
         dataIndex: ['invitor', 'username'],
         key: 'username',
+    },
+]
+export const invitedTableColumns =[
+    {
+        title: 'Invited',
+        dataIndex: ['invited', 'username'],
+        key: 'username',
+    },
+    {
+        title: 'State',
+        dataIndex: 'state',
+        key: 'state',
     },
 ]
 

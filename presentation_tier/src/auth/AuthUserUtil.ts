@@ -19,7 +19,6 @@ export const getUserId = () => {
 
     try {
         const decoded: UserJwtPayload = jwtDecode(authToken)
-        console.log(decoded)
         return decoded.sub;
     } catch (e) {
         return null

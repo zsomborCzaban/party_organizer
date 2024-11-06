@@ -86,14 +86,19 @@ func (ps PartyInviteService) Decline(invitedId, partyId uint) api.IResponse {
 	return api.Success(invite)
 }
 
-func (ps PartyInviteService) Invite(invitedId, invitorId, partyId uint) api.IResponse {
-	if invitorId == invitedId {
+func (ps PartyInviteService) Invite(invitedUsername string, invitorId, partyId uint) api.IResponse {
+	invitedUser, err := ps.UserRepository.FindByUsername(invitedUsername)
+	if err != nil {
+		return api.ErrorBadRequest(err.Error())
+	}
+
+	if invitorId == invitedUser.ID {
 		return api.ErrorBadRequest("cannot party invite yourself")
 	}
 
-	invite, err := ps.PartyInviteRepository.FindByIds(invitedId, partyId)
+	invite, err := ps.PartyInviteRepository.FindByIds(invitedUser.ID, partyId)
 	if err != nil && err.Error() == domains.NOT_FOUND {
-		return ps.CreateInvitation(invitedId, invitorId, partyId)
+		return ps.CreateInvitation(invitedUser.ID, invitorId, partyId)
 	}
 	if err != nil {
 		return api.ErrorInternalServerError(err.Error())

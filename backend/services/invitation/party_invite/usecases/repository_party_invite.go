@@ -94,7 +94,7 @@ func (pr PartyInviteRepository) FindPendingByPartyId(partyId uint) (*[]domains.P
 		{Field: "party_id", Operator: "=", Value: partyId},
 	}
 
-	fetchedInvites, fetchedError := pr.DbAccess.Query(queryParams, "Party", "Invitor")
+	fetchedInvites, fetchedError := pr.DbAccess.Query(queryParams, "Party", "Invitor", "Invited") //could cause concurrent map writes
 	if fetchedError != nil {
 		return nil, fetchedError
 	}

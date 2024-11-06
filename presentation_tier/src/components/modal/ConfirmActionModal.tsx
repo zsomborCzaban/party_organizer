@@ -1,20 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {Modal} from 'antd';
-import {ApiError} from "../../../api/ApiResponse";
-import {
-    deleteDrinkContribution,
-    deleteFoodContribution
-} from "../data/VisitPartyApi";
-import {useDispatch, useSelector} from "react-redux";
-import {AppDispatch, RootState} from "../../../store/store";
-import {loadDrinkContributions} from "../data/slices/DrinkContributionSlice";
-import {loadFoodContributions} from "../data/slices/FoodContributionSlice";
+import {Button, Modal} from 'antd';
+import {ApiError} from "../../api/ApiResponse";
 
-interface ContributeModalProps {
+interface ConfirmActionModalProps {
     visible: boolean;
     onClose: () => void;
-    mode: string;
-    contributionId: number
+    onContinue3: () => Promise<void>;
+    warningText: string
+    title: string
 }
 
 interface Feedbacks{
@@ -23,13 +16,9 @@ interface Feedbacks{
 }
 
 
-const ContributeModal: React.FC<ContributeModalProps> = ({ mode, contributionId, visible, onClose }) => {
+const ConfirmActionModal: React.FC<ConfirmActionModalProps> = ({ warningText, title, visible, onClose, onContinue3 }) => {
     const [feedbacks, setFeedbacks] = useState<Feedbacks>({});
     const [countdown, setCountdown] = useState(0)
-
-    const dispatch = useDispatch<AppDispatch>()
-
-    const {selectedParty} = useSelector((state: RootState)=> state.selectedPartyStore)
 
     useEffect(() => {
         if (visible) {
@@ -43,60 +32,32 @@ const ContributeModal: React.FC<ContributeModalProps> = ({ mode, contributionId,
         //todo: implement me!!!
     }
 
-    const handleDelete = () => {
+    const handleContinue = () => {
         const newFeedbacks: Feedbacks = {};
 
-        if(mode === "drink"){
-            deleteDrinkContribution(contributionId)
-                .then(() => {
-                    newFeedbacks.buttonSuccess = "deleted successfully"
+        onContinue3()
+            .then(() => {
+                newFeedbacks.buttonSuccess = "deleted successfully"
+                setFeedbacks(newFeedbacks)
+
+                startCloseTimer()
+                return
+            })
+            .catch(err => {
+                if(err.response){
+                    let errors = err.response.data.errors
+                    handleErrors(errors)
+
+                    newFeedbacks.buttonError = "unhandled errors"
                     setFeedbacks(newFeedbacks)
-
-                    if(!selectedParty || !selectedParty.ID) return
-                    dispatch(loadDrinkContributions(selectedParty.ID));
-
                     startCloseTimer()
-                    return
-                })
-                .catch(err => {
-                    if(err.response){
-                        let errors = err.response.data.errors
-                        handleErrors(errors)
-                    } else {
-                        newFeedbacks.buttonError = "Something unexpected happened. Try again later!"
-                        setFeedbacks(newFeedbacks)
-                    }
-                })
-            return;
-        }
-
-        if(mode === "food"){
-            deleteFoodContribution(contributionId)
-                .then(() => {
-                    newFeedbacks.buttonSuccess = "deleted successfully"
+                } else {
+                    newFeedbacks.buttonError = "Something unexpected happened. Try again later!"
                     setFeedbacks(newFeedbacks)
-
-                    if(!selectedParty || !selectedParty.ID) return
-                    dispatch(loadFoodContributions(selectedParty.ID));
-
                     startCloseTimer()
-                    return
-                })
-                .catch(err => {
-                    if(err.response){
-                        let errors = err.response.data.errors
-                        handleErrors(errors)
-                    } else {
-                        newFeedbacks.buttonError = "Something unexpected happened. Try again later!"
-                        setFeedbacks(newFeedbacks)
-                    }
-                })
-            return;
-        }
-
-        console.log("unexpected modalMode")
-        newFeedbacks.buttonError = "Unexpected modal mode try again later"
-        setFeedbacks(newFeedbacks)
+                }
+                return
+            })
     };
 
     const startCloseTimer =  () => {
@@ -119,21 +80,21 @@ const ContributeModal: React.FC<ContributeModalProps> = ({ mode, contributionId,
 
     return (
         <Modal
-            title="Contribute"
+            title={`${title}`}
             open={visible}
             onCancel={onClose}
             footer={null} // Disable default footer
         >
             <div style={styles.modalContent}>
-                <label style={styles.label}>Are you sure you want to delete this contribution?</label>
+                <label style={styles.label}>{`${warningText}`}</label>
 
                 <div style={styles.buttonContainer}>
-                    <button onClick={handleDelete} style={styles.submitButton}>
-                        Submit
-                    </button>
-                    <button onClick={onClose} style={styles.cancelButton}>
+                    <Button onClick={handleContinue} style={styles.submitButton}>
+                        Continue
+                    </Button>
+                    <Button onClick={onClose} style={styles.cancelButton}>
                         Cancel
-                    </button>
+                    </Button>
                 </div>
                 {feedbacks.buttonError && <p style={styles.error}>{feedbacks.buttonError}</p>}
                 {feedbacks.buttonSuccess && <p style={styles.success}>{feedbacks.buttonSuccess}</p>}
@@ -199,4 +160,4 @@ const styles: { [key: string]: React.CSSProperties } = {
     },
 };
 
-export default ContributeModal;
+export default ConfirmActionModal;

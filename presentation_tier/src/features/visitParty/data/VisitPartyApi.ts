@@ -5,17 +5,19 @@ import {User} from "../../overView/User";
 import {post} from "../../../api/Api";
 import {PartyInvite} from "../../overView/partiesPage/PartyInvite";
 
-const DRINK_REQUIREMENT_PATH = "http://localhost:8080/api/v0/drinkRequirement/getByPartyId/"
-const FOOD_REQUIREMENT_PATH = "http://localhost:8080/api/v0/foodRequirement/getByPartyId/"
+const DRINK_REQUIREMENT_PATH = "http://localhost:8080/api/v0/drinkRequirement"
+const FOOD_REQUIREMENT_PATH = "http://localhost:8080/api/v0/foodRequirement"
 const DRINK_CONTRIBUTION_PATH = "http://localhost:8080/api/v0/drinkContribution"
 const FOOD_CONTRIBUTION_PATH = "http://localhost:8080/api/v0/foodContribution"
 const PARTICIPANTS_PATH = "http://localhost:8080/api/v0/party/getParticipants/"
-const PENDING_INVITES_PATH = "http://localhost:8080/api/v0/party/getPendingInvites/"
+const PENDING_INVITES_PATH = "http://localhost:8080/api/v0/partyAttendanceManager/getPartyPendingInvites/"
+const INVITE_TO_PARTY_PATH = "http://localhost:8080/api/v0/partyAttendanceManager/invite/"
+
 
 
 export const getDrinkRequirements = async (partyId: number): Promise<Requirement[]> => {
     return new Promise<Requirement[]>((resolve, reject) => {
-        get<Requirement[]>(DRINK_REQUIREMENT_PATH + partyId.toString())
+        get<Requirement[]>(DRINK_REQUIREMENT_PATH + "/getByPartyId/" + partyId.toString())
             .then((requirements: Requirement[]) => {
                 return resolve(requirements);
             })
@@ -27,7 +29,7 @@ export const getDrinkRequirements = async (partyId: number): Promise<Requirement
 
 export const getFoodRequirements = async (partyId: number): Promise<Requirement[]> => {
     return new Promise<Requirement[]>((resolve, reject) => {
-        get<Requirement[]>(FOOD_REQUIREMENT_PATH + partyId.toString())
+        get<Requirement[]>(FOOD_REQUIREMENT_PATH + "/getByPartyId/" + partyId.toString())
             .then((requirements: Requirement[]) => {
                 return resolve(requirements);
             })
@@ -126,6 +128,42 @@ export const getPartyPendingInvites = async (partyId: number): Promise<PartyInvi
         get<PartyInvite[]>(PENDING_INVITES_PATH + partyId.toString())
             .then((invites: PartyInvite[]) => {
                 return resolve(invites);
+            })
+            .catch(err => {
+                return reject(err);
+            });
+    });
+};
+
+export const inviteToParty = async (partyId: number, username: string): Promise<PartyInvite[]> => {
+    return new Promise<PartyInvite[]>((resolve, reject) => {
+        get<PartyInvite[]>(INVITE_TO_PARTY_PATH + partyId.toString() + '/' + username)
+            .then((invites: PartyInvite[]) => {
+                return resolve(invites);
+            })
+            .catch(err => {
+                return reject(err);
+            });
+    });
+};
+
+export const createDrinkRequirement = async (requestBody: Requirement): Promise<Requirement> => {
+    return new Promise<Requirement>((resolve, reject) => {
+        post<Requirement>(DRINK_REQUIREMENT_PATH, requestBody)
+            .then((requirement: Requirement) => {
+                return resolve(requirement);
+            })
+            .catch(err => {
+                return reject(err);
+            });
+    });
+};
+
+export const createFoodRequirement = async (requestBody: Requirement): Promise<Requirement> => {
+    return new Promise<Requirement>((resolve, reject) => {
+        post<Requirement>(FOOD_REQUIREMENT_PATH, requestBody)
+            .then((requirement: Requirement) => {
+                return resolve(requirement);
             })
             .catch(err => {
                 return reject(err);

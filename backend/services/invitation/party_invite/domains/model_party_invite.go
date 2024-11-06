@@ -12,7 +12,7 @@ type PartyInvite struct {
 	InvitorId uint               `json:"-"`
 	Invitor   userDomain.User    `json:"invitor"`
 	InvitedId uint               `json:"-"`
-	Invited   userDomain.User    `json:"-"`
+	Invited   userDomain.User    `json:"invited"`
 	PartyId   uint               `json:"-"`
 	Party     partyDomains.Party `json:"party"`
 	State     string             `json:"state"`

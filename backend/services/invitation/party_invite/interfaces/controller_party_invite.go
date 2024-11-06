@@ -71,9 +71,9 @@ func (fc PartyInviteController) Decline(w http.ResponseWriter, r *http.Request) 
 
 func (fc PartyInviteController) Invite(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	invitedUserId, err := strconv.ParseUint(vars["invitedUser_id"], 10, 32)
-	if err != nil {
-		br := api.ErrorBadRequest(err.Error())
+	invitedUsername, err := vars["invited_username"]
+	if !err {
+		br := api.ErrorBadRequest("wrong parameter as 'invited_username'")
 
 		br.Send(w)
 		return
@@ -95,7 +95,7 @@ func (fc PartyInviteController) Invite(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp := fc.PartyInviteService.Invite(uint(invitedUserId), userId, uint(partyId))
+	resp := fc.PartyInviteService.Invite(invitedUsername, userId, uint(partyId))
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging

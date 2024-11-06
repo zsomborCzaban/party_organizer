@@ -3,7 +3,7 @@ package domains
 import "github.com/zsomborCzaban/party_organizer/common/api"
 
 type IPartyInviteService interface {
-	Invite(invitedId, invitorId, partyId uint) api.IResponse
+	Invite(invitedId string, invitorId, partyId uint) api.IResponse
 	Accept(invitedId, partyId uint) api.IResponse
 	Decline(invitedId, partyId uint) api.IResponse
 
