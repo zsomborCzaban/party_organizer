@@ -105,7 +105,7 @@ const CreateParty: React.FC = () => {
             .then((returnedParty) => {
                 console.log(returnedParty)
                 dispatch(setSelectedParty(returnedParty))
-                navigate("/setupParty")
+                navigate("/visitParty/manageParty")
             })
             .catch(err => {
                 if(err.response){

@@ -3,7 +3,7 @@ import {AppDispatch, RootState} from "../../../store/store";
 import {CSSProperties, useEffect, useState} from "react";
 import {loadPublicParties} from "./PublicPartySlice";
 import OverViewNavBar from "../../../components/navbar/OverViewNavBar";
-import { Table } from 'antd';
+import {Button, Table} from 'antd';
 import createImage from '../../../constants/images/u5679648646_httpss.mj.runKqg0SHl7m9w_make_a_picture_similar_t_2a92ccce-3fd5-4da4-8398-11898f188cd5_3.png'
 import joinImage from '../../../constants/images/u5679648646_2_people_dancing_with_a_galactic_lsd_like_trip_li_78e43cba-8023-4e69-9fa1-75bb9790bbe8_0.png'
 import {useNavigate} from "react-router-dom";
@@ -73,7 +73,7 @@ const Discover = () => {
             title: '',
             key: 'ID',
             render: (text: string, record: Party) => (
-                <button onClick={() => handleVisitClicked(record)}>Visit</button>
+                <Button style={styles.button} onClick={() => handleVisitClicked(record)}>Visit</Button>
             ),
         },
     ];
@@ -203,6 +203,14 @@ const styles: { [key: string]: CSSProperties } = {
         fontSize: '18px',
         textAlign: 'left',
         color: 'red',
+    },
+    button: {
+        padding: '10px 20px',
+        backgroundColor: '#007bff',
+        color: 'white',
+        border: 'none',
+        borderRadius: '5px',
+        cursor: 'pointer',
     },
 };
 

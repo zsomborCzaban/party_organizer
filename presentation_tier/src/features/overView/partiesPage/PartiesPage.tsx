@@ -83,7 +83,7 @@ const PartiesPage = () => {
             title: '',
             key: 'ID',
             render: (record: Party) => (
-                <button onClick={() => handleVisitClicked(record)}>Visit</button>
+                <button style={styles.tableButton} onClick={() => handleVisitClicked(record)}>Visit</button>
             ),
         },
     ];
@@ -93,14 +93,14 @@ const PartiesPage = () => {
             title: '',
             key: 'action 1',
             render: (record: PartyInvite) => (
-                <button onClick={() => handleInviteAccepted(record)}>Accept</button>
+                <button style={styles.acceptButton} onClick={() => handleInviteAccepted(record)}>Accept</button>
             ),
         },
         {
             title: '',
             key: 'action 2',
             render: (record: PartyInvite) => (
-            <button onClick={() => handleInviteDeclined(record)}>Decline</button>
+            <button style={styles.declineButton} onClick={() => handleInviteDeclined(record)}>Decline</button>
         ),
     },
     ];
@@ -213,6 +213,30 @@ const styles: { [key: string]: CSSProperties } = {
         padding: '0 20px',
         flexGrow: 1, // Allow the buttons container to grow
     },
+    tableButton: {
+        padding: '7px 15px',
+        backgroundColor: '#007bff',
+        color: 'white',
+        border: 'none',
+        borderRadius: '5px',
+        cursor: 'pointer',
+    },
+    acceptButton: {
+        padding: '7px 15px',
+        backgroundColor: 'green',
+        color: 'white',
+        border: 'none',
+        borderRadius: '5px',
+        cursor: 'pointer',
+    },
+    declineButton: {
+        padding: '7px 15px',
+        backgroundColor: 'red',
+        color: 'white',
+        border: 'none',
+        borderRadius: '5px',
+        cursor: 'pointer',
+    }
 };
 
 

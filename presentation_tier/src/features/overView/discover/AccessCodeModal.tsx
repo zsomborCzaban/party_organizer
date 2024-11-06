@@ -99,8 +99,8 @@ const styles: { [key: string]: React.CSSProperties } = {
         cursor: 'pointer',
     },
     cancelButton: {
-        backgroundColor: '#ccc',
-        color: '#000',
+        backgroundColor: 'red',
+        color: '#fff',
         border: 'none',
         padding: '10px 20px',
         borderRadius: '4px',

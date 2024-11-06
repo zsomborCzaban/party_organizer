@@ -105,14 +105,14 @@ const Friends: React.FC = () => {
             title: '',
             key: 'accept',
             render: (record: FriendInvite) => (
-                <button onClick={() => handleInviteAccepted(record)}>Accept</button>
+                <button style={styles.acceptButton} onClick={() => handleInviteAccepted(record)}>Accept</button>
             ),
         },
         {
             title: '',
             key: 'decline',
             render: (record: FriendInvite) => (
-                <button onClick={() => handleInviteDeclined(record)}>Decline</button>
+                <button style={styles.declineButton} onClick={() => handleInviteDeclined(record)}>Decline</button>
             ),
         },
     ];
@@ -126,7 +126,7 @@ const Friends: React.FC = () => {
         {
             key: 'remove',
             render: (record: User) => (
-                <button onClick={() => handleRemoveFriend(record)}>Remove</button>
+                <button style={styles.tableButton} onClick={() => handleRemoveFriend(record)}>Remove</button>
             ),
         },
     ];
@@ -268,6 +268,30 @@ const styles: { [key: string]: CSSProperties } = {
         color: 'green',
         fontSize: '0.875em',
     },
+    tableButton: {
+        padding: '7px 15px',
+        backgroundColor: '#007bff',
+        color: 'white',
+        border: 'none',
+        borderRadius: '5px',
+        cursor: 'pointer',
+    },
+    acceptButton: {
+        padding: '7px 15px',
+        backgroundColor: 'green',
+        color: 'white',
+        border: 'none',
+        borderRadius: '5px',
+        cursor: 'pointer',
+    },
+    declineButton: {
+        padding: '7px 15px',
+        backgroundColor: 'red',
+        color: 'white',
+        border: 'none',
+        borderRadius: '5px',
+        cursor: 'pointer',
+    }
 };
 
 export default Friends;
