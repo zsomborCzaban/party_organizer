@@ -84,6 +84,11 @@ export const userTableColumns = [
         dataIndex: 'username',
         key: 'username'
     },
+    {
+        title: 'Email',
+        dataIndex: 'email',
+        key: 'email'
+    },
 ]
 
 export const requirementTableColumns = [

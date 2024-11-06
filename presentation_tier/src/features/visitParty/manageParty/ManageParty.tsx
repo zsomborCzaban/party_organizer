@@ -7,7 +7,7 @@ import {authService} from "../../../auth/AuthService";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../../store/store";
 import {useNavigate} from "react-router-dom";
-import {Button, Table} from "antd";
+import {Button, ConfigProvider, Table, theme} from "antd";
 import {loadDrinkRequirements} from "../data/slices/DrinkRequirementSlice";
 import {loadFoodRequirements} from "../data/slices/FoodRequirementSlice";
 import {
@@ -21,6 +21,7 @@ import {loadPartyPendingInvites} from "../data/slices/PendingInvitesForPartySlic
 import {inviteToParty, kickFromParty} from "../data/VisitPartyApi";
 import CreateRequirementModal from "./CreateRequirementModal";
 import DeleteRequirementModal from "./DeleteRequirementModal";
+import backgroundImage from "../../../constants/images/gears.png";
 
 const ManageParty = () => {
     const navigate = useNavigate()
@@ -197,90 +198,107 @@ const ManageParty = () => {
     }
 
     return (
-        <div style={styles.outerContainer}>
-            <VisitPartyNavBar onProfileClick={() => setProfileOpen(true)}/>
-            <VisitPartyProfile isOpen={profileOpen} onClose={() => setProfileOpen(false)} user={user} onLogout={() => {console.log("logout")}} currentParty={selectedParty} onLeaveParty={() => {}}/>
-            <CreateRequirementModal visible={requirementModalVisible} onClose={() => setRequirementModalVisible(false)} mode={requirementModalMode} />
-            <DeleteRequirementModal visible={deleteModalVisible} onClose={() => setDeleteModalVisible(false)} mode={deleteModalMode} requirementId={requirementToDelete} />
-            <div style={styles.container}>
+        <div style={styles.background}>
+            <div style={styles.outerContainer}>
+                <ConfigProvider
+                    theme={{algorithm: theme.darkAlgorithm,}}
+                >
+                    <VisitPartyNavBar onProfileClick={() => setProfileOpen(true)}/>
+                    <VisitPartyProfile isOpen={profileOpen} onClose={() => setProfileOpen(false)} user={user} onLogout={() => {console.log("logout")}} currentParty={selectedParty} onLeaveParty={() => {}}/>
+                    <CreateRequirementModal visible={requirementModalVisible} onClose={() => setRequirementModalVisible(false)} mode={requirementModalMode} />
+                    <DeleteRequirementModal visible={deleteModalVisible} onClose={() => setDeleteModalVisible(false)} mode={deleteModalMode} requirementId={requirementToDelete} />
+                    <div style={styles.container}>
 
-                <h2>Invite</h2>
-                <div style={styles.inputContainer}>
-                    <input
-                        type="text"
-                        id="username"
-                        value={usernameInput}
-                        placeholder="Enter username"
-                        onChange={(e) => setUsernameInput(e.target.value)}
-                        style={styles.input}
-                    />
-                    <Button type="primary" style={styles.button}
-                            onClick={() => handleInviteToParty(usernameInput)}>Invite</Button>
-                    {inviteFeedbackSuccess && <p style={styles.success}>{inviteFeedbackSuccess}</p>}
-                    {inviteFeedbackError && <p style={styles.error}>{inviteFeedbackError}</p>}
-                </div>
+                        <h2>Invite</h2>
+                        <div style={styles.inputContainer}>
+                            <input
+                                type="text"
+                                id="username"
+                                value={usernameInput}
+                                placeholder="Enter username"
+                                onChange={(e) => setUsernameInput(e.target.value)}
+                                style={styles.input}
+                            />
+                            <Button type="primary" style={styles.button}
+                                    onClick={() => handleInviteToParty(usernameInput)}>Invite</Button>
+                            {inviteFeedbackSuccess && <p style={styles.success}>{inviteFeedbackSuccess}</p>}
+                            {inviteFeedbackError && <p style={styles.error}>{inviteFeedbackError}</p>}
+                        </div>
 
 
-                <h2>Drink Requirements</h2>
-                <div style={styles.requirementContainer}>
-                    <Button type="primary" style={styles.button} onClick={() => handleAddRequirement("drink")}>Add</Button>
-                    <div style={styles.requirementTable}>
-                        {dReqLoading && <div>Loading...</div>}
-                        {dReqError && <div>Error: Some unexpected error happened</div>}
-                        {(!dReqLoading && !dReqError) && renderReqs(dRequirements, "drink")}
+                        <h2>Drink Requirements</h2>
+                        <div style={styles.requirementContainer}>
+                            <Button type="primary" style={styles.button} onClick={() => handleAddRequirement("drink")}>Add</Button>
+                            <div style={styles.requirementTable}>
+                                {dReqLoading && <div>Loading...</div>}
+                                {dReqError && <div>Error: Some unexpected error happened</div>}
+                                {(!dReqLoading && !dReqError) && renderReqs(dRequirements, "drink")}
+                            </div>
+                        </div>
+
+                        <h2>Food Requirements</h2>
+                        <div style={styles.requirementContainer}>
+                            <Button type="primary" style={styles.button} onClick={() => handleAddRequirement("food")}>Add</Button>
+                            <div style={styles.requirementTable}>
+                                {fReqLoading && <div>Loading...</div>}
+                                {fReqError && <div>Error: Some unexpected error happened</div>}
+                                {(!fReqLoading && !fReqError) && renderReqs(fRequirements, "food")}
+                            </div>
+                        </div>
+
+                        <h2>Participants</h2>
+                        <div style={styles.requirementContainer}>
+                            <div style={styles.requirementTable}>
+                                {participantLoading && <div>Loading...</div>}
+                                {participantError && <div>Error: Some unexpected error happened</div>}
+                                {(!participantLoading && !participantError) && renderParticipants()}
+                            </div>
+                        </div>
+
+                        <h2>Pending Invites</h2>
+                        <div style={styles.requirementContainer}>
+                            <div style={styles.requirementTable}>
+                                {pendingInvitesLoading && <div>Loading...</div>}
+                                {pendingInvitesError && <div>Error: Some unexpected error happened</div>}
+                                {(!pendingInvitesLoading && !pendingInvitesError) && renderPendingInvites()}
+                            </div>
+                        </div>
                     </div>
-                </div>
-
-                <h2>Food Requirements</h2>
-                <div style={styles.requirementContainer}>
-                    <Button type="primary" style={styles.button} onClick={() => handleAddRequirement("food")}>Add</Button>
-                    <div style={styles.requirementTable}>
-                        {fReqLoading && <div>Loading...</div>}
-                        {fReqError && <div>Error: Some unexpected error happened</div>}
-                        {(!fReqLoading && !fReqError) && renderReqs(fRequirements, "food")}
-                    </div>
-                </div>
-
-                <h2>Participants</h2>
-                <div style={styles.requirementContainer}>
-                    <div style={styles.requirementTable}>
-                        {participantLoading && <div>Loading...</div>}
-                        {participantError && <div>Error: Some unexpected error happened</div>}
-                        {(!participantLoading && !participantError) && renderParticipants()}
-                    </div>
-                </div>
-
-                <h2>Pending Invites</h2>
-                <div style={styles.requirementContainer}>
-                    <div style={styles.requirementTable}>
-                        {pendingInvitesLoading && <div>Loading...</div>}
-                        {pendingInvitesError && <div>Error: Some unexpected error happened</div>}
-                        {(!pendingInvitesLoading && !pendingInvitesError) && renderPendingInvites()}
-                    </div>
-                </div>
+                </ConfigProvider>
             </div>
         </div>
     )
 }
 
 const styles: { [key: string]: CSSProperties } = {
+    background: {
+        backgroundImage: `url(${backgroundImage})`,
+        position: 'fixed',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        display: 'flex',
+    },
     outerContainer: {
-        height: '100vh', // Full viewport height
+        overflowY: 'auto',
+        height: '100vh',
         display: 'flex',
         flexDirection: 'column',
+        color: '#ffffff',
     },
     container: {
-        width: "80%",
+        width: "min(80%, 1000px)",
         margin: "20px auto",
         padding: "20px",
         display: "flex",
         flexDirection: "column",
-        backgroundColor: "#f9f9f9",
+        // backgroundColor: "#2c2c2c", // Darker gray background for content box
+        backgroundColor: 'rgba(33, 33, 33, 0.95)',
         borderRadius: "8px",
-        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.4)", // Slightly stronger shadow for depth
+        color: "#007bff", // Ensure text is white for readability
     },
     h2: {
-        color: "#333",
+        color: "#d3d3d3", // Light gray for headings
         fontSize: "1.8rem",
         fontWeight: "bold",
         textAlign: "left",
@@ -296,7 +314,9 @@ const styles: { [key: string]: CSSProperties } = {
         padding: "8px 12px",
         fontSize: "1rem",
         borderRadius: "5px",
-        border: "1px solid #ccc",
+        border: "1px solid #444", // Darker border to blend with dark mode
+        backgroundColor: "#3a3a3a", // Dark input background
+        color: "#ffffff", // Light input text
         width: "60%",
     },
     button: {
@@ -306,26 +326,25 @@ const styles: { [key: string]: CSSProperties } = {
         borderRadius: '5px',
         marginBottom: '20px',
         fontWeight: 'bold',
+        color: '#ffffff',
+        backgroundColor: '#007bff', // Accent color to match link color in header
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
     },
     errorButton: {
-        backgroundColor: 'red',
+        backgroundColor: '#b30000', // Dark red for delete buttons in dark mode
         textAlign: 'center',
         borderRadius: '10px',
         cursor: 'pointer',
-        color: 'white',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-    },
-    buttonHover: {
-        backgroundColor: "#45a049",
+        color: '#ffffff',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
     },
     success: {
-        color: "green",
+        color: "#66ff66", // Light green for success messages
         fontSize: "1rem",
         marginTop: "5px",
     },
     error: {
-        color: "red",
+        color: "#ff6666", // Light red for error messages
         fontSize: "1rem",
         marginTop: "5px",
     },
@@ -333,21 +352,21 @@ const styles: { [key: string]: CSSProperties } = {
         marginTop: "10px",
     },
     requirementTable: {
-        border: "1px solid #ddd",
+        border: "1px solid #444",
         borderRadius: "8px",
         padding: "10px",
-        backgroundColor: "#fff",
-        marginBottom: "30px"
+        backgroundColor: "#3a3a3a",
+        marginBottom: "30px",
     },
     loading: {
         textAlign: "center",
         fontSize: "1rem",
-        color: "#555",
+        color: "#d3d3d3",
     },
     errorMessage: {
         textAlign: "center",
         fontSize: "1rem",
-        color: "#555",
+        color: "#ff6666",
     },
 };
 
