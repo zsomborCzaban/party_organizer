@@ -111,12 +111,17 @@ func (ds DrinkContributionService) Delete(contributionId, userId uint) api.IResp
 		return api.ErrorBadRequest(err.Error())
 	}
 
-	if userId != contribution.ContributorId && userId != contribution.DrinkReq.Party.OrganizerID && userId != adminUser.ADMIN_USER_ID {
+	party, err2 := ds.PartyRepository.FindById(contribution.PartyId)
+	if err2 != nil {
+		return api.ErrorBadRequest(err2.Error())
+	}
+
+	if userId != contribution.ContributorId && userId != party.OrganizerID && userId != adminUser.ADMIN_USER_ID {
 		return api.ErrorUnauthorized("cannot delete other people's contribution")
 	}
 
-	if err2 := ds.ContributionRepository.Delete(contribution); err2 != nil {
-		return api.ErrorInternalServerError(err2.Error())
+	if err3 := ds.ContributionRepository.Delete(contribution); err3 != nil {
+		return api.ErrorInternalServerError(err3.Error())
 	}
 
 	return api.Success("contribution deleted successfully")

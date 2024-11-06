@@ -16,7 +16,7 @@ import backgroundImage from "../../../constants/images/cola-pepsi.png";
 import ContributeModal from "./ContributeModal";
 import {getUser} from "../../../auth/AuthUserUtil";
 import {authService} from "../../../auth/AuthService";
-import DeleteModal from "./DeleteModal";
+import DeleteContributionModal from "./DeleteContributionModal";
 import VisitPartyProfile from "../../../components/drawer/VisitPartyProfile";
 
 const Contributions = () => {
@@ -30,7 +30,7 @@ const Contributions = () => {
     const [fulfilledFReqs, setFulfilledFReqs] = useState(0)
     const [dModalVisible, setDModalVisible] = useState(false)
     const [fModalVisible, setFModalVisible] = useState(false)
-    const [deleteModalVisible, setDeleteModalVisible] = useState(false)
+    const [deleteContributionModalVisible, setDeleteContributionModalVisible] = useState(false)
     const [contributionIdToDelete, setContributionIdToDelete] = useState(0)
     const [deleteMode, setDeleteMode] = useState('')
     const [user, setUser] = useState<User>()
@@ -190,13 +190,13 @@ const Contributions = () => {
         if(mode === "drink"){
             setDeleteMode("drink")
             setContributionIdToDelete(contribution.ID || -1)
-            setDeleteModalVisible(true)
+            setDeleteContributionModalVisible(true)
         }
 
         if(mode === "food"){
             setDeleteMode("food")
             setContributionIdToDelete(contribution.ID || -1)
-            setDeleteModalVisible(true)
+            setDeleteContributionModalVisible(true)
         }
     }
 
@@ -214,7 +214,7 @@ const Contributions = () => {
                 <VisitPartyProfile isOpen={profileOpen} onClose={() => setProfileOpen(false)} currentParty={selectedParty} user={user} onLogout={() => console.log("logout")} onLeaveParty={() => console.log("leaveparty")} />
                 <ContributeModal mode="drink" options={makeOptions(dRequirements)} visible={dModalVisible} onClose={() => {setDModalVisible(false)}} />
                 <ContributeModal mode="food" options={makeOptions(fRequirements)} visible={fModalVisible} onClose={() => {setFModalVisible(false)}} />
-                <DeleteModal visible={deleteModalVisible} onClose={() => setDeleteModalVisible(false)} mode={deleteMode} contributionId={contributionIdToDelete}/>
+                <DeleteContributionModal visible={deleteContributionModalVisible} onClose={() => setDeleteContributionModalVisible(false)} mode={deleteMode} contributionId={contributionIdToDelete}/>
                 <div style={styles.container}>
                     <div style={styles.outerCollapsible}>
                         <Collapsible trigger={`Drinks ${fulfilledDReqs}/${dRequirements.length} fulfilled`} key={'drinks'}>
