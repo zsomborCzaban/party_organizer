@@ -3,7 +3,7 @@ package usecases
 import (
 	"errors"
 	"github.com/zsomborCzaban/party_organizer/db"
-	"github.com/zsomborCzaban/party_organizer/services/invitation/party_invite/domains"
+	"github.com/zsomborCzaban/party_organizer/services/managers/party_attendance_manager/domains"
 )
 
 type PartyInviteRepository struct {

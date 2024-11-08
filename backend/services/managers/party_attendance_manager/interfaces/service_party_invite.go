@@ -5,7 +5,7 @@ import (
 	partyDomains "github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
 	drinkContributionDomains "github.com/zsomborCzaban/party_organizer/services/interaction/drink_contributions/domains"
 	foodContributionDomains "github.com/zsomborCzaban/party_organizer/services/interaction/food_contributions/domains"
-	"github.com/zsomborCzaban/party_organizer/services/invitation/party_invite/domains"
+	"github.com/zsomborCzaban/party_organizer/services/managers/party_attendance_manager/domains"
 	userDomain "github.com/zsomborCzaban/party_organizer/services/user/domains"
 )
 

@@ -4,7 +4,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/zsomborCzaban/party_organizer/common/api"
 	"github.com/zsomborCzaban/party_organizer/common/jwt"
-	"github.com/zsomborCzaban/party_organizer/services/invitation/party_invite/domains"
+	"github.com/zsomborCzaban/party_organizer/services/managers/party_attendance_manager/domains"
 	"net/http"
 	"strconv"
 )

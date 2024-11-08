@@ -228,6 +228,10 @@ components:
               type: integer
               format: integer
               example: 6
+            contributor:
+              $ref: "#/components/schemas/user"
+            requirement:
+              $ref: "#/components/schemas/drink_requirement"
         - $ref: '#/components/schemas/drink_contribution_body_idless'
     drink_contribution_body_idless:
       type: object
@@ -236,14 +240,10 @@ components:
           type: integer
           format: integer
           example: 3
-        contributor:
-          $ref: "#/components/schemas/user"
         requirement_id:
           type: integer
           format: integer
           example: 3
-        requirement:
-          $ref: "#/components/schemas/drink_requirement"
         quantity:
           type: integer
           format: integer
