@@ -8,7 +8,6 @@ type DrinkRequirementDTO struct {
 	Type           string  `json:"type,omitempty" validate:"required"`
 	TargetQuantity float32 `json:"target_quantity,omitempty" validate:"required,min=1,gt=0"`
 	QuantityMark   string  `json:"quantity_mark,omitempty" validate:"required,min=1"`
-	Description    string  `json:"description,omitempty" `
 }
 
 func (drDTO *DrinkRequirementDTO) TransformToDrinkRequirement() *DrinkRequirement {
@@ -18,6 +17,5 @@ func (drDTO *DrinkRequirementDTO) TransformToDrinkRequirement() *DrinkRequiremen
 		Type:           drDTO.Type,
 		TargetQuantity: drDTO.TargetQuantity,
 		QuantityMark:   drDTO.QuantityMark,
-		Description:    drDTO.Description,
 	}
 }

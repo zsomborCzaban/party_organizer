@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Party Organizer
   description: This is the server's swagger file for the Party Organizer project
-  version: 1.0.11
+  version: 1.2.1
 servers:
   - url: http://localhost:8080/api/v1/
 paths:
@@ -50,10 +50,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/response_error"
-      security:
-        - petstore_auth:
-            - write:pets
-            - read:pets
   /party/{id}:
     get:
       tags:
@@ -408,11 +404,11 @@ components:
         is_error:
           type: boolean
           format: boolean
-          example: false
+          example: true
         code:
           type: integer
           format: integer
-          example: 200
+          example: 500
         errors:
           type: string
           format: string

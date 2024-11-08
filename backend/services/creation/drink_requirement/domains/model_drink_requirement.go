@@ -13,7 +13,6 @@ type DrinkRequirement struct {
 	Type           string        `json:"type"`
 	TargetQuantity float32       `json:"target_quantity"`
 	QuantityMark   string        `json:"quantity_mark"`
-	Description    string        `json:"description"`
 }
 
 func (d *DrinkRequirement) TransformToDrinkRequirementDTO() *DrinkRequirementDTO {
@@ -23,6 +22,5 @@ func (d *DrinkRequirement) TransformToDrinkRequirementDTO() *DrinkRequirementDTO
 		Type:           d.Type,
 		TargetQuantity: d.TargetQuantity,
 		QuantityMark:   d.QuantityMark,
-		Description:    d.Description,
 	}
 }

@@ -1,0 +1,351 @@
+openapi: 3.0.3
+info:
+  title: Party Organizer
+  description: This is the server's swagger file for the Party Organizer project
+  version: 1.2.1
+servers:
+  - url: http://localhost:8080/api/v1/
+paths:
+  /food_contribution:
+    post:
+      tags:
+        - Food Contribution
+      summary: Create a food contribution
+      description: Create a food contribution
+      requestBody:
+        description: Food contribution object
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/food_contribution_body_idless"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_success_food_contribution_data"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "406":
+          description: Validation exception
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+  /food_contribution/{id}:
+    put:
+      tags:
+        - Food Contribution
+      summary: Update a food contribution
+      description: Update a food contribution
+      requestBody:
+        description: Food Contribution object
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/food_contribution_body_idless"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_success_food_contribution_data"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "406":
+          description: Validation exception
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+    delete:
+      tags:
+        - Food Contribution
+      summary: Delete a food contribution
+      description: Delete a food contribution
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_success_message"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+
+  /food_contribution/getByPartyAndContributor/{party_id}/{contributor_id}:
+    get:
+      tags:
+        - Food Contribution
+      summary: Get all food contributions of a user in a party
+      description: Get all food contributions of a user in a party
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_success_food_contribution_data_array"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+  /food_contribution/getByRequirement/{requirement_id}:
+    get:
+      tags:
+        - Food Contribution
+      summary: Get all food contributions for a food requirement
+      description: Get all food contributions for a food requirement
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_success_food_contribution_data_array"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+  /food_contribution/getByParty/{party_id}:
+    get:
+      tags:
+        - Food Contribution
+      summary: Get all food contributions for a party
+      description: Get all food contributions for a party
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_success_food_contribution_data_array"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+components:
+  schemas:
+    food_contribution_body:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: integer
+              format: integer
+              example: 6
+        - $ref: '#/components/schemas/food_contribution_body_idless'
+    food_contribution_body_idless:
+      type: object
+      properties:
+        contributor_id:
+          type: integer
+          format: integer
+          example: 3
+        contributor:
+          $ref: "#/components/schemas/user"
+        requirement_id:
+          type: integer
+          format: integer
+          example: 3
+        requirement:
+          $ref: "#/components/schemas/food_requirement"
+        quantity:
+          type: integer
+          format: integer
+          example: 5
+        description:
+          type: string
+          format: string
+          example: "jamison"
+    user:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: integer
+          example: 23
+        username:
+          type: string
+          format: string
+          example: "Joseph"
+        email:
+          type: string
+          format: string
+          example: "totally@real.email"
+    food_requirement:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: integer
+          example: 2
+        party_id:
+          type: integer
+          format: integer
+          example: 2
+        type:
+          type: string
+          format: string
+          example: "whisky"
+        target_quantity:
+          type: integer
+          format: integer
+          example: 2,6
+        quantity_mark:
+          type: string
+          format: string
+          example: "L"
+
+    response_success_food_contribution_data:
+      type: object
+      properties:
+        is_error:
+          type: boolean
+          format: boolean
+          example: false
+        code:
+          type: integer
+          format: integer
+          example: 200
+        data:
+          $ref: '#/components/schemas/food_contribution_body'
+    response_success_food_contribution_data_array:
+      type: object
+      properties:
+        is_error:
+          type: boolean
+          format: boolean
+          example: false
+        code:
+          type: integer
+          format: integer
+          example: 200
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/food_contribution_body'
+    response_success_message:
+      type: object
+      properties:
+        is_error:
+          type: boolean
+          format: boolean
+          example: false
+        code:
+          type: integer
+          format: integer
+          example: 200
+        data:
+          type: string
+          format: string
+          example: "action_successful"
+    response_error:
+      type: object
+      properties:
+        is_error:
+          type: boolean
+          format: boolean
+          example: true
+        code:
+          type: integer
+          format: integer
+          example: 500
+        errors:
+          type: string
+          format: string
+          example: "any error"

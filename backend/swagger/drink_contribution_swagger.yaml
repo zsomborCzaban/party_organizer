@@ -1,0 +1,351 @@
+openapi: 3.0.3
+info:
+  title: Party Organizer
+  description: This is the server's swagger file for the Party Organizer project
+  version: 1.2.1
+servers:
+  - url: http://localhost:8080/api/v1/
+paths:
+  /drink_contribution:
+    post:
+      tags:
+        - Drink Contribution
+      summary: Create a drink contribution
+      description: Create a drink contribution
+      requestBody:
+        description: Drink contribution object
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/drink_contribution_body_idless"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_success_drink_contribution_data"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "406":
+          description: Validation exception
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+  /drink_contribution/{id}:
+    put:
+      tags:
+        - Drink Contribution
+      summary: Update a drink contribution
+      description: Update a drink contribution
+      requestBody:
+        description: Drink Contribution object
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/drink_contribution_body_idless"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_success_drink_contribution_data"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "406":
+          description: Validation exception
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+    delete:
+      tags:
+        - Drink Contribution
+      summary: Delete a drink contribution
+      description: Delete a drink contribution
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_success_message"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+
+  /drink_contribution/getByPartyAndContributor/{party_id}/{contributor_id}:
+    get:
+      tags:
+        - Drink Contribution
+      summary: Get all drink contributions of a user in a party
+      description: Get all drink contributions of a user in a party
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_success_drink_contribution_data_array"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+  /drink_contribution/getByRequirement/{requirement_id}:
+    get:
+      tags:
+        - Drink Contribution
+      summary: Get all drink contributions for a drink requirement
+      description: Get all drink contributions for a drink requirement
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_success_drink_contribution_data_array"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+  /drink_contribution/getByParty/{party_id}:
+    get:
+      tags:
+        - Drink Contribution
+      summary: Get all drink contributions for a party
+      description: Get all drink contributions for a party
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_success_drink_contribution_data_array"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+components:
+  schemas:
+    drink_contribution_body:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: integer
+              format: integer
+              example: 6
+        - $ref: '#/components/schemas/drink_contribution_body_idless'
+    drink_contribution_body_idless:
+      type: object
+      properties:
+        contributor_id:
+          type: integer
+          format: integer
+          example: 3
+        contributor:
+          $ref: "#/components/schemas/user"
+        requirement_id:
+          type: integer
+          format: integer
+          example: 3
+        requirement:
+          $ref: "#/components/schemas/drink_requirement"
+        quantity:
+          type: integer
+          format: integer
+          example: 5
+        description:
+          type: string
+          format: string
+          example: "jamison"
+    user:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: integer
+          example: 23
+        username:
+          type: string
+          format: string
+          example: "Joseph"
+        email:
+          type: string
+          format: string
+          example: "totally@real.email"
+    drink_requirement:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: integer
+          example: 2
+        party_id:
+          type: integer
+          format: integer
+          example: 2
+        type:
+          type: string
+          format: string
+          example: "whisky"
+        target_quantity:
+          type: integer
+          format: integer
+          example: 2,6
+        quantity_mark:
+          type: string
+          format: string
+          example: "L"
+
+    response_success_drink_contribution_data:
+      type: object
+      properties:
+        is_error:
+          type: boolean
+          format: boolean
+          example: false
+        code:
+          type: integer
+          format: integer
+          example: 200
+        data:
+          $ref: '#/components/schemas/drink_contribution_body'
+    response_success_drink_contribution_data_array:
+      type: object
+      properties:
+        is_error:
+          type: boolean
+          format: boolean
+          example: false
+        code:
+          type: integer
+          format: integer
+          example: 200
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/drink_contribution_body'
+    response_success_message:
+      type: object
+      properties:
+        is_error:
+          type: boolean
+          format: boolean
+          example: false
+        code:
+          type: integer
+          format: integer
+          example: 200
+        data:
+          type: string
+          format: string
+          example: "action_successful"
+    response_error:
+      type: object
+      properties:
+        is_error:
+          type: boolean
+          format: boolean
+          example: true
+        code:
+          type: integer
+          format: integer
+          example: 500
+        errors:
+          type: string
+          format: string
+          example: "any error"

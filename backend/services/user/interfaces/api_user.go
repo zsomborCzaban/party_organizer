@@ -8,6 +8,7 @@ import (
 func NewUserRouter(router *mux.Router, controller domains.IUserController) {
 	r := router.PathPrefix("/user").Subrouter()
 
+	//todo: refactor this to /login and /register and /getFriends
 	r.HandleFunc("/login/", controller.LoginController).Methods("POST")
 	r.HandleFunc("/register/", controller.RegisterController).Methods("POST")
 
