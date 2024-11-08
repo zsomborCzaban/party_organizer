@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Input, Modal} from 'antd';
 import {ApiError} from "../../../api/ApiResponse";
 import {Contribution} from "../../../data/types/Contribution";

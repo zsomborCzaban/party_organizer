@@ -1,6 +1,5 @@
 import {get} from "../../api/Api";
 import {FriendInvite} from "../types/FriendInvite";
-import {User} from "../types/User";
 import {BACKEND_URL} from "../constants/backend_url";
 
 const FRIEND_MANGER_PATH = BACKEND_URL + "/friendManager"

@@ -1,9 +1,6 @@
 import {DELETE, get} from "../../api/Api";
 import {Requirement} from "../types/Requirement";
-import {Contribution} from "../types/Contribution";
-import {User} from "../types/User";
 import {post} from "../../api/Api";
-import {PartyInvite} from "../types/PartyInvite";
 import {BACKEND_URL} from "../constants/backend_url";
 
 const DRINK_REQUIREMENT_PATH = BACKEND_URL + "/drinkRequirement"
