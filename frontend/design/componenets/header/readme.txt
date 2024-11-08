@@ -1,2 +1,0 @@
-a legegyszerubb header eleg. atlaszo hatter, nem kell a tetohoz rogziteni se semmi. A hover animcaio az maradhat, de ezen kivul tenyleg nem kell semmi extra
-(Annyi h 2 headerre gondoltam. 1 a mainpagehez es majd 1 a party pagehez(amirol a screenshot is van)).

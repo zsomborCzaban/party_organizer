@@ -1,0 +1,80 @@
+import {BACKEND_URL} from "../constants/backend_url";
+import {Contribution} from "../types/Contribution";
+import {DELETE, get, post} from "../../api/Api";
+
+const DRINK_CONTRIBUTION_PATH = BACKEND_URL + '/drinkContribution';
+const FOOD_CONTRIBUTION_PATH = BACKEND_URL + '/foodContribution';
+
+export const getDrinkContributions = async (partyId: number): Promise<Contribution[]> => {
+    return new Promise<Contribution[]>((resolve, reject) => {
+        get<Contribution[]>(DRINK_CONTRIBUTION_PATH + '/getByParty/' +partyId)
+            .then((contributions: Contribution[]) => {
+                return resolve(contributions);
+            })
+            .catch(err => {
+                return reject(err);
+            });
+    });
+};
+
+export const getFoodContributions = async (partyId: number): Promise<Contribution[]> => {
+    return new Promise<Contribution[]>((resolve, reject) => {
+        get<Contribution[]>(FOOD_CONTRIBUTION_PATH + '/getByParty/' + partyId)
+            .then((contributions: Contribution[]) => {
+                return resolve(contributions);
+            })
+            .catch(err => {
+                return reject(err);
+            });
+    });
+};
+
+export const createDrinkContribution = async (requestBody: Contribution): Promise<Contribution> => {
+    return new Promise<Contribution>((resolve, reject) => {
+        post<Contribution>(DRINK_CONTRIBUTION_PATH, requestBody)
+            .then((contribution: Contribution) => {
+                return resolve(contribution);
+            })
+            .catch(err => {
+                return reject(err);
+            });
+    });
+};
+
+export const createFoodContribution = async (requestBody: Contribution): Promise<Contribution> => {
+    return new Promise<Contribution>((resolve, reject) => {
+        post<Contribution>(FOOD_CONTRIBUTION_PATH, requestBody)
+            .then((contribution: Contribution) => {
+                return resolve(contribution);
+            })
+            .catch(err => {
+                return reject(err);
+            });
+    });
+};
+
+export const deleteDrinkContribution = async (contributionId: number): Promise<void> => {
+    return new Promise<void>((resolve, reject) => {
+        DELETE<void>(DRINK_CONTRIBUTION_PATH + "/" + contributionId.toString())
+            .then(() => {
+                return resolve();
+            })
+            .catch(err => {
+                return reject(err);
+            });
+    });
+}
+
+export const deleteFoodContribution = async (contributionId: number): Promise<void> => {
+    return new Promise<void>((resolve, reject) => {
+        DELETE<void>(FOOD_CONTRIBUTION_PATH + "/" + contributionId.toString())
+            .then(() => {
+                return resolve();
+            })
+            .catch(err => {
+                return reject(err);
+            });
+    });
+}
+
+

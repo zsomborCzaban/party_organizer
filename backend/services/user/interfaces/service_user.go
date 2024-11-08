@@ -25,7 +25,7 @@ func (us UserService) Login(loginRequest domains.LoginRequest) api.IResponse {
 
 	user, err2 := us.UserRepository.FindByUsername(*loginRequest.Username)
 	if err2 != nil {
-		return api.ErrorNotFound("username", *loginRequest.Username)
+		return api.ErrorInvalidCredentials()
 	}
 
 	if errPassword := loginRequest.CheckPassword(user.Password); errPassword != nil {

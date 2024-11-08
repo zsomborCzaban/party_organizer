@@ -1,0 +1,249 @@
+openapi: 3.0.3
+info:
+  title: Party Organizer
+  description: This is the server's swagger file for the Party Organizer project
+  version: 1.2.1
+servers:
+  - url: http://localhost:8080/api/v1/
+paths:
+  /friendManager/accept/{invitor_id}:
+    get:
+      tags:
+        - Friend Manager
+      summary: Accept friend invite from other user
+      description: Accept friend invite from other user
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_success_invite_data"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+  /friendManager/decline/{invitor_id}:
+    get:
+      tags:
+        - Friend Manager
+      summary: Decline friend invite from other user
+      description: Decline friend invite from other user
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_success_invite_data"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+  /friendManager/invite/{username}:
+    get:
+      tags:
+        - Friend Manager
+      summary: Send friend invite to user
+      description: Send friend invite to user
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_success_invite_data"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+  /friendManager/getPendingInvites/:
+    get:
+      tags:
+        - Friend Manager
+      summary: Get all pending friend invite for user
+      description: Get all pending friend invite for user
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_success_invite_data_array"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+  /friendManager/removeFriend/{friend_id}:
+    get:
+      tags:
+        - Friend Manager
+      summary: Remove a user from friends
+      description: Remove a user from friends
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_success_message"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+components:
+  schemas:
+    invite_body:
+      type: object
+      properties:
+        invitor:
+          $ref: "#/components/schemas/user"
+        invited:
+          $ref: "#/components/schemas/user"
+        state:
+          type: string
+          format: string
+          example: "PENDING"
+    user:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: integer
+          example: 23
+        username:
+          type: string
+          format: string
+          example: "Joseph"
+        email:
+          type: string
+          format: string
+          example: "totally@real.email"
+    response_success_invite_data:
+      type: object
+      properties:
+        is_error:
+          type: boolean
+          format: boolean
+          example: false
+        code:
+          type: integer
+          format: integer
+          example: 200
+        data:
+          $ref: '#/components/schemas/invite_body'
+    response_success_invite_data_array:
+      type: object
+      properties:
+        is_error:
+          type: boolean
+          format: boolean
+          example: false
+        code:
+          type: integer
+          format: integer
+          example: 200
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/invite_body'
+    response_success_message:
+      type: object
+      properties:
+        is_error:
+          type: boolean
+          format: boolean
+          example: false
+        code:
+          type: integer
+          format: integer
+          example: 200
+        data:
+          type: string
+          format: string
+          example: "action_successful"
+    response_error:
+      type: object
+      properties:
+        is_error:
+          type: boolean
+          format: boolean
+          example: true
+        code:
+          type: integer
+          format: integer
+          example: 500
+        errors:
+          type: string
+          format: string
+          example: "any error"

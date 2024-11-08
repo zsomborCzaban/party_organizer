@@ -29,7 +29,7 @@ func (fr FoodRequirementRepository) CreateFoodRequirement(foodRequirement *domai
 }
 
 func (fr FoodRequirementRepository) FindById(id uint) (*domains.FoodRequirement, error) {
-	foodRequirement, err := fr.DbAccess.FindById(id)
+	foodRequirement, err := fr.DbAccess.FindById(id, "Party")
 	if err != nil {
 		return nil, err
 	}

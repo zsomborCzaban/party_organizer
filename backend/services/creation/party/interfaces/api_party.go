@@ -11,14 +11,14 @@ func NewPartyRouter(router *mux.Router, controller domains.IPartyController) {
 
 	r.Use(jwt.ValidateJWTMiddleware)
 
+	r.HandleFunc("/getPartiesByOrganizerId", controller.GetPartiesByOrganizerId).Methods("GET")
+	r.HandleFunc("/getPartiesByParticipantId", controller.GetPartiesByParticipantId).Methods("GET")
+	r.HandleFunc("/getPublicParties", controller.GetPublicParties).Methods("GET")
+	r.HandleFunc("/getParticipants/{party_id}", controller.GetParticipants).Methods("GET")
+
 	r.HandleFunc("", controller.CreateController).Methods("POST")
 	r.HandleFunc("/{id}", controller.GetController).Methods("GET")
 	r.HandleFunc("/{id}", controller.UpdateController).Methods("PUT")
 	r.HandleFunc("/{id}", controller.DeleteController).Methods("DELETE")
 
-	r.HandleFunc("/getPartiesByOrganizerId", controller.GetPartiesByOrganizerId).Methods("GET")
-	r.HandleFunc("/getPartiesByParticipantId", controller.GetPartiesByParticipantId).Methods("GET")
-	r.HandleFunc("/{party_id}/join", controller.AddUserToParty).Methods("GET") //probably dont use this endpoint
-
-	r.HandleFunc("/getPublicParties", controller.GetPublicParties).Methods("GET")
 }

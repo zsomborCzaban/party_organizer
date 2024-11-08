@@ -7,26 +7,32 @@ import (
 )
 
 type PartyDTO struct {
-	ID                uint           `json:"id,omitempty"`
-	Place             string         `json:"place,omitempty" validate:"required,min=3"`
-	StartTime         time.Time      `json:"start_time,omitempty" validate:"required"`
-	Name              string         `json:"name,omitempty" validate:"required"`
-	Private           bool           `json:"is_private"`
-	AccessCodeEnabled bool           `json:"access_code_enabled"`
-	AccessCode        string         `json:"access_code"`
-	OrganizerID       uint           `json:"organizer_id,omitempty"`
-	Participants      []domains.User `json:"participants"`
+	ID                 uint           `json:"id,omitempty"`
+	Place              string         `json:"place,omitempty" validate:"required,min=3"`
+	StartTime          time.Time      `json:"start_time,omitempty" validate:"required"`
+	Name               string         `json:"name,omitempty" validate:"required"`
+	GoogleMapsPlusCode string         `json:"google_maps_link"`
+	FacebookLink       string         `json:"facebook_link"`
+	WhatsappLink       string         `json:"whatsapp_link"`
+	Private            bool           `json:"is_private"`
+	AccessCodeEnabled  bool           `json:"access_code_enabled"`
+	AccessCode         string         `json:"access_code"`
+	OrganizerID        uint           `json:"organizer_id,omitempty"`
+	Participants       []domains.User `json:"participants"`
 }
 
 func (p *PartyDTO) TransformToParty() *Party {
 	return &Party{
-		Model:             gorm.Model{ID: p.ID},
-		Place:             p.Place,
-		StartTime:         p.StartTime,
-		Name:              p.Name,
-		Private:           p.Private,
-		AccessCodeEnabled: p.AccessCodeEnabled,
-		AccessCode:        p.AccessCode,
-		OrganizerID:       p.OrganizerID,
+		Model:              gorm.Model{ID: p.ID},
+		Place:              p.Place,
+		StartTime:          p.StartTime,
+		Name:               p.Name,
+		GoogleMapsPlusCode: p.GoogleMapsPlusCode,
+		FacebookLink:       p.FacebookLink,
+		WhatsappLink:       p.WhatsappLink,
+		Private:            p.Private,
+		AccessCodeEnabled:  p.AccessCodeEnabled,
+		AccessCode:         p.AccessCode,
+		OrganizerID:        p.OrganizerID,
 	}
 }

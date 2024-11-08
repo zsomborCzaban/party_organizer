@@ -17,10 +17,10 @@ import (
 	drinkContributionUsecases "github.com/zsomborCzaban/party_organizer/services/interaction/drink_contributions/usecases"
 	foodContributionInterfaces "github.com/zsomborCzaban/party_organizer/services/interaction/food_contributions/interfaces"
 	foodContributionUsecases "github.com/zsomborCzaban/party_organizer/services/interaction/food_contributions/usecases"
-	friendInvitationInterfaces "github.com/zsomborCzaban/party_organizer/services/invitation/friend_invite/interfaces"
-	friendInvitationUsecases "github.com/zsomborCzaban/party_organizer/services/invitation/friend_invite/usecases"
-	partyInvitationInterfaces "github.com/zsomborCzaban/party_organizer/services/invitation/party_invite/interfaces"
-	partyInvitationUsecases "github.com/zsomborCzaban/party_organizer/services/invitation/party_invite/usecases"
+	friendInvitationInterfaces "github.com/zsomborCzaban/party_organizer/services/managers/friend_manager/interfaces"
+	friendInvitationUsecases "github.com/zsomborCzaban/party_organizer/services/managers/friend_manager/usecases"
+	partyInvitationInterfaces "github.com/zsomborCzaban/party_organizer/services/managers/party_attendance_manager/interfaces"
+	partyInvitationUsecases "github.com/zsomborCzaban/party_organizer/services/managers/party_attendance_manager/usecases"
 	userInterfaces "github.com/zsomborCzaban/party_organizer/services/user/interfaces"
 	userUsecases "github.com/zsomborCzaban/party_organizer/services/user/usecases"
 	"gorm.io/gorm/logger"
@@ -46,7 +46,7 @@ func main() {
 
 	router := mux.NewRouter()
 
-	apiRouter := router.PathPrefix("/api/v0").Subrouter()
+	apiRouter := router.PathPrefix("/api/v1").Subrouter()
 
 	vali := api.NewValidator(validator.New())
 

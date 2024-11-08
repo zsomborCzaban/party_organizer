@@ -53,7 +53,7 @@ func (pr PartyRepository) GetPublicParties() (*[]domains.Party, error) {
 		{Field: "private", Operator: "=", Value: false},
 	}
 
-	fetchedParties, fetchedError := pr.DbAccess.Query(queryParams)
+	fetchedParties, fetchedError := pr.DbAccess.Query(queryParams, "Organizer")
 	if fetchedError != nil {
 		//we should return errors from the databaselayer
 		return nil, errors.New(fmt.Sprintf("Error while fetching public parties. this should be only temporary. Error: %s", fetchedError.Error()))
@@ -77,7 +77,7 @@ func (pr PartyRepository) GetPartiesByOrganizerId(id uint) (*[]domains.Party, er
 		{Field: "organizer_id", Operator: "=", Value: id},
 	}
 
-	fetchedParties, fetchedError := pr.DbAccess.Query(queryParams)
+	fetchedParties, fetchedError := pr.DbAccess.Query(queryParams, "Organizer")
 	if fetchedError != nil {
 		//we should return errors from the databaselayer
 		return nil, errors.New(fmt.Sprintf("Error while fetching parties for organizer id: %d, this should be only temporary. Error: %s", id, fetchedError.Error()))
@@ -105,7 +105,7 @@ func (pr PartyRepository) GetPartiesByParticipantId(id uint) (*[]domains.Party, 
 		M2MConditionColumnValue: id,
 	}
 
-	fetchedParties, fetchedError := pr.DbAccess.Many2ManyQueryId(queryCond)
+	fetchedParties, fetchedError := pr.DbAccess.Many2ManyQueryId(queryCond, "Organizer")
 	if fetchedError != nil {
 		//we should return errors from the databaselayer
 		return nil, errors.New(fmt.Sprintf("Error while fetching parties for PARICIPANT.id: %d, this should be only temporary. Error: %s", id, fetchedError.Error()))
@@ -144,7 +144,7 @@ func (pr PartyRepository) CreateParty(party *domains.Party) error {
 }
 
 func (pr PartyRepository) FindById(id uint) (*domains.Party, error) {
-	party, err := pr.DbAccess.FindById(id, "Participants")
+	party, err := pr.DbAccess.FindById(id, "Participants", "Organizer") //todo: causes concurent mapwrites sometimes
 	if err != nil {
 		return nil, err
 	}
