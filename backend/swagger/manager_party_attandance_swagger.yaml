@@ -6,64 +6,19 @@ info:
 servers:
   - url: http://localhost:8080/api/v1/
 paths:
-  /party:
-    post:
-      tags:
-        - party
-      summary: Create a party
-      description: Create a party
-      requestBody:
-        description: Party object
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/party_body_idless"
-        required: true
-      responses:
-        "200":
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/response_success_party_data"
-        "400":
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/response_error"
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/response_error"
-        "406":
-          description: Validation exception
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/response_error"
-        "500":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/response_error"
-
-  /party/{id}:
+  /partyAttendanceManager/accept/{party_id}:
     get:
       tags:
-        - party
-      summary: Get a party
-      description: Get a party
+        - Party Attendance Manager
+      summary: Accept party invite
+      description: Accept party invite
       responses:
         "200":
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/response_success_party_data"
+                $ref: "#/components/schemas/response_success_invite_data"
         "400":
           description: Bad Request
           content:
@@ -82,25 +37,19 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/response_error"
-    put:
+  /partyAttendanceManager/decline/{party_id}:
+    get:
       tags:
-        - party
-      summary: Update a party
-      description: Update a party
-      requestBody:
-        description: Party object
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/party_body_idless"
-        required: true
+        - Party Attendance Manager
+      summary: Decline party invite
+      description: Decline party invite
       responses:
         "200":
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/response_success_party_data"
+                $ref: "#/components/schemas/response_success_invite_data"
         "400":
           description: Bad Request
           content:
@@ -113,8 +62,33 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/response_error"
-        "406":
-          description: Validation exception
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+  /partyAttendanceManager/invite/{party_id}/{invited_username}:
+    get:
+      tags:
+        - Party Attendance Manager
+      summary: Send party invite to user
+      description: Send party invite to user
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_success_invite_data"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "401":
+          description: Unauthorized
           content:
             application/json:
               schema:
@@ -125,11 +99,74 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/response_error"
-    delete:
+  /partyAttendanceManager/getPendingInvites/:
+    get:
       tags:
-        - party
-      summary: Delete a party
-      description: Delete a party
+        - Party Attendance Manager
+      summary: Get all pending party invite for user
+      description: Get all pending party invite for user
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_success_invite_data_array"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+  /partyAttendanceManager/getPartyPendingInvites/{party_id}:
+    get:
+      tags:
+        - Party Attendance Manager
+      summary: Get all pending party invite for party
+      description: Get all pending party invite for party
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_success_invite_data_array"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+  /partyAttendanceManager/kick/{party_id}/{friend_id}:
+    get:
+      tags:
+        - Party Attendance Manager
+      summary: Remove a user from a party
+      description: Remove a user from a party
       responses:
         "200":
           description: Successful operation
@@ -155,20 +192,19 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/response_error"
-
-  /party/getPartiesByOrganizerId/:
+  /partyAttendanceManager/joinPublicParty/{party_id}:
     get:
       tags:
-        - party
-      summary: Get parties where the user is the organizer
-      description: Get parties where the user is the organizer
+        - Party Attendance Manager
+      summary: Join public party
+      description: Join public party
       responses:
         "200":
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/response_success_party_data_array"
+                $ref: "#/components/schemas/response_success_party_data"
         "400":
           description: Bad Request
           content:
@@ -187,81 +223,19 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/response_error"
-  /party/getPartiesByParticipantId/:
+  /partyAttendanceManager/joinPrivateParty/{party_id}/{access_code}:
     get:
       tags:
-        - party
-      summary: Get parties where the user is a participant
-      description: Get parties where the user is a participant
+        - Party Attendance Manager
+      summary: Join private party
+      description: Join private party
       responses:
         "200":
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/response_success_party_data_array"
-        "400":
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/response_error"
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/response_error"
-        "500":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/response_error"
-  /party/getPublicParties/:
-    get:
-      tags:
-        - party
-      summary: Get public parties
-      description: Get public parties
-      responses:
-        "200":
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/response_success_party_data_array"
-        "400":
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/response_error"
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/response_error"
-        "500":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/response_error"
-  /party/getParticipants/{party_id}:
-    get:
-      tags:
-        - party
-      summary: Get participants of a party
-      description: Get participants of a party
-      responses:
-        "200":
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/response_success_user_data_array"
+                $ref: "#/components/schemas/response_success_party_data"
         "400":
           description: Bad Request
           content:
@@ -282,20 +256,43 @@ paths:
                 $ref: "#/components/schemas/response_error"
 components:
   schemas:
-    party_body:
-      allOf:
-        - type: object
-          properties:
-            id:
-              type: integer
-              format: integer
-              example: 6
-            organizer:
-              $ref: '#/components/schemas/user'
-        - $ref: '#/components/schemas/party_body_idless'
-    party_body_idless:
+    invite_body:
       type: object
       properties:
+        invitor:
+          $ref: "#/components/schemas/user"
+        invited:
+          $ref: "#/components/schemas/user"
+        party:
+          $ref: "#/components/schemas/party"
+        state:
+          type: string
+          format: string
+          example: "PENDING"
+    user:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: integer
+          example: 23
+        username:
+          type: string
+          format: string
+          example: "Joseph"
+        email:
+          type: string
+          format: string
+          example: "totally@real.email"
+    party:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: integer
+          example: 2
+        organizer:
+          $ref: "#/components/schemas/user"
         place:
           type: string
           format: string
@@ -328,21 +325,34 @@ components:
           type: string
           format: string
           example: "DD45H1A"
-    user:
+    response_success_invite_data:
       type: object
       properties:
-        id:
+        is_error:
+          type: boolean
+          format: boolean
+          example: false
+        code:
           type: integer
           format: integer
-          example: 23
-        username:
-          type: string
-          format: string
-          example: "Joseph"
-        email:
-          type: string
-          format: string
-          example: "totally@real.email"
+          example: 200
+        data:
+          $ref: '#/components/schemas/invite_body'
+    response_success_invite_data_array:
+      type: object
+      properties:
+        is_error:
+          type: boolean
+          format: boolean
+          example: false
+        code:
+          type: integer
+          format: integer
+          example: 200
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/invite_body'
     response_success_party_data:
       type: object
       properties:
@@ -355,37 +365,7 @@ components:
           format: integer
           example: 200
         data:
-          $ref: '#/components/schemas/party_body'
-    response_success_party_data_array:
-      type: object
-      properties:
-        is_error:
-          type: boolean
-          format: boolean
-          example: false
-        code:
-          type: integer
-          format: integer
-          example: 200
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/party_body'
-    response_success_user_data_array:
-      type: object
-      properties:
-        is_error:
-          type: boolean
-          format: boolean
-          example: false
-        code:
-          type: integer
-          format: integer
-          example: 200
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/user'
+          $ref: '#/components/schemas/party'
     response_success_message:
       type: object
       properties:
