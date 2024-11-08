@@ -1,17 +1,17 @@
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import Login from "../features/authtentication/Login";
+import Login from "../pages/authtentication/Login";
 import PrivateRoute from "../auth/PrivateRoute";
-import Login2 from "../features/authtentication/Login2";
-import Register from "../features/authtentication/Register";
-import Discover from "../features/overView/discover/Discover";
-import PartiesPage from "../features/overView/partiesPage/PartiesPage";
-import Friends from "../features/overView/friends/Friends";
-import CreateParty from "../features/createParty/CreateParty";
-import SetupParty from "../features/createParty/SetupParty";
-import PartyHome from "../features/visitParty/partyHome/PartyHome";
-import Contributions from "../features/visitParty/contribution/Contributions";
-import HallOfFame from "../features/visitParty/HallOfFame";
-import ManageParty from "../features/visitParty/manageParty/ManageParty";
+import Login2 from "../pages/authtentication/Login2";
+import Register from "../pages/authtentication/Register";
+import Discover from "../pages/overView/discover/Discover";
+import PartiesPage from "../pages/overView/partiesPage/PartiesPage";
+import Friends from "../pages/overView/friends/Friends";
+import CreateParty from "../pages/createParty/CreateParty";
+import SetupParty from "../pages/createParty/SetupParty";
+import PartyHome from "../pages/visitParty/partyHome/PartyHome";
+import Contributions from "../pages/visitParty/contribution/Contributions";
+import HallOfFame from "../pages/visitParty/hallOfFame/HallOfFame";
+import ManageParty from "../pages/visitParty/manageParty/ManageParty";
 
 const AppRoutes = () => {
     return (

@@ -1,6 +1,6 @@
 import {getJwtAuthToken} from "./AuthStorageUtils";
 import {jwtDecode, JwtPayload} from 'jwt-decode';
-import {User} from "../features/overView/User";
+import {User} from "../data/types/User";
 
 interface UserJwtPayload extends JwtPayload {
     id: string,

@@ -1,18 +1,18 @@
 import { configureStore } from '@reduxjs/toolkit'
-import publicPartySlice from "../features/overView/discover/PublicPartySlice";
-import organizedPartySlice from "../features/overView/partiesPage/OrganizedPartySlice";
-import attendedPartySlice from "../features/overView/partiesPage/AttendedPartySlice";
-import partyInviteSlice from "../features/overView/partiesPage/PartyInviteSlice";
-import friendInviteSlice from "../features/overView/friends/FriendInviteSlice";
-import friendSlice from "../features/overView/friends/FriendSlice";
-import persistedSelectedPartyReducer from "../features/overView/PartySlice";
+import publicPartySlice from "../data/sclices/PublicPartySlice";
+import organizedPartySlice from "../data/sclices/OrganizedPartySlice";
+import attendedPartySlice from "../data/sclices/AttendedPartySlice";
+import partyInviteSlice from "../data/sclices/PartyInviteSlice";
+import friendInviteSlice from "../data/sclices/FriendInviteSlice";
+import friendSlice from "../data/sclices/FriendSlice";
+import persistedSelectedPartyReducer from "../data/sclices/PartySlice";
 import { persistStore } from 'redux-persist';
-import drinkRequirementSlice from "../features/visitParty/data/slices/DrinkRequirementSlice";
-import foodRequirementSlice from "../features/visitParty/data/slices/FoodRequirementSlice";
-import drinkContributionSlice from "../features/visitParty/data/slices/DrinkContributionSlice";
-import foodContributionSlice from "../features/visitParty/data/slices/FoodContributionSlice";
-import partyParticipantSlice from "../features/visitParty/data/slices/PartyParticipantSlice";
-import partyPendingInviteSlice from "../features/visitParty/data/slices/PendingInvitesForPartySlice"
+import drinkRequirementSlice from "../data/sclices/DrinkRequirementSlice";
+import foodRequirementSlice from "../data/sclices/FoodRequirementSlice";
+import drinkContributionSlice from "../data/sclices/DrinkContributionSlice";
+import foodContributionSlice from "../data/sclices/FoodContributionSlice";
+import partyParticipantSlice from "../data/sclices/PartyParticipantSlice";
+import partyPendingInviteSlice from "../data/sclices/PendingInvitesForPartySlice"
 
 export const store = configureStore({
     reducer: {

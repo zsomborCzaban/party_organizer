@@ -1,6 +1,6 @@
 import React from 'react';
-import {User} from "../../features/overView/User";
-import defaultProfilePicture from "../../constants/images/default_profile_picture.png"
+import {User} from "../../data/types/User";
+import defaultProfilePicture from "../../data/resources/images/default_profile_picture.png"
 import {Button} from "antd";
 
 type DrawerProps = {

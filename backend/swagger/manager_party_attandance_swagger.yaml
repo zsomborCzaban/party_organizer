@@ -223,7 +223,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/response_error"
-  /partyAttendanceManager/joinPrivateParty/{party_id}/{access_code}:
+  /partyAttendanceManager/joinPrivateParty/{access_code}:
     get:
       tags:
         - Party Attendance Manager
