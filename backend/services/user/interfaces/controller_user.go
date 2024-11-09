@@ -81,9 +81,9 @@ func (uc *UserController) AddFriendController(w http.ResponseWriter, r *http.Req
 }
 
 func (uc *UserController) GetFriendsController(w http.ResponseWriter, r *http.Request) {
-	userId, err3 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
-	if err3 != nil {
-		br := api.ErrorBadRequest(err3.Error())
+	userId, err := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	if err != nil {
+		br := api.ErrorBadRequest(err.Error())
 
 		br.Send(w)
 		return
@@ -98,15 +98,15 @@ func (uc *UserController) GetFriendsController(w http.ResponseWriter, r *http.Re
 }
 
 func (uc *UserController) UploadProfilePicture(w http.ResponseWriter, r *http.Request) {
-	err := r.ParseMultipartForm(10 << 20)
+	userId, err := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
 	if err != nil {
-		br := api.ErrorBadRequest(domains.BadRequest)
+		br := api.ErrorBadRequest(err.Error())
 
 		br.Send(w)
 		return
 	}
 
-	file, fileHeader, err2 := r.FormFile("image")
+	err2 := r.ParseMultipartForm(10 << 20)
 	if err2 != nil {
 		br := api.ErrorBadRequest(domains.BadRequest)
 
@@ -114,7 +114,15 @@ func (uc *UserController) UploadProfilePicture(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	resp := uc.UserService.UploadProfilePicture(file, fileHeader)
+	file, fileHeader, err3 := r.FormFile("image")
+	if err3 != nil {
+		br := api.ErrorBadRequest(domains.BadRequest)
+
+		br.Send(w)
+		return
+	}
+
+	resp := uc.UserService.UploadProfilePicture(userId, file, fileHeader)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging

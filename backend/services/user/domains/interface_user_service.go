@@ -10,5 +10,5 @@ type IUserService interface {
 	Register(RegisterRequest) api.IResponse
 	AddFriend(uint, uint) api.IResponse
 	GetFriends(uint) api.IResponse
-	UploadProfilePicture(multipart.File, *multipart.FileHeader) api.IResponse
+	UploadProfilePicture(uint, multipart.File, *multipart.FileHeader) api.IResponse
 }

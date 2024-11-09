@@ -114,13 +114,18 @@ func (us *UserService) GetFriends(userId uint) api.IResponse {
 	return api.Success(users)
 }
 
-func (us *UserService) UploadProfilePicture(file multipart.File, fileHeader *multipart.FileHeader) api.IResponse {
+func (us *UserService) UploadProfilePicture(userId uint, file multipart.File, fileHeader *multipart.FileHeader) api.IResponse {
+	user, err := us.UserRepository.FindById(userId)
+	if err != nil {
+		return api.ErrorInternalServerError(err.Error())
+	}
+
 	defer file.Close()
 
 	buffer := make([]byte, fileHeader.Size)
-	_, err := file.Read(buffer)
-	if err != nil {
-		api.ErrorBadRequest(err.Error())
+	_, err2 := file.Read(buffer)
+	if err2 != nil {
+		api.ErrorBadRequest(err2.Error())
 	}
 
 	key := "user/profile_pictures/" + fileHeader.Filename
@@ -128,20 +133,27 @@ func (us *UserService) UploadProfilePicture(file multipart.File, fileHeader *mul
 	bucketName, exists := os.LookupEnv("AWS_BUCKET_NAME")
 	if !exists {
 		bucketName = ""
+		return api.ErrorInternalServerError("AWS_BUCKET_NAME environment variable is not set.")
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	_, err2 := us.S3Client.PutObject(ctx, &s3.PutObjectInput{
+	_, err3 := us.S3Client.PutObject(ctx, &s3.PutObjectInput{
 		Bucket:      aws.String(bucketName),
 		Key:         aws.String(key),
 		Body:        bytes.NewReader(buffer),
 		ContentType: aws.String(contentType),
 	})
-	if err2 != nil {
-		return api.ErrorInternalServerError(err2.Error())
+	if err3 != nil {
+		return api.ErrorInternalServerError(err3.Error())
 	}
 
-	return api.Success(fmt.Sprintf("upload success, https://%s.s3.amazonaws.com/%s", bucketName, key))
+	user.ProfilePictureKey = fmt.Sprintf("https://%s.s3.amazonaws.com/%s", bucketName, key)
+	err4 := us.UserRepository.UpdateUser(user)
+	if err4 != nil {
+		return api.ErrorInternalServerError(err4.Error())
+	}
+
+	return api.Success(user)
 }
