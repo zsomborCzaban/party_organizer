@@ -1,6 +1,9 @@
 package main
 
 import (
+	"context"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
@@ -31,6 +34,16 @@ import (
 )
 
 func main() {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	cfg, err := config.LoadDefaultConfig(ctx, config.WithRegion("us-east-1"))
+	if err != nil {
+		log.Fatal().Msg("unable to load SDK config, " + err.Error())
+	}
+
+	s3Client := s3.NewFromConfig(cfg)
+
 	newLogger := logger.New(
 		log2.New(os.Stdout, "\r\n", log2.LstdFlags), //io writer
 		logger.Config{
@@ -42,7 +55,7 @@ func main() {
 		},
 	)
 
-	dbAccess := db.CreateGormDatabaseAccessManager("local.db", newLogger)
+	dbAccess := db.CreateGormDatabaseAccessManager("application.db", newLogger)
 
 	router := mux.NewRouter()
 
@@ -59,7 +72,7 @@ func main() {
 	drinkContributionRepository := drinkContributionUsecases.NewDrinkContributionRepository(dbAccess)
 	foodContributionRepository := foodContributionUsecases.NewFoodContributionRepository(dbAccess)
 
-	userService := userInterfaces.NewUserService(userRepository, vali)
+	userService := userInterfaces.NewUserService(userRepository, vali, s3Client)
 	partyService := partyInterfaces.NewPartyService(partyRepository, vali, userRepository)
 	drinkRequirementService := drinkRequirementInterfaces.NewDrinkRequirementService(drinkRequirementRepository, vali, partyRepository, drinkContributionRepository)
 	foodRequirementService := foodRequirementInterfaces.NewFoodRequirementService(foodRequirementRepository, vali, partyRepository, foodContributionRepository)

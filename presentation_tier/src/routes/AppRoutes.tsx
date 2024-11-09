@@ -1,4 +1,4 @@
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import Login from "../pages/authtentication/Login";
 import PrivateRoute from "../auth/PrivateRoute";
 import Login2 from "../pages/authtentication/Login2";
@@ -7,7 +7,6 @@ import Discover from "../pages/overView/discover/Discover";
 import PartiesPage from "../pages/overView/partiesPage/PartiesPage";
 import Friends from "../pages/overView/friends/Friends";
 import CreateParty from "../pages/createParty/CreateParty";
-import SetupParty from "../pages/createParty/SetupParty";
 import PartyHome from "../pages/visitParty/partyHome/PartyHome";
 import Contributions from "../pages/visitParty/contribution/Contributions";
 import HallOfFame from "../pages/visitParty/hallOfFame/HallOfFame";
@@ -17,6 +16,7 @@ const AppRoutes = () => {
     return (
         <BrowserRouter>
             <Routes>
+                <Route path="/" element={<Navigate to="/overview/discover" replace />} />
                 <Route path="/overview/discover" element={<PrivateRoute />}>
                     <Route path="/overview/discover" element={<Discover/>}/>
                 </Route>
@@ -28,9 +28,6 @@ const AppRoutes = () => {
                 </Route>
                 <Route path="/createParty" element={<PrivateRoute />}>
                     <Route path="/createParty" element={<CreateParty />}/>
-                </Route>
-                <Route path="/setupParty" element={<PrivateRoute />}>
-                    <Route path="/setupParty" element={<SetupParty />}/>
                 </Route>
                 <Route path="/visitParty/partyHome" element={<PrivateRoute />}>
                     <Route path="/visitParty/partyHome" element={<PartyHome />}/>

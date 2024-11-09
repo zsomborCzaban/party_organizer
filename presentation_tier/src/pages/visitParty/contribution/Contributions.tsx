@@ -162,7 +162,7 @@ const Contributions = () => {
 
         return <div key={contribution.ID} style={styles.contribution}>
                     <div>{contributorName}: {contribution.quantity} {req.quantity_mark}, {contribution.description}</div>
-                    { (contributorId == user.ID || isOrganizer) &&
+                    { (contributorId === user.ID || isOrganizer) &&
                             <div>
                                 <button style={styles.deleteButton} onClick={() => {
                                     handleDeleteContribution(contribution, mode)

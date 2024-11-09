@@ -5,7 +5,7 @@ import {ApiError} from "../../api/ApiResponse";
 interface ConfirmActionModalProps {
     visible: boolean;
     onClose: () => void;
-    onContinue3: () => Promise<void>;
+    onContinue: () => Promise<void>;
     warningText: string
     title: string
 }
@@ -16,7 +16,7 @@ interface Feedbacks{
 }
 
 
-const ConfirmActionModal: React.FC<ConfirmActionModalProps> = ({ warningText, title, visible, onClose, onContinue3 }) => {
+const ConfirmActionModal: React.FC<ConfirmActionModalProps> = ({ warningText, title, visible, onClose, onContinue }) => {
     const [feedbacks, setFeedbacks] = useState<Feedbacks>({});
     const [countdown, setCountdown] = useState(0)
 
@@ -35,7 +35,7 @@ const ConfirmActionModal: React.FC<ConfirmActionModalProps> = ({ warningText, ti
     const handleContinue = () => {
         const newFeedbacks: Feedbacks = {};
 
-        onContinue3()
+        onContinue()
             .then(() => {
                 newFeedbacks.buttonSuccess = "deleted successfully"
                 setFeedbacks(newFeedbacks)
