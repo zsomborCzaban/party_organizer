@@ -149,7 +149,7 @@ func (us *UserService) UploadProfilePicture(userId uint, file multipart.File, fi
 		return api.ErrorInternalServerError(err3.Error())
 	}
 
-	user.ProfilePictureKey = fmt.Sprintf("https://%s.s3.amazonaws.com/%s", bucketName, key)
+	user.ProfilePictureUrl = fmt.Sprintf("https://%s.s3.amazonaws.com/%s", bucketName, key)
 	err4 := us.UserRepository.UpdateUser(user)
 	if err4 != nil {
 		return api.ErrorInternalServerError(err4.Error())
