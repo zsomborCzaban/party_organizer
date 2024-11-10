@@ -13,6 +13,7 @@ const interceptRequest = (request: InternalAxiosRequestConfig) => {
     }
     return request
 };
+apiClient.getUri()
 
 const interceptSuccessResponse = (response: AxiosResponse) => {
     return response

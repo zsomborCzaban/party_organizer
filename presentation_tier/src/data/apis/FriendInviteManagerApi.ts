@@ -1,8 +1,8 @@
 import {get} from "../../api/Api";
 import {FriendInvite} from "../types/FriendInvite";
-import {BACKEND_URL} from "../constants/backend_url";
+import {getApiUrl} from "../../api/ApiHelper";
 
-const FRIEND_MANGER_PATH = BACKEND_URL + "/friendManager"
+const FRIEND_MANGER_PATH = getApiUrl() + "/friendManager"
 
 export const inviteFriend = async (username: string): Promise<void> => {
     return new Promise<void>((resolve, reject) => {

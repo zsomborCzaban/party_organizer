@@ -1,10 +1,8 @@
-import { getBackendUrl } from './ApiHelper'
-
-const API_PATH = '/api/v0';
+import {getApiUrl} from './ApiHelper'
 
 export const getApiConfig = () => {
     return {
-        baseUrl : `${getBackendUrl()}${API_PATH}`,
+        baseUrl : `${getApiUrl()}`,
         headers: {
             'Content-Type': 'application/json'
         },

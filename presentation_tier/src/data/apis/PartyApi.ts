@@ -1,9 +1,9 @@
 import {get, post} from "../../api/Api";
 import {Party} from "../types/Party";
-import {BACKEND_URL} from "../constants/backend_url";
 import {User} from "../types/User";
+import {getApiUrl} from "../../api/ApiHelper";
 
-const PARTY_PATH =  BACKEND_URL + '/party';
+const PARTY_PATH =  getApiUrl() + '/party';
 
 
 export const createParty = async (requestBody: Party): Promise<Party> => {

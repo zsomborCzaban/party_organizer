@@ -1,9 +1,9 @@
-import {BACKEND_URL} from "../constants/backend_url";
 import {Contribution} from "../types/Contribution";
 import {DELETE, get, post} from "../../api/Api";
+import {getApiUrl} from "../../api/ApiHelper";
 
-const DRINK_CONTRIBUTION_PATH = BACKEND_URL + '/drinkContribution';
-const FOOD_CONTRIBUTION_PATH = BACKEND_URL + '/foodContribution';
+const DRINK_CONTRIBUTION_PATH = getApiUrl() + '/drinkContribution';
+const FOOD_CONTRIBUTION_PATH = getApiUrl() + '/foodContribution';
 
 export const getDrinkContributions = async (partyId: number): Promise<Contribution[]> => {
     return new Promise<Contribution[]>((resolve, reject) => {

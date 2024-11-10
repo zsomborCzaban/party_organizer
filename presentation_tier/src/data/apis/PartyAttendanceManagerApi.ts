@@ -1,9 +1,9 @@
-import {BACKEND_URL} from "../constants/backend_url";
 import {PartyInvite} from "../types/PartyInvite";
 import {get} from "../../api/Api";
 import {Party} from "../types/Party";
+import {getApiUrl} from "../../api/ApiHelper";
 
-const PARTY_ATTENDANCE_MANAGER_PATH = BACKEND_URL + "/partyAttendanceManager"
+const PARTY_ATTENDANCE_MANAGER_PATH = getApiUrl() + "/partyAttendanceManager"
 
 export const getPartyPendingInvites = async (partyId: number): Promise<PartyInvite[]> => {
     return new Promise<PartyInvite[]>((resolve, reject) => {

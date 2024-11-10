@@ -1,10 +1,10 @@
 import {DELETE, get} from "../../api/Api";
 import {Requirement} from "../types/Requirement";
 import {post} from "../../api/Api";
-import {BACKEND_URL} from "../constants/backend_url";
+import {getApiUrl} from "../../api/ApiHelper";
 
-const DRINK_REQUIREMENT_PATH = BACKEND_URL + "/drinkRequirement"
-const FOOD_REQUIREMENT_PATH = BACKEND_URL + "/foodRequirement"
+const DRINK_REQUIREMENT_PATH = getApiUrl() + "/drinkRequirement"
+const FOOD_REQUIREMENT_PATH = getApiUrl() + "/foodRequirement"
 
 
 export const getDrinkRequirements = async (partyId: number): Promise<Requirement[]> => {

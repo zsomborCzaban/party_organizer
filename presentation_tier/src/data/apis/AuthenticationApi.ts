@@ -3,10 +3,10 @@ import {ApiResponse} from "../../api/ApiResponse";
 import {jwtDecode} from "jwt-decode";
 import apiClient, {post} from "../../api/Api";
 import {authService} from "../../auth/AuthService";
-import {BACKEND_URL} from "../constants/backend_url";
+import {getApiUrl} from "../../api/ApiHelper";
 
-const LOGIN_PATH = BACKEND_URL + '/user/login';
-const REGISTER_PATH = BACKEND_URL + '/user/register';
+const LOGIN_PATH = getApiUrl() + '/user/login';
+const REGISTER_PATH = getApiUrl() + '/user/register';
 
 export interface LoginRequestDataInterface {
     username: string;
