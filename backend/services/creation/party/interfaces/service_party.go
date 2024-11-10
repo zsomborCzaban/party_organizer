@@ -1,6 +1,7 @@
 package interfaces
 
 import (
+	"fmt"
 	"github.com/zsomborCzaban/party_organizer/common/api"
 	"github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
 	userDomain "github.com/zsomborCzaban/party_organizer/services/user/domains"
@@ -35,6 +36,9 @@ func (ps PartyService) CreateParty(partyDTO domains.PartyDTO, userId uint) api.I
 	party := partyDTO.TransformToParty()
 	party.OrganizerID = userId
 	party.Organizer = *user
+	if party.AccessCodeEnabled {
+		party.AccessCode = fmt.Sprintf("%d_%s", party.ID, party.AccessCode)
+	}
 
 	err2 := ps.PartyRepository.CreateParty(party)
 	if err != nil {

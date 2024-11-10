@@ -15,5 +15,5 @@ func NewPartyInviteRouter(router *mux.Router, controller domains.IPartyInviteCon
 
 	router.HandleFunc("/partyAttendanceManager/kick/{party_id}/{kicked_id}", controller.Kick).Methods("GET")
 	router.HandleFunc("/partyAttendanceManager/joinPublicParty/{party_id}", controller.JoinPublicParty).Methods("GET") // this could be together with the private party join, but its more clearer this way
-	router.HandleFunc("/partyAttendanceManager/joinPrivateParty/{access_code}", controller.JoinPrivateParty).Methods("GEt")
+	router.HandleFunc("/partyAttendanceManager/joinPrivateParty/{access_code}", controller.JoinPrivateParty).Methods("GET")
 }

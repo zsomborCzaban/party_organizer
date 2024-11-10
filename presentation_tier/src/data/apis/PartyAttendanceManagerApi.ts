@@ -89,3 +89,15 @@ export const joinPublicParty = async (partyId: number): Promise<Party> => {
             });
     });
 };
+
+export const joinPrivateParty = async (accessCode: string): Promise<Party> => {
+    return new Promise<Party>((resolve, reject) => {
+        get<Party>(PARTY_ATTENDANCE_MANAGER_PATH + "/joinPrivateParty/" + accessCode)
+            .then((party: Party) => {
+                return resolve(party);
+            })
+            .catch(err => {
+                return reject(err);
+            });
+    });
+};

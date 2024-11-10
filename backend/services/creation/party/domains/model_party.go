@@ -18,7 +18,7 @@ type Party struct {
 	WhatsappLink       string
 	Private            bool           `json:"is_private"`
 	AccessCodeEnabled  bool           `json:"access_code_enabled"`
-	AccessCode         string         `json:"access_code"`
+	AccessCode         string         `json:"access_code"` //starts with the id of the party and after that has a '_' character. The "partyId_" part is appended to the code in the buisness logic. the user only sends the code part of the code
 	OrganizerID        uint           `json:"organizer_id"`
 	Organizer          domains.User   `json:"organizer"`
 	Participants       []domains.User `json:"-" gorm:"many2many:party_participants;"`

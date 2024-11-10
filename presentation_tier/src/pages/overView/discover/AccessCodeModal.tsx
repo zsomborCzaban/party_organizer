@@ -1,5 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import { Modal } from 'antd';
+import {joinPrivateParty} from "../../../data/apis/PartyAttendanceManagerApi";
+import {setForTime} from "../../../data/utils/timeoutSetterUtils";
+import {setSelectedParty} from "../../../data/sclices/PartySlice";
+import {useNavigate} from "react-router-dom";
 
 interface MyModalProps {
     visible: boolean;
@@ -9,6 +13,8 @@ interface MyModalProps {
 const AccessCodeModal: React.FC<MyModalProps> = ({ visible, onClose }) => {
     const [inputValue, setInputValue] = useState<string>('');
     const [feedback, setFeedback] = useState<string>('');
+
+    const navigate = useNavigate()
 
     useEffect(() => {
         if (visible) {
@@ -22,12 +28,25 @@ const AccessCodeModal: React.FC<MyModalProps> = ({ visible, onClose }) => {
     };
 
     const handleSubmit = () => {
-        // Add your submit logic here
-        //todo: iff correct access code then join the user to the party and navigate him to the parties page
         if (inputValue) {
-            setFeedback('Your input has been submitted!');
+            joinPrivateParty(inputValue)
+                .then(party => {
+                    console.log(party)
+                    setSelectedParty(party)
+                    navigate("/visitParty/partyHome")
+                    return
+                })
+                .catch((err) => {
+                    if(err.response){
+                        let errors = err.response.data.errors
+                        setForTime<string>(setFeedback, errors[0].err, "", 4000)
+                    } else {
+                        setFeedback("Something unexpected happened. Try again later!")
+                    }
+                    return
+                })
         } else {
-            setFeedback('Please enter a value.');
+            setForTime<string>(setFeedback, "Enter an access code", "", 4000)
         }
     };
 
@@ -83,7 +102,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     feedback: {
         marginBottom: '16px',
         fontSize: '14px',
-        color: '#555',
+        color: 'red',
     },
     buttonContainer: {
         display: 'flex',

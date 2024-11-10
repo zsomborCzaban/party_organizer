@@ -12,5 +12,5 @@ type IPartyInviteService interface {
 
 	Kick(kickedId, userId, partyId uint) api.IResponse
 	JoinPublicParty(partyId, userId uint) api.IResponse
-	JoinPrivateParty(partyId, userId uint, accessCode string) api.IResponse
+	JoinPrivateParty(userId uint, accessCode string) api.IResponse
 }
