@@ -262,6 +262,8 @@ const styles: {[key: string]: React.CSSProperties} = {
         paddingLeft: '100px',
         paddingTop: '50px',
         maxWidth: '700px',
+        width: '100vw',
+        height: 'auto',
     },
     formContainer: {
         flexGrow: '1',

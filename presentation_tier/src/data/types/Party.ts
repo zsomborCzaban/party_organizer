@@ -8,8 +8,8 @@ export interface Party {
     facebook_link: string;
     whatsapp_link: string;
     start_time: Date;
-    is_private: Boolean;
-    access_code_enabled: Boolean;
+    is_private: boolean;
+    access_code_enabled: boolean;
     access_code: string;
     organizer?: User;
 }

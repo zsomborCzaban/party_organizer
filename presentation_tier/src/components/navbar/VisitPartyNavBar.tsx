@@ -75,7 +75,8 @@ const styles: {[key: string]: React.CSSProperties} = {
     tittleContainer: {
         display: 'flex',
         flexDirection: 'row',
-        gap: '20%'
+        gap: '20%',
+        alignItems: 'center',
     },
     title: {
         fontSize: '24px',
