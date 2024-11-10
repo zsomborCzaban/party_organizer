@@ -12,6 +12,7 @@ import OverViewProfile from "../../../components/drawer/OverViewProfile";
 import {getUser} from "../../../auth/AuthUserUtil";
 import {authService} from "../../../auth/AuthService";
 import {invitedByTableColumns, userTableColumns} from "../../../data/constants/TableColumns";
+import {setForTime} from "../../../data/utils/timeoutSetterUtils";
 
 const Friends: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>()
@@ -53,18 +54,10 @@ const Friends: React.FC = () => {
     const handleInviteFriend = (inputUsername: string) => {
         inviteFriend(inputUsername)
             .then(() => {
-                setInviteFeedbackSuccess("Invite sent!")
-                setUsernameInput('')
-                setTimeout(() => {
-                    setInviteFeedbackSuccess("")
-                }, 4000); // 4000 milliseconds = 4 seconds
+                setForTime<string>(setInviteFeedbackSuccess, "Invite sent!", "", 4000)
             })
             .catch(err => {
-                setInviteFeedbackError("something went wrong")
-                setUsernameInput('')
-                setTimeout(() => {
-                    setInviteFeedbackError("")
-                }, 4000);
+                setForTime<string>(setInviteFeedbackError, "Something went wrong!", "", 4000)
             });
     }
 

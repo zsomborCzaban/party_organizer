@@ -22,6 +22,7 @@ import {inviteToParty, kickFromParty} from "../../../data/apis/PartyAttendanceMa
 import CreateRequirementModal from "./CreateRequirementModal";
 import DeleteRequirementModal from "./DeleteRequirementModal";
 import backgroundImage from "../../../data/resources/images/gears.png";
+import {setForTime} from "../../../data/utils/timeoutSetterUtils";
 
 const ManageParty = () => {
     const navigate = useNavigate()
@@ -150,18 +151,10 @@ const ManageParty = () => {
                 if(!selectedParty || !selectedParty.ID) return
                 dispatch(loadPartyPendingInvites(selectedParty.ID))
 
-                setInviteFeedbackSuccess("Invite sent!")
-                setUsernameInput('')
-                setTimeout(() => {
-                    setInviteFeedbackSuccess('')
-                }, 3000);
+                setForTime<string>(setInviteFeedbackSuccess, "Invite sent!", "", 3000)
             })
             .catch(err => {
-                setInviteFeedbackError("something went wrong")
-                setUsernameInput('')
-                setTimeout(() => {
-                    setInviteFeedbackError('')
-                }, 3000);
+                setForTime<string>(setInviteFeedbackError, "Something went wrong!", "", 3000)
             });
     }
 
