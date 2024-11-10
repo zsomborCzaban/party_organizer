@@ -1,7 +1,6 @@
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
-import Login from "../pages/authtentication/Login";
 import PrivateRoute from "../auth/PrivateRoute";
-import Login2 from "../pages/authtentication/Login2";
+import Login from "../pages/authtentication/Login";
 import Register from "../pages/authtentication/Register";
 import Discover from "../pages/overView/discover/Discover";
 import PartiesPage from "../pages/overView/partiesPage/PartiesPage";
@@ -42,7 +41,6 @@ const AppRoutes = () => {
                     <Route path="/visitParty/manageParty" element={<ManageParty />}/>
                 </Route>
                 <Route path="/login" element={<Login/>} />
-                <Route path="/login2" element={<Login2/>} />
                 <Route path="/register" element={<Register/>} />
             </Routes>
         </BrowserRouter>

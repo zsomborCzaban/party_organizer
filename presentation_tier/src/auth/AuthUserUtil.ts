@@ -6,6 +6,7 @@ interface UserJwtPayload extends JwtPayload {
     id: string,
     email: string,
     username: string,
+    profilePictureUrl: string,
 }
 
 
@@ -39,19 +40,19 @@ export const getUserEmail = () => {
     }
 }
 
-// export const getUserProfilePicture = () => {
-//     const authToken = getJwtAuthToken()
-//     if (!authToken) {
-//         return null
-//     }
-//
-//     try {
-//         const decoded = jwtDecode(authToken)
-//         return decoded.sub;
-//     } catch (e) {
-//         return null
-//     }
-// }
+export const getUserProfilePicture = () => {
+    const authToken = getJwtAuthToken()
+    if (!authToken) {
+        return null
+    }
+
+    try {
+        const decoded: UserJwtPayload = jwtDecode(authToken)
+        return decoded.profilePictureUrl;
+    } catch (e) {
+        return null
+    }
+}
 
 export const getUser = () => {
     const authToken = getJwtAuthToken()
@@ -64,7 +65,8 @@ export const getUser = () => {
         const user: User = {
             ID: Number(decoded.id),
             username: decoded.username,
-            email: decoded.email
+            email: decoded.email,
+            profile_picture_url: decoded.profilePictureUrl
         }
         return user;
     } catch (e) {

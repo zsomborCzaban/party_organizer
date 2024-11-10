@@ -1,8 +1,9 @@
-import React from 'react';
+import React, {ChangeEvent, useState} from 'react';
 import {User} from "../../data/types/User";
 import defaultProfilePicture from "../../data/resources/images/default_profile_picture.png"
 import {Button} from "antd";
 import {Party} from "../../data/types/Party";
+import {handleProfilePictureUpload} from "../../data/utils/imageUtils";
 
 type DrawerProps = {
     isOpen: boolean;
@@ -14,6 +15,14 @@ type DrawerProps = {
 };
 
 const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, user, currentParty, onLogout, onLeaveParty }) => {
+    const [profileErrorMessage, setProfileErrorMessage] = useState("")
+    const [profilePictureUrl, setProfilePictureUrl] = useState(user.profile_picture_url ? user.profile_picture_url : defaultProfilePicture)
+
+    const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
+        handleProfilePictureUpload(event, setProfilePictureUrl, setProfileErrorMessage)
+    }
+
+
     return (
         <div>
             {isOpen && (
@@ -41,7 +50,18 @@ const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, user, currentParty, on
                     />
                 </svg>
 
-                <img src={defaultProfilePicture} alt="Profile" style={styles.profilePicture}/>
+                <div style={styles.profileContainer}>
+                    <img src={profilePictureUrl} alt="Profile"
+                         style={styles.profilePicture}/>
+
+                    <input style={{display: 'none'}} id="file-input" type="file" accept="image/*"
+                           onChange={handleFileUpload}/>
+                    <label htmlFor="file-input" style={styles.changeProfilePicture}>
+                        Upload Picture
+                    </label>
+                    {profileErrorMessage && <p style={styles.errorMessage}>{profileErrorMessage}</p>}
+                </div>
+
 
                 <div style={styles.infoContainer}>
                     <div style={styles.userInfo}>
@@ -95,6 +115,14 @@ const styles: { [key: string]: React.CSSProperties } = {
         alignItems: 'center',
         zIndex: 1000,
     },
+    profileContainer: {
+        width: 'min(300px, 90%)',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyItems: 'flex-start',
+        marginBottom: '20px',
+    },
     infoContainer: {
         width: 'min(300px, 90%)',
         height: '100%',
@@ -112,6 +140,18 @@ const styles: { [key: string]: React.CSSProperties } = {
         height: '100px',
         borderRadius: '50%',
         marginBottom: '20px',
+    },
+    changeProfilePicture: {
+        display: 'inline-block',
+        padding: '5px',
+        color: '#fff',
+        backgroundColor: '#007bff',
+        borderRadius: '5px',
+        cursor: 'pointer',
+        fontWeight: 'bold',
+        fontSize: '18px',
+        width: '100%',
+        textAlign: 'center',
     },
     userInfo: {
         textAlign: 'left',

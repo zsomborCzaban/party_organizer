@@ -2,6 +2,7 @@ import React, {ChangeEvent, useState} from 'react';
 import {User} from "../../data/types/User";
 import defaultProfilePicture from "../../data/resources/images/default_profile_picture.png"
 import {Button} from "antd";
+import {handleProfilePictureUpload} from "../../data/utils/imageUtils";
 
 type DrawerProps = {
     isOpen: boolean;
@@ -12,20 +13,10 @@ type DrawerProps = {
 
 const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, user, onLogout }) => {
     const [errorMessage, setErrorMessage] = useState("")
+    const [profilePictureUrl, setProfilePictureUrl] = useState(user.profile_picture_url ? user.profile_picture_url : defaultProfilePicture)
 
     const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files && event.target.files[0];
-
-        if (!file) return;
-        if (!file.type.startsWith("image/")) {
-            setErrorMessage("Upload failed. Please select a valid image file (PNG or JPG).");
-            setTimeout(() => {
-                setErrorMessage("")
-            }, 4000); // 4000 milliseconds = 4 seconds
-            return;
-        }
-
-        //todo: continue here
+        handleProfilePictureUpload(event, setProfilePictureUrl, setErrorMessage)
     }
 
     return (
@@ -56,7 +47,7 @@ const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, user, onLogout }) => {
                 </svg>
 
                 <div style={styles.profileContainer}>
-                    <img src={user.profile_picture_url ? user.profile_picture_url : defaultProfilePicture} alt="Profile"
+                    <img src={profilePictureUrl} alt="Profile"
                          style={styles.profilePicture}/>
 
                     <input style={{display: 'none'}} id="file-input" type="file" accept="image/*" onChange={handleFileUpload}/>
@@ -64,7 +55,6 @@ const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, user, onLogout }) => {
                         Upload Picture
                     </label>
                     {errorMessage && <p style={styles.errorMessage}>{errorMessage}</p>}
-
                 </div>
 
 

@@ -8,3 +8,12 @@ export const getApiConfig = () => {
         },
     };
 };
+
+export const getImageUploaderApiConfig = () => {
+    return {
+        baseUrl : `${getApiUrl()}`,
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        },
+    };
+};

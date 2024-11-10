@@ -93,7 +93,7 @@ func GetAwsS3Client() *s3.Client {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	cfg, err := config.LoadDefaultConfig(ctx, config.WithRegion(os.Getenv(AWS_BUCKET_NAME_ENV_KEY)))
+	cfg, err := config.LoadDefaultConfig(ctx, config.WithRegion(os.Getenv(AWS_REGION_ENV_KEY)))
 	if err != nil {
 		log.Fatal().Msg("unable to load SDK config, " + err.Error())
 	}

@@ -1,10 +1,11 @@
 import axios, { InternalAxiosRequestConfig, AxiosResponse } from "axios";
 
-import { getApiConfig } from "./ApiConfig";
+import {getApiConfig, getImageUploaderApiConfig} from "./ApiConfig";
 import { authService } from "../auth/AuthService";
 import  { ApiResponse } from "./ApiResponse";
 
 const apiClient = axios.create(getApiConfig())
+const imageUploaderApiClient = axios.create(getImageUploaderApiConfig())
 
 const interceptRequest = (request: InternalAxiosRequestConfig) => {
     const accessToken = authService.getJwtToken();
@@ -13,7 +14,6 @@ const interceptRequest = (request: InternalAxiosRequestConfig) => {
     }
     return request
 };
-apiClient.getUri()
 
 const interceptSuccessResponse = (response: AxiosResponse) => {
     return response
@@ -34,6 +34,11 @@ apiClient.interceptors.response.use(
     interceptSuccessResponse,
     interceptErrorReponse,
 );
+imageUploaderApiClient.interceptors.request.use(interceptRequest)
+imageUploaderApiClient.interceptors.response.use(
+    interceptSuccessResponse,
+    interceptErrorReponse,
+)
 
 export const parseResponse = <T>(response: AxiosResponse<ApiResponse<T>>) => {
     return new Promise<T>((resolve, reject) => {
@@ -71,6 +76,24 @@ export const get = async <T>(url: string) => {
 export const post = <T>(url: string, requestBody: object) => {
     return new Promise<T>((resolve, reject) => {
         apiClient.post<ApiResponse<T>>(url, requestBody)
+            .then((response) => {
+                parseResponse<T>(response)
+                    .then((parsedResponse: T) => {
+                        return resolve(parsedResponse);
+                    })
+                    .catch((error) => {
+                        return reject(error);
+                    });
+            })
+            .catch((error) => {
+                return reject(error);
+            });
+    });
+};
+
+export const postImage = <T>(url: string, requestBody: FormData) => {
+    return new Promise<T>((resolve, reject) => {
+        imageUploaderApiClient.post<ApiResponse<T>>(url, requestBody)
             .then((response) => {
                 parseResponse<T>(response)
                     .then((parsedResponse: T) => {

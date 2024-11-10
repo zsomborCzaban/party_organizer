@@ -5,16 +5,21 @@ import {
 } from "./AuthStorageUtils";
 
 export interface AuthService {
-    userLoggedIn: (username: string, jwt: string) => void
+    userLoggedIn: (jwt: string) => void
+    logout: () => void
     handleUnauthorized: () => void
     getJwtToken: () => string | null
     isAuthenticated: () => boolean
 }
 
 export const authService: AuthService = {
-    userLoggedIn(username, jwt) {
-        console.log(`User logged in: ${username}`)
+    userLoggedIn(jwt) {
         setJwtAuthToken(jwt)
+    },
+
+
+    logout(){
+        this.handleUnauthorized()
     },
 
     handleUnauthorized() {

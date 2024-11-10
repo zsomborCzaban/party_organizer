@@ -17,10 +17,11 @@ type User struct {
 
 func (u *User) TransformToUserDTO() *UserDTO {
 	return &UserDTO{
-		ID:       u.Model.ID,
-		Username: u.Username,
-		Email:    u.Email,
-		Friends:  u.Friends,
+		ID:                u.Model.ID,
+		Username:          u.Username,
+		Email:             u.Email,
+		ProfilePictureUrl: u.ProfilePictureUrl,
+		Friends:           u.Friends,
 		//OrganizedParties: u.OrganizedParties,
 	}
 }

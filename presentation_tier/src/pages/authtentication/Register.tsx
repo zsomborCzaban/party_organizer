@@ -225,7 +225,7 @@ const Register: React.FC = () => {
 
                 {/* Sign In Link */}
                 <p style={styles.textCenter}>
-                    Already have an account? <a href="/login2">Sign In</a>
+                    Already have an account? <a href="/presentation_tier/src/pages/authtentication/Login">Sign In</a>
                 </p>
             </form>
         </div>

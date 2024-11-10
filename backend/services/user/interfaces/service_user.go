@@ -128,7 +128,7 @@ func (us *UserService) UploadProfilePicture(userId uint, file multipart.File, fi
 		api.ErrorBadRequest(err2.Error())
 	}
 
-	key := "user/profile_pictures/" + fileHeader.Filename
+	key := fmt.Sprintf("users/%d/profile_pictures/%s", userId, fileHeader.Filename)
 	contentType := fileHeader.Header.Get("Content-Type")
 	bucketName, exists := os.LookupEnv("AWS_BUCKET_NAME")
 	if !exists {
@@ -155,5 +155,14 @@ func (us *UserService) UploadProfilePicture(userId uint, file multipart.File, fi
 		return api.ErrorInternalServerError(err4.Error())
 	}
 
-	return api.Success(user)
+	userDTO := user.TransformToUserDTO()
+
+	jwt, err5 := userDTO.GenerateJWT()
+	if err5 != nil {
+		return api.ErrorBadRequest("error while generating jwt")
+	}
+
+	return api.Success(
+		domains.JWTData{Jwt: *jwt},
+	)
 }

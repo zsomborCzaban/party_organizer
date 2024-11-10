@@ -7,19 +7,21 @@ import (
 )
 
 type UserDTO struct {
-	ID       uint   `json:"id"`
-	Username string `json:"username" validate:"required,min=3"`
-	Email    string `json:"email" validate:"required"`
-	Friends  []User `json:"-"`
+	ID                uint   `json:"id"`
+	Username          string `json:"username" validate:"required,min=3"`
+	Email             string `json:"email" validate:"required"`
+	ProfilePictureUrl string `json:"profile_picture_url"`
+	Friends           []User `json:"-"`
 	//OrganizedParties []domains.Party `json:"organized_parties"`
 }
 
 func (u *UserDTO) TransformToUser() *User {
 	return &User{
-		Model:    gorm.Model{ID: u.ID},
-		Username: u.Username,
-		Email:    u.Email,
-		Friends:  u.Friends,
+		Model:             gorm.Model{ID: u.ID},
+		Username:          u.Username,
+		Email:             u.Email,
+		ProfilePictureUrl: u.ProfilePictureUrl,
+		Friends:           u.Friends,
 		//OrganizedParties: u.OrganizedParties,
 	}
 }
@@ -28,8 +30,9 @@ func (u *UserDTO) GenerateJWT() (*string, error) {
 	idString := strconv.FormatUint(uint64(u.ID), 10)
 
 	return jwt.WithClaims(idString, map[string]string{
-		"email":    u.Email,
-		"username": u.Username,
-		"id":       idString,
+		"email":             u.Email,
+		"username":          u.Username,
+		"id":                idString,
+		"profilePictureUrl": u.ProfilePictureUrl,
 	})
 }

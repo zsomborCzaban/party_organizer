@@ -26,7 +26,7 @@ export const login = async (username: string, password: string) => {
             loginRequest,
         )
             .then(response => {
-                authService.userLoggedIn(username, response.jwt)
+                authService.userLoggedIn(response.jwt)
                 return ""
             })
             .catch(err => {
@@ -53,8 +53,4 @@ export const register = async (requestBody: RegisterRequestBody): Promise<void> 
                 return reject(error)
             })
     })
-}
-
-export const logout = () => {
-    authService.handleUnauthorized();
 }
