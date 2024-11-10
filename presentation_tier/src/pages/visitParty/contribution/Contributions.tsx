@@ -203,7 +203,7 @@ const Contributions = () => {
         <div style={styles.background}>
             <div style={styles.outerContainer}>
                 <VisitPartyNavBar onProfileClick={()=> setProfileOpen(true)}/>
-                <VisitPartyProfile isOpen={profileOpen} onClose={() => setProfileOpen(false)} currentParty={selectedParty} user={user} onLogout={() => console.log("logout")} onLeaveParty={() => console.log("leaveparty")} />
+                <VisitPartyProfile isOpen={profileOpen} onClose={() => setProfileOpen(false)} currentParty={selectedParty} user={user} onLeaveParty={() => console.log("leaveparty")} />
                 <ContributeModal mode="drink" options={makeOptions(dRequirements)} visible={dModalVisible} onClose={() => {setDModalVisible(false)}} />
                 <ContributeModal mode="food" options={makeOptions(fRequirements)} visible={fModalVisible} onClose={() => {setFModalVisible(false)}} />
                 <DeleteContributionModal visible={deleteContributionModalVisible} onClose={() => setDeleteContributionModalVisible(false)} mode={deleteMode} contributionId={contributionIdToDelete}/>

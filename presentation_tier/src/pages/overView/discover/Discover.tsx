@@ -1,6 +1,6 @@
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../../store/store";
-import {CSSProperties, useEffect, useState} from "react";
+import React, {CSSProperties, useEffect, useState} from "react";
 import {loadPublicParties} from "../../../data/sclices/PublicPartySlice";
 import OverViewNavBar from "../../../components/navbar/OverViewNavBar";
 import {Button, Table} from 'antd';
@@ -98,7 +98,7 @@ const Discover = () => {
     return (
         <div style={styles.outerContainer}>
             <OverViewNavBar onProfileClick={() => setProfileOpen(true)}/>
-            <OverViewProfile isOpen={profileOpen} onClose={() => setProfileOpen(false)} user={user} onLogout={()=>{console.log("logout")}}/>
+            <OverViewProfile isOpen={profileOpen} onClose={() => setProfileOpen(false)} user={user}/>
             <div style={styles.container}>
 
                 <h2 style={styles.label}>Public Parties</h2>

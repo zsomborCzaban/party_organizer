@@ -165,7 +165,7 @@ const Friends: React.FC = () => {
     return (
         <div style={styles.outerContainer}>
             <OverViewNavBar onProfileClick={() => setProfileOpen(true)}/>
-            <OverViewProfile isOpen={profileOpen} onClose={() => setProfileOpen(false)} user={user} onLogout={()=>{console.log("logout")}}/>
+            <OverViewProfile isOpen={profileOpen} onClose={() => setProfileOpen(false)} user={user}/>
             <div style={styles.container}>
                 {/* Title and input section */}
                 <h2 style={styles.label}>Invite Friend</h2>

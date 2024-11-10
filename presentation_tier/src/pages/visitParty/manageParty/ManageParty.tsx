@@ -204,7 +204,7 @@ const ManageParty = () => {
                     theme={{algorithm: theme.darkAlgorithm,}}
                 >
                     <VisitPartyNavBar onProfileClick={() => setProfileOpen(true)}/>
-                    <VisitPartyProfile isOpen={profileOpen} onClose={() => setProfileOpen(false)} user={user} onLogout={() => {console.log("logout")}} currentParty={selectedParty} onLeaveParty={() => {}}/>
+                    <VisitPartyProfile isOpen={profileOpen} onClose={() => setProfileOpen(false)} currentParty={selectedParty} user={user} onLeaveParty={() => console.log("leaveparty")} />
                     <CreateRequirementModal visible={requirementModalVisible} onClose={() => setRequirementModalVisible(false)} mode={requirementModalMode} />
                     <DeleteRequirementModal visible={deleteModalVisible} onClose={() => setDeleteModalVisible(false)} mode={deleteModalMode} requirementId={requirementToDelete} />
                     <div style={styles.container}>

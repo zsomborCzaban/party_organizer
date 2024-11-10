@@ -3,15 +3,15 @@ import {User} from "../../data/types/User";
 import defaultProfilePicture from "../../data/resources/images/default_profile_picture.png"
 import {Button} from "antd";
 import {handleProfilePictureUpload} from "../../data/utils/imageUtils";
+import {authService} from "../../auth/AuthService";
 
 type DrawerProps = {
     isOpen: boolean;
     onClose: () => void;
     user: User;
-    onLogout: () => void;
 };
 
-const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, user, onLogout }) => {
+const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, user }) => {
     const [errorMessage, setErrorMessage] = useState("")
     const [profilePictureUrl, setProfilePictureUrl] = useState(user.profile_picture_url ? user.profile_picture_url : defaultProfilePicture)
 
@@ -69,7 +69,7 @@ const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, user, onLogout }) => {
                         <div style={styles.userData}>{user.email}</div>
                     </div>
 
-                    <Button type="primary" onClick={onLogout} style={styles.logoutButton}>
+                    <Button type="primary" onClick={authService.handleUnauthorized} style={styles.logoutButton}>
                         Logout
                     </Button>
                 </div>

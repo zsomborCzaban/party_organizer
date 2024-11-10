@@ -141,7 +141,7 @@ const PartiesPage = () => {
     return (
         <div style={styles.outerContainer}>
             <OverViewNavBar onProfileClick={() => setProfileOpen(true)}/>
-            <OverViewProfile isOpen={profileOpen} onClose={() => setProfileOpen(false)} user={user} onLogout={()=>{console.log("logout")}}/>
+            <OverViewProfile isOpen={profileOpen} onClose={() => setProfileOpen(false)} user={user}/>
             <div style={styles.container}>
 
                 <h2 style={styles.label}>Party Invites</h2>

@@ -6,7 +6,6 @@ import {
 
 export interface AuthService {
     userLoggedIn: (jwt: string) => void
-    logout: () => void
     handleUnauthorized: () => void
     getJwtToken: () => string | null
     isAuthenticated: () => boolean
@@ -15,11 +14,6 @@ export interface AuthService {
 export const authService: AuthService = {
     userLoggedIn(jwt) {
         setJwtAuthToken(jwt)
-    },
-
-
-    logout(){
-        this.handleUnauthorized()
     },
 
     handleUnauthorized() {

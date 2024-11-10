@@ -60,7 +60,7 @@ const PartyHome: React.FC = () => {
             {/*</div>*/}
 
             <VisitPartyNavBar onProfileClick={() => setProfileOpen(true)}/>
-            <VisitPartyProfile isOpen={profileOpen} onClose={() => setProfileOpen(false)} currentParty={selectedParty} user={user} onLogout={()=>{console.log("logout")}} onLeaveParty={()=>{console.log("logout")}} />
+            <VisitPartyProfile isOpen={profileOpen} onClose={() => setProfileOpen(false)} currentParty={selectedParty} user={user} onLeaveParty={() => console.log("leaveparty")} />
             <div style={styles.container}>
                 {/* Middle Section */}
                 <div style={styles.middleSection}>

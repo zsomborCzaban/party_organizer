@@ -4,17 +4,17 @@ import defaultProfilePicture from "../../data/resources/images/default_profile_p
 import {Button} from "antd";
 import {Party} from "../../data/types/Party";
 import {handleProfilePictureUpload} from "../../data/utils/imageUtils";
+import {authService} from "../../auth/AuthService";
 
 type DrawerProps = {
     isOpen: boolean;
     onClose: () => void;
     currentParty: Party;
     user: User;
-    onLogout: () => void;
     onLeaveParty: () => void;
 };
 
-const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, user, currentParty, onLogout, onLeaveParty }) => {
+const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, user, currentParty, onLeaveParty }) => {
     const [profileErrorMessage, setProfileErrorMessage] = useState("")
     const [profilePictureUrl, setProfilePictureUrl] = useState(user.profile_picture_url ? user.profile_picture_url : defaultProfilePicture)
 
@@ -75,10 +75,10 @@ const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, user, currentParty, on
                     </div>
 
                     <div style={styles.buttonContainer}>
-                        <Button type="primary" onClick={onLogout} style={styles.logoutButton}>
+                        <Button type="primary" onClick={authService.handleUnauthorized} style={styles.logoutButton}>
                             Logout
                         </Button>
-                        <Button type="primary" onClick={onLogout} style={styles.leavePartyButton}>
+                        <Button type="primary" onClick={() => {}} style={styles.leavePartyButton}>
                             Leave Party
                         </Button>
                     </div>
