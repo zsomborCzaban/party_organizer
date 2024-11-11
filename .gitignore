@@ -1,2 +1,3 @@
 /backend/aws/access_key.txt
 /backend/.env
+/backend/application.db

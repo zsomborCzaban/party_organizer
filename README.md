@@ -12,6 +12,8 @@ Go into the backend folder in the project and run `go mod tidy` command
 
 Run the main file in the backend folder to start the server
 
+(to use sample data for development, copy sample_db.db and rename it to 'application.db' (or replace it if you already have one))
+
 ### Frontend
 Prerequisites:
 - Have node.js v22.11.0 installed (You can download it from https://nodejs.org/en)
