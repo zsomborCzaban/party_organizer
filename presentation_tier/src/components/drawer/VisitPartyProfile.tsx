@@ -78,9 +78,16 @@ const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, user, currentParty, on
                         <Button type="primary" onClick={authService.handleUnauthorized} style={styles.logoutButton}>
                             Logout
                         </Button>
+                        { user.ID === currentParty.ID &&
+                        <Button type="primary" onClick={() => {}} style={styles.leavePartyButton}>
+                            Delete Party
+                        </Button>
+                        }
+                        { user.ID !== currentParty.ID &&
                         <Button type="primary" onClick={() => {}} style={styles.leavePartyButton}>
                             Leave Party
                         </Button>
+                        }
                     </div>
                 </div>
             </div>

@@ -17,8 +17,8 @@ import {authService} from "../../../auth/AuthService";
 
 interface Feedbacks{
     partyName?: string;
-    displayedPlace?: string;
-    location?: string;
+    place?: string;
+    googlemapsLink?: string;
     startTime?: string;
     facebookLink?: string;
     whatsAppLink?: string;
@@ -38,9 +38,9 @@ const PartyOptions = () => {
     const [profileOpen, setProfileOpen] = useState(false)
     const [user, setUser] = useState<User>()
     const [partyName, setPartyName] = useState(selectedParty ? selectedParty.name : '');
-    const [displayedPlace, setDisplayedPlace] = useState(selectedParty ? selectedParty.place : '');
-    const [location, setLocation] = useState(selectedParty ? selectedParty.google_maps_link : '');
-    const [startTime, setStartTime] = useState<dayjs.Dayjs>();
+    const [place, setPlace] = useState(selectedParty ? selectedParty.place : '');
+    const [googlemapsLink, setGoogleMapsLink] = useState(selectedParty ? selectedParty.google_maps_link : '');
+    const [startTime, setStartTime] = useState<dayjs.Dayjs>(dayjs(selectedParty? selectedParty.start_time : ''));
     const [facebookLink, setFacebookLink] = useState(selectedParty ? selectedParty.facebook_link : '');
     const [whatsAppLink, setWhatsAppLink] = useState(selectedParty ? selectedParty.whatsapp_link : '');
     const [isPrivate, setIsPrivate] = useState(selectedParty ? selectedParty.is_private : false);
@@ -71,7 +71,19 @@ const PartyOptions = () => {
         return <div>Loading...</div>
     }
 
+    const handleReset = () => {
+        setPartyName(selectedParty.name)
+        setPlace(selectedParty.place)
+        setGoogleMapsLink(selectedParty.google_maps_link)
+        setStartTime(dayjs(selectedParty.start_time))
+        setFacebookLink(selectedParty.facebook_link)
+        setWhatsAppLink(selectedParty.whatsapp_link)
+        setIsPrivate(selectedParty.is_private)
+        setIsAccessCodeEnabled(selectedParty.access_code_enabled)
+        setAccessCode(selectedParty.access_code)
 
+        setFeedbacks({})
+    }
 
     const validate = (): boolean => {
         let valid = true;
@@ -81,12 +93,12 @@ const PartyOptions = () => {
             newFeedbacks.partyName = 'party name is required.';
             valid = false;
         }
-        if (!displayedPlace) {
-            newFeedbacks.displayedPlace = 'display name is required.';
+        if (!place) {
+            newFeedbacks.place = 'display name is required.';
             valid = false;
         }
-        if (!location) {
-            newFeedbacks.location = 'location is required.';
+        if (!googlemapsLink) {
+            newFeedbacks.googlemapsLink = 'googlemapsLink is required.';
             valid = false;
         }
         if (!startTime) {
@@ -122,9 +134,10 @@ const PartyOptions = () => {
         if (!validate()) return
 
         const party: Party = {
+            ID: selectedParty.ID,
             name: partyName,
-            place: displayedPlace,
-            google_maps_link: location,
+            place: place,
+            google_maps_link: googlemapsLink,
             facebook_link: facebookLink,
             whatsapp_link: whatsAppLink,
             start_time: startTime?.toDate()!,
@@ -133,6 +146,7 @@ const PartyOptions = () => {
             access_code: accessCode,
         }
 
+        //todo: countine from here. make update party, and set the returned party to the selected party
         createParty(party)
             .then((returnedParty) => {
                 console.log(returnedParty)
@@ -151,124 +165,134 @@ const PartyOptions = () => {
             })
     };
 
-    const handleCancel = () => {
-        navigate("/overview/discover");
-    }
-
     return (
             <div style={styles.outerContainer}>
+                <ConfigProvider
+                    theme={{algorithm: theme.darkAlgorithm,}}
+                >
                 {/*<VisitPartyNavBar onProfileClick={() => setProfileOpen(true)}/>*/}
                 {/*<VisitPartyProfile isOpen={profileOpen} onClose={() => setProfileOpen(false)} currentParty={selectedParty} user={user} onLeaveParty={() => console.log("leaveparty")} />*/}
 
-                <div style={styles.container}>
+                    <div style={styles.container}>
                         <h2 style={styles.h2}>Create Party</h2>
 
-                        {/* Party Name */}
-                        <label style={styles.label}>Party Name</label>
-                        <Input
-                            placeholder="Enter Party Name"
-                            value={partyName}
-                            onChange={(e) => setPartyName(e.target.value)}
-                            style={styles.input}
-                        />
-                        {feedbacks.partyName && <p style={styles.error}>{feedbacks.partyName}</p>}
+                        <div style={styles.inputDiv}>
+                            <label style={styles.label}>Party Name</label>
+                            <Input
+                                placeholder="Enter Party Name"
+                                value={partyName}
+                                onChange={(e) => setPartyName(e.target.value)}
+                                style={styles.input}
+                            />
+                            {feedbacks.partyName && <p style={styles.error}>{feedbacks.partyName}</p>}
+                        </div>
 
-                        {/* Displayed Place */}
-                        <label style={styles.label}>Displayed Place</label>
-                        <Input
-                            placeholder="Enter Displayed Place"
-                            value={displayedPlace}
-                            onChange={(e) => setDisplayedPlace(e.target.value)}
-                            style={styles.input}
-                        />
-                        {feedbacks.displayedPlace && <p style={styles.error}>{feedbacks.displayedPlace}</p>}
+                        <div style={styles.inputDiv}>
 
-                        {/* Actual Location */}
-                        <label style={styles.label}>Actual Location</label>
-                        <Input
-                            placeholder="Enter googlemaps plus code"
-                            value={location}
-                            onChange={(e) => setLocation(e.target.value)}
-                            style={styles.input}
-                        />
-                        {feedbacks.location && <p style={styles.error}>{feedbacks.location}</p>}
+                            <label style={styles.label}>Displayed Place</label>
+                            <Input
+                                placeholder="Enter Displayed Place"
+                                value={place}
+                                onChange={(e) => setPlace(e.target.value)}
+                                style={styles.input}
+                            />
+                            {feedbacks.place && <p style={styles.error}>{feedbacks.place}</p>}
+                        </div>
 
-                        {/* Time Picker */}
-                        <label style={styles.label}>Time</label>
-                        <DatePicker
-                            showTime
-                            style={styles.input}
-                            onChange={(date) => setStartTime(date)}
-                        />
-                        {feedbacks.startTime && <p style={styles.error}>{feedbacks.startTime}</p>}
 
-                        {/* Facebook Link */}
-                        <label style={styles.label}>Facebook Link</label>
-                        <Input
-                            placeholder="Enter Facebook Link"
-                            value={facebookLink}
-                            onChange={(e) => setFacebookLink(e.target.value)}
-                            style={styles.input}
-                        />
-                        {feedbacks.facebookLink && <p style={styles.error}>{feedbacks.facebookLink}</p>}
+                        <div style={styles.inputDiv}>
+                            <label style={styles.label}>Actual Location</label>
+                            <Input
+                                placeholder="Enter googlemaps plus code"
+                                value={googlemapsLink}
+                                onChange={(e) => setGoogleMapsLink(e.target.value)}
+                                style={styles.input}
+                            />
+                            {feedbacks.googlemapsLink && <p style={styles.error}>{feedbacks.googlemapsLink}</p>}
+                        </div>
 
-                        {/* WhatsApp Link */}
-                        <label style={styles.label}>WhatsApp Link</label>
-                        <Input
-                            placeholder="Enter WhatsApp Link"
-                            value={whatsAppLink}
-                            onChange={(e) => setWhatsAppLink(e.target.value)}
-                            style={styles.input}
-                        />
-                        {feedbacks.whatsAppLink && <p style={styles.error}>{feedbacks.whatsAppLink}</p>}
+                        <div style={styles.inputDiv}>
+                            <label style={styles.label}>Time</label>
+                            <DatePicker
+                                showTime
+                                value={startTime}
+                                style={styles.input}
+                                onChange={(date) => setStartTime(date)}
+                            />
+                            {feedbacks.startTime && <p style={styles.error}>{feedbacks.startTime}</p>}
+                        </div>
 
-                        {/* Private Slider */}
-                        <div style={styles.checkboxContainer}>
-                            <div style={styles.checkbox}>
-                                <label style={styles.label}>Private</label>
-                                <Checkbox
-                                    checked={isPrivate}
-                                    onChange={(e) => setIsPrivate(e.target.checked)}
-                                    style={styles.slider}
-                                />
-                            </div>
+                        <div style={styles.inputDiv}>
+                            <label style={styles.label}>Facebook Link</label>
+                            <Input
+                                placeholder="Enter Facebook Link"
+                                value={facebookLink}
+                                onChange={(e) => setFacebookLink(e.target.value)}
+                                style={styles.input}
+                            />
+                            {feedbacks.facebookLink && <p style={styles.error}>{feedbacks.facebookLink}</p>}
+                        </div>
 
-                            {/* Access Code Enable Slider */}
-                            <div style={styles.checkbox}>
-                                <label style={styles.label}>Access Code Enabled</label>
-                                <Checkbox
-                                    checked={isAccessCodeEnabled}
-                                    onChange={(e) => setIsAccessCodeEnabled(e.target.checked)}
-                                    style={styles.slider}
-                                />
+                        <div style={styles.inputDiv}>
+                            <label style={styles.label}>WhatsApp Link</label>
+                            <Input
+                                placeholder="Enter WhatsApp Link"
+                                value={whatsAppLink}
+                                onChange={(e) => setWhatsAppLink(e.target.value)}
+                                style={styles.input}
+                            />
+                            {feedbacks.whatsAppLink && <p style={styles.error}>{feedbacks.whatsAppLink}</p>}
+                        </div>
+
+                        <div style={styles.inputDiv}>
+                            <div style={styles.checkboxContainer}>
+                                <div style={styles.checkbox}>
+                                    <label htmlFor="isPrivate" style={styles.label}>Private</label>
+                                    <Checkbox
+                                        id="isPrivate"
+                                        checked={isPrivate}
+                                        onChange={(e) => setIsPrivate(e.target.checked)}
+                                    />
+                                </div>
+
+                                <div style={styles.checkbox}>
+                                    <label htmlFor="isAccessCodeEnabled" style={styles.label}>Access Code Enabled</label>
+                                    <Checkbox
+                                        id="isAccessCodeEnabled"
+                                        checked={isAccessCodeEnabled}
+                                        onChange={(e) => setIsAccessCodeEnabled(e.target.checked)}
+                                    />
+                                </div>
                             </div>
                         </div>
 
-                        {/* Access Code */}
-                        {isAccessCodeEnabled && (
-                            <>
-                                <label style={styles.label}>Access Code</label>
-                                <Input
-                                    placeholder="Enter Access Code"
-                                    value={accessCode}
-                                    onChange={(e) => setAccessCode(e.target.value)}
-                                    style={styles.input}
-                                />
-                                {feedbacks.accessCode && <p style={styles.error}>{feedbacks.accessCode}</p>}
-                            </>
-                        )}
-
-                        {/* Buttons */}
-                        <div style={styles.buttonsContainer}>
-                            <Button type="primary" style={styles.button} onClick={handleCreate}>
-                                Save
-                            </Button>
-                            <Button type="primary" style={styles.resetButton} onClick={handleCancel}>
-                                Reset
-                            </Button>
+                        <div style={styles.inputDiv}>
+                            {isAccessCodeEnabled && (
+                                <>
+                                    <label style={styles.label}>Access Code</label>
+                                    <Input
+                                        placeholder="Enter Access Code"
+                                        value={accessCode}
+                                        onChange={(e) => setAccessCode(e.target.value)}
+                                        style={styles.input}
+                                    />
+                                    {feedbacks.accessCode && <p style={styles.error}>{feedbacks.accessCode}</p>}
+                                </>
+                            )}
                         </div>
-                        {feedbacks.button && <p style={styles.error}>{feedbacks.button}</p>}
-                    </div>
+
+                            {/* Buttons */}
+                            <div style={styles.buttonsContainer}>
+                                <Button type="primary" style={styles.button} onClick={handleCreate}>
+                                    Save
+                                </Button>
+                                <Button type="primary" style={styles.resetButton} onClick={handleReset}>
+                                    Reset
+                                </Button>
+                            </div>
+                            {feedbacks.button && <p style={styles.error}>{feedbacks.button}</p>}
+                        </div>
+                </ConfigProvider>
             </div>
     );
 };
@@ -305,12 +329,14 @@ const styles: { [key: string]: CSSProperties } = {
         textAlign: "left",
         marginBottom: "20px"
     },
-    inputContainer: {
+    inputDiv: {
         display: "flex",
         flexDirection: "column",
         alignItems: "flex-start",
         marginBottom: "20px",
-        gap: "10px",
+    },
+    label: {
+      marginBottom: "5px",
     },
     input: {
         padding: "8px 12px",
@@ -320,8 +346,17 @@ const styles: { [key: string]: CSSProperties } = {
         backgroundColor: "#3a3a3a", // Dark input background
         color: "#ffffff", // Light input text
         width: "60%",
-        marginBottom: "20px",
-
+    },
+    checkboxContainer: {
+        display: "flex",
+        flexDirection: "row",
+        gap: "20px",
+        width: "60%",
+    },
+    checkbox: {
+        display: "flex",
+        flexDirection: "row",
+        gap: "5px",
     },
     buttonsContainer: {
         display: "flex",
@@ -359,6 +394,7 @@ const styles: { [key: string]: CSSProperties } = {
         color: "#ff6666", // Light red for error messages
         fontSize: "1rem",
         marginTop: "5px",
+        marginBottom: "0px",
     },
     loading: {
         textAlign: "center",
@@ -370,9 +406,6 @@ const styles: { [key: string]: CSSProperties } = {
         fontSize: "1rem",
         color: "#ff6666",
     },
-    checkbox: {
-        marginBottom: "20px",
-    }
 };
 
 
