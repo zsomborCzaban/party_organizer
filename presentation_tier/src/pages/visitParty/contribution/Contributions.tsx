@@ -40,19 +40,19 @@ const Contributions = () => {
     const initialFetchDone = useRef(false);
 
     const {selectedParty} = useSelector((state: RootState)=> state.selectedPartyStore)
-    const {requirements: dRequirements, loading: dReqLoading, error: DReqError} = useSelector(
+    const {requirements: dRequirements} = useSelector(
         (state: RootState) => state.drinkRequirementStore
     )
-    const {requirements: fRequirements, loading: fReqLoading, error: FReqError} = useSelector(
+    const {requirements: fRequirements} = useSelector(
         (state: RootState) => state.foodRequirementStore
     )
-    const {contributions: dContributions, loading: dConLoading, error: DConError} = useSelector(
+    const {contributions: dContributions} = useSelector(
         (state: RootState) => state.drinkContributionStore
     )
-    const {contributions: fContributions, loading: fConLoading, error: FConError} = useSelector(
+    const {contributions: fContributions} = useSelector(
         (state: RootState) => state.foodContributionStore
     )
-    const {participants, loading: participantsLoading, error: particiapntsError} = useSelector(
+    const {participants} = useSelector(
         (state: RootState) => state.partyParticipantStore
     )
 
