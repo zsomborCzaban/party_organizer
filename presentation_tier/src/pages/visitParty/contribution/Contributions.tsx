@@ -90,7 +90,7 @@ const Contributions = () => {
     }, []);
 
     useEffect(() => {
-        if(dContributions.length === 0) return
+        if(dContributions.length === 0 || dRequirements.length === 0) return
         const reqContributionMap: Record<number, number> = {}
         let fulfilled = 0
 
@@ -111,10 +111,10 @@ const Contributions = () => {
         setDReqContributionMap(reqContributionMap)
         setFulfilledDReqs(fulfilled)
 
-    }, [dContributions]);
+    }, [dContributions, dRequirements]);
 
     useEffect(() => {
-        if(fContributions.length === 0) return
+        if(fContributions.length === 0 || fRequirements.length === 0) return
         const reqContributionMap: Record<number, number> = {}
         let fulfilled = 0
 
@@ -135,7 +135,7 @@ const Contributions = () => {
         setFReqContributionMap(reqContributionMap)
         setFulfilledFReqs(fulfilled)
 
-    }, [fContributions]);
+    }, [fContributions, fRequirements]);
 
     if(!selectedParty || !selectedParty.ID){
         console.log("error, no selected party or no id of party")
@@ -231,7 +231,7 @@ const Contributions = () => {
                             <button  style={styles.button} onClick={()=> { handleContribute("food") } }> Contribute </button>
                             {fRequirements.map(req => (
                                 <div style={styles.collapsible} key={req.ID}>
-                                    <Collapsible trigger={`${req.type} ${fReqContributionMap[req.ID || -1] || 0}/${req.target_quantity} ${req.quantity_mark}`} key={req.ID}>
+                                    <Collapsible trigger={`${req.type} ${Math.round((fReqContributionMap[req.ID || -1] || 0) *100) / 100}/${req.target_quantity} ${req.quantity_mark}`} key={req.ID}>
                                         {fContributions
                                             .filter(con => con.requirement_id === req.ID)
                                             .map(contribution => {
