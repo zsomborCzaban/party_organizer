@@ -213,7 +213,7 @@ const Contributions = () => {
                             <button style={styles.button} onClick={() => {handleContribute("drink")}}>Contribute</button>
                             {dRequirements.map(req => (
                                 <div style={styles.collapsible} key={req.ID}>
-                                    <Collapsible trigger={`${req.type} ${dReqContributionMap[req.ID || -1] || 0}/${req.target_quantity} ${req.quantity_mark}`} key={req.ID}>
+                                    <Collapsible trigger={`${req.type} ${Math.round((dReqContributionMap[req.ID || -1] || 0) *100) / 100}/${req.target_quantity} ${req.quantity_mark}`} key={req.ID}>
                                         {dContributions
                                             .filter(con => con.requirement_id === req.ID)
                                             .map(contribution => {
@@ -272,12 +272,12 @@ const styles: { [key: string]: CSSProperties } = {
         width: 'min(80%, 800px)',
         padding: '20px',
         alignSelf: 'center',
-        background: 'linear-gradient(to top right, rgba(139, 0, 0, 0.8), rgba(0, 0, 139, 0.8))',
+        backgroundColor: 'rgba(34, 34, 34, 0.8)',
 },
     outerCollapsible: {
         minHeight: '50px',
         marginBottom: '10px',
-        background: 'linear-gradient(to top right, #8B0000, #00008B)',
+        backgroundColor: '#222222',
         border: '1px solid #ddd',
         borderRadius: '5px',
         padding: '10px',

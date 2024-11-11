@@ -10,6 +10,7 @@ import {AppDispatch, RootState} from "../../../store/store";
 import {Requirement} from "../../../data/types/Requirement";
 import {loadDrinkRequirements} from "../../../data/sclices/DrinkRequirementSlice";
 import {loadFoodRequirements} from "../../../data/sclices/FoodRequirementSlice";
+import {setForTime} from "../../../data/utils/timeoutSetterUtils";
 
 interface ContributeModalProps {
     visible: boolean;
@@ -90,10 +91,11 @@ const CreateRequirementModal: React.FC<ContributeModalProps> = ({ mode, visible,
             createDrinkRequirement(requirement)
                 .then(createdRequirement => {
                     newFeedbacks.buttonSuccess = "created successfully"
-                    setFeedbacks(newFeedbacks)
+                    setForTime(setFeedbacks, newFeedbacks, {}, 3000)
 
                     if(!selectedParty || !selectedParty.ID) return
                     dispatch(loadDrinkRequirements(selectedParty.ID));
+                    return
                 })
                 .catch(err => {
                     if(err.response){
@@ -103,6 +105,7 @@ const CreateRequirementModal: React.FC<ContributeModalProps> = ({ mode, visible,
                         newFeedbacks.buttonError = "Something unexpected happened. Try again later!"
                         setFeedbacks(newFeedbacks)
                     }
+                    return
                 })
             return;
         }
@@ -111,10 +114,11 @@ const CreateRequirementModal: React.FC<ContributeModalProps> = ({ mode, visible,
             createFoodRequirement(requirement)
                 .then(createdRequirement => {
                     newFeedbacks.buttonSuccess = "created successfully"
-                    setFeedbacks(newFeedbacks)
+                    setForTime(setFeedbacks, newFeedbacks, {}, 3000)
 
                     if(!selectedParty || !selectedParty.ID) return
                     dispatch(loadFoodRequirements(selectedParty.ID));
+                    return
                 })
                 .catch(err => {
                     if(err.response){
@@ -124,6 +128,7 @@ const CreateRequirementModal: React.FC<ContributeModalProps> = ({ mode, visible,
                         newFeedbacks.buttonError = "Something unexpected happened. Try again later!"
                         setFeedbacks(newFeedbacks)
                     }
+                    return
                 })
             return;
         }

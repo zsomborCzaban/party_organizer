@@ -7,6 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../../store/store";
 import {loadDrinkContributions} from "../../../data/sclices/DrinkContributionSlice";
 import {loadFoodContributions} from "../../../data/sclices/FoodContributionSlice";
+import {setForTime} from "../../../data/utils/timeoutSetterUtils";
 
 interface ContributeModalProps {
     visible: boolean;
@@ -86,10 +87,11 @@ const ContributeModal: React.FC<ContributeModalProps> = ({ mode, options, visibl
             createDrinkContribution(contribution)
                 .then(createdContribution => {
                     newFeedbacks.buttonSuccess = "created successfully"
-                    setFeedbacks(newFeedbacks)
+                    setForTime(setFeedbacks, newFeedbacks, {}, 3000)
 
                     if(!selectedParty || !selectedParty.ID) return
                     dispatch(loadDrinkContributions(selectedParty.ID));
+                    return
                 })
                 .catch(err => {
                     if(err.response){
@@ -99,6 +101,7 @@ const ContributeModal: React.FC<ContributeModalProps> = ({ mode, options, visibl
                         newFeedbacks.buttonError = "Something unexpected happened. Try again later!"
                         setFeedbacks(newFeedbacks)
                     }
+                    return
                 })
             return;
         }
@@ -107,10 +110,11 @@ const ContributeModal: React.FC<ContributeModalProps> = ({ mode, options, visibl
             createFoodContribution(contribution)
                 .then(createdContribution => {
                     newFeedbacks.buttonSuccess = "created successfully"
-                    setFeedbacks(newFeedbacks)
+                    setForTime(setFeedbacks, newFeedbacks, {}, 3000)
 
                     if(!selectedParty || !selectedParty.ID) return
                     dispatch(loadFoodContributions(selectedParty.ID));
+                    return
                 })
                 .catch(err => {
                     if(err.response){
@@ -120,6 +124,7 @@ const ContributeModal: React.FC<ContributeModalProps> = ({ mode, options, visibl
                         newFeedbacks.buttonError = "Something unexpected happened. Try again later!"
                         setFeedbacks(newFeedbacks)
                     }
+                    return
                 })
             return;
         }
