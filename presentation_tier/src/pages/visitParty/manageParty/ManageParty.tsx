@@ -274,6 +274,7 @@ const styles: { [key: string]: CSSProperties } = {
     outerContainer: {
         overflowY: 'auto',
         height: '100vh',
+        width: '100vw',
         display: 'flex',
         flexDirection: 'column',
         color: '#ffffff',

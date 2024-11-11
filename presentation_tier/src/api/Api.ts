@@ -109,6 +109,24 @@ export const postImage = <T>(url: string, requestBody: FormData) => {
     });
 };
 
+export const put = <T>(url: string, requestBody: object) => {
+    return new Promise<T>((resolve, reject) => {
+        apiClient.put<ApiResponse<T>>(url, requestBody)
+            .then((response) => {
+                parseResponse<T>(response)
+                    .then((parsedResponse: T) => {
+                        return resolve(parsedResponse);
+                    })
+                    .catch((error) => {
+                        return reject(error);
+                    });
+            })
+            .catch((error) => {
+                return reject(error);
+            });
+    });
+};
+
 export const DELETE = <T>(url: string) => {
     return new Promise<T>((resolve, reject) => {
         apiClient.delete<ApiResponse<T>>(url)

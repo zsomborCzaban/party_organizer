@@ -7,29 +7,32 @@ import backgroundImage from "../../../data/resources/images/gears.png";
 import dayjs from "dayjs";
 import {ApiError} from "../../../api/ApiResponse";
 import {Party} from "../../../data/types/Party";
-import {createParty} from "../../../data/apis/PartyApi";
+import {updateParty} from "../../../data/apis/PartyApi";
 import {setSelectedParty} from "../../../data/sclices/PartySlice";
 import VisitPartyNavBar from "../../../components/navbar/VisitPartyNavBar";
 import VisitPartyProfile from "../../../components/drawer/VisitPartyProfile";
 import {User} from "../../../data/types/User";
 import {getUser} from "../../../auth/AuthUserUtil";
 import {authService} from "../../../auth/AuthService";
+import {setForTime} from "../../../data/utils/timeoutSetterUtils";
 
 interface Feedbacks{
-    partyName?: string;
-    place?: string;
-    googlemapsLink?: string;
-    startTime?: string;
-    facebookLink?: string;
-    whatsAppLink?: string;
-    isPrivate?: string;
-    isAccessCodeEnabled?: string;
-    accessCode?: string;
-    button?: string;
+    PartyName?: string;
+    Place?: string;
+    GooglemapsLink?: string;
+    StartTime?: string;
+    FacebookLink?: string;
+    WhatsAppLink?: string;
+    IsPrivate?: string;
+    IsAccessCodeEnabled?: string;
+    AccessCode?: string;
+    buttonError?: string;
+    buttonSuccess?: string;
+
+    [key: string]: string | undefined;
 }
 
-
-const PartyOptions = () => {
+const PartySettings = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch<AppDispatch>()
 
@@ -87,38 +90,38 @@ const PartyOptions = () => {
 
     const validate = (): boolean => {
         let valid = true;
-        const newFeedbacks: Feedbacks = {};
+        const newFeedbacks: Feedbacks = {}
 
         if (!partyName) {
-            newFeedbacks.partyName = 'party name is required.';
+            newFeedbacks.PartyName = 'party name is required.';
             valid = false;
         }
         if (!place) {
-            newFeedbacks.place = 'display name is required.';
+            newFeedbacks.Place = 'display name is required.';
             valid = false;
         }
         if (!googlemapsLink) {
-            newFeedbacks.googlemapsLink = 'googlemapsLink is required.';
+            newFeedbacks.GooglemapsLink = 'googlemapsLink is required.';
             valid = false;
         }
         if (!startTime) {
-            newFeedbacks.startTime = 'party time is required.';
+            newFeedbacks.StartTime = 'party time is required.';
             valid = false;
         }
         if (!startTime?.toDate()) {
-            newFeedbacks.startTime = 'invalid time format';
+            newFeedbacks.StartTime = 'invalid time format';
             valid = false;
         }
         if (!isAccessCodeEnabled && accessCode) {
-            newFeedbacks.isAccessCodeEnabled = 'to use access code, you should enable it';
+            newFeedbacks.IsAccessCodeEnabled = 'to use access code, you should enable it';
             valid = false;
         }
         if (isAccessCodeEnabled && !accessCode) {
-            newFeedbacks.accessCode = 'access code is required if you enable it';
+            newFeedbacks.AccessCode = 'access code is required if you enable it';
             valid = false;
         }
         if (accessCode && accessCode.length < 6) {
-            newFeedbacks.accessCode = 'access code must be at least 6 characters long';
+            newFeedbacks.AccessCode = 'access code must be at least 6 characters long';
             valid = false;
         }
 
@@ -127,7 +130,28 @@ const PartyOptions = () => {
     }
 
     const handleErrors = (errs: ApiError[]) => {
-        //todo: implement me!!!
+        const newFeedbacks: Feedbacks ={
+            PartyName: "",
+            Place: "",
+            GooglemapsLink: "",
+            StartTime: "",
+            FacebookLink: "",
+            WhatsAppLink: "",
+            IsPrivate: "",
+            IsAccessCodeEnabled: "",
+            AccessCode: "",
+            buttonError: "",
+            buttonSuccess: "",
+        }
+
+        Array.from(errs).forEach(err => {
+            if (newFeedbacks[err.field] !== undefined){
+                newFeedbacks[err.field] = err.err
+            } else {
+                newFeedbacks.buttonError = err.err
+            }
+        })
+        setFeedbacks(newFeedbacks)
     }
 
     const handleCreate = () => {
@@ -146,21 +170,25 @@ const PartyOptions = () => {
             access_code: accessCode,
         }
 
-        //todo: countine from here. make update party, and set the returned party to the selected party
-        createParty(party)
+        updateParty(party)
             .then((returnedParty) => {
-                console.log(returnedParty)
                 dispatch(setSelectedParty(returnedParty))
-                navigate("/visitParty/manageParty")
+
+                const newFeedbacks: Feedbacks = {}
+                newFeedbacks.buttonSuccess = "saved successfully"
+                setForTime(setFeedbacks, newFeedbacks, {}, 3000)
+                return
             })
             .catch(err => {
                 if (err.response) {
-                    let errors = err.response.data.errors
+                    let errors: ApiError[] = err.response.data.errors['Errors']
                     handleErrors(errors)
+                    return
                 } else {
                     const newFeedbacks: Feedbacks = {};
-                    newFeedbacks.button = "Something unexpected happened. Try again later!"
-                    setFeedbacks(newFeedbacks)
+                    newFeedbacks.buttonError = "Something unexpected happened. Try again later!"
+                    setForTime(setFeedbacks, newFeedbacks, {}, 3000)
+                    return
                 }
             })
     };
@@ -170,11 +198,11 @@ const PartyOptions = () => {
                 <ConfigProvider
                     theme={{algorithm: theme.darkAlgorithm,}}
                 >
-                {/*<VisitPartyNavBar onProfileClick={() => setProfileOpen(true)}/>*/}
-                {/*<VisitPartyProfile isOpen={profileOpen} onClose={() => setProfileOpen(false)} currentParty={selectedParty} user={user} onLeaveParty={() => console.log("leaveparty")} />*/}
+                <VisitPartyNavBar onProfileClick={() => setProfileOpen(true)}/>
+                <VisitPartyProfile isOpen={profileOpen} onClose={() => setProfileOpen(false)} currentParty={selectedParty} user={user} onLeaveParty={() => console.log("leaveparty")} />
 
                     <div style={styles.container}>
-                        <h2 style={styles.h2}>Create Party</h2>
+                        <h2 style={styles.h2}>Party Settings</h2>
 
                         <div style={styles.inputDiv}>
                             <label style={styles.label}>Party Name</label>
@@ -184,7 +212,7 @@ const PartyOptions = () => {
                                 onChange={(e) => setPartyName(e.target.value)}
                                 style={styles.input}
                             />
-                            {feedbacks.partyName && <p style={styles.error}>{feedbacks.partyName}</p>}
+                            {feedbacks.PartyName && <p style={styles.error}>{feedbacks.PartyName}</p>}
                         </div>
 
                         <div style={styles.inputDiv}>
@@ -196,7 +224,7 @@ const PartyOptions = () => {
                                 onChange={(e) => setPlace(e.target.value)}
                                 style={styles.input}
                             />
-                            {feedbacks.place && <p style={styles.error}>{feedbacks.place}</p>}
+                            {feedbacks.Place && <p style={styles.error}>{feedbacks.Place}</p>}
                         </div>
 
 
@@ -208,7 +236,7 @@ const PartyOptions = () => {
                                 onChange={(e) => setGoogleMapsLink(e.target.value)}
                                 style={styles.input}
                             />
-                            {feedbacks.googlemapsLink && <p style={styles.error}>{feedbacks.googlemapsLink}</p>}
+                            {feedbacks.GooglemapsLink && <p style={styles.error}>{feedbacks.GooglemapsLink}</p>}
                         </div>
 
                         <div style={styles.inputDiv}>
@@ -219,7 +247,7 @@ const PartyOptions = () => {
                                 style={styles.input}
                                 onChange={(date) => setStartTime(date)}
                             />
-                            {feedbacks.startTime && <p style={styles.error}>{feedbacks.startTime}</p>}
+                            {feedbacks.StartTime && <p style={styles.error}>{feedbacks.StartTime}</p>}
                         </div>
 
                         <div style={styles.inputDiv}>
@@ -230,7 +258,7 @@ const PartyOptions = () => {
                                 onChange={(e) => setFacebookLink(e.target.value)}
                                 style={styles.input}
                             />
-                            {feedbacks.facebookLink && <p style={styles.error}>{feedbacks.facebookLink}</p>}
+                            {feedbacks.FacebookLink && <p style={styles.error}>{feedbacks.FacebookLink}</p>}
                         </div>
 
                         <div style={styles.inputDiv}>
@@ -241,7 +269,7 @@ const PartyOptions = () => {
                                 onChange={(e) => setWhatsAppLink(e.target.value)}
                                 style={styles.input}
                             />
-                            {feedbacks.whatsAppLink && <p style={styles.error}>{feedbacks.whatsAppLink}</p>}
+                            {feedbacks.WhatsAppLink && <p style={styles.error}>{feedbacks.WhatsAppLink}</p>}
                         </div>
 
                         <div style={styles.inputDiv}>
@@ -276,7 +304,7 @@ const PartyOptions = () => {
                                         onChange={(e) => setAccessCode(e.target.value)}
                                         style={styles.input}
                                     />
-                                    {feedbacks.accessCode && <p style={styles.error}>{feedbacks.accessCode}</p>}
+                                    {feedbacks.AccessCode && <p style={styles.error}>{feedbacks.AccessCode}</p>}
                                 </>
                             )}
                         </div>
@@ -290,8 +318,10 @@ const PartyOptions = () => {
                                     Reset
                                 </Button>
                             </div>
-                            {feedbacks.button && <p style={styles.error}>{feedbacks.button}</p>}
-                        </div>
+                            {feedbacks.buttonError && <p style={styles.error}>{feedbacks.buttonError}</p>}
+                            {feedbacks.buttonSuccess && <p style={styles.success}>{feedbacks.buttonSuccess}</p>}
+
+                    </div>
                 </ConfigProvider>
             </div>
     );
@@ -409,4 +439,4 @@ const styles: { [key: string]: CSSProperties } = {
 };
 
 
-export default PartyOptions
+export default PartySettings

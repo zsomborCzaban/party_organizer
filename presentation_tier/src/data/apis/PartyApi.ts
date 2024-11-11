@@ -1,4 +1,4 @@
-import {get, post} from "../../api/Api";
+import {get, post, put} from "../../api/Api";
 import {Party} from "../types/Party";
 import {User} from "../types/User";
 import {getApiUrl} from "../../api/ApiHelper";
@@ -9,6 +9,16 @@ const PARTY_PATH =  getApiUrl() + '/party';
 export const createParty = async (requestBody: Party): Promise<Party> => {
     return new Promise<Party>((resolve, reject) => {
         post<Party>(PARTY_PATH, requestBody)
+            .then((party) => {return resolve(party)})
+            .catch(error => {
+                return reject(error)
+            })
+    })
+}
+
+export const updateParty = async (requestBody: Party): Promise<Party> => {
+    return new Promise<Party>((resolve, reject) => {
+        put<Party>(PARTY_PATH, requestBody)
             .then((party) => {return resolve(party)})
             .catch(error => {
                 return reject(error)

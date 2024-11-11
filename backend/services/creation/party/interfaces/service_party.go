@@ -71,19 +71,24 @@ func (ps PartyService) UpdateParty(partyDTO domains.PartyDTO, userId uint) api.I
 		return api.ErrorValidation(err)
 	}
 
-	//todo: cehck against original party
-	if partyDTO.OrganizerID != userId && userId != 0 {
+	originalParty, err2 := ps.PartyRepository.FindById(partyDTO.ID)
+	if err2 != nil {
+		return api.ErrorBadRequest(err2.Error())
+	}
+
+	if !originalParty.CanBeOrganizedBy(userId) {
 		return api.ErrorUnauthorized("cannot update other people's party")
 	}
-
 	party := partyDTO.TransformToParty()
+	party.Organizer = originalParty.Organizer
+	party.OrganizerID = originalParty.OrganizerID
 
-	err2 := ps.PartyRepository.UpdateParty(party)
-	if err2 != nil {
-		return api.ErrorInternalServerError(err2.Error())
+	err3 := ps.PartyRepository.UpdateParty(party)
+	if err3 != nil {
+		return api.ErrorInternalServerError(err3.Error())
 	}
 
-	return api.Success("update_success")
+	return api.Success(party)
 }
 
 func (ps PartyService) DeleteParty(id uint) api.IResponse {

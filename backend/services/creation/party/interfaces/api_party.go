@@ -12,8 +12,8 @@ func NewPartyRouter(router *mux.Router, controller domains.IPartyController) {
 	router.HandleFunc("/party/getParticipants/{party_id}", controller.GetParticipants).Methods("GET")
 
 	router.HandleFunc("/party", controller.CreateController).Methods("POST")
+	router.HandleFunc("/party", controller.UpdateController).Methods("PUT")
 	router.HandleFunc("/party/{id}", controller.GetController).Methods("GET")
-	router.HandleFunc("/party/{id}", controller.UpdateController).Methods("PUT")
 	router.HandleFunc("/party/{id}", controller.DeleteController).Methods("DELETE")
 
 }

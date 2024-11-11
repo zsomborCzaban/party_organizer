@@ -94,16 +94,6 @@ func (pc PartyController) UpdateController(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	vars := mux.Vars(r)
-	id, err3 := strconv.ParseUint(vars["id"], 10, 32)
-	if err3 != nil {
-		br := api.ErrorBadRequest(err3.Error())
-
-		br.Send(w)
-		return
-	}
-	updatePartyReq.ID = uint(id)
-
 	resp := pc.PartyService.UpdateParty(updatePartyReq, userId)
 	couldSend := resp.Send(w)
 	if !couldSend {

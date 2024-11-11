@@ -46,8 +46,11 @@ const VisitPartyNavBar: React.FC<VisitPartyNavBarProps> = ({ onProfileClick }) =
             <nav style={styles.nav}>
                 <ul style={styles.navList}>
                     {userId === selectedParty.organizer.ID &&
-                        <li style={styles.navItem}><p onClick={() => navigate("/visitParty/manageParty")}  style={styles.link}>Manage
-                            Party</p></li>}
+                        <li style={styles.navItem}><p onClick={() => navigate("/visitParty/manageParty")}  style={styles.link}>Manage Party</p></li>
+                    }
+                    {userId === selectedParty.organizer.ID &&
+                        <li style={styles.navItem}><p onClick={() => navigate("/visitParty/partySettings")}  style={styles.link}>Party Settings</p></li>
+                    }
                     <li style={styles.navItem}><p onClick={() => navigate("/visitParty/partyHome")}  style={styles.link}>Home</p></li>
                     <li style={styles.navItem}><p onClick={() => navigate("/visitParty/contributions")}  style={styles.link}>Contributions</p>
                     </li>
