@@ -1,9 +1,9 @@
-import {post} from "../../api/Api";
-import {authService} from "../../auth/AuthService";
-import {getApiUrl} from "../../api/ApiHelper";
+import {post} from '../../api/Api';
+import {authService} from '../../auth/AuthService';
+import {getApiUrl} from '../../api/ApiHelper';
 
-const LOGIN_PATH = getApiUrl() + '/user/login';
-const REGISTER_PATH = getApiUrl() + '/user/register';
+const LOGIN_PATH = `${getApiUrl()  }/user/login`;
+const REGISTER_PATH = `${getApiUrl()  }/user/register`;
 
 export interface LoginRequestDataInterface {
     username: string;
@@ -16,27 +16,25 @@ export interface LoginResponseDataInterface {
 
 export const login = async (username: string, password: string) => {
     const loginRequest: LoginRequestDataInterface = {
-        username: username,
-        password: password,
+        username,
+        password,
     };
 
     try {
-        return post<LoginResponseDataInterface>(
+        return await post<LoginResponseDataInterface>(
             LOGIN_PATH,
             loginRequest,
         )
             .then(response => {
-                authService.userLoggedIn(response.jwt)
-                return ""
+                authService.userLoggedIn(response.jwt);
+                return '';
             })
-            .catch(err => {
-                return err.response.data.errors
-            })
+            .catch((err) => err.response.data.errors);
     } catch (err) {
-        return 'An error occurred while logging in. Please try again.'
+        return 'An error occurred while logging in. Please try again.';
     }
 
-}
+};
 
 export interface RegisterRequestBody {
     username: string;
@@ -45,12 +43,8 @@ export interface RegisterRequestBody {
     confirm_password: string;
 }
 
-export const register = async (requestBody: RegisterRequestBody): Promise<void> => {
-    return new Promise<void>((resolve, reject) => {
+export const register = async (requestBody: RegisterRequestBody): Promise<void> => new Promise<void>((resolve, reject) => {
         post<void>(REGISTER_PATH, requestBody)
-            .then(() => {return resolve()})
-            .catch(error => {
-                return reject(error)
-            })
-    })
-}
+            .then(() => resolve())
+            .catch((error) => reject(error));
+    });

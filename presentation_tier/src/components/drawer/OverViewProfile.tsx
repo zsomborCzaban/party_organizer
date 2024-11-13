@@ -1,9 +1,99 @@
 import React, {ChangeEvent, useState} from 'react';
-import {User} from "../../data/types/User";
-import defaultProfilePicture from "../../data/resources/images/default_profile_picture.png"
-import {Button} from "antd";
-import {handleProfilePictureUpload} from "../../data/utils/imageUtils";
-import {authService} from "../../auth/AuthService";
+import {User} from '../../data/types/User';
+import defaultProfilePicture from '../../data/resources/images/default_profile_picture.png';
+import {Button} from 'antd';
+import {handleProfilePictureUpload} from '../../data/utils/imageUtils';
+import {authService} from '../../auth/AuthService';
+
+const styles: { [key: string]: React.CSSProperties } = {
+  backdrop: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100vw',
+    height: '100vh',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    zIndex: 999,
+    transition: 'opacity 0.3s ease',
+  },
+  drawerContainer: {
+    position: 'fixed',
+    top: 0,
+    right: 0,
+    width: 'min(400px, 80%)',
+    height: '100%',
+    backgroundColor: '#fff',
+    boxShadow: '0 0 10px rgba(0,0,0,0.3)',
+    transition: 'right 0.3s ease',
+    padding: '20px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    zIndex: 1000,
+  },
+  profileContainer: {
+    width: 'min(300px, 90%)',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyItems: 'flex-start',
+    marginBottom: '20px',
+  },
+  infoContainer: {
+    width: 'min(300px, 90%)',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
+  closeIcon: {
+    alignSelf: 'flex-start',
+    cursor: 'pointer',
+    marginBottom: '20px',
+  },
+  profilePicture: {
+    width: '100px',
+    height: '100px',
+    borderRadius: '50%',
+    marginBottom: '20px',
+  },
+  changeProfilePicture: {
+    display: 'inline-block',
+    padding: '5px',
+    color: '#fff',
+    backgroundColor: '#007bff',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    fontWeight: 'bold',
+    fontSize: '18px',
+    width: '100%',
+    textAlign: 'center',
+  },
+  userInfo: {
+    textAlign: 'left',
+    marginBottom: '10px',
+  },
+  label: {
+    fontWeight: 'bold',
+  },
+  userData: {
+    marginLeft: '30px',
+  },
+  logoutButton: {
+    // padding: '10px 20px',
+    // border: 'none',
+    // borderRadius: '5px',
+    fontWeight: 'bold',
+    fontSize: '18px',
+    width: '100%',
+    marginTop: 'auto',
+    textAlign: 'center',
+  },
+  errorMessage: {
+    color: 'red',
+  },
+};
+
 
 type DrawerProps = {
     isOpen: boolean;
@@ -12,160 +102,76 @@ type DrawerProps = {
 };
 
 const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, user }) => {
-    const [errorMessage, setErrorMessage] = useState("")
-    const [profilePictureUrl, setProfilePictureUrl] = useState(user.profile_picture_url ? user.profile_picture_url : defaultProfilePicture)
+    const [errorMessage, setErrorMessage] = useState('');
+    const [profilePictureUrl, setProfilePictureUrl] = useState(user.profile_picture_url ? user.profile_picture_url : defaultProfilePicture);
 
     const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
-        handleProfilePictureUpload(event, setProfilePictureUrl, setErrorMessage)
-    }
+        handleProfilePictureUpload(event, setProfilePictureUrl, setErrorMessage);
+    };
 
     return (
-        <div>
-            {isOpen && (
-                <div style={styles.backdrop} onClick={onClose} />
+      <div>
+        {isOpen && (
+        <div style={styles.backdrop} onClick={onClose} />
             )}
-            <div
-                style={{
+        <div
+          style={{
                     ...styles.drawerContainer,
                     right: isOpen ? 0 : '-100%',
                 }}
-            >
-                <svg
-                    style={styles.closeIcon}
-                    onClick={onClose}
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="40"
-                    height="40"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                >
-                    <path
-                        stroke="#000"
-                        strokeWidth="2"
-                        d="M6 18L18 6M6 6l12 12"
-                    />
-                </svg>
+        >
+          <svg
+            style={styles.closeIcon}
+            onClick={onClose}
+            xmlns='http://www.w3.org/2000/svg'
+            width='40'
+            height='40'
+            fill='none'
+            viewBox='0 0 24 24'
+          >
+            <path
+              stroke='#000'
+              strokeWidth='2'
+              d='M6 18L18 6M6 6l12 12'
+            />
+          </svg>
 
-                <div style={styles.profileContainer}>
-                    <img src={profilePictureUrl} alt="Profile"
-                         style={styles.profilePicture}/>
+          <div style={styles.profileContainer}>
+            <img
+              src={profilePictureUrl}
+              alt='Profile'
+              style={styles.profilePicture}
+            />
 
-                    <input style={{display: 'none'}} id="file-input" type="file" accept="image/*" onChange={handleFileUpload}/>
-                    <label htmlFor="file-input" style={styles.changeProfilePicture}>
-                        Upload Picture
-                    </label>
-                    {errorMessage && <p style={styles.errorMessage}>{errorMessage}</p>}
-                </div>
+            <input style={{display: 'none'}} id='file-input' type='file' accept='image/*' onChange={handleFileUpload} />
+            <label htmlFor='file-input' style={styles.changeProfilePicture}>
+              Upload Picture
+            </label>
+            {errorMessage && <p style={styles.errorMessage}>{errorMessage}</p>}
+          </div>
 
 
-                <div style={styles.infoContainer}>
-                    <div style={styles.userInfo}>
-                        <label style={styles.label}>Username:</label>
-                        <div style={styles.userData}>{user.username}</div>
-                    </div>
-
-                    <div style={styles.userInfo}>
-                        <label style={styles.label}>Email:</label>
-                        <div style={styles.userData}>{user.email}</div>
-                    </div>
-
-                    <Button type="primary" onClick={authService.handleUnauthorized} style={styles.logoutButton}>
-                        Logout
-                    </Button>
-                </div>
+          <div style={styles.infoContainer}>
+            <div style={styles.userInfo}>
+              <label style={styles.label}>Username:</label>
+              <div style={styles.userData}>{user.username}</div>
             </div>
+
+            <div style={styles.userInfo}>
+              <label style={styles.label}>Email:</label>
+              <div style={styles.userData}>{user.email}</div>
+            </div>
+
+            <Button type='primary' onClick={authService.handleUnauthorized} style={styles.logoutButton}>
+              Logout
+            </Button>
+          </div>
         </div>
+      </div>
     );
 };
 
-const styles: { [key: string]: React.CSSProperties } = {
-    backdrop: {
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100vw',
-        height: '100vh',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        zIndex: 999,
-        transition: 'opacity 0.3s ease',
-    },
-    drawerContainer: {
-        position: 'fixed',
-        top: 0,
-        right: 0,
-        width: 'min(400px, 80%)',
-        height: '100%',
-        backgroundColor: '#fff',
-        boxShadow: '0 0 10px rgba(0,0,0,0.3)',
-        transition: 'right 0.3s ease',
-        padding: '20px',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        zIndex: 1000,
-    },
-    profileContainer: {
-        width: 'min(300px, 90%)',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyItems: 'flex-start',
-        marginBottom: '20px',
-    },
-    infoContainer: {
-        width: 'min(300px, 90%)',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'flex-start'
-    },
-    closeIcon: {
-        alignSelf: 'flex-start',
-        cursor: 'pointer',
-        marginBottom: '20px',
-    },
-    profilePicture: {
-        width: '100px',
-        height: '100px',
-        borderRadius: '50%',
-        marginBottom: '20px',
-    },
-    changeProfilePicture: {
-        display: 'inline-block',
-        padding: '5px',
-        color: '#fff',
-        backgroundColor: '#007bff',
-        borderRadius: '5px',
-        cursor: 'pointer',
-        fontWeight: 'bold',
-        fontSize: '18px',
-        width: '100%',
-        textAlign: 'center',
-    },
-    userInfo: {
-        textAlign: 'left',
-        marginBottom: '10px',
-    },
-    label: {
-        fontWeight: 'bold',
-    },
-    userData: {
-      marginLeft: '30px',
-    },
-    logoutButton: {
-        // padding: '10px 20px',
-        // border: 'none',
-        // borderRadius: '5px',
-        fontWeight: 'bold',
-        fontSize: '18px',
-        width: '100%',
-        marginTop: 'auto',
-        textAlign: 'center',
-    },
-    errorMessage: {
-        color: 'red',
-    },
-};
+
 
 
 export default Drawer;

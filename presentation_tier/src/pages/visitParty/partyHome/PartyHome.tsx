@@ -1,108 +1,14 @@
-import React, {CSSProperties, useEffect, useState} from "react";
-import VisitPartyNavBar from "../../../components/navbar/VisitPartyNavBar";
-import "bootstrap/dist/css/bootstrap.min.css";
-import {useNavigate} from "react-router-dom";
-import {useSelector} from "react-redux";
-import {RootState} from "../../../store/store";
-import videoBackground from "../../../data/resources/videos/party_video.mp4"
-import VisitPartyProfile from "../../../components/drawer/VisitPartyProfile";
-import {User} from "../../../data/types/User";
-import {getUser} from "../../../auth/AuthUserUtil";
-import {authService} from "../../../auth/AuthService";
-
-
-const PartyHome: React.FC = () => {
-    const navigate = useNavigate()
-
-    const [profileOpen, setProfileOpen] = useState(false)
-    const [user, setUser] = useState<User>()
-
-    const {selectedParty} = useSelector((state: RootState)=> state.selectedPartyStore)
-
-    useEffect(() => {
-        const currentUser = getUser()
-
-        if(!currentUser) {
-            authService.handleUnauthorized()
-            return
-        }
-
-        setUser(currentUser)
-    }, []);
-
-    if(!selectedParty){
-        console.log("error, no selected party")
-        navigate("/overview/discover")
-        return <div>error, selected party was null</div>
-    }
-
-    if(!user){
-        console.log("user was null")
-        return <div>Loading...</div>
-    }
-
-    const handleContributeClick = () => {
-        navigate("/visitParty/Contributions")
-    }
-
-    return (
-        <div style={styles.outerContainer}>
-
-            {/*<div style={{ position: 'relative', width: '100%', height: '100vh', overflow: 'hidden' }}>*/}
-                <video
-                    src={videoBackground}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    style={styles.video}
-                />
-            {/*</div>*/}
-
-            <VisitPartyNavBar onProfileClick={() => setProfileOpen(true)}/>
-            <VisitPartyProfile isOpen={profileOpen} onClose={() => setProfileOpen(false)} currentParty={selectedParty} user={user} onLeaveParty={() => console.log("leaveparty")} />
-            <div style={styles.container}>
-                {/* Middle Section */}
-                <div style={styles.middleSection}>
-                    {/* Title */}
-                    <h1 style={{fontSize: '48px', margin: '20px 0'}}>{selectedParty.name}</h1>
-
-                    {/* Subtitle */}
-                    <p style={{fontSize: '18px', margin: '10px 0'}}>Contributions to the party.</p>
-
-                    {/* Progress Bar */}
-                    <div style={styles.progressBarContainer}>
-                        <p style={styles.progressText}> 60% Complete</p>
-                        <div style={styles.progressBar}/>
-                    </div>
-
-                    {/* Button */}
-                    <button style={styles.button} onClick={handleContributeClick}>Contribute</button>
-                </div>
-
-                {/* Bottom Row */}
-                <div style={styles.bottomRow}>
-                    {/* Date */}
-                    <div>
-                        <h5>12<sup>th</sup> June, 18:00</h5>
-                    </div>
-
-                    {/* Place */}
-                    <div>
-                        <h5>Kecskemét, Szabadság tér 13</h5>
-                    </div>
-
-                    {/* Link */}
-                    <div>
-                        <h5>
-                            <a href="" style={styles.link}>Join Group Chat</a>
-                        </h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-);
-};
+import React, {CSSProperties, useEffect, useState} from 'react';
+import VisitPartyNavBar from 'components/navbar/VisitPartyNavBar';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import {useNavigate} from 'react-router-dom';
+import {useSelector} from 'react-redux';
+import {RootState} from 'store/store';
+import videoBackground from 'data/resources/videos/party_video.mp4';
+import VisitPartyProfile from 'components/drawer/VisitPartyProfile';
+import {User} from 'data/types/User';
+import {getUser} from 'auth/AuthUserUtil';
+import {authService} from 'auth/AuthService';
 
 const styles: { [key: string]: CSSProperties } = {
     outerContainer: {
@@ -125,7 +31,7 @@ const styles: { [key: string]: CSSProperties } = {
         alignItems: 'center',
         textAlign: 'center',
         flexGrow: 1,
-        color: 'white'
+        color: 'white',
     },
     progressBarContainer: {
         width: '75%',
@@ -149,7 +55,7 @@ const styles: { [key: string]: CSSProperties } = {
         top: 0,
     },
     progressText: {
-      zIndex: 1,
+        zIndex: 1,
         margin: 0,
     },
     bottomRow: {
@@ -180,7 +86,101 @@ const styles: { [key: string]: CSSProperties } = {
         height: '100%',
         objectFit: 'cover',
         zIndex: -1,
+    },
+};
+
+
+const PartyHome: React.FC = () => {
+    const navigate = useNavigate();
+
+    const [profileOpen, setProfileOpen] = useState(false);
+    const [user, setUser] = useState<User>();
+
+    const {selectedParty} = useSelector((state: RootState)=> state.selectedPartyStore);
+
+    useEffect(() => {
+        const currentUser = getUser();
+
+        if(!currentUser) {
+            authService.handleUnauthorized();
+            return;
+        }
+
+        setUser(currentUser);
+    }, []);
+
+    if(!selectedParty){
+        console.log('error, no selected party');
+        navigate('/overview/discover');
+        return <div>error, selected party was null</div>;
     }
+
+    if(!user){
+        console.log('user was null');
+        return <div>Loading...</div>;
+    }
+
+    const handleContributeClick = () => {
+        navigate('/visitParty/Contributions');
+    };
+
+    return (
+      <div style={styles.outerContainer}>
+
+        {/* <div style={{ position: 'relative', width: '100%', height: '100vh', overflow: 'hidden' }}> */}
+        <video
+          src={videoBackground}
+          autoPlay
+          loop
+          muted
+          playsInline
+          style={styles.video}
+        />
+        {/* </div> */}
+
+        <VisitPartyNavBar onProfileClick={() => setProfileOpen(true)} />
+        <VisitPartyProfile isOpen={profileOpen} onClose={() => setProfileOpen(false)} currentParty={selectedParty} user={user} onLeaveParty={() => console.log('leaveparty')} />
+        <div style={styles.container}>
+          {/* Middle Section */}
+          <div style={styles.middleSection}>
+            {/* Title */}
+            <h1 style={{fontSize: '48px', margin: '20px 0'}}>{selectedParty.name}</h1>
+
+            {/* Subtitle */}
+            <p style={{fontSize: '18px', margin: '10px 0'}}>Contributions to the party.</p>
+
+            {/* Progress Bar */}
+            <div style={styles.progressBarContainer}>
+              <p style={styles.progressText}> 60% Complete</p>
+              <div style={styles.progressBar} />
+            </div>
+
+            {/* Button */}
+            <button style={styles.button} onClick={handleContributeClick}>Contribute</button>
+          </div>
+
+          {/* Bottom Row */}
+          <div style={styles.bottomRow}>
+            {/* Date */}
+            <div>
+              <h5>12<sup>th</sup> June, 18:00</h5>
+            </div>
+
+            {/* Place */}
+            <div>
+              <h5>Kecskemét, Szabadság tér 13</h5>
+            </div>
+
+            {/* Link */}
+            <div>
+              <h5>
+                <a href='' style={styles.link}>Join Group Chat</a>
+              </h5>
+            </div>
+          </div>
+        </div>
+      </div>
+);
 };
 
 export default PartyHome;

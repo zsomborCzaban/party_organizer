@@ -1,19 +1,15 @@
-import {getApiUrl} from './ApiHelper'
+import {getApiUrl} from './ApiHelper';
 
-export const getApiConfig = () => {
-    return {
+export const getApiConfig = () => ({
         baseUrl : `${getApiUrl()}`,
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         },
-    };
-};
+    });
 
-export const getImageUploaderApiConfig = () => {
-    return {
+export const getImageUploaderApiConfig = () => ({
         baseUrl : `${getApiUrl()}`,
         headers: {
-            'Content-Type': 'multipart/form-data'
+            'Content-Type': 'multipart/form-data',
         },
-    };
-};
+    });

@@ -1,7 +1,7 @@
 import React, { useState, CSSProperties } from 'react';
-import {register, RegisterRequestBody} from "../../data/apis/AuthenticationApi";
-import {AxiosError} from "axios";
-import {ApiError, ApiResponse} from "../../api/ApiResponse";
+import {register, RegisterRequestBody} from '../../data/apis/AuthenticationApi';
+import {AxiosError} from 'axios';
+import {ApiError, ApiResponse} from '../../api/ApiResponse';
 
 
 interface Feedbacks{
@@ -16,7 +16,7 @@ interface Feedbacks{
 const Register: React.FC = () => {
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const [email, setEmail] = useState('')
+    const [email, setEmail] = useState('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
     const [feedbacks, setFeedbacks] = useState<Feedbacks>({});
 
@@ -54,53 +54,52 @@ const Register: React.FC = () => {
 
     const handleErrors = (errs: ApiError[])=> {
         let newFeedbacks: Feedbacks = {};
-        const keysOfFeedbacks = ["username", "password", "confirmpassword", "email"]
+        const keysOfFeedbacks = ['username', 'password', 'confirmpassword', 'email'];
 
         errs.forEach((err: ApiError) => {
             // @ts-ignore
-            const key: keyof Feedbacks = err.field.toLowerCase()
+            const key: keyof Feedbacks = err.field.toLowerCase();
             if(keysOfFeedbacks.includes(key)){
-                newFeedbacks[key] = err.err
+                newFeedbacks[key] = err.err;
             } else {
-                const unexpectedErr: Feedbacks = {}
-                unexpectedErr.buttonError = "unexpected error while registering"
-                newFeedbacks = unexpectedErr
-                return
+                const unexpectedErr: Feedbacks = {};
+                unexpectedErr.buttonError = 'unexpected error while registering';
+                newFeedbacks = unexpectedErr;
+                
             }
-        })
-        setFeedbacks(newFeedbacks)
-    }
+        });
+        setFeedbacks(newFeedbacks);
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
         if (validate()) {
-            let registerBody: RegisterRequestBody = {
-                username: username,
-                email: email,
-                password: password,
+            const registerBody: RegisterRequestBody = {
+                username,
+                email,
+                password,
                 confirm_password: confirmPassword,
-            }
+            };
             register(registerBody)
                 .then(() => {
                     const newFeedbacks: Feedbacks = {};
-                    newFeedbacks.buttonSuccess = "registered successfully"
-                    setFeedbacks(newFeedbacks)
+                    newFeedbacks.buttonSuccess = 'registered successfully';
+                    setFeedbacks(newFeedbacks);
                 })
                 .catch((err: AxiosError<ApiResponse<void>>) => {
                     if(err.response){
-                        let errors = err.response.data.errors
-                        handleErrors(errors)
+                        const {errors} = err.response.data;
+                        handleErrors(errors);
                     } else {
                         const newFeedbacks: Feedbacks = {};
-                        newFeedbacks.buttonError = "unexpected error while registering"
-                        setFeedbacks(newFeedbacks)
+                        newFeedbacks.buttonError = 'unexpected error while registering';
+                        setFeedbacks(newFeedbacks);
                     }
-                })
+                });
         }
     };
 
-    // Inline styles
     const styles: { [key: string]: CSSProperties } = {
         container: {
             maxWidth: '400px',
@@ -147,88 +146,88 @@ const Register: React.FC = () => {
     };
 
     return (
-        <div style={styles.container}>
-            <form onSubmit={handleSubmit}>
-                <h2>Register</h2>
+      <div style={styles.container}>
+        <form onSubmit={handleSubmit}>
+          <h2>Register</h2>
 
-                {/* Username Field */}
-                <div style={styles.formGroup}>
-                    <label htmlFor="username" style={styles.label}>
-                        Username
-                    </label>
-                    <input
-                        type="text"
-                        id="username"
-                        style={styles.input}
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
-                    {feedbacks.username && <p style={styles.error}>{feedbacks.username}</p>}
-                </div>
+          {/* Username Field */}
+          <div style={styles.formGroup}>
+            <label htmlFor='username' style={styles.label}>
+              Username
+            </label>
+            <input
+              type='text'
+              id='username'
+              style={styles.input}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            {feedbacks.username && <p style={styles.error}>{feedbacks.username}</p>}
+          </div>
 
-                {/* Email Field */}
-                <div style={styles.formGroup}>
-                    <label htmlFor="email" style={styles.label}>
-                        Email
-                    </label>
-                    <input
-                        type="text"
-                        id="email"
-                        style={styles.input}
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                    {feedbacks.email && <p style={styles.error}>{feedbacks.email}</p>}
-                </div>
+          {/* Email Field */}
+          <div style={styles.formGroup}>
+            <label htmlFor='email' style={styles.label}>
+              Email
+            </label>
+            <input
+              type='text'
+              id='email'
+              style={styles.input}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            {feedbacks.email && <p style={styles.error}>{feedbacks.email}</p>}
+          </div>
 
-                {/* Password Field */}
-                <div style={styles.formGroup}>
-                    <label htmlFor="password" style={styles.label}>
-                        Password
-                    </label>
-                    <input
-                        type="password"
-                        id="password"
-                        style={styles.input}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                    {feedbacks.password && <p style={styles.error}>{feedbacks.password}</p>}
-                </div>
+          {/* Password Field */}
+          <div style={styles.formGroup}>
+            <label htmlFor='password' style={styles.label}>
+              Password
+            </label>
+            <input
+              type='password'
+              id='password'
+              style={styles.input}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            {feedbacks.password && <p style={styles.error}>{feedbacks.password}</p>}
+          </div>
 
-                {/* Confirm Password Field */}
-                <div style={styles.formGroup}>
-                    <label htmlFor="confirmPassword" style={styles.label}>
-                        Confirm Password
-                    </label>
-                    <input
-                        type="password"
-                        id="confirmPassword"
-                        style={styles.input}
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                    />
-                    {feedbacks.confirmPassword && (
-                        <p style={styles.error}>{feedbacks.confirmPassword}</p>
+          {/* Confirm Password Field */}
+          <div style={styles.formGroup}>
+            <label htmlFor='confirmPassword' style={styles.label}>
+              Confirm Password
+            </label>
+            <input
+              type='password'
+              id='confirmPassword'
+              style={styles.input}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+            {feedbacks.confirmPassword && (
+            <p style={styles.error}>{feedbacks.confirmPassword}</p>
                     )}
-                </div>
+          </div>
 
-                {/* Submit Button */}
-                <button type="submit" style={styles.button}>
-                    Send
-                </button>
+          {/* Submit Button */}
+          <button type='submit' style={styles.button}>
+            Send
+          </button>
 
-                {feedbacks.buttonError && (<p style={styles.error}>{feedbacks.buttonError}</p>)}
+          {feedbacks.buttonError && (<p style={styles.error}>{feedbacks.buttonError}</p>)}
 
-                {feedbacks.buttonSuccess && (<p style={styles.success}>{feedbacks.buttonSuccess}</p>)}
+          {feedbacks.buttonSuccess && (<p style={styles.success}>{feedbacks.buttonSuccess}</p>)}
 
 
-                {/* Sign In Link */}
-                <p style={styles.textCenter}>
-                    Already have an account? <a href="/presentation_tier/src/pages/authtentication/Login">Sign In</a>
-                </p>
-            </form>
-        </div>
+          {/* Sign In Link */}
+          <p style={styles.textCenter}>
+            Already have an account? <a href='/presentation_tier/src/pages/authtentication/Login'>Sign In</a>
+          </p>
+        </form>
+      </div>
     );
 };
 

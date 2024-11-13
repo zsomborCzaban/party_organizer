@@ -1,83 +1,7 @@
 import React, { useState } from 'react';
-import {login} from "../../data/apis/AuthenticationApi";
-import {useNavigate} from "react-router-dom";
+import {login} from '../../data/apis/AuthenticationApi';
+import {useNavigate} from 'react-router-dom';
 
-type InvalidCred = {
-    err: string;
-    field: string;
-    value: string;
-};
-
-
-const Login: React.FC = () => {
-    const [username, setUsername] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
-    const [error, setError] = useState<string | null>(null);
-
-    const navigate = useNavigate();
-
-
-    const handleError = (data: InvalidCred[]) => {
-        setError(data[0].err)
-    }
-
-    const handleLogin = (e: React.FormEvent) => {
-        e.preventDefault();
-        login(username, password)
-            .then((responseData: InvalidCred[]) => {
-                if(!responseData){
-                   navigate("/overview/discover")
-                }
-                handleError(responseData)
-            })
-            .catch(() => {
-                setError("Unexpected error, please try again")
-            })
-        console.log('Logging in with', { username, password });
-    };
-
-    return (
-        <div style={styles.container}>
-            <form onSubmit={handleLogin} style={styles.form}>
-                <h2>Login</h2>
-                <div style={styles.inputGroup}>
-                    <label htmlFor="username">Username</label>
-                    <input
-                        type="text"
-                        id="username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                        style={styles.input}
-                    />
-                </div>
-
-                <div style={styles.inputGroup}>
-                    <label htmlFor="password">Password</label>
-                    <input
-                        type="password"
-                        id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        style={styles.input}
-                    />
-                </div>
-
-                <button type="submit" style={styles.button}>Login</button>
-
-                {error && <p style={styles.error}>{error}</p>}
-
-                <div style={styles.textGroup}>
-                    <p><a href="/register" style={styles.link}>Sign Up!</a></p>
-                    <p><a href="/forgot-password" style={styles.link}>Forgot Password?</a></p>
-                </div>
-            </form>
-        </div>
-    );
-};
-
-// Inline styles
 const styles: { [key: string]: React.CSSProperties } = {
     container: {
         display: 'flex',
@@ -121,6 +45,82 @@ const styles: { [key: string]: React.CSSProperties } = {
         color: '#007BFF',
         textDecoration: 'none',
     },
+};
+
+
+type InvalidCred = {
+    err: string;
+    field: string;
+    value: string;
+};
+
+
+const Login: React.FC = () => {
+    const [username, setUsername] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [error, setError] = useState<string | null>(null);
+
+    const navigate = useNavigate();
+
+
+    const handleError = (data: InvalidCred[]) => {
+        setError(data[0].err);
+    };
+
+    const handleLogin = (e: React.FormEvent) => {
+        e.preventDefault();
+        login(username, password)
+            .then((responseData: InvalidCred[]) => {
+                if(!responseData){
+                   navigate('/overview/discover');
+                }
+                handleError(responseData);
+            })
+            .catch(() => {
+                setError('Unexpected error, please try again');
+            });
+        console.log('Logging in with', { username, password });
+    };
+
+    return (
+      <div style={styles.container}>
+        <form onSubmit={handleLogin} style={styles.form}>
+          <h2>Login</h2>
+          <div style={styles.inputGroup}>
+            <label htmlFor='username'>Username</label>
+            <input
+              type='text'
+              id='username'
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              style={styles.input}
+            />
+          </div>
+
+          <div style={styles.inputGroup}>
+            <label htmlFor='password'>Password</label>
+            <input
+              type='password'
+              id='password'
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              style={styles.input}
+            />
+          </div>
+
+          <button type='submit' style={styles.button}>Login</button>
+
+          {error && <p style={styles.error}>{error}</p>}
+
+          <div style={styles.textGroup}>
+            <p><a href='/register' style={styles.link}>Sign Up!</a></p>
+            <p><a href='/forgot-password' style={styles.link}>Forgot Password?</a></p>
+          </div>
+        </form>
+      </div>
+    );
 };
 
 export default Login;

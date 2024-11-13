@@ -21,7 +21,7 @@ export const partyTableColumns = [
         key: 'organizer',
     },
     {
-        //todo: to be done in backend
+        // todo: to be done in backend
         title: 'Headcount',
         dataIndex: 'headcount',
         key: 'headcount',
@@ -51,12 +51,12 @@ export const partyInviteTableColumns = [
     },
 
     {
-        //todo: to be done in backend
+        // todo: to be done in backend
         title: 'Headcount',
         dataIndex: ['party', 'headcount'],
         key: 'headcount',
     },
-]
+];
 
 export const invitedByTableColumns =[
     {
@@ -64,7 +64,7 @@ export const invitedByTableColumns =[
         dataIndex: ['invitor', 'username'],
         key: 'username',
     },
-]
+];
 export const invitedTableColumns =[
     {
         title: 'Invited',
@@ -76,20 +76,20 @@ export const invitedTableColumns =[
         dataIndex: 'state',
         key: 'state',
     },
-]
+];
 
 export const userTableColumns = [
     {
         title: 'Username',
         dataIndex: 'username',
-        key: 'username'
+        key: 'username',
     },
     {
         title: 'Email',
         dataIndex: 'email',
-        key: 'email'
+        key: 'email',
     },
-]
+];
 
 export const requirementTableColumns = [
     {

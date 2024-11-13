@@ -1,6 +1,6 @@
-import {Party} from "../types/Party";
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {getPublicParties} from "../apis/PartyApi";
+import {Party} from '../types/Party';
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {getPublicParties} from '../apis/PartyApi';
 
 export interface PublicPartySlice {
     parties: Party[];
@@ -12,17 +12,11 @@ const initialState: PublicPartySlice = {
     parties: [],
     loading: true,
     error: null,
-}
+};
 
 export const loadPublicParties = createAsyncThunk(
     'data/loadPublicParties',
-    async () => {
-        try {
-            return await getPublicParties();
-        } catch (err) {
-            console.log("err in loadPublicParties: " + err)
-        }
-    },
+    async () => getPublicParties(),
 );
 
 const publicPartySlice = createSlice({
@@ -38,15 +32,15 @@ const publicPartySlice = createSlice({
             })
             .addCase(loadPublicParties.fulfilled, (state, action) => {
                 state.loading = false;
-                state.parties = action.payload ? action.payload : [];
                 state.error = null;
+                state.parties = action.payload ? action.payload : [];
             })
             .addCase(loadPublicParties.rejected, (state, action) => {
                 state.loading = false;
                 state.parties = [];
-                state.error = new Error(action.error.message || 'Failed to load public parties',);
+                state.error = new Error(action.error.message || 'Failed to load public parties');
             });
     },
 });
 
-export default publicPartySlice.reducer
+export default publicPartySlice.reducer;

@@ -1,6 +1,6 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {getPartyParticipants} from "../apis/PartyApi";
-import {User} from "../types/User";
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {getPartyParticipants} from '../apis/PartyApi';
+import {User} from '../types/User';
 
 export interface PartParticipantsSlice {
     participants: User[];
@@ -12,13 +12,11 @@ const initialState: PartParticipantsSlice = {
     participants: [],
     loading: true,
     error: null,
-}
+};
 
 export const loadPartyParticipants = createAsyncThunk(
     'data/loadPartyParticipants',
-    async (partyId: number) => {
-        return getPartyParticipants(partyId)
-    },
+    async (partyId: number) => getPartyParticipants(partyId),
 );
 
 const partyParticipantsSlice = createSlice({
@@ -40,9 +38,9 @@ const partyParticipantsSlice = createSlice({
             .addCase(loadPartyParticipants.rejected, (state, action) => {
                 state.loading = false;
                 state.participants = [];
-                state.error = new Error(action.error.message || 'Failed to load party participants',);
+                state.error = new Error(action.error.message || 'Failed to load party participants');
             });
     },
 });
 
-export default partyParticipantsSlice.reducer
+export default partyParticipantsSlice.reducer;

@@ -1,6 +1,6 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {Contribution} from "../types/Contribution";
-import {getDrinkContributions} from "../apis/ContributionApi";
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {Contribution} from '../types/Contribution';
+import {getDrinkContributions} from '../apis/ContributionApi';
 
 export interface DrinkContributionSlice {
     contributions: Contribution[];
@@ -12,13 +12,11 @@ const initialState: DrinkContributionSlice = {
     contributions: [],
     loading: true,
     error: null,
-}
+};
 
 export const loadDrinkContributions = createAsyncThunk(
     'data/loadDrinkContributions',
-    async (partyId: number) => {
-        return getDrinkContributions(partyId)
-    },
+    async (partyId: number) => getDrinkContributions(partyId),
 );
 
 const drinkContributionSlice = createSlice({
@@ -40,9 +38,9 @@ const drinkContributionSlice = createSlice({
             .addCase(loadDrinkContributions.rejected, (state, action) => {
                 state.loading = false;
                 state.contributions = [];
-                state.error = new Error(action.error.message || 'Failed to load drink contributions',);
+                state.error = new Error(action.error.message || 'Failed to load drink contributions');
             });
     },
 });
 
-export default drinkContributionSlice.reducer
+export default drinkContributionSlice.reducer;

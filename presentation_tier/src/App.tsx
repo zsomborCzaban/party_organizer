@@ -1,9 +1,6 @@
-import React from 'react';
 import './App.css';
 import AppRoutes from './routes/AppRoutes';
 
-function App() {
-  return <AppRoutes />;
-}
+const App = () => <AppRoutes />;
 
 export default App;

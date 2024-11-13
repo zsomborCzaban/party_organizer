@@ -1,5 +1,3 @@
-const HallOfFame = () => {
-    return <div></div>
-}
+const HallOfFame = () => <div />;
 
-export default HallOfFame
+export default HallOfFame;
