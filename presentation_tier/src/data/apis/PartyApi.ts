@@ -1,77 +1,45 @@
-import {get, post, put} from "../../api/Api";
-import {Party} from "../types/Party";
-import {User} from "../types/User";
-import {getApiUrl} from "../../api/ApiHelper";
+import {get, post, put} from '../../api/Api';
+import {Party} from '../types/Party';
+import {User} from '../types/User';
+import {getApiUrl} from '../../api/ApiHelper';
 
-const PARTY_PATH =  getApiUrl() + '/party';
+const PARTY_PATH =  `${getApiUrl()  }/party`;
 
 
-export const createParty = async (requestBody: Party): Promise<Party> => {
-    return new Promise<Party>((resolve, reject) => {
+export const createParty = async (requestBody: Party): Promise<Party> => new Promise<Party>((resolve, reject) => {
         post<Party>(PARTY_PATH, requestBody)
-            .then((party) => {return resolve(party)})
-            .catch(error => {
-                return reject(error)
-            })
-    })
-}
+            .then((party) => resolve(party))
+            .catch((error) => reject(error));
+    });
 
-export const updateParty = async (requestBody: Party): Promise<Party> => {
-    return new Promise<Party>((resolve, reject) => {
+export const updateParty = async (requestBody: Party): Promise<Party> => new Promise<Party>((resolve, reject) => {
         put<Party>(PARTY_PATH, requestBody)
-            .then((party) => {return resolve(party)})
-            .catch(error => {
-                return reject(error)
-            })
-    })
-}
-
-export const getPublicParties = async (): Promise<Party[]> => {
-    return new Promise<Party[]>((resolve, reject) => {
-        get<Party[]>(PARTY_PATH + "/getPublicParties")
-            .then((parties: Party[]) => {
-                return resolve(parties);
-            })
-            .catch(err => {
-                return reject(err);
-            });
+            .then((party) => resolve(party))
+            .catch((error) => reject(error));
     });
-};
 
-
-export const getAttendedParties = async (): Promise<Party[]> => {
-    return new Promise<Party[]>((resolve, reject) => {
-        get<Party[]>(PARTY_PATH + "/getPartiesByParticipantId")
-            .then((parties: Party[]) => {
-                return resolve(parties);
-            })
-            .catch(err => {
-                return reject(err);
-            });
+export const getPublicParties = async (): Promise<Party[]> => new Promise<Party[]>((resolve, reject) => {
+        get<Party[]>(`${PARTY_PATH  }/getPublicParties`)
+            .then((parties: Party[]) => resolve(parties))
+            .catch((err) => reject(err));
     });
-};
 
-export const getOrganizedParties = async (): Promise<Party[]> => {
-    return new Promise<Party[]>((resolve, reject) => {
-        get<Party[]>(PARTY_PATH + "/getPartiesByOrganizerId")
-            .then((parties: Party[]) => {
-                return resolve(parties);
-            })
-            .catch(err => {
-                return reject(err);
-            });
+
+export const getAttendedParties = async (): Promise<Party[]> => new Promise<Party[]>((resolve, reject) => {
+        get<Party[]>(`${PARTY_PATH  }/getPartiesByParticipantId`)
+            .then((parties: Party[]) => resolve(parties))
+            .catch((err) => reject(err));
     });
-};
 
-
-export const getPartyParticipants = async (partyId: number): Promise<User[]> => {
-    return new Promise<User[]>((resolve, reject) => {
-        get<User[]>(PARTY_PATH + "/getParticipants/" + partyId)
-            .then((participants: User[]) => {
-                return resolve(participants);
-            })
-            .catch(err => {
-                return reject(err);
-            });
+export const getOrganizedParties = async (): Promise<Party[]> => new Promise<Party[]>((resolve, reject) => {
+        get<Party[]>(`${PARTY_PATH  }/getPartiesByOrganizerId`)
+            .then((parties: Party[]) => resolve(parties))
+            .catch((err) => reject(err));
     });
-};
+
+
+export const getPartyParticipants = async (partyId: number): Promise<User[]> => new Promise<User[]>((resolve, reject) => {
+        get<User[]>(`${PARTY_PATH  }/getParticipants/${  partyId}`)
+            .then((participants: User[]) => resolve(participants))
+            .catch((err) => reject(err));
+    });

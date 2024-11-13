@@ -1,34 +1,6 @@
 import React from 'react';
-import {useNavigate} from "react-router-dom";
+import {useNavigate} from 'react-router-dom';
 
-type OverViewNavBarProps = {
-    onProfileClick: () => void;
-};
-
-const OverViewNavBar: React.FC<OverViewNavBarProps> = ({ onProfileClick }) => {
-    const navigate = useNavigate()
-
-    return (
-        <header style={styles.header}>
-            <h1 style={styles.title}>Party Organizer</h1>
-            <nav style={styles.nav}>
-                <ul style={styles.navList}>
-                    <li style={styles.navItem}><p onClick={() => navigate("/overview/discover")} style={styles.link}>Discover</p></li>
-                    <li style={styles.navItem}><p onClick={() => navigate("/overview/parties")} style={styles.link}>Parties</p></li>
-                    <li style={styles.navItem}><p onClick={() => navigate("/overview/friends")} style={styles.link}>Friends</p></li>
-                    <li style={styles.navItem}><p style={styles.link}
-                        onClick={e => {
-                            e.preventDefault();
-                            onProfileClick();
-                        }}
-                    >Profile</p></li>
-                </ul>
-            </nav>
-        </header>
-    );
-};
-
-// Inline styles
 const styles: {[key: string]: React.CSSProperties} = {
     header: {
         display: 'flex',
@@ -62,5 +34,34 @@ const styles: {[key: string]: React.CSSProperties} = {
         cursor: 'pointer',
     },
 };
+
+type OverViewNavBarProps = {
+    onProfileClick: () => void;
+};
+
+const OverViewNavBar: React.FC<OverViewNavBarProps> = ({ onProfileClick }) => {
+    const navigate = useNavigate();
+
+    return (
+      <header style={styles.header}>
+        <h1 style={styles.title}>Party Organizer</h1>
+        <nav style={styles.nav}>
+          <ul style={styles.navList}>
+            <li style={styles.navItem}><p onClick={() => navigate('/overview/discover')} style={styles.link}>Discover</p></li>
+            <li style={styles.navItem}><p onClick={() => navigate('/overview/parties')} style={styles.link}>Parties</p></li>
+            <li style={styles.navItem}><p onClick={() => navigate('/overview/friends')} style={styles.link}>Friends</p></li>
+            <li style={styles.navItem}><p
+              style={styles.link}
+              onClick={e => {
+                            e.preventDefault();
+                            onProfileClick();
+                        }}
+                                       >Profile</p></li>
+          </ul>
+        </nav>
+      </header>
+    );
+};
+
 
 export default OverViewNavBar;

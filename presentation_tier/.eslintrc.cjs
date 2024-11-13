@@ -2,7 +2,7 @@ module.exports = {
     root: true,
     parserOptions: {
       sourceType: 'module',
-      project: './presentation_tier/tsconfig.eslint.json',
+      project: './tsconfig.eslint.json',
     },
     extends: ['airbnb-base', 'airbnb-typescript/base', 'prettier', 'plugin:react/recommended', 'plugin:react/jsx-runtime'],
     plugins: ['simple-import-sort', 'check-file', 'prefer-arrow-functions', 'react-hooks', 'path'],
@@ -10,8 +10,9 @@ module.exports = {
       'quotes': ['error', 'single'],
       'class-methods-use-this': 'warn',
       'import/prefer-default-export': 'off',
+      'no-param-reassign': 'off',
       'linebreak-style': 'off',
-      'max-len': ['warn', { code: 180 }],
+      'max-len': ['warn', { code: 240 }],
       'no-plusplus': ['error', { allowForLoopAfterthoughts: true }],
       'jsx-quotes': ['error', 'prefer-single'],
       '@typescript-eslint/comma-dangle': ['error', 'always-multiline'],
@@ -60,7 +61,7 @@ module.exports = {
       'react-hooks/rules-of-hooks': ['error'],
       'react-hooks/exhaustive-deps': ['error'],
       'path/no-relative-imports': 'error',
-      'no-console': ['warn'],
+      'no-console': 'off',
       'no-restricted-syntax': [
         'error',
         // Enabling ForOfStatement, but keeping the rest of the airbnb defaults.

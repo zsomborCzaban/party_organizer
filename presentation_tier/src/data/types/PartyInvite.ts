@@ -1,5 +1,5 @@
-import {User} from "./User";
-import {Party} from "./Party";
+import {User} from './User';
+import {Party} from './Party';
 
 export interface PartyInvite {
     ID: number,

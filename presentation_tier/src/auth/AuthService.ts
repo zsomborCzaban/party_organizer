@@ -1,8 +1,8 @@
 import {
     setJwtAuthToken,
     getJwtAuthToken,
-    clearJwtAuthToken
-} from "./AuthStorageUtils";
+    clearJwtAuthToken,
+} from './AuthStorageUtils';
 
 export interface AuthService {
     userLoggedIn: (jwt: string) => void
@@ -12,21 +12,19 @@ export interface AuthService {
 }
 
 export const authService: AuthService = {
-    userLoggedIn(jwt) {
-        setJwtAuthToken(jwt)
+    userLoggedIn: (jwt) => {
+        setJwtAuthToken(jwt);
     },
 
-    handleUnauthorized() {
-        clearJwtAuthToken()
-        window.location.href = '/login'
+    handleUnauthorized: () => {
+        clearJwtAuthToken();
+        window.location.href = '/login';
     },
 
-    getJwtToken() {
-        return getJwtAuthToken()
-    },
+    getJwtToken: () => getJwtAuthToken(),
 
-    isAuthenticated() {
-        const authToken = getJwtAuthToken()
-        return ( authToken !== null && authToken !== undefined && authToken.length > 0)
+    isAuthenticated: () => {
+        const authToken = getJwtAuthToken();
+        return ( authToken !== null && authToken !== undefined && authToken.length > 0);
     },
-}
+};

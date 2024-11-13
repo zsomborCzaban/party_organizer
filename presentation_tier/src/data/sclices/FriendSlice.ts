@@ -1,6 +1,6 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {getFriends} from "../apis/UserApi";
-import {User} from "../types/User";
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {getFriends} from '../apis/UserApi';
+import {User} from '../types/User';
 
 export interface FriendSlice {
     friends: User[];
@@ -12,17 +12,11 @@ const initialState: FriendSlice = {
     friends: [],
     loading: true,
     error: null,
-}
+};
 
 export const loadFriends = createAsyncThunk(
     'data/loadFriends',
-    async () => {
-        try {
-            return await getFriends();
-        } catch (err) {
-            console.log("err in loadFriends: " + err)
-        }
-    },
+    async () => getFriends(),
 );
 
 const friendSlice = createSlice({
@@ -44,9 +38,9 @@ const friendSlice = createSlice({
             .addCase(loadFriends.rejected, (state, action) => {
                 state.loading = false;
                 state.friends = [];
-                state.error = new Error(action.error.message || 'Failed to load friends',);
+                state.error = new Error(action.error.message || 'Failed to load friends');
             });
     },
 });
 
-export default friendSlice.reducer
+export default friendSlice.reducer;
