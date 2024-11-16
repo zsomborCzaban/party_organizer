@@ -69,8 +69,8 @@ func (dr DrinkContributionRepository) DeleteByContributorId(contributorId uint) 
 	return nil
 }
 
-func (dr DrinkContributionRepository) FindById(id uint) (*domains.DrinkContribution, error) {
-	fetchedContribution, fetchedErr := dr.DbAccess.FindById(id)
+func (dr DrinkContributionRepository) FindById(id uint, associations ...string) (*domains.DrinkContribution, error) {
+	fetchedContribution, fetchedErr := dr.DbAccess.FindById(id, associations...)
 	if fetchedErr != nil {
 		return nil, fetchedErr
 	}
@@ -83,7 +83,7 @@ func (dr DrinkContributionRepository) FindById(id uint) (*domains.DrinkContribut
 }
 
 // FindAllBy culd also get the []db.QueryParameter as param, but then maybe move QueryParamter to utils package
-func (dr DrinkContributionRepository) FindAllBy(columnNames []string, values []interface{}) (*[]domains.DrinkContribution, error) {
+func (dr DrinkContributionRepository) FindAllBy(columnNames []string, values []interface{}, associations ...string) (*[]domains.DrinkContribution, error) {
 	if len(columnNames) != len(values) || len(columnNames) == 0 {
 		return nil, errors.New("incorrect use of FindAllBy")
 	}
@@ -98,7 +98,7 @@ func (dr DrinkContributionRepository) FindAllBy(columnNames []string, values []i
 		}
 	}
 
-	fetchedContributions, fetchedError := dr.DbAccess.Query(queryParams)
+	fetchedContributions, fetchedError := dr.DbAccess.Query(queryParams, associations...)
 	if fetchedError != nil {
 		//we should return errors from the database layer
 		return nil, errors.New(fmt.Sprintf("Error while fetching contributions"))

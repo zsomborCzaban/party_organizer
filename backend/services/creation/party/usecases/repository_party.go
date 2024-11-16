@@ -143,8 +143,8 @@ func (pr PartyRepository) CreateParty(party *domains.Party) error {
 
 }
 
-func (pr PartyRepository) FindById(id uint) (*domains.Party, error) {
-	party, err := pr.DbAccess.FindById(id, "Participants", "Organizer") //todo: causes concurent mapwrites sometimes
+func (pr PartyRepository) FindById(id uint, associations ...string) (*domains.Party, error) {
+	party, err := pr.DbAccess.FindById(id, associations...) //todo: causes concurent mapwrites sometimes
 	if err != nil {
 		return nil, err
 	}

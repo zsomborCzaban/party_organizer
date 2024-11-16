@@ -28,20 +28,14 @@ func (ps PartyService) CreateParty(partyDTO domains.PartyDTO, userId uint) api.I
 		return api.ErrorValidation(errors)
 	}
 
-	user, err := ps.UserRepository.FindById(userId)
-	if err != nil {
-		return api.ErrorBadRequest(err.Error())
-	}
-
 	party := partyDTO.TransformToParty()
 	party.OrganizerID = userId
-	party.Organizer = *user
 	if party.AccessCodeEnabled {
 		party.AccessCode = fmt.Sprintf("%d_%s", party.ID, party.AccessCode)
 	}
 
 	err2 := ps.PartyRepository.CreateParty(party)
-	if err != nil {
+	if err2 != nil {
 		return api.ErrorInternalServerError(err2.Error())
 	}
 
@@ -49,7 +43,7 @@ func (ps PartyService) CreateParty(partyDTO domains.PartyDTO, userId uint) api.I
 }
 
 func (ps PartyService) GetParty(partyId, userId uint) api.IResponse {
-	party, err := ps.PartyRepository.FindById(partyId)
+	party, err := ps.PartyRepository.FindById(partyId, domains.FullPartyPreload...)
 	if err != nil {
 		return api.ErrorInternalServerError(err.Error())
 	}
@@ -71,7 +65,7 @@ func (ps PartyService) UpdateParty(partyDTO domains.PartyDTO, userId uint) api.I
 		return api.ErrorValidation(err)
 	}
 
-	originalParty, err2 := ps.PartyRepository.FindById(partyDTO.ID)
+	originalParty, err2 := ps.PartyRepository.FindById(partyDTO.ID, "Organizer")
 	if err2 != nil {
 		return api.ErrorBadRequest(err2.Error())
 	}
@@ -80,7 +74,6 @@ func (ps PartyService) UpdateParty(partyDTO domains.PartyDTO, userId uint) api.I
 		return api.ErrorUnauthorized("cannot update other people's party")
 	}
 	party := partyDTO.TransformToParty()
-	party.Organizer = originalParty.Organizer
 	party.OrganizerID = originalParty.OrganizerID
 
 	err3 := ps.PartyRepository.UpdateParty(party)
@@ -91,6 +84,7 @@ func (ps PartyService) UpdateParty(partyDTO domains.PartyDTO, userId uint) api.I
 	return api.Success(party)
 }
 
+// todo: come back here and do this
 func (ps PartyService) DeleteParty(id uint) api.IResponse {
 	//bc the repository layer only checks for id
 	party := &domains.Party{
@@ -134,7 +128,7 @@ func (ps PartyService) GetPartiesByParticipantId(id uint) api.IResponse {
 }
 
 func (ps PartyService) GetParticipants(partyId, userId uint) api.IResponse {
-	party, err := ps.PartyRepository.FindById(partyId)
+	party, err := ps.PartyRepository.FindById(partyId, domains.FullPartyPreload...)
 	if err != nil {
 		return api.ErrorBadRequest(err.Error())
 	}
@@ -144,22 +138,4 @@ func (ps PartyService) GetParticipants(partyId, userId uint) api.IResponse {
 	}
 
 	return api.Success(append(party.Participants, party.Organizer))
-}
-
-func (ps PartyService) AddUserToParty(partyId, userId uint) api.IResponse {
-	party, err := ps.PartyRepository.FindById(partyId)
-	if err != nil {
-		return api.ErrorBadRequest(err.Error())
-	}
-
-	user, err2 := ps.UserRepository.FindById(userId)
-	if err2 != nil {
-		return api.ErrorInternalServerError(err2.Error())
-	}
-
-	if err3 := ps.PartyRepository.AddUserToParty(party, user); err3 != nil {
-		return api.ErrorInternalServerError(err3.Error())
-	}
-
-	return api.Success("user added to party")
 }

@@ -31,7 +31,7 @@ func (fs FoodRequirementService) CreateFoodRequirement(foodRequirementDTO domain
 
 	foodRequirement := foodRequirementDTO.TransformToFoodRequirement()
 
-	party, err2 := fs.PartyRepository.FindById(foodRequirement.PartyID)
+	party, err2 := fs.PartyRepository.FindById(foodRequirement.PartyID, partyDomains.FullPartyPreload...)
 	if err2 != nil {
 		return api.ErrorBadRequest("partyId does not exists")
 	}
@@ -39,8 +39,6 @@ func (fs FoodRequirementService) CreateFoodRequirement(foodRequirementDTO domain
 	if !party.CanBeOrganizedBy(userId) {
 		return api.ErrorUnauthorized("cannot create foodRequirement for other people's party")
 	}
-
-	foodRequirement.Party = *party
 
 	err3 := fs.FoodRequirementRepository.CreateFoodRequirement(foodRequirement)
 	if err3 != nil {
@@ -51,39 +49,20 @@ func (fs FoodRequirementService) CreateFoodRequirement(foodRequirementDTO domain
 }
 
 func (fs FoodRequirementService) GetFoodRequirement(foodReqId, userId uint) api.IResponse {
-	foodRequirement, err := fs.FoodRequirementRepository.FindById(foodReqId)
+	foodRequirement, err := fs.FoodRequirementRepository.FindById(foodReqId, partyDomains.FullPartyNestedPreload...)
+	if err != nil {
+		return api.ErrorInternalServerError(err)
+	}
 
 	if foodRequirement.Party.CanBeAccessedBy(userId) {
 		return api.ErrorUnauthorized("you are not in the party")
 	}
 
-	if err != nil {
-		return api.ErrorInternalServerError(err)
-	}
-
 	return api.Success(foodRequirement)
 }
 
-func (fs FoodRequirementService) UpdateFoodRequirement(foodRequirementDTO domains.FoodRequirementDTO, userId uint) api.IResponse {
-	//this wont be used!
-
-	errors := fs.Validator.Validate(foodRequirementDTO)
-	if errors != nil {
-		return api.ErrorValidation(errors)
-	}
-
-	foodRequirement := foodRequirementDTO.TransformToFoodRequirement()
-
-	err := fs.FoodRequirementRepository.UpdateFoodRequirement(foodRequirement)
-	if err != nil {
-		return api.ErrorInternalServerError(err)
-	}
-
-	return api.Success("update_success")
-}
-
 func (fs FoodRequirementService) DeleteFoodRequirement(foodReqId, userId uint) api.IResponse {
-	foodRequirement, err := fs.FoodRequirementRepository.FindById(foodReqId)
+	foodRequirement, err := fs.FoodRequirementRepository.FindById(foodReqId, partyDomains.FullPartyNestedPreload...)
 	if err != nil {
 		return api.ErrorBadRequest(err.Error())
 	}
@@ -105,7 +84,7 @@ func (fs FoodRequirementService) DeleteFoodRequirement(foodReqId, userId uint) a
 }
 
 func (fs FoodRequirementService) GetByPartyId(partyId, userId uint) api.IResponse {
-	party, err := fs.PartyRepository.FindById(partyId)
+	party, err := fs.PartyRepository.FindById(partyId, partyDomains.FullPartyPreload...)
 	if err != nil {
 		return api.ErrorBadRequest("party not found")
 	}

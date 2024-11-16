@@ -9,7 +9,6 @@ import (
 	"github.com/rs/cors"
 	"github.com/rs/zerolog/log"
 	"github.com/zsomborCzaban/party_organizer/common/api"
-	"github.com/zsomborCzaban/party_organizer/common/jwt"
 	"github.com/zsomborCzaban/party_organizer/db"
 	drinkRequirementInterfaces "github.com/zsomborCzaban/party_organizer/services/creation/drink_requirement/interfaces"
 	drinkRequirementUsecases "github.com/zsomborCzaban/party_organizer/services/creation/drink_requirement/usecases"
@@ -34,7 +33,7 @@ import (
 
 func SetupRoutes(router *mux.Router, dbAccessManager db.IDatabaseAccessManager) *mux.Router {
 	apiRouter := router.PathPrefix("/api/v1").Subrouter()
-	apiRouter.Use(jwt.ValidateJWTMiddleware)
+	//apiRouter.Use(jwt.ValidateJWTMiddleware)
 
 	vali := api.NewValidator(validator.New())
 

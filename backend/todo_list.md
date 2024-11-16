@@ -35,3 +35,5 @@ todo: useSelector party-t is kivul hasznalni
 concurrent mapwrite errort fixelni backendben
 
 groupchat
+
+when inviting nonexistong user give back normal error message

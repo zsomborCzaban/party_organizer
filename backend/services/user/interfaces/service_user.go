@@ -105,13 +105,17 @@ func (us *UserService) AddFriend(friendId, userId uint) api.IResponse {
 }
 
 func (us *UserService) GetFriends(userId uint) api.IResponse {
-	//todo: parse to dto to avoid password leakingy
-	users, err := us.UserRepository.GetFriends(userId)
+	user, err := us.UserRepository.FindById(userId, "Friends")
 	if err != nil {
 		return api.ErrorInternalServerError(err)
 	}
 
-	return api.Success(users)
+	friendDTOs := []domains.UserDTO{}
+	for _, friend := range user.Friends {
+		friendDTOs = append(friendDTOs, *friend.TransformToUserDTO())
+	}
+
+	return api.Success(friendDTOs)
 }
 
 func (us *UserService) UploadProfilePicture(userId uint, file multipart.File, fileHeader *multipart.FileHeader) api.IResponse {

@@ -31,7 +31,7 @@ func (ds DrinkRequirementService) CreateDrinkRequirement(drinkRequirementDTO dom
 
 	drinkRequirement := drinkRequirementDTO.TransformToDrinkRequirement()
 
-	party, err2 := ds.PartyRepository.FindById(drinkRequirement.PartyID)
+	party, err2 := ds.PartyRepository.FindById(drinkRequirement.PartyID, partyDomains.FullPartyPreload...)
 	if err2 != nil {
 		return api.ErrorBadRequest("Party id doesnt exists")
 	}
@@ -39,8 +39,6 @@ func (ds DrinkRequirementService) CreateDrinkRequirement(drinkRequirementDTO dom
 	if !party.CanBeOrganizedBy(userId) {
 		return api.ErrorUnauthorized("cannot create drinkRequirements for other peoples party")
 	}
-
-	drinkRequirement.Party = *party
 
 	err3 := ds.DrinkRequirementRepository.CreateDrinkRequirement(drinkRequirement)
 	if err3 != nil {
@@ -51,7 +49,7 @@ func (ds DrinkRequirementService) CreateDrinkRequirement(drinkRequirementDTO dom
 }
 
 func (ds DrinkRequirementService) GetDrinkRequirement(drinkReqId, userId uint) api.IResponse {
-	drinkRequirement, err := ds.DrinkRequirementRepository.FindById(drinkReqId)
+	drinkRequirement, err := ds.DrinkRequirementRepository.FindById(drinkReqId, partyDomains.FullPartyNestedPreload...)
 	if err != nil {
 		return api.ErrorInternalServerError(err)
 	}
@@ -63,26 +61,8 @@ func (ds DrinkRequirementService) GetDrinkRequirement(drinkReqId, userId uint) a
 	return api.Success(drinkRequirement.TransformToDrinkRequirementDTO())
 }
 
-func (ds DrinkRequirementService) UpdateDrinkRequirement(drinkRequirementDTO domains.DrinkRequirementDTO, userId uint) api.IResponse {
-	//this wont be used!
-
-	err := ds.Validator.Validate(drinkRequirementDTO)
-	if err != nil {
-		return api.ErrorValidation(err)
-	}
-
-	drinkRequirement := drinkRequirementDTO.TransformToDrinkRequirement()
-
-	err2 := ds.DrinkRequirementRepository.UpdateDrinkRequirement(drinkRequirement)
-	if err2 != nil {
-		return api.ErrorInternalServerError(err2)
-	}
-
-	return api.Success("update_success")
-}
-
 func (ds DrinkRequirementService) DeleteDrinkRequirement(drinkReqId, userId uint) api.IResponse {
-	drinkRequirement, err := ds.DrinkRequirementRepository.FindById(drinkReqId)
+	drinkRequirement, err := ds.DrinkRequirementRepository.FindById(drinkReqId, partyDomains.FullPartyNestedPreload...)
 	if err != nil {
 		return api.ErrorBadRequest(err.Error())
 	}
@@ -104,7 +84,7 @@ func (ds DrinkRequirementService) DeleteDrinkRequirement(drinkReqId, userId uint
 }
 
 func (ds DrinkRequirementService) GetByPartyId(partyId, userId uint) api.IResponse {
-	party, err := ds.PartyRepository.FindById(partyId)
+	party, err := ds.PartyRepository.FindById(partyId, partyDomains.FullPartyPreload...)
 	if err != nil {
 		return api.ErrorBadRequest("party not found")
 	}
