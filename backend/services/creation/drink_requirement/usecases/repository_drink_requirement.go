@@ -49,6 +49,20 @@ func (dr DrinkRequirementRepository) DeleteDrinkRequirement(drinkRequirement *do
 	return nil
 }
 
+func (dr DrinkRequirementRepository) DeleteByPartyId(partyId uint) error {
+	conds := []db.QueryParameter{{
+		Field:    "party_id",
+		Operator: "=",
+		Value:    partyId,
+	},
+	}
+
+	if err := dr.DbAccess.BatchDelete(conds); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (dr DrinkRequirementRepository) GetByPartyId(id uint) (*[]domains.DrinkRequirement, error) {
 	queryParams := []db.QueryParameter{
 		{Field: "party_id", Operator: "=", Value: id},

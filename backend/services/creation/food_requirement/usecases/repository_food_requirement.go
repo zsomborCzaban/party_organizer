@@ -57,13 +57,19 @@ func (fr FoodRequirementRepository) DeleteFoodRequirement(foodRequirement *domai
 	return nil
 }
 
-//func (fr FoodRequirementRepository) DeleteFoodReqContribution(foodRequirement *domains.FoodRequirement) error {
-//	err := fr.DbAccess.DeleteAssociation(foodRequirement, "FoodContributions")
-//	if err != nil {
-//		return err
-//	}
-//	return nil
-//}
+func (fr FoodRequirementRepository) DeleteByPartyId(partyId uint) error {
+	conds := []db.QueryParameter{{
+		Field:    "party_id",
+		Operator: "=",
+		Value:    partyId,
+	},
+	}
+
+	if err := fr.DbAccess.BatchDelete(conds); err != nil {
+		return err
+	}
+	return nil
+}
 
 func (fr FoodRequirementRepository) GetByPartyId(id uint) (*[]domains.FoodRequirement, error) {
 	queryParams := []db.QueryParameter{

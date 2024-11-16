@@ -41,6 +41,20 @@ func (dr DrinkContributionRepository) Delete(contribution *domains.DrinkContribu
 	return nil
 }
 
+func (dr DrinkContributionRepository) DeleteByPartyId(partyId uint) error {
+	conds := []db.QueryParameter{{
+		Field:    "party_id",
+		Operator: "=",
+		Value:    partyId,
+	},
+	}
+
+	if err := dr.DbAccess.BatchDelete(conds); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (dr DrinkContributionRepository) DeleteByReqId(drinkReqId uint) error {
 	conds := []db.QueryParameter{{
 		Field:    "drink_req_id",

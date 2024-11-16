@@ -5,6 +5,6 @@ type IFoodRequirementRepository interface {
 	FindById(id uint, associations ...string) (*FoodRequirement, error)
 	UpdateFoodRequirement(*FoodRequirement) error
 	DeleteFoodRequirement(*FoodRequirement) error
-	//DeleteFoodReqContribution(*FoodRequirement) error
+	DeleteByPartyId(uint) error
 	GetByPartyId(uint) (*[]FoodRequirement, error)
 }
