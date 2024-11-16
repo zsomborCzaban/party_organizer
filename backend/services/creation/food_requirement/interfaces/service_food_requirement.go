@@ -1,10 +1,10 @@
 package interfaces
 
 import (
-	"github.com/zsomborCzaban/party_organizer/common/api"
 	"github.com/zsomborCzaban/party_organizer/services/creation/food_requirement/domains"
 	partyDomains "github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
 	foodContributionDomains "github.com/zsomborCzaban/party_organizer/services/interaction/food_contributions/domains"
+	"github.com/zsomborCzaban/party_organizer/utils/api"
 )
 
 type FoodRequirementService struct {

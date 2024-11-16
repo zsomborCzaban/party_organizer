@@ -2,9 +2,9 @@ package interfaces
 
 import (
 	"fmt"
-	"github.com/zsomborCzaban/party_organizer/common/api"
 	"github.com/zsomborCzaban/party_organizer/services/managers/friend_manager/domains"
 	userDomain "github.com/zsomborCzaban/party_organizer/services/user/domains"
+	"github.com/zsomborCzaban/party_organizer/utils/api"
 )
 
 type FriendInviteService struct {

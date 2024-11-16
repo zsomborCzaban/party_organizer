@@ -1,7 +1,7 @@
 package domains
 
 import (
-	"github.com/zsomborCzaban/party_organizer/common/api"
+	"github.com/zsomborCzaban/party_organizer/utils/api"
 )
 
 type IFoodContributionService interface {

@@ -2,9 +2,9 @@ package interfaces
 
 import (
 	"github.com/gorilla/mux"
-	"github.com/zsomborCzaban/party_organizer/common/api"
-	"github.com/zsomborCzaban/party_organizer/common/jwt"
 	"github.com/zsomborCzaban/party_organizer/services/managers/friend_manager/domains"
+	"github.com/zsomborCzaban/party_organizer/utils/api"
+	"github.com/zsomborCzaban/party_organizer/utils/jwt"
 	"net/http"
 	"strconv"
 )

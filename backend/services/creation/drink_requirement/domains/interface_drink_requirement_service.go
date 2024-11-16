@@ -1,6 +1,6 @@
 package domains
 
-import "github.com/zsomborCzaban/party_organizer/common/api"
+import "github.com/zsomborCzaban/party_organizer/utils/api"
 
 type IDrinkRequirementService interface {
 	CreateDrinkRequirement(dr DrinkRequirementDTO, userId uint) api.IResponse
