@@ -11,7 +11,7 @@ type IPartyService interface {
 	GetPartiesByParticipantId(uint) api.IResponse
 
 	CreateParty(PartyDTO PartyDTO, userId uint) api.IResponse
-	GetParty(partyId, userId uint) api.IResponse
 	UpdateParty(partyDTO PartyDTO, userId uint) api.IResponse
-	DeleteParty(uint) api.IResponse //auth this
+	GetParty(partyId, userId uint) api.IResponse
+	DeleteParty(partyId, userId uint) api.IResponse //auth this
 }

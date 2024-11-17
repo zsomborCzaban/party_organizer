@@ -8,6 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/zsomborCzaban/party_organizer/services/user/domains"
 	"github.com/zsomborCzaban/party_organizer/utils/api"
+	"github.com/zsomborCzaban/party_organizer/utils/repo"
 	"mime/multipart"
 	"net/http"
 	"os"
@@ -15,14 +16,14 @@ import (
 )
 
 type UserService struct {
-	UserRepository domains.IUserRepository
 	Validator      api.IValidator
+	UserRepository *domains.IUserRepository
 	S3Client       *s3.Client
 }
 
-func NewUserService(userRepository domains.IUserRepository, validator api.IValidator, s3 *s3.Client) *UserService {
+func NewUserService(repoCollector *repo.RepoCollector, validator api.IValidator, s3 *s3.Client) *UserService {
 	return &UserService{
-		UserRepository: userRepository,
+		UserRepository: repoCollector.UserRepo,
 		Validator:      validator,
 		S3Client:       s3,
 	}
@@ -33,7 +34,7 @@ func (us *UserService) Login(loginRequest domains.LoginRequest) api.IResponse {
 		return api.ErrorValidation(err1.Errors)
 	}
 
-	user, err2 := us.UserRepository.FindByUsername(*loginRequest.Username)
+	user, err2 := (*us.UserRepository).FindByUsername(*loginRequest.Username)
 	if err2 != nil {
 		return api.ErrorInvalidCredentials()
 	}
@@ -59,7 +60,7 @@ func (us *UserService) Register(registerRequest domains.RegisterRequest) api.IRe
 		return api.ErrorValidation(err1.Errors)
 	}
 
-	duplicateUser, err2 := us.UserRepository.FindByUsername(registerRequest.Username)
+	duplicateUser, err2 := (*us.UserRepository).FindByUsername(registerRequest.Username)
 	if duplicateUser != nil {
 		errorUserAlreadyExists := api.NewValidationErrors()
 		errorUserAlreadyExists.CollectValidationError("username", "username already taken", registerRequest.Username)
@@ -74,7 +75,7 @@ func (us *UserService) Register(registerRequest domains.RegisterRequest) api.IRe
 		return api.ErrorInternalServerError(err3.Error())
 	}
 
-	if err4 := us.UserRepository.CreateUser(user); err4 != nil {
+	if err4 := (*us.UserRepository).CreateUser(user); err4 != nil {
 		return api.ErrorInternalServerError(err4.Error())
 	}
 
@@ -87,17 +88,17 @@ func (us *UserService) AddFriend(friendId, userId uint) api.IResponse {
 		return api.ErrorBadRequest("You cannot be friends with yourself")
 	} //unnecessary but good for safety
 
-	user, err := us.UserRepository.FindById(userId)
+	user, err := (*us.UserRepository).FindById(userId)
 	if err != nil {
 		return api.ErrorBadRequest(err.Error())
 	}
 
-	friend, err := us.UserRepository.FindById(friendId)
+	friend, err := (*us.UserRepository).FindById(friendId)
 	if err != nil {
 		return api.ErrorBadRequest(err.Error())
 	}
 
-	if err3 := us.UserRepository.AddFriend(user, friend); err3 != nil {
+	if err3 := (*us.UserRepository).AddFriend(user, friend); err3 != nil {
 		return api.ErrorInternalServerError(err3)
 	}
 
@@ -105,7 +106,7 @@ func (us *UserService) AddFriend(friendId, userId uint) api.IResponse {
 }
 
 func (us *UserService) GetFriends(userId uint) api.IResponse {
-	user, err := us.UserRepository.FindById(userId, "Friends")
+	user, err := (*us.UserRepository).FindById(userId, "Friends")
 	if err != nil {
 		return api.ErrorInternalServerError(err)
 	}
@@ -119,7 +120,7 @@ func (us *UserService) GetFriends(userId uint) api.IResponse {
 }
 
 func (us *UserService) UploadProfilePicture(userId uint, file multipart.File, fileHeader *multipart.FileHeader) api.IResponse {
-	user, err := us.UserRepository.FindById(userId)
+	user, err := (*us.UserRepository).FindById(userId)
 	if err != nil {
 		return api.ErrorInternalServerError(err.Error())
 	}
@@ -154,7 +155,7 @@ func (us *UserService) UploadProfilePicture(userId uint, file multipart.File, fi
 	}
 
 	user.ProfilePictureUrl = fmt.Sprintf("https://%s.s3.amazonaws.com/%s", bucketName, key)
-	err4 := us.UserRepository.UpdateUser(user)
+	err4 := (*us.UserRepository).UpdateUser(user)
 	if err4 != nil {
 		return api.ErrorInternalServerError(err4.Error())
 	}

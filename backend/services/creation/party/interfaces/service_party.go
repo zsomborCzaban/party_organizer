@@ -5,19 +5,19 @@ import (
 	"github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
 	userDomain "github.com/zsomborCzaban/party_organizer/services/user/domains"
 	"github.com/zsomborCzaban/party_organizer/utils/api"
-	"gorm.io/gorm"
+	"github.com/zsomborCzaban/party_organizer/utils/repo"
 )
 
 type PartyService struct {
-	PartyRepository domains.IPartyRepository
-	UserRepository  userDomain.IUserRepository
 	Validator       api.IValidator
+	PartyRepository *domains.IPartyRepository
+	UserRepository  *userDomain.IUserRepository
 }
 
-func NewPartyService(repo domains.IPartyRepository, validator api.IValidator, userRepo userDomain.IUserRepository) domains.IPartyService {
+func NewPartyService(repoCollector *repo.RepoCollector, validator api.IValidator) domains.IPartyService {
 	return &PartyService{
-		PartyRepository: repo,
-		UserRepository:  userRepo,
+		PartyRepository: repoCollector.PartyRepo,
+		UserRepository:  repoCollector.UserRepo,
 		Validator:       validator,
 	}
 }
@@ -34,7 +34,7 @@ func (ps PartyService) CreateParty(partyDTO domains.PartyDTO, userId uint) api.I
 		party.AccessCode = fmt.Sprintf("%d_%s", party.ID, party.AccessCode)
 	}
 
-	err2 := ps.PartyRepository.CreateParty(party)
+	err2 := (*ps.PartyRepository).CreateParty(party)
 	if err2 != nil {
 		return api.ErrorInternalServerError(err2.Error())
 	}
@@ -43,7 +43,7 @@ func (ps PartyService) CreateParty(partyDTO domains.PartyDTO, userId uint) api.I
 }
 
 func (ps PartyService) GetParty(partyId, userId uint) api.IResponse {
-	party, err := ps.PartyRepository.FindById(partyId, domains.FullPartyPreload...)
+	party, err := (*ps.PartyRepository).FindById(partyId, domains.FullPartyPreload...)
 	if err != nil {
 		return api.ErrorInternalServerError(err.Error())
 	}
@@ -65,7 +65,7 @@ func (ps PartyService) UpdateParty(partyDTO domains.PartyDTO, userId uint) api.I
 		return api.ErrorValidation(err)
 	}
 
-	originalParty, err2 := ps.PartyRepository.FindById(partyDTO.ID, "Organizer")
+	originalParty, err2 := (*ps.PartyRepository).FindById(partyDTO.ID, "Organizer")
 	if err2 != nil {
 		return api.ErrorBadRequest(err2.Error())
 	}
@@ -76,7 +76,7 @@ func (ps PartyService) UpdateParty(partyDTO domains.PartyDTO, userId uint) api.I
 	party := partyDTO.TransformToParty()
 	party.OrganizerID = originalParty.OrganizerID
 
-	err3 := ps.PartyRepository.UpdateParty(party)
+	err3 := (*ps.PartyRepository).UpdateParty(party)
 	if err3 != nil {
 		return api.ErrorInternalServerError(err3.Error())
 	}
@@ -84,22 +84,27 @@ func (ps PartyService) UpdateParty(partyDTO domains.PartyDTO, userId uint) api.I
 	return api.Success(party)
 }
 
-// todo: come back here and do this
-func (ps PartyService) DeleteParty(id uint) api.IResponse {
+func (ps PartyService) DeleteParty(partyId uint, userId uint) api.IResponse {
 	//bc the repository layer only checks for id
-	party := &domains.Party{
-		Model: gorm.Model{ID: id},
+	party, err := (*ps.PartyRepository).FindById(partyId, "Organizer")
+	if err != nil {
+		return api.ErrorBadRequest(err.Error())
 	}
 
-	err := ps.PartyRepository.DeleteParty(party)
-	if err != nil {
-		return api.ErrorInternalServerError(err.Error())
+	if !party.CanBeOrganizedBy(userId) {
+		return api.ErrorUnauthorized("cannot delete other peoples party")
+	}
+
+	//todo: come back here and delete the contributions and requirements
+	err2 := (*ps.PartyRepository).DeleteParty(party)
+	if err2 != nil {
+		return api.ErrorInternalServerError(err2.Error())
 	}
 	return api.Success("delete_success")
 }
 
 func (ps PartyService) GetPublicParties() api.IResponse {
-	parties, err := ps.PartyRepository.GetPublicParties()
+	parties, err := (*ps.PartyRepository).GetPublicParties()
 	if err != nil {
 		return api.ErrorInternalServerError(err.Error())
 	}
@@ -107,7 +112,7 @@ func (ps PartyService) GetPublicParties() api.IResponse {
 }
 
 func (ps PartyService) GetPartiesByOrganizerId(id uint) api.IResponse {
-	parties, err := ps.PartyRepository.GetPartiesByOrganizerId(id)
+	parties, err := (*ps.PartyRepository).GetPartiesByOrganizerId(id)
 
 	if err != nil {
 		return api.ErrorInternalServerError(err.Error())
@@ -118,7 +123,7 @@ func (ps PartyService) GetPartiesByOrganizerId(id uint) api.IResponse {
 }
 
 func (ps PartyService) GetPartiesByParticipantId(id uint) api.IResponse {
-	parties, err := ps.PartyRepository.GetPartiesByParticipantId(id)
+	parties, err := (*ps.PartyRepository).GetPartiesByParticipantId(id)
 
 	if err != nil {
 		return api.ErrorInternalServerError(err.Error())
@@ -128,7 +133,7 @@ func (ps PartyService) GetPartiesByParticipantId(id uint) api.IResponse {
 }
 
 func (ps PartyService) GetParticipants(partyId, userId uint) api.IResponse {
-	party, err := ps.PartyRepository.FindById(partyId, domains.FullPartyPreload...)
+	party, err := (*ps.PartyRepository).FindById(partyId, domains.FullPartyPreload...)
 	if err != nil {
 		return api.ErrorBadRequest(err.Error())
 	}

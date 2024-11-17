@@ -112,7 +112,15 @@ func (pc PartyController) DeleteController(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	resp := pc.PartyService.DeleteParty(uint(id))
+	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	if err2 != nil {
+		br := api.ErrorBadRequest(err2.Error())
+
+		br.Send(w)
+		return
+	}
+
+	resp := pc.PartyService.DeleteParty(uint(id), userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging
