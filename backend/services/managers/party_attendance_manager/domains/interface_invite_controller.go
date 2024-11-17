@@ -11,6 +11,7 @@ type IPartyInviteController interface {
 	GetPartyPendingInvites(w http.ResponseWriter, r *http.Request)
 
 	Kick(w http.ResponseWriter, r *http.Request)
+	LeaveParty(w http.ResponseWriter, r *http.Request)
 	JoinPublicParty(w http.ResponseWriter, r *http.Request)
 	JoinPrivateParty(w http.ResponseWriter, r *http.Request)
 }

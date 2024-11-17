@@ -58,17 +58,12 @@ func (fr FoodRequirementRepository) DeleteFoodRequirement(foodRequirement *domai
 }
 
 func (fr FoodRequirementRepository) DeleteByPartyId(partyId uint) error {
-	conds := []db.QueryParameter{{
-		Field:    "party_id",
-		Operator: "=",
-		Value:    partyId,
-	},
+	conds := []db.QueryParameter{
+		{Field: "party_id", Operator: "=", Value: partyId},
 	}
 
-	if err := fr.DbAccess.BatchDelete(conds); err != nil {
-		return err
-	}
-	return nil
+	err := fr.DbAccess.BatchDelete(conds)
+	return err
 }
 
 func (fr FoodRequirementRepository) GetByPartyId(id uint) (*[]domains.FoodRequirement, error) {

@@ -283,6 +283,7 @@ func (ps PartyInviteService) JoinPrivateParty(userId uint, accessCode string) ap
 	return api.Success(party)
 }
 
+// also used for LeaveParty
 func (ps PartyInviteService) Kick(kickedId, userId, partyId uint) api.IResponse {
 	kickedUser, err := ps.UserRepository.FindById(kickedId)
 	if err != nil {

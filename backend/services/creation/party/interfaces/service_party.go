@@ -2,23 +2,37 @@ package interfaces
 
 import (
 	"fmt"
+	drinkReqDomain "github.com/zsomborCzaban/party_organizer/services/creation/drink_requirement/domains"
+	foodReqDomain "github.com/zsomborCzaban/party_organizer/services/creation/food_requirement/domains"
 	"github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
+	drinkContribDomain "github.com/zsomborCzaban/party_organizer/services/interaction/drink_contributions/domains"
+	foodContributionDomains "github.com/zsomborCzaban/party_organizer/services/interaction/food_contributions/domains"
+	partyInvitationDomains "github.com/zsomborCzaban/party_organizer/services/managers/party_attendance_manager/domains"
 	userDomain "github.com/zsomborCzaban/party_organizer/services/user/domains"
 	"github.com/zsomborCzaban/party_organizer/utils/api"
 	"github.com/zsomborCzaban/party_organizer/utils/repo"
 )
 
 type PartyService struct {
-	Validator       api.IValidator
-	PartyRepository domains.IPartyRepository
-	UserRepository  userDomain.IUserRepository
+	Validator              api.IValidator
+	PartyRepository        domains.IPartyRepository
+	UserRepository         userDomain.IUserRepository
+	DrinkReqRepository     drinkReqDomain.IDrinkRequirementRepository
+	DrinkContribRepository drinkContribDomain.IDrinkContributionRepository
+	FoodReqRepository      foodReqDomain.IFoodRequirementRepository
+	FoodContribRepository  foodContributionDomains.IFoodContributionRepository
+	PartyInviteRepository  partyInvitationDomains.IPartyInviteRepository
 }
 
 func NewPartyService(repoCollector *repo.RepoCollector, validator api.IValidator) domains.IPartyService {
 	return &PartyService{
-		PartyRepository: *repoCollector.PartyRepo,
-		UserRepository:  *repoCollector.UserRepo,
-		Validator:       validator,
+		Validator:              validator,
+		PartyRepository:        *repoCollector.PartyRepo,
+		UserRepository:         *repoCollector.UserRepo,
+		DrinkReqRepository:     *repoCollector.DrinkReqRepo,
+		DrinkContribRepository: *repoCollector.DrinkContribRepo,
+		FoodReqRepository:      *repoCollector.FoodReqReqRepo,
+		FoodContribRepository:  *repoCollector.FoodContribRepo,
 	}
 }
 
@@ -95,10 +109,27 @@ func (ps PartyService) DeleteParty(partyId uint, userId uint) api.IResponse {
 		return api.ErrorUnauthorized("cannot delete other peoples party")
 	}
 
-	//todo: come back here and delete the contributions and requirements
-	err2 := ps.PartyRepository.DeleteParty(party)
-	if err2 != nil {
-		return api.ErrorInternalServerError(err2.Error())
+	//todo: transaction maybe
+	err2 := ps.DrinkContribRepository.DeleteByPartyId(partyId)
+	err3 := ps.FoodContribRepository.DeleteByPartyId(partyId)
+	if err2 != nil || err3 != nil {
+		return api.ErrorInternalServerError("unexpected error while deleting the contributions of the party")
+	}
+
+	err4 := ps.DrinkReqRepository.DeleteByPartyId(partyId)
+	err5 := ps.FoodReqRepository.DeleteByPartyId(partyId)
+	if err4 != nil || err5 != nil {
+		return api.ErrorInternalServerError("unexpected error while deleting the requirements of the party")
+	}
+
+	err6 := ps.PartyInviteRepository.DeleteByPartyId(partyId)
+	if err6 != nil {
+		return api.ErrorInternalServerError("unexpected error while deleting party invites of the party")
+	}
+
+	err7 := ps.PartyRepository.DeleteParty(party)
+	if err7 != nil {
+		return api.ErrorInternalServerError(err7.Error())
 	}
 	return api.Success("delete_success")
 }
