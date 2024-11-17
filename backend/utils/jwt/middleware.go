@@ -3,7 +3,7 @@ package jwt
 import (
 	"errors"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/zsomborCzaban/party_organizer/common/api"
+	"github.com/zsomborCzaban/party_organizer/utils/api"
 	"net/http"
 	"strings"
 )

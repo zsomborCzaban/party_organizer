@@ -8,8 +8,6 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 	"github.com/rs/zerolog/log"
-	"github.com/zsomborCzaban/party_organizer/common/api"
-	"github.com/zsomborCzaban/party_organizer/common/jwt"
 	"github.com/zsomborCzaban/party_organizer/db"
 	drinkRequirementInterfaces "github.com/zsomborCzaban/party_organizer/services/creation/drink_requirement/interfaces"
 	drinkRequirementUsecases "github.com/zsomborCzaban/party_organizer/services/creation/drink_requirement/usecases"
@@ -27,6 +25,8 @@ import (
 	partyInvitationUsecases "github.com/zsomborCzaban/party_organizer/services/managers/party_attendance_manager/usecases"
 	userInterfaces "github.com/zsomborCzaban/party_organizer/services/user/interfaces"
 	userUsecases "github.com/zsomborCzaban/party_organizer/services/user/usecases"
+	"github.com/zsomborCzaban/party_organizer/utils/api"
+	"github.com/zsomborCzaban/party_organizer/utils/repo"
 	"net/http"
 	"os"
 	"time"
@@ -34,12 +34,12 @@ import (
 
 func SetupRoutes(router *mux.Router, dbAccessManager db.IDatabaseAccessManager) *mux.Router {
 	apiRouter := router.PathPrefix("/api/v1").Subrouter()
-	apiRouter.Use(jwt.ValidateJWTMiddleware)
+	//apiRouter.Use(jwt.ValidateJWTMiddleware)
 
 	vali := api.NewValidator(validator.New())
 
-	userRepository := userUsecases.NewUserRepository(dbAccessManager)
 	partyRepository := partyUsecases.NewPartyRepository(dbAccessManager)
+	userRepository := userUsecases.NewUserRepository(dbAccessManager)
 	drinkRequirementRepository := drinkRequirementUsecases.NewDrinkRequirementRepository(dbAccessManager)
 	foodRequirementRepository := foodRequirementUsecases.NewFoodRequirementRepository(dbAccessManager)
 	friendInviteRepository := friendInvitationUsecases.NewFriendInviteRepository(dbAccessManager)
@@ -47,17 +47,19 @@ func SetupRoutes(router *mux.Router, dbAccessManager db.IDatabaseAccessManager) 
 	drinkContributionRepository := drinkContributionUsecases.NewDrinkContributionRepository(dbAccessManager)
 	foodContributionRepository := foodContributionUsecases.NewFoodContributionRepository(dbAccessManager)
 
-	userService := userInterfaces.NewUserService(userRepository, vali, GetAwsS3Client())
-	partyService := partyInterfaces.NewPartyService(partyRepository, vali, userRepository)
-	drinkRequirementService := drinkRequirementInterfaces.NewDrinkRequirementService(drinkRequirementRepository, vali, partyRepository, drinkContributionRepository)
-	foodRequirementService := foodRequirementInterfaces.NewFoodRequirementService(foodRequirementRepository, vali, partyRepository, foodContributionRepository)
-	friendInviteService := friendInvitationInterfaces.NewFriendInviteService(friendInviteRepository, userRepository)
-	partyInviteService := partyInvitationInterfaces.NewPartyInviteService(partyInviteRepository, userRepository, partyRepository, foodContributionRepository, drinkContributionRepository)
-	drinkContributionService := drinkContributionInterfaces.NewDrinkContributionService(drinkContributionRepository, vali, userRepository, partyRepository, drinkRequirementRepository)
-	foodContributionService := foodContributionInterfaces.NewFoodContributionService(foodContributionRepository, vali, userRepository, partyRepository, foodRequirementRepository)
+	repoCollector := repo.NewRepoCollector(partyRepository, userRepository, drinkRequirementRepository, drinkContributionRepository, foodRequirementRepository, foodContributionRepository, partyInviteRepository, friendInviteRepository)
 
-	userController := userInterfaces.NewUserController(userService)
+	partyService := partyInterfaces.NewPartyService(repoCollector, vali)
+	userService := userInterfaces.NewUserService(repoCollector, vali, GetAwsS3Client())
+	drinkRequirementService := drinkRequirementInterfaces.NewDrinkRequirementService(repoCollector, vali)
+	foodRequirementService := foodRequirementInterfaces.NewFoodRequirementService(repoCollector, vali)
+	friendInviteService := friendInvitationInterfaces.NewFriendInviteService(repoCollector)
+	partyInviteService := partyInvitationInterfaces.NewPartyInviteService(repoCollector)
+	drinkContributionService := drinkContributionInterfaces.NewDrinkContributionService(repoCollector, vali)
+	foodContributionService := foodContributionInterfaces.NewFoodContributionService(repoCollector, vali)
+
 	partyController := partyInterfaces.NewPartyController(partyService)
+	userController := userInterfaces.NewUserController(userService)
 	drinkRequirementController := drinkRequirementInterfaces.NewDrinkRequirementController(drinkRequirementService)
 	foodRequirementController := foodRequirementInterfaces.NewFoodRequirementController(foodRequirementService)
 	friendInviteController := friendInvitationInterfaces.NewFriendInviteController(friendInviteService)
@@ -65,9 +67,9 @@ func SetupRoutes(router *mux.Router, dbAccessManager db.IDatabaseAccessManager) 
 	drinkContributionController := drinkContributionInterfaces.NewDrinkContributionController(drinkContributionService)
 	foodContributionController := foodContributionInterfaces.NewFoodContributionController(foodContributionService)
 
+	partyInterfaces.NewPartyRouter(apiRouter, partyController)
 	userInterfaces.NewUserRouter(apiRouter, userController)
 	userInterfaces.NewUserAuthRouter(router.PathPrefix("/api/v1").Subrouter(), userController)
-	partyInterfaces.NewPartyRouter(apiRouter, partyController)
 	drinkRequirementInterfaces.NewDrinkRequirementRouter(apiRouter, drinkRequirementController)
 	foodRequirementInterfaces.NewFoodRequirementRouter(apiRouter, foodRequirementController)
 	friendInvitationInterfaces.NewFriendInviteRouter(apiRouter, friendInviteController)

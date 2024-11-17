@@ -3,9 +3,9 @@ package interfaces
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
-	"github.com/zsomborCzaban/party_organizer/common/api"
-	"github.com/zsomborCzaban/party_organizer/common/jwt"
 	"github.com/zsomborCzaban/party_organizer/services/creation/drink_requirement/domains"
+	"github.com/zsomborCzaban/party_organizer/utils/api"
+	"github.com/zsomborCzaban/party_organizer/utils/jwt"
 	"net/http"
 	"strconv"
 )
@@ -67,43 +67,6 @@ func (dc DrinkRequirementController) GetController(w http.ResponseWriter, r *htt
 	}
 
 	resp := dc.DrinkRequirementService.GetDrinkRequirement(uint(drinkReqId), userId)
-	couldSend := resp.Send(w)
-	if !couldSend {
-		//todo: handle logging
-		return
-	}
-}
-
-func (dc DrinkRequirementController) UpdateController(w http.ResponseWriter, r *http.Request) {
-	var updateDrinkRequirementReq domains.DrinkRequirementDTO
-	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&updateDrinkRequirementReq)
-	if err != nil {
-		br := api.ErrorBadRequest(err.Error())
-
-		br.Send(w)
-		return
-	}
-
-	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
-	if err2 != nil {
-		br := api.ErrorBadRequest(err2.Error())
-
-		br.Send(w)
-		return
-	}
-
-	vars := mux.Vars(r)
-	id, err3 := strconv.ParseUint(vars["id"], 10, 32)
-	if err3 != nil {
-		br := api.ErrorBadRequest(err3.Error())
-
-		br.Send(w)
-		return
-	}
-	updateDrinkRequirementReq.ID = uint(id)
-
-	resp := dc.DrinkRequirementService.UpdateDrinkRequirement(updateDrinkRequirementReq, userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging

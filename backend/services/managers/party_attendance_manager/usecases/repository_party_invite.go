@@ -40,6 +40,15 @@ func (pr PartyInviteRepository) Save(invitation *domains.PartyInvite) error {
 	return nil
 }
 
+func (pr PartyInviteRepository) DeleteByPartyId(partyId uint) error {
+	queryParams := []db.QueryParameter{
+		{Field: "party_id", Operator: "=", Value: partyId},
+	}
+
+	err := pr.DbAccess.BatchDelete(queryParams)
+	return err
+}
+
 func (pr PartyInviteRepository) FindByIds(invitedId, partyId uint) (*domains.PartyInvite, error) {
 	queryParams := []db.QueryParameter{
 		{Field: "invited_id", Operator: "=", Value: invitedId},

@@ -2,23 +2,37 @@ package interfaces
 
 import (
 	"fmt"
-	"github.com/zsomborCzaban/party_organizer/common/api"
+	drinkReqDomain "github.com/zsomborCzaban/party_organizer/services/creation/drink_requirement/domains"
+	foodReqDomain "github.com/zsomborCzaban/party_organizer/services/creation/food_requirement/domains"
 	"github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
+	drinkContribDomain "github.com/zsomborCzaban/party_organizer/services/interaction/drink_contributions/domains"
+	foodContributionDomains "github.com/zsomborCzaban/party_organizer/services/interaction/food_contributions/domains"
+	partyInvitationDomains "github.com/zsomborCzaban/party_organizer/services/managers/party_attendance_manager/domains"
 	userDomain "github.com/zsomborCzaban/party_organizer/services/user/domains"
-	"gorm.io/gorm"
+	"github.com/zsomborCzaban/party_organizer/utils/api"
+	"github.com/zsomborCzaban/party_organizer/utils/repo"
 )
 
 type PartyService struct {
-	PartyRepository domains.IPartyRepository
-	UserRepository  userDomain.IUserRepository
-	Validator       api.IValidator
+	Validator              api.IValidator
+	PartyRepository        domains.IPartyRepository
+	UserRepository         userDomain.IUserRepository
+	DrinkReqRepository     drinkReqDomain.IDrinkRequirementRepository
+	DrinkContribRepository drinkContribDomain.IDrinkContributionRepository
+	FoodReqRepository      foodReqDomain.IFoodRequirementRepository
+	FoodContribRepository  foodContributionDomains.IFoodContributionRepository
+	PartyInviteRepository  partyInvitationDomains.IPartyInviteRepository
 }
 
-func NewPartyService(repo domains.IPartyRepository, validator api.IValidator, userRepo userDomain.IUserRepository) domains.IPartyService {
+func NewPartyService(repoCollector *repo.RepoCollector, validator api.IValidator) domains.IPartyService {
 	return &PartyService{
-		PartyRepository: repo,
-		UserRepository:  userRepo,
-		Validator:       validator,
+		Validator:              validator,
+		PartyRepository:        *repoCollector.PartyRepo,
+		UserRepository:         *repoCollector.UserRepo,
+		DrinkReqRepository:     *repoCollector.DrinkReqRepo,
+		DrinkContribRepository: *repoCollector.DrinkContribRepo,
+		FoodReqRepository:      *repoCollector.FoodReqReqRepo,
+		FoodContribRepository:  *repoCollector.FoodContribRepo,
 	}
 }
 
@@ -28,20 +42,14 @@ func (ps PartyService) CreateParty(partyDTO domains.PartyDTO, userId uint) api.I
 		return api.ErrorValidation(errors)
 	}
 
-	user, err := ps.UserRepository.FindById(userId)
-	if err != nil {
-		return api.ErrorBadRequest(err.Error())
-	}
-
 	party := partyDTO.TransformToParty()
 	party.OrganizerID = userId
-	party.Organizer = *user
 	if party.AccessCodeEnabled {
 		party.AccessCode = fmt.Sprintf("%d_%s", party.ID, party.AccessCode)
 	}
 
 	err2 := ps.PartyRepository.CreateParty(party)
-	if err != nil {
+	if err2 != nil {
 		return api.ErrorInternalServerError(err2.Error())
 	}
 
@@ -49,7 +57,7 @@ func (ps PartyService) CreateParty(partyDTO domains.PartyDTO, userId uint) api.I
 }
 
 func (ps PartyService) GetParty(partyId, userId uint) api.IResponse {
-	party, err := ps.PartyRepository.FindById(partyId)
+	party, err := ps.PartyRepository.FindById(partyId, domains.FullPartyPreload...)
 	if err != nil {
 		return api.ErrorInternalServerError(err.Error())
 	}
@@ -71,7 +79,7 @@ func (ps PartyService) UpdateParty(partyDTO domains.PartyDTO, userId uint) api.I
 		return api.ErrorValidation(err)
 	}
 
-	originalParty, err2 := ps.PartyRepository.FindById(partyDTO.ID)
+	originalParty, err2 := ps.PartyRepository.FindById(partyDTO.ID, "Organizer")
 	if err2 != nil {
 		return api.ErrorBadRequest(err2.Error())
 	}
@@ -80,7 +88,6 @@ func (ps PartyService) UpdateParty(partyDTO domains.PartyDTO, userId uint) api.I
 		return api.ErrorUnauthorized("cannot update other people's party")
 	}
 	party := partyDTO.TransformToParty()
-	party.Organizer = originalParty.Organizer
 	party.OrganizerID = originalParty.OrganizerID
 
 	err3 := ps.PartyRepository.UpdateParty(party)
@@ -91,15 +98,38 @@ func (ps PartyService) UpdateParty(partyDTO domains.PartyDTO, userId uint) api.I
 	return api.Success(party)
 }
 
-func (ps PartyService) DeleteParty(id uint) api.IResponse {
+func (ps PartyService) DeleteParty(partyId uint, userId uint) api.IResponse {
 	//bc the repository layer only checks for id
-	party := &domains.Party{
-		Model: gorm.Model{ID: id},
+	party, err := ps.PartyRepository.FindById(partyId, "Organizer")
+	if err != nil {
+		return api.ErrorBadRequest(err.Error())
 	}
 
-	err := ps.PartyRepository.DeleteParty(party)
-	if err != nil {
-		return api.ErrorInternalServerError(err.Error())
+	if !party.CanBeOrganizedBy(userId) {
+		return api.ErrorUnauthorized("cannot delete other peoples party")
+	}
+
+	//todo: transaction maybe
+	err2 := ps.DrinkContribRepository.DeleteByPartyId(partyId)
+	err3 := ps.FoodContribRepository.DeleteByPartyId(partyId)
+	if err2 != nil || err3 != nil {
+		return api.ErrorInternalServerError("unexpected error while deleting the contributions of the party")
+	}
+
+	err4 := ps.DrinkReqRepository.DeleteByPartyId(partyId)
+	err5 := ps.FoodReqRepository.DeleteByPartyId(partyId)
+	if err4 != nil || err5 != nil {
+		return api.ErrorInternalServerError("unexpected error while deleting the requirements of the party")
+	}
+
+	err6 := ps.PartyInviteRepository.DeleteByPartyId(partyId)
+	if err6 != nil {
+		return api.ErrorInternalServerError("unexpected error while deleting party invites of the party")
+	}
+
+	err7 := ps.PartyRepository.DeleteParty(party)
+	if err7 != nil {
+		return api.ErrorInternalServerError(err7.Error())
 	}
 	return api.Success("delete_success")
 }
@@ -134,7 +164,7 @@ func (ps PartyService) GetPartiesByParticipantId(id uint) api.IResponse {
 }
 
 func (ps PartyService) GetParticipants(partyId, userId uint) api.IResponse {
-	party, err := ps.PartyRepository.FindById(partyId)
+	party, err := ps.PartyRepository.FindById(partyId, domains.FullPartyPreload...)
 	if err != nil {
 		return api.ErrorBadRequest(err.Error())
 	}
@@ -144,22 +174,4 @@ func (ps PartyService) GetParticipants(partyId, userId uint) api.IResponse {
 	}
 
 	return api.Success(append(party.Participants, party.Organizer))
-}
-
-func (ps PartyService) AddUserToParty(partyId, userId uint) api.IResponse {
-	party, err := ps.PartyRepository.FindById(partyId)
-	if err != nil {
-		return api.ErrorBadRequest(err.Error())
-	}
-
-	user, err2 := ps.UserRepository.FindById(userId)
-	if err2 != nil {
-		return api.ErrorInternalServerError(err2.Error())
-	}
-
-	if err3 := ps.PartyRepository.AddUserToParty(party, user); err3 != nil {
-		return api.ErrorInternalServerError(err3.Error())
-	}
-
-	return api.Success("user added to party")
 }

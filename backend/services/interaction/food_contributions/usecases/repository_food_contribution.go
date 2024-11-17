@@ -41,6 +41,20 @@ func (dr FoodContributionRepository) Delete(contribution *domains.FoodContributi
 	return nil
 }
 
+func (dr FoodContributionRepository) DeleteByPartyId(partyId uint) error {
+	conds := []db.QueryParameter{{
+		Field:    "party_id",
+		Operator: "=",
+		Value:    partyId,
+	},
+	}
+
+	if err := dr.DbAccess.BatchDelete(conds); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (dr FoodContributionRepository) DeleteByReqId(foodReqId uint) error {
 	conds := []db.QueryParameter{{
 		Field:    "food_req_id",
@@ -69,8 +83,8 @@ func (dr FoodContributionRepository) DeleteByContributorId(contributorId uint) e
 	return nil
 }
 
-func (dr FoodContributionRepository) FindById(id uint) (*domains.FoodContribution, error) {
-	fetchedContribution, fetchedErr := dr.DbAccess.FindById(id)
+func (dr FoodContributionRepository) FindById(id uint, associations ...string) (*domains.FoodContribution, error) {
+	fetchedContribution, fetchedErr := dr.DbAccess.FindById(id, associations...)
 	if fetchedErr != nil {
 		return nil, fetchedErr
 	}
@@ -83,7 +97,7 @@ func (dr FoodContributionRepository) FindById(id uint) (*domains.FoodContributio
 }
 
 // FindAllBy culd also get the []db.QueryParameter as param, but then maybe move QueryParamter to utils package
-func (dr FoodContributionRepository) FindAllBy(columnNames []string, values []interface{}) (*[]domains.FoodContribution, error) {
+func (dr FoodContributionRepository) FindAllBy(columnNames []string, values []interface{}, associations ...string) (*[]domains.FoodContribution, error) {
 	if len(columnNames) != len(values) || len(columnNames) == 0 {
 		return nil, errors.New("incorrect use of FindAllBy")
 	}
@@ -98,7 +112,7 @@ func (dr FoodContributionRepository) FindAllBy(columnNames []string, values []in
 		}
 	}
 
-	fetchedContributions, fetchedError := dr.DbAccess.Query(queryParams)
+	fetchedContributions, fetchedError := dr.DbAccess.Query(queryParams, associations...)
 	if fetchedError != nil {
 		//we should return errors from the database layer
 		return nil, errors.New(fmt.Sprintf("Error while fetching contributions"))

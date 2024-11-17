@@ -1,12 +1,13 @@
 package interfaces
 
 import (
-	"github.com/zsomborCzaban/party_organizer/common/adminUser"
-	"github.com/zsomborCzaban/party_organizer/common/api"
 	foodReqDomain "github.com/zsomborCzaban/party_organizer/services/creation/food_requirement/domains"
 	partyDomains "github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
 	"github.com/zsomborCzaban/party_organizer/services/interaction/food_contributions/domains"
 	userDomain "github.com/zsomborCzaban/party_organizer/services/user/domains"
+	"github.com/zsomborCzaban/party_organizer/utils/adminUser"
+	"github.com/zsomborCzaban/party_organizer/utils/api"
+	"github.com/zsomborCzaban/party_organizer/utils/repo"
 )
 
 type FoodContributionService struct {
@@ -17,13 +18,13 @@ type FoodContributionService struct {
 	FoodReqRepository      foodReqDomain.IFoodRequirementRepository
 }
 
-func NewFoodContributionService(contributionRepo domains.IFoodContributionRepository, vali api.IValidator, userRepo userDomain.IUserRepository, partyRepo partyDomains.IPartyRepository, foodReqRepo foodReqDomain.IFoodRequirementRepository) domains.IFoodContributionService {
+func NewFoodContributionService(repoCollector *repo.RepoCollector, vali api.IValidator) domains.IFoodContributionService {
 	return &FoodContributionService{
 		Validator:              vali,
-		ContributionRepository: contributionRepo,
-		UserRepository:         userRepo,
-		PartyRepository:        partyRepo,
-		FoodReqRepository:      foodReqRepo,
+		ContributionRepository: *repoCollector.FoodContribRepo,
+		UserRepository:         *repoCollector.UserRepo,
+		PartyRepository:        *repoCollector.PartyRepo,
+		FoodReqRepository:      *repoCollector.FoodReqReqRepo,
 	}
 }
 
@@ -33,29 +34,17 @@ func (ds FoodContributionService) Create(contribution domains.FoodContribution, 
 		return api.ErrorValidation(err.Errors)
 	}
 
-	contributor, err2 := ds.UserRepository.FindById(userId)
-	if err2 != nil {
-		return api.ErrorBadRequest(err2.Error())
-	}
-
-	foodReq, err3 := ds.FoodReqRepository.FindById(contribution.FoodReqId)
+	req, err3 := ds.FoodReqRepository.FindById(contribution.FoodReqId, partyDomains.FullPartyNestedPreload...)
 	if err3 != nil {
 		return api.ErrorBadRequest(err3.Error())
 	}
 
-	party, err4 := ds.PartyRepository.FindById(foodReq.PartyID)
-	if err4 != nil {
-		return api.ErrorBadRequest(err4.Error())
-	}
-
-	if !party.CanBeAccessedBy(userId) {
+	if !req.Party.CanBeAccessedBy(userId) {
 		return api.ErrorUnauthorized(domains.NO_ACCESS_TO_PARTY)
 	}
 
 	contribution.ContributorId = userId
-	contribution.Contributor = *contributor
-	contribution.PartyId = party.ID
-	contribution.FoodReq = *foodReq
+	contribution.PartyId = req.PartyID
 
 	if err5 := ds.ContributionRepository.Create(&contribution); err5 != nil {
 		return api.ErrorInternalServerError(err5.Error())
@@ -70,18 +59,12 @@ func (ds FoodContributionService) Update(contribution domains.FoodContribution, 
 		return api.ErrorValidation(err.Errors)
 	}
 
-	oldContribution, err2 := ds.ContributionRepository.FindById(contribution.ID)
+	oldContribution, err2 := ds.ContributionRepository.FindById(contribution.ID, partyDomains.FullPartyNestedPreload...)
 	if err2 != nil {
 		return api.ErrorBadRequest(err2.Error())
 	}
 
-	foodReq, err5 := ds.FoodReqRepository.FindById(contribution.FoodReqId)
-	if err5 != nil {
-		return api.ErrorBadRequest(err5.Error())
-	}
-	party := foodReq.Party
-
-	if !foodReq.Party.CanBeAccessedBy(userId) {
+	if oldContribution.Party.CanBeAccessedBy(userId) {
 		return api.ErrorUnauthorized(domains.NO_ACCESS_TO_PARTY)
 	}
 
@@ -89,14 +72,12 @@ func (ds FoodContributionService) Update(contribution domains.FoodContribution, 
 		return api.ErrorBadRequest("cannot update other people's contribution")
 	}
 
-	if foodReq.PartyID != contribution.PartyId {
-		return api.ErrorBadRequest("food requirement doesnt belong to party")
+	if oldContribution.FoodReqId != contribution.FoodReqId {
+		return api.ErrorBadRequest("cannot change food requirement of the contribution")
 	}
 
 	contribution.ContributorId = oldContribution.ContributorId
-	contribution.Contributor = oldContribution.Contributor
-	contribution.PartyId = party.ID
-	contribution.FoodReq = *foodReq
+	contribution.PartyId = oldContribution.PartyId
 
 	if err6 := ds.ContributionRepository.Create(&contribution); err6 != nil {
 		return api.ErrorInternalServerError(err6.Error())
@@ -106,12 +87,12 @@ func (ds FoodContributionService) Update(contribution domains.FoodContribution, 
 }
 
 func (ds FoodContributionService) Delete(contributionId, userId uint) api.IResponse {
-	contribution, err := ds.ContributionRepository.FindById(contributionId)
+	contribution, err := ds.ContributionRepository.FindById(contributionId, "Party.Organizer")
 	if err != nil {
 		return api.ErrorBadRequest(err.Error())
 	}
 
-	if userId != contribution.ContributorId && userId != contribution.FoodReq.Party.OrganizerID && userId != adminUser.ADMIN_USER_ID {
+	if userId != contribution.ContributorId && !contribution.Party.CanBeOrganizedBy(userId) {
 		return api.ErrorUnauthorized("cannot delete other people's contribution")
 	}
 
@@ -123,7 +104,7 @@ func (ds FoodContributionService) Delete(contributionId, userId uint) api.IRespo
 }
 
 func (ds FoodContributionService) GetByPartyIdAndContributorId(partyId, contributorId, userId uint) api.IResponse {
-	party, err := ds.PartyRepository.FindById(partyId)
+	party, err := ds.PartyRepository.FindById(partyId, partyDomains.FullPartyPreload...)
 	if err != nil {
 		return api.ErrorBadRequest(err.Error())
 	}
@@ -135,7 +116,7 @@ func (ds FoodContributionService) GetByPartyIdAndContributorId(partyId, contribu
 	columnNames := []string{"party_id", "contributor_id"}
 	values := []interface{}{partyId, contributorId}
 
-	contributions, err := ds.ContributionRepository.FindAllBy(columnNames, values)
+	contributions, err := ds.ContributionRepository.FindAllBy(columnNames, values, "Contributor")
 	if err != nil {
 		return api.ErrorInternalServerError(err.Error())
 	}
@@ -144,7 +125,7 @@ func (ds FoodContributionService) GetByPartyIdAndContributorId(partyId, contribu
 }
 
 func (ds FoodContributionService) GetByRequirementId(requirementId, userId uint) api.IResponse {
-	requirement, err := ds.FoodReqRepository.FindById(requirementId)
+	requirement, err := ds.FoodReqRepository.FindById(requirementId, partyDomains.FullPartyNestedPreload...)
 	if err != nil {
 		return api.ErrorBadRequest(err.Error())
 	}
@@ -156,7 +137,7 @@ func (ds FoodContributionService) GetByRequirementId(requirementId, userId uint)
 	columnNames := []string{"food_req_id"}
 	values := []interface{}{requirementId}
 
-	contributions, err := ds.ContributionRepository.FindAllBy(columnNames, values)
+	contributions, err := ds.ContributionRepository.FindAllBy(columnNames, values, "Contributor")
 	if err != nil {
 		return api.ErrorInternalServerError(err.Error())
 	}
@@ -165,7 +146,7 @@ func (ds FoodContributionService) GetByRequirementId(requirementId, userId uint)
 }
 
 func (ds FoodContributionService) GetByPartyId(partyId, userId uint) api.IResponse {
-	party, err := ds.PartyRepository.FindById(partyId)
+	party, err := ds.PartyRepository.FindById(partyId, partyDomains.FullPartyPreload...)
 	if err != nil {
 		return api.ErrorBadRequest(err.Error())
 	}
@@ -177,7 +158,7 @@ func (ds FoodContributionService) GetByPartyId(partyId, userId uint) api.IRespon
 	columnNames := []string{"party_id"}
 	values := []interface{}{partyId}
 
-	contributions, err := ds.ContributionRepository.FindAllBy(columnNames, values)
+	contributions, err := ds.ContributionRepository.FindAllBy(columnNames, values, "Contributor")
 	if err != nil {
 		return api.ErrorInternalServerError(err.Error())
 	}

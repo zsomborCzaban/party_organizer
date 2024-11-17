@@ -6,8 +6,9 @@ import (
 	"fmt"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
-	"github.com/zsomborCzaban/party_organizer/common/api"
 	"github.com/zsomborCzaban/party_organizer/services/user/domains"
+	"github.com/zsomborCzaban/party_organizer/utils/api"
+	"github.com/zsomborCzaban/party_organizer/utils/repo"
 	"mime/multipart"
 	"net/http"
 	"os"
@@ -15,14 +16,14 @@ import (
 )
 
 type UserService struct {
-	UserRepository domains.IUserRepository
 	Validator      api.IValidator
+	UserRepository domains.IUserRepository
 	S3Client       *s3.Client
 }
 
-func NewUserService(userRepository domains.IUserRepository, validator api.IValidator, s3 *s3.Client) *UserService {
+func NewUserService(repoCollector *repo.RepoCollector, validator api.IValidator, s3 *s3.Client) *UserService {
 	return &UserService{
-		UserRepository: userRepository,
+		UserRepository: *repoCollector.UserRepo,
 		Validator:      validator,
 		S3Client:       s3,
 	}
@@ -105,13 +106,17 @@ func (us *UserService) AddFriend(friendId, userId uint) api.IResponse {
 }
 
 func (us *UserService) GetFriends(userId uint) api.IResponse {
-	//todo: parse to dto to avoid password leakingy
-	users, err := us.UserRepository.GetFriends(userId)
+	user, err := us.UserRepository.FindById(userId, "Friends")
 	if err != nil {
 		return api.ErrorInternalServerError(err)
 	}
 
-	return api.Success(users)
+	friendDTOs := []domains.UserDTO{}
+	for _, friend := range user.Friends {
+		friendDTOs = append(friendDTOs, *friend.TransformToUserDTO())
+	}
+
+	return api.Success(friendDTOs)
 }
 
 func (us *UserService) UploadProfilePicture(userId uint, file multipart.File, fileHeader *multipart.FileHeader) api.IResponse {

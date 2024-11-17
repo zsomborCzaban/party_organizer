@@ -3,9 +3,9 @@ package interfaces
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
-	"github.com/zsomborCzaban/party_organizer/common/api"
-	"github.com/zsomborCzaban/party_organizer/common/jwt"
 	"github.com/zsomborCzaban/party_organizer/services/creation/food_requirement/domains"
+	"github.com/zsomborCzaban/party_organizer/utils/api"
+	"github.com/zsomborCzaban/party_organizer/utils/jwt"
 	"net/http"
 	"strconv"
 )
@@ -67,44 +67,6 @@ func (fc FoodRequirementController) GetController(w http.ResponseWriter, r *http
 	}
 
 	resp := fc.FoodRequirementService.GetFoodRequirement(uint(foodReqId), userId)
-	couldSend := resp.Send(w)
-	if !couldSend {
-		//todo: handle logging
-		return
-	}
-}
-
-func (fc FoodRequirementController) UpdateController(w http.ResponseWriter, r *http.Request) {
-	var updateFoodRequirementReq domains.FoodRequirementDTO
-	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&updateFoodRequirementReq)
-	if err != nil {
-		br := api.ErrorBadRequest(domains.BadRequest)
-
-		//todo: implement response helper that has logger as param
-		br.Send(w)
-		return
-	}
-
-	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
-	if err2 != nil {
-		br := api.ErrorBadRequest(err2.Error())
-
-		br.Send(w)
-		return
-	}
-
-	vars := mux.Vars(r)
-	id, err3 := strconv.ParseUint(vars["id"], 10, 32)
-	if err3 != nil {
-		br := api.ErrorBadRequest(err3.Error())
-
-		br.Send(w)
-		return
-	}
-	updateFoodRequirementReq.ID = uint(id)
-
-	resp := fc.FoodRequirementService.UpdateFoodRequirement(updateFoodRequirementReq, userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging

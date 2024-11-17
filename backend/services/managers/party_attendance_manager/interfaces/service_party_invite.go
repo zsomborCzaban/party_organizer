@@ -1,12 +1,13 @@
 package interfaces
 
 import (
-	"github.com/zsomborCzaban/party_organizer/common/api"
 	partyDomains "github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
 	drinkContributionDomains "github.com/zsomborCzaban/party_organizer/services/interaction/drink_contributions/domains"
 	foodContributionDomains "github.com/zsomborCzaban/party_organizer/services/interaction/food_contributions/domains"
 	"github.com/zsomborCzaban/party_organizer/services/managers/party_attendance_manager/domains"
 	userDomain "github.com/zsomborCzaban/party_organizer/services/user/domains"
+	"github.com/zsomborCzaban/party_organizer/utils/api"
+	"github.com/zsomborCzaban/party_organizer/utils/repo"
 	"strconv"
 	"strings"
 )
@@ -19,13 +20,13 @@ type PartyInviteService struct {
 	DrinkContributionRepository drinkContributionDomains.IDrinkContributionRepository
 }
 
-func NewPartyInviteService(repo domains.IPartyInviteRepository, userRepo userDomain.IUserRepository, partyRepo partyDomains.IPartyRepository, fContrRepo foodContributionDomains.IFoodContributionRepository, dContrRepo drinkContributionDomains.IDrinkContributionRepository) domains.IPartyInviteService {
+func NewPartyInviteService(repoCollector *repo.RepoCollector) domains.IPartyInviteService {
 	return &PartyInviteService{
-		PartyInviteRepository:       repo,
-		UserRepository:              userRepo,
-		PartyRepository:             partyRepo,
-		FoodContributionRepository:  fContrRepo,
-		DrinkContributionRepository: dContrRepo,
+		PartyInviteRepository:       *repoCollector.PartyInviteRepo,
+		UserRepository:              *repoCollector.UserRepo,
+		PartyRepository:             *repoCollector.PartyRepo,
+		FoodContributionRepository:  *repoCollector.FoodContribRepo,
+		DrinkContributionRepository: *repoCollector.DrinkContribRepo,
 	}
 }
 
@@ -282,6 +283,7 @@ func (ps PartyInviteService) JoinPrivateParty(userId uint, accessCode string) ap
 	return api.Success(party)
 }
 
+// also used for LeaveParty
 func (ps PartyInviteService) Kick(kickedId, userId, partyId uint) api.IResponse {
 	kickedUser, err := ps.UserRepository.FindById(kickedId)
 	if err != nil {

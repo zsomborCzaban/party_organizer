@@ -8,7 +8,6 @@ import (
 func NewFoodRequirementRouter(router *mux.Router, controller domains.IFoodRequirementController) {
 	router.HandleFunc("/foodRequirement", controller.CreateController).Methods("POST")
 	router.HandleFunc("/foodRequirement/{id}", controller.GetController).Methods("GET")
-	router.HandleFunc("/foodRequirement/{id}", controller.UpdateController).Methods("PUT")
 	router.HandleFunc("/foodRequirement/{id}", controller.DeleteController).Methods("DELETE")
 
 	router.HandleFunc("/foodRequirement/getByPartyId/{party_id}", controller.GetByPartyIdController).Methods("GET")

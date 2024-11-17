@@ -2,9 +2,9 @@ package interfaces
 
 import (
 	"github.com/gorilla/mux"
-	"github.com/zsomborCzaban/party_organizer/common/api"
-	"github.com/zsomborCzaban/party_organizer/common/jwt"
 	"github.com/zsomborCzaban/party_organizer/services/managers/party_attendance_manager/domains"
+	"github.com/zsomborCzaban/party_organizer/utils/api"
+	"github.com/zsomborCzaban/party_organizer/utils/jwt"
 	"net/http"
 	"strconv"
 )
@@ -173,6 +173,33 @@ func (fc PartyInviteController) Kick(w http.ResponseWriter, r *http.Request) {
 	}
 
 	resp := fc.PartyInviteService.Kick(uint(kickedId), userId, uint(partyId))
+	couldSend := resp.Send(w)
+	if !couldSend {
+		//todo: handle logging
+		return
+	}
+}
+
+func (fc PartyInviteController) LeaveParty(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	partyId, err := strconv.ParseUint(vars["party_id"], 10, 32)
+	if err != nil {
+		br := api.ErrorBadRequest(err.Error())
+
+		br.Send(w)
+		return
+	}
+
+	userId, err3 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	if err3 != nil {
+		br := api.ErrorBadRequest(err3.Error())
+
+		br.Send(w)
+		return
+	}
+
+	//kick method is also used for LeaveParty
+	resp := fc.PartyInviteService.Kick(userId, userId, uint(partyId))
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging

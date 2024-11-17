@@ -10,7 +10,7 @@ type IDatabase interface {
 	Find(dest interface{}, conds ...interface{}) error
 	Update(entity interface{}) error
 	Save(entity interface{}) error
-	Delete(entity interface{}, conds ...interface{}) error
+	Delete(entity interface{}) error
 	AddToAssociation(entity interface{}, association string, associatedEntities ...interface{}) error
 	DeleteFromAssociation(entity interface{}, association string, associatedEntities ...interface{}) error
 	ClearAssociation(entity interface{}, association string) error

@@ -9,7 +9,7 @@ type GormDBWrapper struct {
 	DB *gorm.DB
 }
 
-func NewGormDBWrapper(dbEntity interface{}, db *gorm.DB) *GormDBWrapper {
+func NewGormDBWrapper(db *gorm.DB) *GormDBWrapper {
 	return &GormDBWrapper{DB: db}
 }
 
@@ -41,8 +41,8 @@ func (dbWrapper *GormDBWrapper) Find(dest interface{}, conds ...interface{}) err
 	return dbWrapper.DB.Find(dest, conds).Error
 }
 
-func (dbWrapper *GormDBWrapper) Delete(entity interface{}, conds ...interface{}) error {
-	return dbWrapper.DB.Delete(entity, conds).Error
+func (dbWrapper *GormDBWrapper) Delete(entity interface{}) error {
+	return dbWrapper.DB.Delete(entity).Error
 }
 
 func (dbWrapper *GormDBWrapper) AddToAssociation(entity interface{}, association string, associatedEntities ...interface{}) error {
@@ -53,8 +53,8 @@ func (dbWrapper *GormDBWrapper) DeleteFromAssociation(entity interface{}, associ
 	return dbWrapper.DB.Model(entity).Association(association).Delete(associatedEntities)
 }
 
-func (dbHandler *GormDBWrapper) ClearAssociation(entity interface{}, association string) error {
-	return dbHandler.DB.Model(entity).Association(association).Clear()
+func (dbWrapper *GormDBWrapper) ClearAssociation(entity interface{}, association string) error {
+	return dbWrapper.DB.Model(entity).Association(association).Clear()
 }
 
 func (dbWrapper *GormDBWrapper) ProcessWhereStatements(conds []QueryParameter) {

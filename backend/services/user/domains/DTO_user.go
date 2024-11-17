@@ -1,7 +1,7 @@
 package domains
 
 import (
-	"github.com/zsomborCzaban/party_organizer/common/jwt"
+	"github.com/zsomborCzaban/party_organizer/utils/jwt"
 	"gorm.io/gorm"
 	"strconv"
 )
