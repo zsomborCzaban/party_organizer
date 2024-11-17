@@ -12,19 +12,19 @@ import (
 
 type DrinkContributionService struct {
 	Validator              api.IValidator
-	ContributionRepository *domains.IDrinkContributionRepository
-	UserRepository         *userDomain.IUserRepository
-	PartyRepository        *partyDomains.IPartyRepository
-	DrinkReqRepository     *drinkReqDomain.IDrinkRequirementRepository
+	ContributionRepository domains.IDrinkContributionRepository
+	UserRepository         userDomain.IUserRepository
+	PartyRepository        partyDomains.IPartyRepository
+	DrinkReqRepository     drinkReqDomain.IDrinkRequirementRepository
 }
 
 func NewDrinkContributionService(repoCollector *repo.RepoCollector, vali api.IValidator) domains.IDrinkContributionService {
 	return &DrinkContributionService{
 		Validator:              vali,
-		ContributionRepository: repoCollector.DrinkContribRepo,
-		UserRepository:         repoCollector.UserRepo,
-		PartyRepository:        repoCollector.PartyRepo,
-		DrinkReqRepository:     repoCollector.DrinkReqRepo,
+		ContributionRepository: *repoCollector.DrinkContribRepo,
+		UserRepository:         *repoCollector.UserRepo,
+		PartyRepository:        *repoCollector.PartyRepo,
+		DrinkReqRepository:     *repoCollector.DrinkReqRepo,
 	}
 }
 
@@ -34,7 +34,7 @@ func (ds DrinkContributionService) Create(contribution domains.DrinkContribution
 		return api.ErrorValidation(err.Errors)
 	}
 
-	req, err3 := (*ds.DrinkReqRepository).FindById(contribution.DrinkReqId, partyDomains.FullPartyNestedPreload...)
+	req, err3 := ds.DrinkReqRepository.FindById(contribution.DrinkReqId, partyDomains.FullPartyNestedPreload...)
 	if err3 != nil {
 		return api.ErrorBadRequest(err3.Error())
 	}
@@ -46,7 +46,7 @@ func (ds DrinkContributionService) Create(contribution domains.DrinkContribution
 	contribution.ContributorId = userId
 	contribution.PartyId = req.PartyID
 
-	if err5 := (*ds.ContributionRepository).Create(&contribution); err5 != nil {
+	if err5 := ds.ContributionRepository.Create(&contribution); err5 != nil {
 		return api.ErrorInternalServerError(err5.Error())
 	}
 
@@ -59,7 +59,7 @@ func (ds DrinkContributionService) Update(contribution domains.DrinkContribution
 		return api.ErrorValidation(err.Errors)
 	}
 
-	oldContribution, err2 := (*ds.ContributionRepository).FindById(contribution.ID, partyDomains.FullPartyNestedPreload...)
+	oldContribution, err2 := ds.ContributionRepository.FindById(contribution.ID, partyDomains.FullPartyNestedPreload...)
 	if err2 != nil {
 		return api.ErrorBadRequest(err2.Error())
 	}
@@ -79,7 +79,7 @@ func (ds DrinkContributionService) Update(contribution domains.DrinkContribution
 	contribution.ContributorId = oldContribution.ContributorId
 	contribution.PartyId = oldContribution.PartyId
 
-	if err6 := (*ds.ContributionRepository).Create(&contribution); err6 != nil {
+	if err6 := ds.ContributionRepository.Create(&contribution); err6 != nil {
 		return api.ErrorInternalServerError(err6.Error())
 	}
 
@@ -87,7 +87,7 @@ func (ds DrinkContributionService) Update(contribution domains.DrinkContribution
 }
 
 func (ds DrinkContributionService) Delete(contributionId, userId uint) api.IResponse {
-	contribution, err := (*ds.ContributionRepository).FindById(contributionId, partyDomains.FullPartyNestedPreload...)
+	contribution, err := ds.ContributionRepository.FindById(contributionId, partyDomains.FullPartyNestedPreload...)
 	if err != nil {
 		return api.ErrorBadRequest(err.Error())
 	}
@@ -96,7 +96,7 @@ func (ds DrinkContributionService) Delete(contributionId, userId uint) api.IResp
 		return api.ErrorUnauthorized("cannot delete other people's contribution")
 	}
 
-	if err3 := (*ds.ContributionRepository).Delete(contribution); err3 != nil {
+	if err3 := ds.ContributionRepository.Delete(contribution); err3 != nil {
 		return api.ErrorInternalServerError(err3.Error())
 	}
 
@@ -104,7 +104,7 @@ func (ds DrinkContributionService) Delete(contributionId, userId uint) api.IResp
 }
 
 func (ds DrinkContributionService) GetByPartyIdAndContributorId(partyId, contributorId, userId uint) api.IResponse {
-	party, err := (*ds.PartyRepository).FindById(partyId, partyDomains.FullPartyNestedPreload...)
+	party, err := ds.PartyRepository.FindById(partyId, partyDomains.FullPartyNestedPreload...)
 	if err != nil {
 		return api.ErrorBadRequest(err.Error())
 	}
@@ -116,7 +116,7 @@ func (ds DrinkContributionService) GetByPartyIdAndContributorId(partyId, contrib
 	columnNames := []string{"party_id", "contributor_id"}
 	values := []interface{}{partyId, contributorId}
 
-	contributions, err := (*ds.ContributionRepository).FindAllBy(columnNames, values, "Contributor")
+	contributions, err := ds.ContributionRepository.FindAllBy(columnNames, values, "Contributor")
 	if err != nil {
 		return api.ErrorInternalServerError(err.Error())
 	}
@@ -125,7 +125,7 @@ func (ds DrinkContributionService) GetByPartyIdAndContributorId(partyId, contrib
 }
 
 func (ds DrinkContributionService) GetByRequirementId(requirementId, userId uint) api.IResponse {
-	requirement, err := (*ds.DrinkReqRepository).FindById(requirementId, partyDomains.FullPartyNestedPreload...)
+	requirement, err := ds.DrinkReqRepository.FindById(requirementId, partyDomains.FullPartyNestedPreload...)
 	if err != nil {
 		return api.ErrorBadRequest(err.Error())
 	}
@@ -137,7 +137,7 @@ func (ds DrinkContributionService) GetByRequirementId(requirementId, userId uint
 	columnNames := []string{"drink_req_id"}
 	values := []interface{}{requirementId}
 
-	contributions, err := (*ds.ContributionRepository).FindAllBy(columnNames, values, "Contributor")
+	contributions, err := ds.ContributionRepository.FindAllBy(columnNames, values, "Contributor")
 	if err != nil {
 		return api.ErrorInternalServerError(err.Error())
 	}
@@ -146,7 +146,7 @@ func (ds DrinkContributionService) GetByRequirementId(requirementId, userId uint
 }
 
 func (ds DrinkContributionService) GetByPartyId(partyId, userId uint) api.IResponse {
-	party, err := (*ds.PartyRepository).FindById(partyId, partyDomains.FullPartyPreload...)
+	party, err := ds.PartyRepository.FindById(partyId, partyDomains.FullPartyPreload...)
 	if err != nil {
 		return api.ErrorBadRequest(err.Error())
 	}
@@ -158,7 +158,7 @@ func (ds DrinkContributionService) GetByPartyId(partyId, userId uint) api.IRespo
 	columnNames := []string{"party_id"}
 	values := []interface{}{partyId}
 
-	contributions, err := (*ds.ContributionRepository).FindAllBy(columnNames, values, "Contributor")
+	contributions, err := ds.ContributionRepository.FindAllBy(columnNames, values, "Contributor")
 	if err != nil {
 		return api.ErrorInternalServerError(err.Error())
 	}

@@ -13,25 +13,25 @@ import (
 )
 
 type PartyInviteService struct {
-	PartyInviteRepository       *domains.IPartyInviteRepository
-	UserRepository              *userDomain.IUserRepository
-	PartyRepository             *partyDomains.IPartyRepository
-	FoodContributionRepository  *foodContributionDomains.IFoodContributionRepository
-	DrinkContributionRepository *drinkContributionDomains.IDrinkContributionRepository
+	PartyInviteRepository       domains.IPartyInviteRepository
+	UserRepository              userDomain.IUserRepository
+	PartyRepository             partyDomains.IPartyRepository
+	FoodContributionRepository  foodContributionDomains.IFoodContributionRepository
+	DrinkContributionRepository drinkContributionDomains.IDrinkContributionRepository
 }
 
 func NewPartyInviteService(repoCollector *repo.RepoCollector) domains.IPartyInviteService {
 	return &PartyInviteService{
-		PartyInviteRepository:       repoCollector.PartyInviteRepo,
-		UserRepository:              repoCollector.UserRepo,
-		PartyRepository:             repoCollector.PartyRepo,
-		FoodContributionRepository:  repoCollector.FoodContribRepo,
-		DrinkContributionRepository: repoCollector.DrinkContribRepo,
+		PartyInviteRepository:       *repoCollector.PartyInviteRepo,
+		UserRepository:              *repoCollector.UserRepo,
+		PartyRepository:             *repoCollector.PartyRepo,
+		FoodContributionRepository:  *repoCollector.FoodContribRepo,
+		DrinkContributionRepository: *repoCollector.DrinkContribRepo,
 	}
 }
 
 func (ps PartyInviteService) Accept(invitedId, partyId uint) api.IResponse {
-	invite, err := (*ps.PartyInviteRepository).FindByIds(invitedId, partyId)
+	invite, err := ps.PartyInviteRepository.FindByIds(invitedId, partyId)
 	if err != nil {
 		return api.ErrorInternalServerError(err.Error())
 	}
@@ -44,23 +44,23 @@ func (ps PartyInviteService) Accept(invitedId, partyId uint) api.IResponse {
 		return api.Success(invite)
 	}
 
-	invitedUser, err3 := (*ps.UserRepository).FindById(invitedId)
+	invitedUser, err3 := ps.UserRepository.FindById(invitedId)
 	if err3 != nil {
 		return api.ErrorInternalServerError(err3.Error())
 	}
 
-	party, err4 := (*ps.PartyRepository).FindById(partyId)
+	party, err4 := ps.PartyRepository.FindById(partyId)
 	if err4 != nil {
 		return api.ErrorBadRequest(err4.Error())
 	}
 
 	//todo: put this in a transaction
 	invite.State = domains.ACCEPTED
-	if err5 := (*ps.PartyInviteRepository).Update(invite); err5 != nil {
+	if err5 := ps.PartyInviteRepository.Update(invite); err5 != nil {
 		return api.ErrorInternalServerError(err5.Error())
 	}
 
-	if err6 := (*ps.PartyRepository).AddUserToParty(party, invitedUser); err6 != nil {
+	if err6 := ps.PartyRepository.AddUserToParty(party, invitedUser); err6 != nil {
 		return api.ErrorInternalServerError(err6.Error())
 	}
 
@@ -68,7 +68,7 @@ func (ps PartyInviteService) Accept(invitedId, partyId uint) api.IResponse {
 }
 
 func (ps PartyInviteService) Decline(invitedId, partyId uint) api.IResponse {
-	invite, err := (*ps.PartyInviteRepository).FindByIds(invitedId, partyId)
+	invite, err := ps.PartyInviteRepository.FindByIds(invitedId, partyId)
 	if err != nil {
 		return api.ErrorInternalServerError(err.Error())
 	}
@@ -82,7 +82,7 @@ func (ps PartyInviteService) Decline(invitedId, partyId uint) api.IResponse {
 	}
 
 	invite.State = domains.DECLINED
-	if err2 := (*ps.PartyInviteRepository).Update(invite); err2 != nil {
+	if err2 := ps.PartyInviteRepository.Update(invite); err2 != nil {
 		return api.ErrorInternalServerError(err2.Error())
 	}
 
@@ -90,7 +90,7 @@ func (ps PartyInviteService) Decline(invitedId, partyId uint) api.IResponse {
 }
 
 func (ps PartyInviteService) Invite(invitedUsername string, invitorId, partyId uint) api.IResponse {
-	invitedUser, err := (*ps.UserRepository).FindByUsername(invitedUsername)
+	invitedUser, err := ps.UserRepository.FindByUsername(invitedUsername)
 	if err != nil {
 		return api.ErrorBadRequest(err.Error())
 	}
@@ -99,7 +99,7 @@ func (ps PartyInviteService) Invite(invitedUsername string, invitorId, partyId u
 		return api.ErrorBadRequest("cannot party invite yourself")
 	}
 
-	invite, err := (*ps.PartyInviteRepository).FindByIds(invitedUser.ID, partyId)
+	invite, err := ps.PartyInviteRepository.FindByIds(invitedUser.ID, partyId)
 	if err != nil && err.Error() == domains.NOT_FOUND {
 		return ps.CreateInvitation(invitedUser.ID, invitorId, partyId)
 	}
@@ -116,7 +116,7 @@ func (ps PartyInviteService) Invite(invitedUsername string, invitorId, partyId u
 	}
 
 	invite.State = domains.PENDING
-	if err2 := (*ps.PartyInviteRepository).Update(invite); err2 != nil {
+	if err2 := ps.PartyInviteRepository.Update(invite); err2 != nil {
 		return api.ErrorInternalServerError(err2.Error())
 	}
 
@@ -124,17 +124,17 @@ func (ps PartyInviteService) Invite(invitedUsername string, invitorId, partyId u
 }
 
 func (ps PartyInviteService) CreateInvitation(invitedId, invitorId, partyId uint) api.IResponse {
-	invitor, err := (*ps.UserRepository).FindById(invitorId)
+	invitor, err := ps.UserRepository.FindById(invitorId)
 	if err != nil {
 		return api.ErrorBadRequest(err.Error())
 	}
 
-	party, err2 := (*ps.PartyRepository).FindById(partyId)
+	party, err2 := ps.PartyRepository.FindById(partyId)
 	if err2 != nil {
 		return api.ErrorBadRequest(err2.Error())
 	}
 
-	invited, err3 := (*ps.UserRepository).FindById(invitedId)
+	invited, err3 := ps.UserRepository.FindById(invitedId)
 	if err3 != nil {
 		return api.ErrorBadRequest(err3.Error())
 	}
@@ -154,14 +154,14 @@ func (ps PartyInviteService) CreateInvitation(invitedId, invitorId, partyId uint
 		State:     domains.PENDING,
 	}
 
-	if errCreation := (*ps.PartyInviteRepository).Create(invitation); errCreation != nil {
+	if errCreation := ps.PartyInviteRepository.Create(invitation); errCreation != nil {
 		return api.ErrorInternalServerError(errCreation.Error())
 	}
 	return api.Success(invitation)
 }
 
 func (ps PartyInviteService) GetUserPendingInvites(userId uint) api.IResponse {
-	invites, err := (*ps.PartyInviteRepository).FindPendingByInvitedId(userId)
+	invites, err := ps.PartyInviteRepository.FindPendingByInvitedId(userId)
 	if err != nil {
 		return api.ErrorInternalServerError(err.Error())
 	}
@@ -169,7 +169,7 @@ func (ps PartyInviteService) GetUserPendingInvites(userId uint) api.IResponse {
 	return api.Success(invites)
 }
 func (ps PartyInviteService) GetPartyPendingInvites(partyId, userId uint) api.IResponse {
-	party, err := (*ps.PartyRepository).FindById(partyId)
+	party, err := ps.PartyRepository.FindById(partyId)
 	if err != nil {
 		return api.ErrorBadRequest(err.Error())
 	}
@@ -178,7 +178,7 @@ func (ps PartyInviteService) GetPartyPendingInvites(partyId, userId uint) api.IR
 		return api.ErrorUnauthorized("cannot organize this party")
 	}
 
-	invites, err := (*ps.PartyInviteRepository).FindPendingByPartyId(partyId)
+	invites, err := ps.PartyInviteRepository.FindPendingByPartyId(partyId)
 	if err != nil {
 		return api.ErrorInternalServerError(err.Error())
 	}
@@ -187,12 +187,12 @@ func (ps PartyInviteService) GetPartyPendingInvites(partyId, userId uint) api.IR
 }
 
 func (ps PartyInviteService) JoinPublicParty(partyId, userId uint) api.IResponse {
-	party, err := (*ps.PartyRepository).FindById(partyId)
+	party, err := ps.PartyRepository.FindById(partyId)
 	if err != nil {
 		return api.ErrorBadRequest(err.Error())
 	}
 
-	user, err2 := (*ps.UserRepository).FindById(userId)
+	user, err2 := ps.UserRepository.FindById(userId)
 	if err2 != nil {
 		return api.ErrorBadRequest(err2.Error())
 	}
@@ -201,7 +201,7 @@ func (ps PartyInviteService) JoinPublicParty(partyId, userId uint) api.IResponse
 		return api.Success(party)
 	}
 
-	invite, err3 := (*ps.PartyInviteRepository).FindByIds(userId, partyId)
+	invite, err3 := ps.PartyInviteRepository.FindByIds(userId, partyId)
 	if err3 != nil {
 		invite = &domains.PartyInvite{
 			InvitorId: party.OrganizerID,
@@ -215,12 +215,12 @@ func (ps PartyInviteService) JoinPublicParty(partyId, userId uint) api.IResponse
 	invite.State = domains.ACCEPTED
 
 	//todo: put this in transaction
-	err4 := (*ps.PartyInviteRepository).Save(invite)
+	err4 := ps.PartyInviteRepository.Save(invite)
 	if err4 != nil {
 		return api.ErrorInternalServerError(err4.Error())
 	}
 
-	err5 := (*ps.PartyRepository).AddUserToParty(party, user)
+	err5 := ps.PartyRepository.AddUserToParty(party, user)
 	if err5 != nil {
 		//todo: rollback
 		return api.ErrorInternalServerError(err5.Error())
@@ -236,7 +236,7 @@ func (ps PartyInviteService) JoinPrivateParty(userId uint, accessCode string) ap
 		return api.ErrorBadRequest(domains.INVALID_ACCESS_CODE)
 	}
 
-	party, err := (*ps.PartyRepository).FindById(uint(partyId))
+	party, err := ps.PartyRepository.FindById(uint(partyId))
 	if err != nil {
 		return api.ErrorBadRequest(domains.INVALID_ACCESS_CODE)
 	}
@@ -249,7 +249,7 @@ func (ps PartyInviteService) JoinPrivateParty(userId uint, accessCode string) ap
 		return api.ErrorUnauthorized(domains.INVALID_ACCESS_CODE)
 	}
 
-	user, err2 := (*ps.UserRepository).FindById(userId)
+	user, err2 := ps.UserRepository.FindById(userId)
 	if err2 != nil {
 		return api.ErrorBadRequest(err2.Error())
 	}
@@ -258,7 +258,7 @@ func (ps PartyInviteService) JoinPrivateParty(userId uint, accessCode string) ap
 		return api.Success(party)
 	}
 
-	invite, err3 := (*ps.PartyInviteRepository).FindByIds(userId, uint(partyId))
+	invite, err3 := ps.PartyInviteRepository.FindByIds(userId, uint(partyId))
 	if err3 != nil {
 		invite = &domains.PartyInvite{
 			InvitorId: party.OrganizerID,
@@ -272,11 +272,11 @@ func (ps PartyInviteService) JoinPrivateParty(userId uint, accessCode string) ap
 	invite.State = domains.ACCEPTED
 
 	//todo: put this in transaction
-	err4 := (*ps.PartyInviteRepository).Save(invite)
+	err4 := ps.PartyInviteRepository.Save(invite)
 	if err4 != nil {
 		return api.ErrorInternalServerError(err4.Error())
 	}
-	if err5 := (*ps.PartyRepository).AddUserToParty(party, user); err5 != nil {
+	if err5 := ps.PartyRepository.AddUserToParty(party, user); err5 != nil {
 		//todo: rollback
 		return api.ErrorInternalServerError(err5.Error())
 	}
@@ -284,12 +284,12 @@ func (ps PartyInviteService) JoinPrivateParty(userId uint, accessCode string) ap
 }
 
 func (ps PartyInviteService) Kick(kickedId, userId, partyId uint) api.IResponse {
-	kickedUser, err := (*ps.UserRepository).FindById(kickedId)
+	kickedUser, err := ps.UserRepository.FindById(kickedId)
 	if err != nil {
 		return api.ErrorBadRequest(err.Error())
 	}
 
-	party, err3 := (*ps.PartyRepository).FindById(partyId)
+	party, err3 := ps.PartyRepository.FindById(partyId)
 	if err3 != nil {
 		return api.ErrorBadRequest(err3.Error())
 	}
@@ -304,25 +304,25 @@ func (ps PartyInviteService) Kick(kickedId, userId, partyId uint) api.IResponse 
 		return api.Success("user kicked successfully")
 	}
 
-	invite, err4 := (*ps.PartyInviteRepository).FindByIds(kickedId, partyId)
+	invite, err4 := ps.PartyInviteRepository.FindByIds(kickedId, partyId)
 	if err4 != nil {
 		return api.ErrorInternalServerError(err4.Error())
 	}
 
 	//todo: put this in a transaction
-	if err5 := (*ps.FoodContributionRepository).DeleteByContributorId(kickedId); err5 != nil {
+	if err5 := ps.FoodContributionRepository.DeleteByContributorId(kickedId); err5 != nil {
 		return api.ErrorInternalServerError(err5.Error())
 	}
-	if err6 := (*ps.DrinkContributionRepository).DeleteByContributorId(kickedId); err6 != nil {
+	if err6 := ps.DrinkContributionRepository.DeleteByContributorId(kickedId); err6 != nil {
 		return api.ErrorInternalServerError(err6.Error())
 	}
 
-	if err7 := (*ps.PartyRepository).RemoveUserFromParty(party, kickedUser); err7 != nil {
+	if err7 := ps.PartyRepository.RemoveUserFromParty(party, kickedUser); err7 != nil {
 		return api.ErrorInternalServerError(err7.Error())
 	}
 
 	invite.State = domains.DECLINED
-	if err8 := (*ps.PartyInviteRepository).Update(invite); err8 != nil {
+	if err8 := ps.PartyInviteRepository.Update(invite); err8 != nil {
 		return api.ErrorInternalServerError(err8.Error())
 	}
 
