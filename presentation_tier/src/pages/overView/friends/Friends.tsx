@@ -1,18 +1,18 @@
 import React, {CSSProperties, useEffect, useState} from 'react';
 import { Button, Table } from 'antd';
-import OverViewNavBar from 'components/navbar/OverViewNavBar';
-import {useDispatch, useSelector} from 'react-redux';
-import {AppDispatch, RootState} from 'store/store';
-import {loadFriendInvites} from 'data/sclices/FriendInviteSlice';
-import {loadFriends} from 'data/sclices/FriendSlice';
-import {acceptInvite, declineInvite, inviteFriend, removeFriend} from 'data/apis/FriendInviteManagerApi';
-import {FriendInvite} from 'data/types/FriendInvite';
-import {User} from 'data/types/User';
-import OverViewProfile from 'components/drawer/OverViewProfile';
-import {getUser} from 'auth/AuthUserUtil';
-import {authService} from 'auth/AuthService';
-import {invitedByTableColumns, userTableColumns} from 'data/constants/TableColumns';
-import {setForTime} from 'data/utils/timeoutSetterUtils';
+import { AppDispatch, RootState } from 'src/store/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { User } from 'src/data/types/User';
+import { getUser } from 'src/auth/AuthUserUtil';
+import { authService } from 'src/auth/AuthService';
+import { loadFriendInvites } from 'src/data/sclices/FriendInviteSlice';
+import { loadFriends } from 'src/data/sclices/FriendSlice';
+import { acceptInvite, declineInvite, inviteFriend, removeFriend } from 'src/data/apis/FriendInviteManagerApi';
+import { setForTime } from 'src/data/utils/timeoutSetterUtils';
+import { FriendInvite } from 'src/data/types/FriendInvite';
+import { invitedByTableColumns, userTableColumns } from 'src/data/constants/TableColumns';
+import OverViewNavBar from 'src/components/navbar/OverViewNavBar';
+import OverViewProfile from 'src/components/drawer/OverViewProfile';
 
 const styles: { [key: string]: CSSProperties } = {
     container: {

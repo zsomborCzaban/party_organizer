@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {Input, Button, DatePicker, Checkbox} from 'antd';
 import dayjs from 'dayjs';
 import 'antd/dist/reset.css';
-import backgroundImage from '../../data/resources/images/blackhole.png';
 import {Party} from '../../data/types/Party';
 import {useNavigate} from 'react-router-dom';
 import {createParty} from '../../data/apis/PartyApi';
@@ -14,7 +13,7 @@ import {ApiError} from '../../api/ApiResponse';
 // Inline CSS styles
 const styles: {[key: string]: React.CSSProperties} = {
     outerOuterContainer: {
-        backgroundImage: `url(${backgroundImage})`,
+        backgroundImage: `url(${'background image url'})`,
         width: '100vw',
         height: '100vh',
         backgroundSize: 'cover',

@@ -1,6 +1,5 @@
 import React, {ChangeEvent, useState} from 'react';
 import {User} from '../../data/types/User';
-import defaultProfilePicture from '../../data/resources/images/default_profile_picture.png';
 import {Button} from 'antd';
 import {Party} from '../../data/types/Party';
 import {handleProfilePictureUpload} from '../../data/utils/imageUtils';
@@ -116,7 +115,7 @@ type DrawerProps = {
 
 const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, user, currentParty }) => {
     const [profileErrorMessage, setProfileErrorMessage] = useState('');
-    const [profilePictureUrl, setProfilePictureUrl] = useState(user.profile_picture_url ? user.profile_picture_url : defaultProfilePicture);
+    const [profilePictureUrl, setProfilePictureUrl] = useState(user.profile_picture_url ? user.profile_picture_url : 'default picture');
 
     const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
         handleProfilePictureUpload(event, setProfilePictureUrl, setProfileErrorMessage);

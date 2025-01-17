@@ -1,21 +1,21 @@
 import {useDispatch, useSelector} from 'react-redux';
-import {AppDispatch, RootState} from 'store/store';
 import {CSSProperties, useEffect, useState} from 'react';
-import OverViewNavBar from 'components/navbar/OverViewNavBar';
 import { Table } from 'antd';
 import {useNavigate} from 'react-router-dom';
-import {Party} from 'data/types/Party';
-import {loadOrganizedParties} from 'data/sclices/OrganizedPartySlice';
-import {loadAttendedParties} from 'data/sclices/AttendedPartySlice';
-import {loadPartyInvites} from 'data/sclices/PartyInviteSlice';
-import {PartyInvite} from 'data/types/PartyInvite';
-import {acceptInvite, declineInvite} from 'data/apis/PartyAttendanceManagerApi';
-import {setSelectedParty} from 'data/sclices/PartySlice';
-import OverViewProfile from 'components/drawer/OverViewProfile';
-import {User} from 'data/types/User';
-import {getUser} from 'auth/AuthUserUtil';
-import {authService} from 'auth/AuthService';
-import {partyInviteTableColumns, partyTableColumns} from 'data/constants/TableColumns';
+import { AppDispatch, RootState } from 'src/store/store';
+import { User } from 'src/data/types/User';
+import { loadOrganizedParties } from 'src/data/sclices/OrganizedPartySlice';
+import { getUser } from 'src/auth/AuthUserUtil';
+import { loadAttendedParties } from 'src/data/sclices/AttendedPartySlice';
+import { loadPartyInvites } from 'src/data/sclices/PartyInviteSlice';
+import { setSelectedParty } from 'src/data/sclices/PartySlice';
+import { Party } from 'src/data/types/Party';
+import { PartyInvite } from 'src/data/types/PartyInvite';
+import { acceptInvite, declineInvite } from 'src/data/apis/PartyAttendanceManagerApi';
+import OverViewNavBar from 'src/components/navbar/OverViewNavBar';
+import OverViewProfile from 'src/components/drawer/OverViewProfile';
+import { authService } from 'src/auth/AuthService';
+import { partyInviteTableColumns, partyTableColumns } from 'src/data/constants/TableColumns';
 
 const styles: { [key: string]: CSSProperties } = {
     outerContainer: {

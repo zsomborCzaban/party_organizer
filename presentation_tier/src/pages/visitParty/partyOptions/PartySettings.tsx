@@ -1,25 +1,24 @@
+import { Button, Checkbox, ConfigProvider, DatePicker, Input, theme } from 'antd';
+import dayjs from 'dayjs';
 import {CSSProperties, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {AppDispatch, RootState} from 'store/store';
-import {useNavigate} from 'react-router-dom';
-import {Button, Checkbox, ConfigProvider, DatePicker, Input, theme} from 'antd';
-import backgroundImage from 'data/resources/images/gears.png';
-import dayjs from 'dayjs';
-import {ApiError} from 'api/ApiResponse';
-import {Party} from 'data/types/Party';
-import {updateParty} from 'data/apis/PartyApi';
-import {setSelectedParty} from 'data/sclices/PartySlice';
-import VisitPartyNavBar from 'components/navbar/VisitPartyNavBar';
-import VisitPartyProfile from 'components/drawer/VisitPartyProfile';
-import {User} from 'data/types/User';
-import {getUser} from 'auth/AuthUserUtil';
-import {authService} from 'auth/AuthService';
-import {setForTime} from 'data/utils/timeoutSetterUtils';
+import { useNavigate } from 'react-router-dom';
+import { ApiError } from 'src/api/ApiResponse';
+import { authService } from 'src/auth/AuthService';
+import { getUser } from 'src/auth/AuthUserUtil';
+import VisitPartyProfile from 'src/components/drawer/VisitPartyProfile';
+import VisitPartyNavBar from 'src/components/navbar/VisitPartyNavBar';
+import { updateParty } from 'src/data/apis/PartyApi';
+import { setSelectedParty } from 'src/data/sclices/PartySlice';
+import { Party } from 'src/data/types/Party';
+import { User } from 'src/data/types/User';
+import { setForTime } from 'src/data/utils/timeoutSetterUtils';
+import { AppDispatch, RootState } from 'src/store/store';
 
 
 const styles: { [key: string]: CSSProperties } = {
     outerContainer: {
-        backgroundImage: `url(${backgroundImage})`,
+        backgroundImage: `url(${'backgroundImage'})`,
         position: 'fixed',
         backgroundSize: 'cover',
         backgroundPosition: 'center',

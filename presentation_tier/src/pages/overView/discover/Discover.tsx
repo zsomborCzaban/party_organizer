@@ -1,21 +1,20 @@
+import { Button, Table } from 'antd';
+import { CSSProperties, useEffect, useState } from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {AppDispatch, RootState} from 'store/store';
-import {CSSProperties, useEffect, useState} from 'react';
-import {loadPublicParties} from 'data/sclices/PublicPartySlice';
-import OverViewNavBar from 'components/navbar/OverViewNavBar';
-import {Button, Table} from 'antd';
-import createImage from 'data/resources/images/u5679648646_httpss.mj.runKqg0SHl7m9w_make_a_picture_similar_t_2a92ccce-3fd5-4da4-8398-11898f188cd5_3.png';
-import joinImage from 'data/resources/images/u5679648646_2_people_dancing_with_a_galactic_lsd_like_trip_li_78e43cba-8023-4e69-9fa1-75bb9790bbe8_0.png';
-import {useNavigate} from 'react-router-dom';
-import {Party} from 'data/types/Party';
+import { useNavigate } from 'react-router-dom';
+import { authService } from 'src/auth/AuthService';
+import { getUser } from 'src/auth/AuthUserUtil';
+import OverViewProfile from 'src/components/drawer/OverViewProfile';
+import OverViewNavBar from 'src/components/navbar/OverViewNavBar';
+import { joinPublicParty } from 'src/data/apis/PartyAttendanceManagerApi';
+import { partyTableColumns } from 'src/data/constants/TableColumns';
+import { setSelectedParty } from 'src/data/sclices/PartySlice';
+import { loadPublicParties } from 'src/data/sclices/PublicPartySlice';
+import { Party } from 'src/data/types/Party';
+import { User } from 'src/data/types/User';
+import { AppDispatch, RootState } from 'src/store/store';
 import AccessCodeModal from './AccessCodeModal';
-import {setSelectedParty} from 'data/sclices/PartySlice';
-import {joinPublicParty} from 'data/apis/PartyAttendanceManagerApi';
-import OverViewProfile from 'components/drawer/OverViewProfile';
-import {User} from 'data/types/User';
-import {getUser} from 'auth/AuthUserUtil';
-import {authService} from 'auth/AuthService';
-import {partyTableColumns} from 'data/constants/TableColumns';
+
 
 const styles: { [key: string]: CSSProperties } = {
     outerContainer: {
@@ -57,7 +56,7 @@ const styles: { [key: string]: CSSProperties } = {
     },
     createButton: {
         width: '48%',
-        backgroundImage: `url(${createImage})`,
+        backgroundImage: `url(${'createImage'})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         color: 'white',
@@ -75,7 +74,7 @@ const styles: { [key: string]: CSSProperties } = {
     },
     joinButton: {
         width: '48%',
-        backgroundImage: `url(${joinImage})`,
+        backgroundImage: `url(${'joinImage'})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         color: 'white',

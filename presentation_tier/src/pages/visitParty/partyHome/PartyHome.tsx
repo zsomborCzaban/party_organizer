@@ -1,14 +1,13 @@
 import React, {CSSProperties, useEffect, useState} from 'react';
-import VisitPartyNavBar from 'components/navbar/VisitPartyNavBar';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import {useNavigate} from 'react-router-dom';
-import {useSelector} from 'react-redux';
-import {RootState} from 'store/store';
-import videoBackground from 'data/resources/videos/party_video.mp4';
-import VisitPartyProfile from 'components/drawer/VisitPartyProfile';
-import {User} from 'data/types/User';
-import {getUser} from 'auth/AuthUserUtil';
-import {authService} from 'auth/AuthService';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { authService } from 'src/auth/AuthService';
+import { getUser } from 'src/auth/AuthUserUtil';
+import VisitPartyProfile from 'src/components/drawer/VisitPartyProfile';
+import VisitPartyNavBar from 'src/components/navbar/VisitPartyNavBar';
+import { User } from 'src/data/types/User';
+import { RootState } from 'src/store/store';
+
 
 const styles: { [key: string]: CSSProperties } = {
     outerContainer: {
@@ -129,7 +128,7 @@ const PartyHome: React.FC = () => {
 
         {/* <div style={{ position: 'relative', width: '100%', height: '100vh', overflow: 'hidden' }}> */}
         <video
-          src={videoBackground}
+          /* src={videoBackground} */
           autoPlay
           loop
           muted

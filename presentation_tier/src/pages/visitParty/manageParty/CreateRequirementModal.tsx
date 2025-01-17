@@ -1,16 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {Input, Modal} from 'antd';
-import {ApiError} from 'api/ApiResponse';
-import {
-    createDrinkRequirement,
-    createFoodRequirement,
-} from 'data/apis/RequirementApi';
-import {useDispatch, useSelector} from 'react-redux';
-import {AppDispatch, RootState} from 'store/store';
-import {Requirement} from 'data/types/Requirement';
-import {loadDrinkRequirements} from 'data/sclices/DrinkRequirementSlice';
-import {loadFoodRequirements} from 'data/sclices/FoodRequirementSlice';
-import {setForTime} from 'data/utils/timeoutSetterUtils';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from 'src/store/store';
+import { ApiError } from 'src/api/ApiResponse';
+import { Requirement } from 'src/data/types/Requirement';
+import { createDrinkRequirement, createFoodRequirement } from 'src/data/apis/RequirementApi';
+import { setForTime } from 'src/data/utils/timeoutSetterUtils';
+import { loadDrinkRequirements } from 'src/data/sclices/DrinkRequirementSlice';
+import { loadFoodRequirements } from 'src/data/sclices/FoodRequirementSlice';
+
 
 const styles: { [key: string]: React.CSSProperties } = {
     modalContent: {

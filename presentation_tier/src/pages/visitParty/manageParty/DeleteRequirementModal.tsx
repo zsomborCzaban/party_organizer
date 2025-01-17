@@ -1,14 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Modal} from 'antd';
-import {ApiError} from 'api/ApiResponse';
-import {
-    deleteDrinkRequirement,
-    deleteFoodRequirement,
-} from 'data/apis/RequirementApi';
-import {useDispatch, useSelector} from 'react-redux';
-import {AppDispatch, RootState} from 'store/store';
-import {loadDrinkRequirements} from 'data/sclices/DrinkRequirementSlice';
-import {loadFoodRequirements} from 'data/sclices/FoodRequirementSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from 'src/store/store';
+import { ApiError } from 'src/api/ApiResponse';
+import { deleteDrinkRequirement, deleteFoodRequirement } from 'src/data/apis/RequirementApi';
+import { loadDrinkRequirements } from 'src/data/sclices/DrinkRequirementSlice';
+import { loadFoodRequirements } from 'src/data/sclices/FoodRequirementSlice';
 
 const styles: { [key: string]: React.CSSProperties } = {
     modalContent: {

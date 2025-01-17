@@ -1,27 +1,26 @@
+import { CSSProperties, useEffect, useRef, useState } from 'react';
 import Collapsible from 'react-collapsible';
-import VisitPartyNavBar from 'components/navbar/VisitPartyNavBar';
-import {useNavigate} from 'react-router-dom';
-import {useDispatch, useSelector} from 'react-redux';
-import {AppDispatch, RootState} from 'store/store';
-import {CSSProperties, useEffect, useRef, useState} from 'react';
-import {loadDrinkRequirements} from 'data/sclices/DrinkRequirementSlice';
-import {loadFoodRequirements} from 'data/sclices/FoodRequirementSlice';
-import {loadDrinkContributions} from 'data/sclices/DrinkContributionSlice';
-import {loadFoodContributions} from 'data/sclices/FoodContributionSlice';
-import {loadPartyParticipants} from 'data/sclices/PartyParticipantSlice';
-import {User} from 'data/types/User';
-import {Contribution} from 'data/types/Contribution';
-import {Requirement} from 'data/types/Requirement';
-import backgroundImage from 'data/resources/images/cola-pepsi.png';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { authService } from 'src/auth/AuthService';
+import { getUser } from 'src/auth/AuthUserUtil';
+import VisitPartyProfile from 'src/components/drawer/VisitPartyProfile';
+import VisitPartyNavBar from 'src/components/navbar/VisitPartyNavBar';
+import { loadDrinkContributions } from 'src/data/sclices/DrinkContributionSlice';
+import { loadDrinkRequirements } from 'src/data/sclices/DrinkRequirementSlice';
+import { loadFoodContributions } from 'src/data/sclices/FoodContributionSlice';
+import { loadFoodRequirements } from 'src/data/sclices/FoodRequirementSlice';
+import { loadPartyParticipants } from 'src/data/sclices/PartyParticipantSlice';
+import { Contribution } from 'src/data/types/Contribution';
+import { Requirement } from 'src/data/types/Requirement';
+import { User } from 'src/data/types/User';
+import { AppDispatch, RootState } from 'src/store/store';
 import ContributeModal from './ContributeModal';
-import {getUser} from 'auth/AuthUserUtil';
-import {authService} from 'auth/AuthService';
 import DeleteContributionModal from './DeleteContributionModal';
-import VisitPartyProfile from 'components/drawer/VisitPartyProfile';
 
 const styles: { [key: string]: CSSProperties } = {
     background: {
-        backgroundImage: `url(${backgroundImage})`,
+        backgroundImage: `url(${'backgroundImage'})`,
         position: 'fixed',
         backgroundSize: 'cover',
         backgroundPosition: 'center',

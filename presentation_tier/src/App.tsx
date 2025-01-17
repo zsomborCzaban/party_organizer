@@ -1,4 +1,3 @@
-import './App.css';
 import { AppRouter } from './AppRouter';
 
 const App = () => <AppRouter />;
