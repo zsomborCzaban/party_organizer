@@ -2,19 +2,14 @@ package interfaces
 
 import (
 	"github.com/gorilla/mux"
-	"github.com/zsomborCzaban/party_organizer/common/jwt"
 	"github.com/zsomborCzaban/party_organizer/services/managers/friend_manager/domains"
 )
 
 func NewFriendInviteRouter(router *mux.Router, controller domains.IFriendInviteController) {
-	r := router.PathPrefix("/friendManager").Subrouter()
+	router.HandleFunc("/friendManager/accept/{invitor_id}", controller.Accept).Methods("GET")
+	router.HandleFunc("/friendManager/decline/{invitor_id}", controller.Decline).Methods("GET")
+	router.HandleFunc("/friendManager/invite/{username}", controller.Invite).Methods("GET")
 
-	r.Use(jwt.ValidateJWTMiddleware)
-
-	r.HandleFunc("/accept/{invitor_id}", controller.Accept).Methods("GET")
-	r.HandleFunc("/decline/{invitor_id}", controller.Decline).Methods("GET")
-	r.HandleFunc("/invite/{username}", controller.Invite).Methods("GET")
-
-	r.HandleFunc("/getPendingInvites", controller.GetPendingInvites).Methods("GET")
-	r.HandleFunc("/removeFriend/{friend_id}", controller.RemoveFriend).Methods("GET")
+	router.HandleFunc("/friendManager/getPendingInvites", controller.GetPendingInvites).Methods("GET")
+	router.HandleFunc("/friendManager/removeFriend/{friend_id}", controller.RemoveFriend).Methods("GET")
 }

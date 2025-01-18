@@ -83,7 +83,7 @@ func ErrorNotFound(field, entity string) IResponse {
 
 func ErrorInvalidCredentials() IResponse {
 	ve := NewValidationErrors()
-	ve.CollectValidationError("", "invalid credentials", nil)
+	ve.CollectValidationError("", "invalid password or username", nil)
 
 	return Error(http.StatusNotAcceptable, ve.Errors)
 }

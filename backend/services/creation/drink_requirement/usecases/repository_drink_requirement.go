@@ -28,8 +28,8 @@ func (dr DrinkRequirementRepository) CreateDrinkRequirement(drinkRequirement *do
 
 }
 
-func (dr DrinkRequirementRepository) FindById(id uint) (*domains.DrinkRequirement, error) {
-	drinkRequirement, err := dr.DbAccess.FindById(id, "Party")
+func (dr DrinkRequirementRepository) FindById(id uint, associations ...string) (*domains.DrinkRequirement, error) {
+	drinkRequirement, err := dr.DbAccess.FindById(id, associations...)
 	if err != nil {
 		return nil, err
 	}
@@ -41,17 +41,23 @@ func (dr DrinkRequirementRepository) FindById(id uint) (*domains.DrinkRequiremen
 	return drinkRequirement2, nil
 }
 
-func (dr DrinkRequirementRepository) UpdateDrinkRequirement(drinkRequirement *domains.DrinkRequirement) error {
-	err := dr.DbAccess.Update(drinkRequirement)
+func (dr DrinkRequirementRepository) DeleteDrinkRequirement(drinkRequirement *domains.DrinkRequirement) error {
+	err := dr.DbAccess.Delete(drinkRequirement)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (dr DrinkRequirementRepository) DeleteDrinkRequirement(drinkRequirement *domains.DrinkRequirement) error {
-	err := dr.DbAccess.Delete(drinkRequirement)
-	if err != nil {
+func (dr DrinkRequirementRepository) DeleteByPartyId(partyId uint) error {
+	conds := []db.QueryParameter{{
+		Field:    "party_id",
+		Operator: "=",
+		Value:    partyId,
+	},
+	}
+
+	if err := dr.DbAccess.BatchDelete(conds); err != nil {
 		return err
 	}
 	return nil
@@ -74,7 +80,7 @@ func (dr DrinkRequirementRepository) GetByPartyId(id uint) (*[]domains.DrinkRequ
 
 	//not sure if parties can be nil after the db function call
 	if drinkReqs == nil {
-		return nil, errors.New("Error. DrinkRequirements were nil")
+		return nil, errors.New("error. DrinkRequirements were nil")
 	}
 
 	return drinkReqs, nil

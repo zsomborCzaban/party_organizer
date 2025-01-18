@@ -2,9 +2,9 @@ package domains
 
 type IFoodRequirementRepository interface {
 	CreateFoodRequirement(*FoodRequirement) error
-	FindById(uint) (*FoodRequirement, error)
+	FindById(id uint, associations ...string) (*FoodRequirement, error)
 	UpdateFoodRequirement(*FoodRequirement) error
 	DeleteFoodRequirement(*FoodRequirement) error
-	//DeleteFoodReqContribution(*FoodRequirement) error
+	DeleteByPartyId(uint) error
 	GetByPartyId(uint) (*[]FoodRequirement, error)
 }

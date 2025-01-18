@@ -1,12 +1,15 @@
 package interfaces
 
 import (
-	"github.com/zsomborCzaban/party_organizer/common/api"
 	partyDomains "github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
 	drinkContributionDomains "github.com/zsomborCzaban/party_organizer/services/interaction/drink_contributions/domains"
 	foodContributionDomains "github.com/zsomborCzaban/party_organizer/services/interaction/food_contributions/domains"
 	"github.com/zsomborCzaban/party_organizer/services/managers/party_attendance_manager/domains"
 	userDomain "github.com/zsomborCzaban/party_organizer/services/user/domains"
+	"github.com/zsomborCzaban/party_organizer/utils/api"
+	"github.com/zsomborCzaban/party_organizer/utils/repo"
+	"strconv"
+	"strings"
 )
 
 type PartyInviteService struct {
@@ -17,13 +20,13 @@ type PartyInviteService struct {
 	DrinkContributionRepository drinkContributionDomains.IDrinkContributionRepository
 }
 
-func NewPartyInviteService(repo domains.IPartyInviteRepository, userRepo userDomain.IUserRepository, partyRepo partyDomains.IPartyRepository, fContrRepo foodContributionDomains.IFoodContributionRepository, dContrRepo drinkContributionDomains.IDrinkContributionRepository) domains.IPartyInviteService {
+func NewPartyInviteService(repoCollector *repo.RepoCollector) domains.IPartyInviteService {
 	return &PartyInviteService{
-		PartyInviteRepository:       repo,
-		UserRepository:              userRepo,
-		PartyRepository:             partyRepo,
-		FoodContributionRepository:  fContrRepo,
-		DrinkContributionRepository: dContrRepo,
+		PartyInviteRepository:       *repoCollector.PartyInviteRepo,
+		UserRepository:              *repoCollector.UserRepo,
+		PartyRepository:             *repoCollector.PartyRepo,
+		FoodContributionRepository:  *repoCollector.FoodContribRepo,
+		DrinkContributionRepository: *repoCollector.DrinkContribRepo,
 	}
 }
 
@@ -226,18 +229,24 @@ func (ps PartyInviteService) JoinPublicParty(partyId, userId uint) api.IResponse
 
 }
 
-func (ps PartyInviteService) JoinPrivateParty(partyId, userId uint, accessCode string) api.IResponse {
-	party, err := ps.PartyRepository.FindById(partyId)
+func (ps PartyInviteService) JoinPrivateParty(userId uint, accessCode string) api.IResponse {
+	partyIdString, _, found := strings.Cut(accessCode, "_")
+	partyId, parseError := strconv.ParseUint(partyIdString, 10, 32)
+	if !found || parseError != nil {
+		return api.ErrorBadRequest(domains.INVALID_ACCESS_CODE)
+	}
+
+	party, err := ps.PartyRepository.FindById(uint(partyId))
 	if err != nil {
-		return api.ErrorBadRequest(err.Error())
+		return api.ErrorBadRequest(domains.INVALID_ACCESS_CODE)
 	}
 
 	if !party.AccessCodeEnabled {
-		return api.ErrorBadRequest("accessCode is not enabled for party")
+		return api.ErrorBadRequest(domains.INVALID_ACCESS_CODE)
 	}
 
 	if party.AccessCode != accessCode {
-		return api.ErrorUnauthorized("invalid accessCode")
+		return api.ErrorUnauthorized(domains.INVALID_ACCESS_CODE)
 	}
 
 	user, err2 := ps.UserRepository.FindById(userId)
@@ -249,14 +258,14 @@ func (ps PartyInviteService) JoinPrivateParty(partyId, userId uint, accessCode s
 		return api.Success(party)
 	}
 
-	invite, err3 := ps.PartyInviteRepository.FindByIds(userId, partyId)
+	invite, err3 := ps.PartyInviteRepository.FindByIds(userId, uint(partyId))
 	if err3 != nil {
 		invite = &domains.PartyInvite{
 			InvitorId: party.OrganizerID,
 			Invitor:   party.Organizer,
 			InvitedId: userId,
 			Invited:   *user,
-			PartyId:   partyId,
+			PartyId:   uint(partyId),
 			Party:     *party,
 		}
 	}
@@ -274,6 +283,7 @@ func (ps PartyInviteService) JoinPrivateParty(partyId, userId uint, accessCode s
 	return api.Success(party)
 }
 
+// also used for LeaveParty
 func (ps PartyInviteService) Kick(kickedId, userId, partyId uint) api.IResponse {
 	kickedUser, err := ps.UserRepository.FindById(kickedId)
 	if err != nil {

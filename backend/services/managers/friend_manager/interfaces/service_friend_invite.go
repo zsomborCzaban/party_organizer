@@ -2,9 +2,10 @@ package interfaces
 
 import (
 	"fmt"
-	"github.com/zsomborCzaban/party_organizer/common/api"
 	"github.com/zsomborCzaban/party_organizer/services/managers/friend_manager/domains"
 	userDomain "github.com/zsomborCzaban/party_organizer/services/user/domains"
+	"github.com/zsomborCzaban/party_organizer/utils/api"
+	"github.com/zsomborCzaban/party_organizer/utils/repo"
 )
 
 type FriendInviteService struct {
@@ -12,10 +13,10 @@ type FriendInviteService struct {
 	UserRepository         userDomain.IUserRepository
 }
 
-func NewFriendInviteService(repo domains.IFriendInviteRepository, userRepo userDomain.IUserRepository) domains.IFriendInviteService {
+func NewFriendInviteService(repoCollector *repo.RepoCollector) domains.IFriendInviteService {
 	return &FriendInviteService{
-		FriendInviteRepository: repo,
-		UserRepository:         userRepo,
+		FriendInviteRepository: *repoCollector.FriendInviteRepo,
+		UserRepository:         *repoCollector.UserRepo,
 	}
 }
 

@@ -10,7 +10,7 @@ type IPartyRepository interface {
 	RemoveUserFromParty(*Party, *userDomain.User) error
 
 	CreateParty(*Party) error
-	FindById(uint) (*Party, error)
+	FindById(id uint, associations ...string) (*Party, error)
 	UpdateParty(*Party) error
 	DeleteParty(*Party) error
 }

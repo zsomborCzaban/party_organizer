@@ -5,15 +5,13 @@ import (
 	"github.com/zsomborCzaban/party_organizer/services/user/domains"
 )
 
+func NewUserAuthRouter(router *mux.Router, controller domains.IUserController) {
+	router.HandleFunc("/user/login", controller.LoginController).Methods("POST")
+	router.HandleFunc("/user/register", controller.RegisterController).Methods("POST")
+}
+
 func NewUserRouter(router *mux.Router, controller domains.IUserController) {
-	r := router.PathPrefix("/user").Subrouter()
-
-	//todo: refactor this to /login and /register and /getFriends
-	r.HandleFunc("/login", controller.LoginController).Methods("POST")
-	r.HandleFunc("/register", controller.RegisterController).Methods("POST")
-
-	//todo: authenticate these with middleware:
-	r.HandleFunc("/addFriend/{id}", controller.AddFriendController).Methods("GET") //wont be used by user
-	r.HandleFunc("/getFriends", controller.GetFriendsController).Methods("GET")
+	router.HandleFunc("/user/getFriends", controller.GetFriendsController).Methods("GET")
+	router.HandleFunc("/user/uploadProfilePicture", controller.UploadProfilePicture).Methods("POST")
 
 }

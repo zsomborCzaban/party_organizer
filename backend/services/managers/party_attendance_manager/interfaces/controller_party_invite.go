@@ -2,9 +2,9 @@ package interfaces
 
 import (
 	"github.com/gorilla/mux"
-	"github.com/zsomborCzaban/party_organizer/common/api"
-	"github.com/zsomborCzaban/party_organizer/common/jwt"
 	"github.com/zsomborCzaban/party_organizer/services/managers/party_attendance_manager/domains"
+	"github.com/zsomborCzaban/party_organizer/utils/api"
+	"github.com/zsomborCzaban/party_organizer/utils/jwt"
 	"net/http"
 	"strconv"
 )
@@ -180,6 +180,33 @@ func (fc PartyInviteController) Kick(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (fc PartyInviteController) LeaveParty(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	partyId, err := strconv.ParseUint(vars["party_id"], 10, 32)
+	if err != nil {
+		br := api.ErrorBadRequest(err.Error())
+
+		br.Send(w)
+		return
+	}
+
+	userId, err3 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	if err3 != nil {
+		br := api.ErrorBadRequest(err3.Error())
+
+		br.Send(w)
+		return
+	}
+
+	//kick method is also used for LeaveParty
+	resp := fc.PartyInviteService.Kick(userId, userId, uint(partyId))
+	couldSend := resp.Send(w)
+	if !couldSend {
+		//todo: handle logging
+		return
+	}
+}
+
 func (fc PartyInviteController) JoinPublicParty(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	partyId, err := strconv.ParseUint(vars["party_id"], 10, 32)
@@ -208,16 +235,8 @@ func (fc PartyInviteController) JoinPublicParty(w http.ResponseWriter, r *http.R
 
 func (fc PartyInviteController) JoinPrivateParty(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	partyId, err := strconv.ParseUint(vars["party_id"], 10, 32)
-	if err != nil {
-		br := api.ErrorBadRequest(err.Error())
-
-		br.Send(w)
-		return
-	}
-
 	accessCode := vars["access_code"]
-	if accessCode != "" {
+	if accessCode == "" {
 		br := api.ErrorBadRequest("missing access_code")
 
 		br.Send(w)
@@ -232,7 +251,7 @@ func (fc PartyInviteController) JoinPrivateParty(w http.ResponseWriter, r *http.
 		return
 	}
 
-	resp := fc.PartyInviteService.JoinPrivateParty(uint(partyId), userId, accessCode)
+	resp := fc.PartyInviteService.JoinPrivateParty(userId, accessCode)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging

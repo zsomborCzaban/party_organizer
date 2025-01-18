@@ -7,4 +7,5 @@ type IUserController interface {
 	RegisterController(w http.ResponseWriter, r *http.Request)
 	AddFriendController(w http.ResponseWriter, r *http.Request)
 	GetFriendsController(w http.ResponseWriter, r *http.Request)
+	UploadProfilePicture(w http.ResponseWriter, r *http.Request)
 }

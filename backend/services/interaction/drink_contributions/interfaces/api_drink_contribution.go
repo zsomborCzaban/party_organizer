@@ -2,20 +2,15 @@ package interfaces
 
 import (
 	"github.com/gorilla/mux"
-	"github.com/zsomborCzaban/party_organizer/common/jwt"
 	"github.com/zsomborCzaban/party_organizer/services/interaction/drink_contributions/domains"
 )
 
 func NewDrinkContributionRouter(router *mux.Router, controller domains.IDrinkContributionController) {
-	r := router.PathPrefix("/drinkContribution").Subrouter()
+	router.HandleFunc("/drinkContribution", controller.Create).Methods("POST")
+	router.HandleFunc("/drinkContribution/{id}", controller.Update).Methods("PUT")
+	router.HandleFunc("/drinkContribution/{id}", controller.Delete).Methods("DELETE")
 
-	r.Use(jwt.ValidateJWTMiddleware)
-
-	r.HandleFunc("", controller.Create).Methods("POST")
-	r.HandleFunc("/{id}", controller.Update).Methods("PUT")
-	r.HandleFunc("/{id}", controller.Delete).Methods("DELETE")
-
-	r.HandleFunc("/getByPartyAndContributor/{party_id}/{contributor_id}", controller.GetByPartyIdAndContributorId).Methods("GET")
-	r.HandleFunc("/getByRequirement/{requirement_id}", controller.GetByRequirementId).Methods("GET")
-	r.HandleFunc("/getByParty/{party_id}", controller.GetByPartyId).Methods("GET")
+	router.HandleFunc("/drinkContribution/getByPartyAndContributor/{party_id}/{contributor_id}", controller.GetByPartyIdAndContributorId).Methods("GET")
+	router.HandleFunc("/drinkContribution/getByRequirement/{requirement_id}", controller.GetByRequirementId).Methods("GET")
+	router.HandleFunc("/drinkContribution/getByParty/{party_id}", controller.GetByPartyId).Methods("GET")
 }

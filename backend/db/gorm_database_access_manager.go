@@ -12,7 +12,7 @@ type GormDatabaseAccessManager struct {
 }
 
 func CreateGormDatabaseAccessManager(dbConnectionUrl string, newLogger logger.Interface) IDatabaseAccessManager {
-	db, err := gorm.Open(sqlite.Open(dbConnectionUrl), &gorm.Config{
+	db, err := gorm.Open(sqlite.Open(dbConnectionUrl+"?_foreign_keys=on"), &gorm.Config{
 		Logger: newLogger,
 	})
 	if err != nil {
@@ -34,7 +34,7 @@ func (dam GormDatabaseAccessManager) RegisterEntity(name string, dbEntityProvide
 		panic("failed to migrate database: " + name + " ; error: " + migrateErr.Error())
 	}
 
-	dbWrapper := NewGormDBWrapper(entity, dam.DB)
+	dbWrapper := NewGormDBWrapper(dam.DB)
 	access := NewDatabaseAccessImpl(dbEntityProvider, dbWrapper)
 
 	dam.DBAccessRegistry[name] = access

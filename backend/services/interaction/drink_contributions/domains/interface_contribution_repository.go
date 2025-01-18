@@ -5,8 +5,9 @@ type IDrinkContributionRepository interface {
 	Update(*DrinkContribution) error
 	Delete(*DrinkContribution) error
 
+	DeleteByPartyId(partyId uint) error
 	DeleteByReqId(foodReqId uint) error
 	DeleteByContributorId(userId uint) error
-	FindAllBy(columnNames []string, values []interface{}) (*[]DrinkContribution, error)
-	FindById(uint) (*DrinkContribution, error)
+	FindAllBy(columnNames []string, values []interface{}, associations ...string) (*[]DrinkContribution, error)
+	FindById(id uint, associations ...string) (*DrinkContribution, error)
 }

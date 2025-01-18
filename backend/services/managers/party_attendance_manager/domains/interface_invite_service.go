@@ -1,6 +1,6 @@
 package domains
 
-import "github.com/zsomborCzaban/party_organizer/common/api"
+import "github.com/zsomborCzaban/party_organizer/utils/api"
 
 type IPartyInviteService interface {
 	Invite(invitedId string, invitorId, partyId uint) api.IResponse
@@ -12,5 +12,5 @@ type IPartyInviteService interface {
 
 	Kick(kickedId, userId, partyId uint) api.IResponse
 	JoinPublicParty(partyId, userId uint) api.IResponse
-	JoinPrivateParty(partyId, userId uint, accessCode string) api.IResponse
+	JoinPrivateParty(userId uint, accessCode string) api.IResponse
 }

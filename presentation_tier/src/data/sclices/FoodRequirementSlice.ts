@@ -1,6 +1,6 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {Requirement} from "../types/Requirement";
-import {getFoodRequirements} from "../apis/RequirementApi";
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {Requirement} from '../types/Requirement';
+import {getFoodRequirements} from '../apis/RequirementApi';
 
 export interface FoodRequirementSlice {
     requirements: Requirement[];
@@ -12,13 +12,11 @@ const initialState: FoodRequirementSlice = {
     requirements: [],
     loading: true,
     error: null,
-}
+};
 
 export const loadFoodRequirements = createAsyncThunk(
     'data/loadFoodRequirements',
-    async (partyId: number) => {
-       return getFoodRequirements(partyId)
-    },
+    async (partyId: number) => getFoodRequirements(partyId),
 );
 
 const foodRequirementSlice = createSlice({
@@ -40,9 +38,9 @@ const foodRequirementSlice = createSlice({
             .addCase(loadFoodRequirements.rejected, (state, action) => {
                 state.loading = false;
                 state.requirements = [];
-                state.error = new Error(action.error.message || 'Failed to load food requirements',);
+                state.error = new Error(action.error.message || 'Failed to load food requirements');
             });
     },
 });
 
-export default foodRequirementSlice.reducer
+export default foodRequirementSlice.reducer;

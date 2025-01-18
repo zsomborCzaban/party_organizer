@@ -1,5 +1,5 @@
-import {User} from "./User";
-import {Requirement} from "./Requirement";
+import {User} from './User';
+import {Requirement} from './Requirement';
 
 export interface Contribution {
     ID?: number;

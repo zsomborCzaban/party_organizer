@@ -1,67 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import { Modal } from 'antd';
+import {joinPrivateParty} from 'data/apis/PartyAttendanceManagerApi';
+import {setForTime} from 'data/utils/timeoutSetterUtils';
+import {setSelectedParty} from 'data/sclices/PartySlice';
+import {useNavigate} from 'react-router-dom';
+import {Party} from 'data/types/Party';
 
-interface MyModalProps {
-    visible: boolean;
-    onClose: () => void;
-}
-
-const AccessCodeModal: React.FC<MyModalProps> = ({ visible, onClose }) => {
-    const [inputValue, setInputValue] = useState<string>('');
-    const [feedback, setFeedback] = useState<string>('');
-
-    useEffect(() => {
-        if (visible) {
-            setFeedback(''); // Reset feedback when the modal opens
-            setInputValue(''); // Optional: Reset input value when modal opens
-        }
-    }, [visible]);
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInputValue(e.target.value);
-    };
-
-    const handleSubmit = () => {
-        // Add your submit logic here
-        //todo: iff correct access code then join the user to the party and navigate him to the parties page
-        if (inputValue) {
-            setFeedback('Your input has been submitted!');
-        } else {
-            setFeedback('Please enter a value.');
-        }
-    };
-
-    return (
-        <Modal
-            title="Join party"
-            open={visible}
-            onCancel={onClose}
-            footer={null} // Disable default footer
-        >
-            <div style={styles.modalContent}>
-                <label style={styles.label}>Access Code:</label>
-                <input
-                    type="text"
-                    placeholder="Enter the accesscode"
-                    value={inputValue}
-                    onChange={handleInputChange}
-                    style={styles.inputField}
-                />
-                <div style={styles.feedback}>{feedback}</div>
-                <div style={styles.buttonContainer}>
-                    <button onClick={handleSubmit} style={styles.submitButton}>
-                        Submit
-                    </button>
-                    <button onClick={onClose} style={styles.cancelButton}>
-                        Cancel
-                    </button>
-                </div>
-            </div>
-        </Modal>
-    );
-};
-
-// Styles
 const styles: { [key: string]: React.CSSProperties } = {
     modalContent: {
         display: 'flex',
@@ -83,7 +27,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     feedback: {
         marginBottom: '16px',
         fontSize: '14px',
-        color: '#555',
+        color: 'red',
     },
     buttonContainer: {
         display: 'flex',
@@ -106,6 +50,81 @@ const styles: { [key: string]: React.CSSProperties } = {
         borderRadius: '4px',
         cursor: 'pointer',
     },
+};
+
+interface MyModalProps {
+    visible: boolean;
+    onClose: () => void;
+}
+
+const AccessCodeModal: React.FC<MyModalProps> = ({ visible, onClose }) => {
+    const [inputValue, setInputValue] = useState<string>('');
+    const [feedback, setFeedback] = useState<string>('');
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (visible) {
+            setFeedback(''); // Reset feedback when the modal opens
+            setInputValue(''); // Optional: Reset input value when modal opens
+        }
+    }, [visible]);
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setInputValue(e.target.value);
+    };
+
+    const handleSubmit = () => {
+        if (inputValue) {
+            joinPrivateParty(inputValue)
+                .then((party: Party) => {
+                    console.log(party);
+                    setSelectedParty(party);
+                    navigate('/visitParty/partyHome');
+                    
+                })
+                .catch((err) => {
+                    if(err.response){
+                        const {errors} = err.response.data;
+                        setForTime<string>(setFeedback, errors[0].err, '', 4000);
+                    } else {
+                        setFeedback('Something unexpected happened. Try again later!');
+                    }
+                    
+                });
+        } else {
+            setForTime<string>(setFeedback, 'Enter an access code', '', 4000);
+        }
+    };
+
+    return (
+      <Modal
+        title='Join party'
+        open={visible}
+        onCancel={onClose}
+        footer={null}
+      >
+        <div style={styles.modalContent}>
+          <label style={styles.label}>Access Code:</label>
+          <input
+            type='text'
+            placeholder='Enter the accesscode'
+            value={inputValue}
+            onChange={handleInputChange}
+            style={styles.inputField}
+          />
+          <div style={styles.feedback}>{feedback}</div>
+          <div style={styles.buttonContainer}>
+            <button onClick={handleSubmit} style={styles.submitButton}>
+              Submit
+            </button>
+            <button onClick={onClose} style={styles.cancelButton}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      </Modal>
+    );
 };
 
 export default AccessCodeModal;

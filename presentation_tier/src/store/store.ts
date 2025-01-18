@@ -1,18 +1,18 @@
-import { configureStore } from '@reduxjs/toolkit'
-import publicPartySlice from "../data/sclices/PublicPartySlice";
-import organizedPartySlice from "../data/sclices/OrganizedPartySlice";
-import attendedPartySlice from "../data/sclices/AttendedPartySlice";
-import partyInviteSlice from "../data/sclices/PartyInviteSlice";
-import friendInviteSlice from "../data/sclices/FriendInviteSlice";
-import friendSlice from "../data/sclices/FriendSlice";
-import persistedSelectedPartyReducer from "../data/sclices/PartySlice";
+import { configureStore } from '@reduxjs/toolkit';
+import publicPartySlice from '../data/sclices/PublicPartySlice';
+import organizedPartySlice from '../data/sclices/OrganizedPartySlice';
+import attendedPartySlice from '../data/sclices/AttendedPartySlice';
+import partyInviteSlice from '../data/sclices/PartyInviteSlice';
+import friendInviteSlice from '../data/sclices/FriendInviteSlice';
+import friendSlice from '../data/sclices/FriendSlice';
+import persistedSelectedPartyReducer from '../data/sclices/PartySlice';
 import { persistStore } from 'redux-persist';
-import drinkRequirementSlice from "../data/sclices/DrinkRequirementSlice";
-import foodRequirementSlice from "../data/sclices/FoodRequirementSlice";
-import drinkContributionSlice from "../data/sclices/DrinkContributionSlice";
-import foodContributionSlice from "../data/sclices/FoodContributionSlice";
-import partyParticipantSlice from "../data/sclices/PartyParticipantSlice";
-import partyPendingInviteSlice from "../data/sclices/PendingInvitesForPartySlice"
+import drinkRequirementSlice from '../data/sclices/DrinkRequirementSlice';
+import foodRequirementSlice from '../data/sclices/FoodRequirementSlice';
+import drinkContributionSlice from '../data/sclices/DrinkContributionSlice';
+import foodContributionSlice from '../data/sclices/FoodContributionSlice';
+import partyParticipantSlice from '../data/sclices/PartyParticipantSlice';
+import partyPendingInviteSlice from '../data/sclices/PendingInvitesForPartySlice';
 
 export const store = configureStore({
     reducer: {
@@ -32,7 +32,7 @@ export const store = configureStore({
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
-            serializableCheck: false, //quickfix for development todo: get back here
+            serializableCheck: false, // quickfix for development todo: get back here
     }),
 });
 

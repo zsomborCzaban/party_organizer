@@ -3,7 +3,7 @@ package jwt
 import (
 	"errors"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/zsomborCzaban/party_organizer/common/env"
+	"github.com/zsomborCzaban/party_organizer/utils/env"
 	"strconv"
 	"strings"
 	"time"

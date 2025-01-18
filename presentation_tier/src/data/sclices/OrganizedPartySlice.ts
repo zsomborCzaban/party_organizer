@@ -1,6 +1,6 @@
-import {Party} from "../types/Party";
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {getOrganizedParties} from "../apis/PartyApi";
+import {Party} from '../types/Party';
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {getOrganizedParties} from '../apis/PartyApi';
 
 export interface OrganizedPartySlice {
     parties: Party[];
@@ -12,17 +12,11 @@ const initialState: OrganizedPartySlice = {
     parties: [],
     loading: true,
     error: null,
-}
+};
 
 export const loadOrganizedParties = createAsyncThunk(
     'data/loadOrganizedParties',
-    async () => {
-        try {
-            return await getOrganizedParties();
-        } catch (err) {
-            console.log("err in loadOrganizedParties: " + err)
-        }
-    },
+    async () => getOrganizedParties(),
 );
 
 const organizedPartySlice = createSlice({
@@ -44,9 +38,9 @@ const organizedPartySlice = createSlice({
             .addCase(loadOrganizedParties.rejected, (state, action) => {
                 state.loading = false;
                 state.parties = [];
-                state.error = new Error(action.error.message || 'Failed to load organized parties',);
+                state.error = new Error(action.error.message || 'Failed to load organized parties');
             });
     },
 });
 
-export default organizedPartySlice.reducer
+export default organizedPartySlice.reducer;

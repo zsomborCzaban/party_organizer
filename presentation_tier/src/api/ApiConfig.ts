@@ -1,12 +1,15 @@
-import { getBackendUrl } from './ApiHelper'
+import {getApiUrl} from './ApiHelper';
 
-const API_PATH = '/api/v0';
-
-export const getApiConfig = () => {
-    return {
-        baseUrl : `${getBackendUrl()}${API_PATH}`,
+export const getApiConfig = () => ({
+        baseUrl : `${getApiUrl()}`,
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         },
-    };
-};
+    });
+
+export const getImageUploaderApiConfig = () => ({
+        baseUrl : `${getApiUrl()}`,
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });

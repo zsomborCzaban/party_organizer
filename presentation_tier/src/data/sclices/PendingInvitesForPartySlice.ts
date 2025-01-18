@@ -1,6 +1,6 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {getPartyPendingInvites} from "../apis/PartyAttendanceManagerApi";
-import {PartyInvite} from "../types/PartyInvite";
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {getPartyPendingInvites} from '../apis/PartyAttendanceManagerApi';
+import {PartyInvite} from '../types/PartyInvite';
 
 export interface PartyPendingInvitesSlice {
     pendingInvites: PartyInvite[];
@@ -12,13 +12,11 @@ const initialState: PartyPendingInvitesSlice = {
     pendingInvites: [],
     loading: true,
     error: null,
-}
+};
 
 export const loadPartyPendingInvites = createAsyncThunk(
     'data/loadPartyPendingInvites',
-    async (partyId: number) => {
-        return getPartyPendingInvites(partyId)
-    },
+    async (partyId: number) => getPartyPendingInvites(partyId),
 );
 
 const partyPartyPendingInviteSlice = createSlice({
@@ -40,9 +38,9 @@ const partyPartyPendingInviteSlice = createSlice({
             .addCase(loadPartyPendingInvites.rejected, (state, action) => {
                 state.loading = false;
                 state.pendingInvites = [];
-                state.error = new Error(action.error.message || 'Failed to load party pending invites',);
+                state.error = new Error(action.error.message || 'Failed to load party pending invites');
             });
     },
 });
 
-export default partyPartyPendingInviteSlice.reducer
+export default partyPartyPendingInviteSlice.reducer;

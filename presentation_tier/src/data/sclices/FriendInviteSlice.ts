@@ -1,6 +1,6 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {getFriendInvites} from "../apis/FriendInviteManagerApi";
-import {FriendInvite} from "../types/FriendInvite";
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {getFriendInvites} from '../apis/FriendInviteManagerApi';
+import {FriendInvite} from '../types/FriendInvite';
 
 export interface FriendInviteSlice {
     invites: FriendInvite[];
@@ -12,17 +12,11 @@ const initialState: FriendInviteSlice = {
     invites: [],
     loading: true,
     error: null,
-}
+};
 
 export const loadFriendInvites = createAsyncThunk(
     'data/loadFriendInvites',
-    async () => {
-        try {
-            return await getFriendInvites();
-        } catch (err) {
-            console.log("err in loadFriendInvites: " + err)
-        }
-    },
+    async () => getFriendInvites(),
 );
 
 const friendInviteSlice = createSlice({
@@ -44,9 +38,9 @@ const friendInviteSlice = createSlice({
             .addCase(loadFriendInvites.rejected, (state, action) => {
                 state.loading = false;
                 state.invites = [];
-                state.error = new Error(action.error.message || 'Failed to load friend invites',);
+                state.error = new Error(action.error.message || 'Failed to load friend invites');
             });
     },
 });
 
-export default friendInviteSlice.reducer
+export default friendInviteSlice.reducer;

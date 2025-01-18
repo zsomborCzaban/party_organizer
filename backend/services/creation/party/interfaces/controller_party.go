@@ -3,9 +3,9 @@ package interfaces
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
-	"github.com/zsomborCzaban/party_organizer/common/api"
-	"github.com/zsomborCzaban/party_organizer/common/jwt"
 	"github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
+	"github.com/zsomborCzaban/party_organizer/utils/api"
+	"github.com/zsomborCzaban/party_organizer/utils/jwt"
 	"net/http"
 	"strconv"
 )
@@ -94,16 +94,6 @@ func (pc PartyController) UpdateController(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	vars := mux.Vars(r)
-	id, err3 := strconv.ParseUint(vars["id"], 10, 32)
-	if err3 != nil {
-		br := api.ErrorBadRequest(err3.Error())
-
-		br.Send(w)
-		return
-	}
-	updatePartyReq.ID = uint(id)
-
 	resp := pc.PartyService.UpdateParty(updatePartyReq, userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
@@ -122,7 +112,15 @@ func (pc PartyController) DeleteController(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	resp := pc.PartyService.DeleteParty(uint(id))
+	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	if err2 != nil {
+		br := api.ErrorBadRequest(err2.Error())
+
+		br.Send(w)
+		return
+	}
+
+	resp := pc.PartyService.DeleteParty(uint(id), userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging
@@ -199,32 +197,6 @@ func (pc PartyController) GetParticipants(w http.ResponseWriter, r *http.Request
 	}
 
 	resp := pc.PartyService.GetParticipants(uint(partyId), userId)
-	couldSend := resp.Send(w)
-	if !couldSend {
-		//todo: handle logging
-		return
-	}
-}
-
-func (pc PartyController) AddUserToParty(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	partyId, err := strconv.ParseUint(vars["party_id"], 10, 32)
-	if err != nil {
-		br := api.ErrorBadRequest(domains.BadRequest)
-
-		br.Send(w)
-		return
-	}
-
-	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
-	if err2 != nil {
-		br := api.ErrorBadRequest(err2.Error())
-
-		br.Send(w)
-		return
-	}
-
-	resp := pc.PartyService.AddUserToParty(uint(partyId), userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging

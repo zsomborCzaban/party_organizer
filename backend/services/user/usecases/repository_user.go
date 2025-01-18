@@ -19,8 +19,8 @@ func NewUserRepository(databaseAccessManager db.IDatabaseAccessManager) domains.
 	return &UserRepository{DbAccess: access}
 }
 
-func (ur UserRepository) FindById(id uint) (*domains.User, error) {
-	user, err := ur.DbAccess.FindById(id)
+func (ur UserRepository) FindById(id uint, associations ...string) (*domains.User, error) {
+	user, err := ur.DbAccess.FindById(id, associations...)
 	if err != nil {
 		return nil, err
 	}
@@ -166,9 +166,6 @@ func (ur UserRepository) GetFriends(userId uint) (*[]domains.User, error) {
 		M2MQueriedColumnName:    "user_id",
 		M2MConditionColumnName:  "friend_id",
 		M2MConditionColumnValue: userId,
-		//OrActive:                true,
-		//OrConditionColumnName:   "friend_id",
-		//OrConditionColumnValue:  userId,
 	}
 
 	fetchedUsers, fetchedError := ur.DbAccess.Many2ManyQueryId(cond)
