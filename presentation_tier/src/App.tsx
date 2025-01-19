@@ -1,5 +1,9 @@
-import { AppRouter } from './AppRouter';
+import { AppRouter } from '../../frontend/src/AppRouter';
+import { NavigationBar } from './components/navigation-bar/NavigationBar';
 
-const App = () => <AppRouter />;
-
-export default App;
+export const App = () => (
+  <>
+    <NavigationBar />
+    <AppRouter />;
+  </>
+);

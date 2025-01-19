@@ -2,7 +2,7 @@ module.exports = {
     root: true,
     parserOptions: {
       sourceType: 'module',
-      project: './presentation_tier/tsconfig.eslint.json',
+      project: './tsconfig.eslint.json',
     },
     extends: ['airbnb-base', 'airbnb-typescript/base', 'prettier', 'plugin:react/recommended', 'plugin:react/jsx-runtime'],
     plugins: ['simple-import-sort', 'check-file', 'prefer-arrow-functions', 'react-hooks', 'path'],
