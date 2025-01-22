@@ -1,0 +1,14 @@
+.navigationButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 6px;
+  cursor: pointer;
+  color: grey;
+  transition: all 200ms;
+}
+
+.navigationButton:hover {
+  transition: all 500ms;
+  color: black;
+}

@@ -8,7 +8,6 @@ import { PersistGate } from "redux-persist/integration/react";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <div>asdad</div>
     <Provider store={store}>
       {/* todo: make a loading screen */}
       <PersistGate loading={<div>Loading...</div>} persistor={persistor}>

@@ -12,9 +12,11 @@ import PartySettings from './pages/visitParty/partyOptions/PartySettings';
 import Login from './pages/authtentication/Login';
 import Register from './pages/authtentication/Register';
 import { Homepage } from './pages/HomePage';
+import { NavigationBar } from './components/navigation-bar/NavigationBar';
 
 export const AppRouter = () => (
   <BrowserRouter>
+    <NavigationBar />
     <Routes>
       <Route
         path='/'
