@@ -8,7 +8,7 @@ import {createParty} from '../../data/apis/PartyApi';
 import {useDispatch} from 'react-redux';
 import {AppDispatch} from '../../store/store';
 import {setSelectedParty} from '../../data/sclices/PartySlice';
-import {ApiError} from '../../api/ApiResponse';
+import {ApiError} from '../../type-declarations/ApiResponseTypes';
 
 // Inline CSS styles
 const styles: {[key: string]: React.CSSProperties} = {

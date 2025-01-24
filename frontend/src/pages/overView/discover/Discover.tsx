@@ -8,12 +8,12 @@ import { User } from '../../../data/types/User';
 import { loadPublicParties } from '../../../data/sclices/PublicPartySlice';
 import { getUser } from '../../../auth/AuthUserUtil';
 import { authService } from '../../../auth/AuthService';
-import { joinPublicParty } from '../../../data/apis/PartyAttendanceManagerApi';
 import { Party } from '../../../data/types/Party';
 import { setSelectedParty } from '../../../data/sclices/PartySlice';
 import { partyTableColumns } from '../../../data/constants/TableColumns';
 import OverViewNavBar from '../../../components/navigation-bar/OverViewNavBar';
 import OverViewProfile from '../../../components/drawer/OverViewProfile';
+import { joinPublicParty } from '../../../api/apis/PartyAttendanceManagerApi';
 
 
 const styles: { [key: string]: CSSProperties } = {

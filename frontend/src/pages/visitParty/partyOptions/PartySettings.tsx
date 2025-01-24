@@ -7,7 +7,7 @@ import { AppDispatch, RootState } from '../../../store/store';
 import { User } from '../../../data/types/User';
 import { getUser } from '../../../auth/AuthUserUtil';
 import { authService } from '../../../auth/AuthService';
-import { ApiError } from '../../../api/ApiResponse';
+import { ApiError } from '../../../type-declarations/ApiResponseTypes';
 import { Party } from '../../../data/types/Party';
 import { updateParty } from '../../../data/apis/PartyApi';
 import { setSelectedParty } from '../../../data/sclices/PartySlice';

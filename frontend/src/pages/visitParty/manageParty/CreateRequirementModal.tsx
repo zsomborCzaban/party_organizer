@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Input, Modal} from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store/store';
-import { ApiError } from '../../../api/ApiResponse';
+import { ApiError } from '../../../type-declarations/ApiResponseTypes';
 import { Requirement } from '../../../data/types/Requirement';
 import { createDrinkRequirement, createFoodRequirement } from '../../../data/apis/RequirementApi';
 import { setForTime } from '../../../data/utils/timeoutSetterUtils';

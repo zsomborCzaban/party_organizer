@@ -3,7 +3,7 @@ import {Modal} from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store/store';
 import { deleteDrinkContribution, deleteFoodContribution } from '../../../data/apis/ContributionApi';
-import { ApiError } from '../../../api/ApiResponse';
+import { ApiError } from '../../../type-declarations/ApiResponseTypes';
 import { loadDrinkContributions } from '../../../data/sclices/DrinkContributionSlice';
 import { loadFoodContributions } from '../../../data/sclices/FoodContributionSlice';
 

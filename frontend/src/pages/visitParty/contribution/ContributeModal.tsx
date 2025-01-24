@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Input, Modal} from 'antd';
 import { AppDispatch, RootState } from '../../../store/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { ApiError } from '../../../api/ApiResponse';
+import { ApiError } from '../../../type-declarations/ApiResponseTypes';
 import { Contribution } from '../../../data/types/Contribution';
 import { createDrinkContribution, createFoodContribution } from '../../../data/apis/ContributionApi';
 import { setForTime } from '../../../data/utils/timeoutSetterUtils';

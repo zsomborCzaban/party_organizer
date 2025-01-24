@@ -1,18 +1,22 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import "./index.css";
-import App from "./App.tsx";
-import { persistor, store } from "./store/store.ts";
-import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import './index.css';
+import App from './App.tsx';
+import { persistor, store } from './store/store.ts';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 
-createRoot(document.getElementById("root")!).render(
+createRoot(document.getElementById('root')!).render(
   <StrictMode>
+    {/* Add aip context here */}
     <Provider store={store}>
       {/* todo: make a loading screen */}
-      <PersistGate loading={<div>Loading...</div>} persistor={persistor}>
+      <PersistGate
+        loading={<div>Loading...</div>}
+        persistor={persistor}
+      >
         <App />
       </PersistGate>
     </Provider>
-  </StrictMode>
+  </StrictMode>,
 );

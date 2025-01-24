@@ -1,7 +1,7 @@
 import React, { useState, CSSProperties } from 'react';
 import {register, RegisterRequestBody} from '../../data/apis/AuthenticationApi';
 import {AxiosError} from 'axios';
-import {ApiError, ApiResponse} from '../../api/ApiResponse';
+import {ApiError, ApiResponse} from '../../type-declarations/ApiResponseTypes';
 
 
 interface Feedbacks{
