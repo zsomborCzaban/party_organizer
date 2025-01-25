@@ -7,7 +7,7 @@ import {useNavigate} from 'react-router-dom';
 import {useDispatch} from 'react-redux';
 import {AppDispatch} from '../../store/store';
 import {setSelectedParty} from '../../data/sclices/PartySlice';
-import {ApiError} from '../../type-declarations/ApiResponseTypes';
+import {ApiError} from '../../data/types/ApiResponseTypes';
 import { createParty } from '../../api/apis/PartyApi';
 
 // Inline CSS styles

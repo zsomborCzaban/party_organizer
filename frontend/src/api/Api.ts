@@ -1,7 +1,7 @@
 import axios, { InternalAxiosRequestConfig, AxiosResponse } from 'axios';
 import { getApiConfig, getImageUploaderApiConfig } from './ApiConfig';
 import { authService } from '../auth/AuthService';
-import { ApiResponse } from '../type-declarations/ApiResponseTypes';
+import { ApiResponse } from '../data/types/ApiResponseTypes';
 
 const apiClient = axios.create(getApiConfig());
 const imageUploaderApiClient = axios.create(getImageUploaderApiConfig());

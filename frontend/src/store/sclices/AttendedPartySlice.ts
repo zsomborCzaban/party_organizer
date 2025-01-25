@@ -1,32 +1,28 @@
 import { getAttendedParties } from '../../api/apis/PartyApi';
-import { Party } from '../types/Party';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { Party } from '../../data/types/Party';
 
-export interface AttendedPartySlice {
+export interface AttendedPartyState {
   parties: Party[];
   loading: boolean;
   error: Error | null;
 }
 
-const initialState: AttendedPartySlice = {
+const initialState: AttendedPartyState = {
   parties: [],
   loading: true,
   error: null,
 };
 
-export const loadAttendedParties = createAsyncThunk(
-  'data/loadAttendedParties',
-  // eslint-disable-next-line consistent-return
-  async () => {
-    try {
-      return await getAttendedParties();
-    } catch (err) {
-      console.log(`err in loadAttendedParties: ${err}`);
-    }
-  },
-);
+export const loadAttendedParties = createAsyncThunk('data/loadAttendedParties', async () => {
+  try {
+    return await getAttendedParties();
+  } catch (err) {
+    console.log(`err in loadAttendedParties: ${err}`);
+  }
+});
 
-const attendedPartySlice = createSlice({
+export const attendedPartySlice = createSlice({
   name: 'attendedParties',
   initialState,
   reducers: {},
@@ -49,5 +45,3 @@ const attendedPartySlice = createSlice({
       });
   },
 });
-
-export default attendedPartySlice.reducer;

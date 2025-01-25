@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Modal} from 'antd';
-import {ApiError} from '../../type-declarations/ApiResponseTypes';
+import {ApiError} from '../../data/types/ApiResponseTypes';
 
 // Styles
 const styles: { [key: string]: React.CSSProperties } = {
