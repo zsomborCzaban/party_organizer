@@ -1,6 +1,7 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {Contribution} from '../types/Contribution';
-import {getDrinkContributions} from '../apis/ContributionApi';
+import { getDrinkContributions } from '../../api/apis/ContributionApi';
+
 
 export interface DrinkContributionSlice {
     contributions: Contribution[];

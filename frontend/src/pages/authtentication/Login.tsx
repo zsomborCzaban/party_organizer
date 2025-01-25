@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import {login} from '../../data/apis/AuthenticationApi';
 import {useNavigate} from 'react-router-dom';
+import { login } from '../../api/apis/AuthenticationApi';
 
 const styles: { [key: string]: React.CSSProperties } = {
     container: {

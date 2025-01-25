@@ -12,12 +12,12 @@ import { loadDrinkRequirements } from '../../../data/sclices/DrinkRequirementSli
 import { loadFoodRequirements } from '../../../data/sclices/FoodRequirementSlice';
 import { loadPartyParticipants } from '../../../data/sclices/PartyParticipantSlice';
 import { loadPartyPendingInvites } from '../../../data/sclices/PendingInvitesForPartySlice';
-import { inviteToParty, kickFromParty } from '../../../data/apis/PartyAttendanceManagerApi';
 import { setForTime } from '../../../data/utils/timeoutSetterUtils';
 import { Requirement } from '../../../data/types/Requirement';
 import { invitedTableColumns, requirementTableColumns, userTableColumns } from '../../../data/constants/TableColumns';
 import VisitPartyNavBar from '../../../components/navigation-bar/VisitPartyNavBar';
 import VisitPartyProfile from '../../../components/drawer/VisitPartyProfile';
+import { inviteToParty, kickFromParty } from '../../../api/apis/PartyAttendanceManagerApi';
 
 
 

@@ -1,6 +1,6 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {getPartyParticipants} from '../apis/PartyApi';
 import {User} from '../types/User';
+import { getPartyParticipants } from '../../api/apis/PartyApi';
 
 export interface PartParticipantsSlice {
     participants: User[];

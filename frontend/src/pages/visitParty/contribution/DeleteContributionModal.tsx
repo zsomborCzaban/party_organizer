@@ -2,10 +2,10 @@ import {useEffect, useState} from 'react';
 import {Modal} from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store/store';
-import { deleteDrinkContribution, deleteFoodContribution } from '../../../data/apis/ContributionApi';
 import { ApiError } from '../../../type-declarations/ApiResponseTypes';
 import { loadDrinkContributions } from '../../../data/sclices/DrinkContributionSlice';
 import { loadFoodContributions } from '../../../data/sclices/FoodContributionSlice';
+import { deleteDrinkContribution, deleteFoodContribution } from '../../../api/apis/ContributionApi';
 
 
 const styles: { [key: string]: React.CSSProperties } = {

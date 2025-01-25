@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import { Modal } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { joinPrivateParty } from '../../../data/apis/PartyAttendanceManagerApi';
 import { setSelectedParty } from '../../../data/sclices/PartySlice';
 import { setForTime } from '../../../data/utils/timeoutSetterUtils';
 import { Party } from '../../../data/types/Party';
+import { joinPrivateParty } from '../../../api/apis/PartyAttendanceManagerApi';
 
 const styles: { [key: string]: React.CSSProperties } = {
     modalContent: {

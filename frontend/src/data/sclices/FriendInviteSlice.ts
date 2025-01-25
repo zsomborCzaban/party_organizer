@@ -1,6 +1,6 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {getFriendInvites} from '../apis/FriendInviteManagerApi';
 import {FriendInvite} from '../types/FriendInvite';
+import { getFriendInvites } from '../../api/apis/FriendInviteManagerApi';
 
 export interface FriendInviteSlice {
     invites: FriendInvite[];

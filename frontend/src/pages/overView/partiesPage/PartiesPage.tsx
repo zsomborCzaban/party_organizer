@@ -12,10 +12,10 @@ import { loadPartyInvites } from '../../../data/sclices/PartyInviteSlice';
 import { setSelectedParty } from '../../../data/sclices/PartySlice';
 import { Party } from '../../../data/types/Party';
 import { PartyInvite } from '../../../data/types/PartyInvite';
-import { acceptInvite, declineInvite } from '../../../data/apis/PartyAttendanceManagerApi';
 import { partyInviteTableColumns, partyTableColumns } from '../../../data/constants/TableColumns';
 import OverViewNavBar from '../../../components/navigation-bar/OverViewNavBar';
 import OverViewProfile from '../../../components/drawer/OverViewProfile';
+import { acceptInvite, declineInvite } from '../../../api/apis/PartyAttendanceManagerApi';
 
 const styles: { [key: string]: CSSProperties } = {
     outerContainer: {

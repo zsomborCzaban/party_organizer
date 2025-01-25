@@ -1,5 +1,7 @@
 import { getApiUrl } from '../../api/ApiHelper';
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import { authService } from '../../auth/AuthService';
+import { post } from '../Api';
 
 const handleApiResponse = <T>(response: AxiosResponse<T>): T => {
   return response.data;
@@ -30,7 +32,7 @@ export interface RegisterPostRequestProps {
   confirm_password: string;
 }
 
-export class AutchenticationApi {
+export class AuthApi {
   private axiosInstance: AxiosInstance;
 
   constructor(axiosInstance: AxiosInstance) {
@@ -39,6 +41,7 @@ export class AutchenticationApi {
 
   async postLogin(username: string, password: string): Promise<LoginPostResponse | undefined> {
     try {
+        console.log('sa',getApiUrl());
       const response = await this.axiosInstance.post<LoginPostResponse>(`${getApiUrl()}/user/login`, { username, password });
       return handleApiResponse(response);
     } catch (error) {
@@ -56,3 +59,49 @@ export class AutchenticationApi {
     return undefined;
   }
 }
+
+// Deprecated from here!!!!!!!
+
+const LOGIN_PATH = `${getApiUrl()}/user/login`;
+const REGISTER_PATH = `${getApiUrl()}/user/register`;
+
+export interface LoginRequestDataInterface {
+  username: string;
+  password: string;
+}
+
+export interface LoginResponseDataInterface {
+  jwt: string;
+}
+
+export const login = async (username: string, password: string) => {
+  const loginRequest: LoginRequestDataInterface = {
+    username,
+    password,
+  };
+
+  try {
+    return await post<LoginResponseDataInterface>(LOGIN_PATH, loginRequest)
+      .then((response) => {
+        authService.userLoggedIn(response.jwt);
+        return '';
+      })
+      .catch((err) => err.response.data.errors);
+  } catch (err) {
+    return 'An error occurred while logging in. Please try again.';
+  }
+};
+
+export interface RegisterRequestBody {
+  username: string;
+  email: string;
+  password: string;
+  confirm_password: string;
+}
+
+export const register = async (requestBody: RegisterRequestBody): Promise<void> =>
+  new Promise<void>((resolve, reject) => {
+    post<void>(REGISTER_PATH, requestBody)
+      .then(() => resolve())
+      .catch((error) => reject(error));
+  });

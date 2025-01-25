@@ -1,6 +1,7 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {Requirement} from '../types/Requirement';
-import {getDrinkRequirements} from '../apis/RequirementApi';
+import { getDrinkRequirements } from '../../api/apis/RequirementApi';
+
 
 export interface DrinkRequirementSlice {
     requirements: Requirement[];

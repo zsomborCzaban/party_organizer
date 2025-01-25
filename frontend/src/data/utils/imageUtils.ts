@@ -1,7 +1,7 @@
 import {ChangeEvent} from 'react';
-import {uploadPicture} from '../apis/UserApi';
 import {authService} from '../../auth/AuthService';
 import {getUserProfilePicture} from '../../auth/AuthUserUtil';
+import { uploadPicture } from '../../api/apis/UserApi';
 
 export const handleProfilePictureUpload = (event: ChangeEvent<HTMLInputElement>, profilePictureUrlSetter: React.Dispatch<React.SetStateAction<string>>, errorMessageSetter: React.Dispatch<React.SetStateAction<string>>) => {
     const file = event.target.files && event.target.files[0];

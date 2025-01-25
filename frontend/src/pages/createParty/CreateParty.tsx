@@ -4,11 +4,11 @@ import dayjs from 'dayjs';
 import 'antd/dist/reset.css';
 import {Party} from '../../data/types/Party';
 import {useNavigate} from 'react-router-dom';
-import {createParty} from '../../data/apis/PartyApi';
 import {useDispatch} from 'react-redux';
 import {AppDispatch} from '../../store/store';
 import {setSelectedParty} from '../../data/sclices/PartySlice';
 import {ApiError} from '../../type-declarations/ApiResponseTypes';
+import { createParty } from '../../api/apis/PartyApi';
 
 // Inline CSS styles
 const styles: {[key: string]: React.CSSProperties} = {
@@ -188,7 +188,7 @@ const CreateParty: React.FC = () => {
             google_maps_link: location,
             facebook_link: facebookLink,
             whatsapp_link: whatsAppLink,
-            start_time: startTime?.toDate()!,
+            start_time: startTime!.toDate()!,
             is_private: isPrivate,
             access_code_enabled: isAccessCodeEnabled,
             access_code: accessCode,

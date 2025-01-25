@@ -1,6 +1,6 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {getPartyPendingInvites} from '../apis/PartyAttendanceManagerApi';
 import {PartyInvite} from '../types/PartyInvite';
+import { getPartyPendingInvites } from '../../api/apis/PartyAttendanceManagerApi';
 
 export interface PartyPendingInvitesSlice {
     pendingInvites: PartyInvite[];

@@ -4,10 +4,10 @@ import { AppDispatch, RootState } from '../../../store/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiError } from '../../../type-declarations/ApiResponseTypes';
 import { Contribution } from '../../../data/types/Contribution';
-import { createDrinkContribution, createFoodContribution } from '../../../data/apis/ContributionApi';
 import { setForTime } from '../../../data/utils/timeoutSetterUtils';
 import { loadDrinkContributions } from '../../../data/sclices/DrinkContributionSlice';
 import { loadFoodContributions } from '../../../data/sclices/FoodContributionSlice';
+import { createDrinkContribution, createFoodContribution } from '../../../api/apis/ContributionApi';
 
 
 const styles: { [key: string]: React.CSSProperties } = {

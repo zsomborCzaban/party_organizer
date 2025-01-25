@@ -7,12 +7,12 @@ import { getUser } from '../../../auth/AuthUserUtil';
 import { authService } from '../../../auth/AuthService';
 import { loadFriendInvites } from '../../../data/sclices/FriendInviteSlice';
 import { loadFriends } from '../../../data/sclices/FriendSlice';
-import { acceptInvite, declineInvite, inviteFriend, removeFriend } from '../../../data/apis/FriendInviteManagerApi';
 import { setForTime } from '../../../data/utils/timeoutSetterUtils';
 import { FriendInvite } from '../../../data/types/FriendInvite';
 import { invitedByTableColumns, userTableColumns } from '../../../data/constants/TableColumns';
 import OverViewNavBar from '../../../components/navigation-bar/OverViewNavBar';
 import OverViewProfile from '../../../components/drawer/OverViewProfile';
+import { acceptInvite, declineInvite, inviteFriend, removeFriend } from '../../../api/apis/FriendInviteManagerApi';
 
 
 const styles: { [key: string]: CSSProperties } = {
