@@ -1,9 +1,10 @@
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import classes from './NavigationBar.module.scss';
 import { NavigationButton } from './navigation-button/NavigationButton';
 
 export const NavigationBar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   // check if we are logged in
 
   return (
@@ -34,10 +35,13 @@ export const NavigationBar = () => {
           navigateToLink='/'
         />
 
-        <NavigationButton
-          buttonText='Login' // if not logged in, login page
-          navigateToLink='/login'
-        />
+        {/* TODO: add user logged in to also hide button */}
+        {location.pathname !== '/login' && (
+          <NavigationButton
+            buttonText='Login' // if not logged in, login page
+            navigateToLink='/login'
+          />
+        )}
       </div>
     </div>
   );

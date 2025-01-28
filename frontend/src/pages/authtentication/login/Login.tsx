@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthApi, login } from '../../../api/apis/AuthenticationApi';
+import { login } from '../../../api/apis/AuthenticationApi';
 import classes from './Login.module.scss';
-import axios from 'axios';
 
 type InvalidCred = {
   err: string;
@@ -12,7 +11,6 @@ type InvalidCred = {
 
 export const Login = () => {
   const navigate = useNavigate();
-  const authApi = new AuthApi(axios);
 
   // TODO: Remove these
   const [username, setUsername] = useState<string>('');
@@ -56,12 +54,20 @@ export const Login = () => {
       </div>
 
       <div className={classes.inputGroup}>
-        <label
-          htmlFor='password'
-          className={classes.inputLabel}
-        >
-          Password
-        </label>
+        <div className={classes.passwordLabelContainer}>
+          <label
+            htmlFor='password'
+            className={classes.inputLabel}
+          >
+            Password
+          </label>
+          <a
+            href='/forgot-password'
+            className={classes.link}
+          >
+            Forgot Password?
+          </a>
+        </div>
         <input
           type='password'
           id='password'
@@ -73,31 +79,22 @@ export const Login = () => {
       </div>
 
       <button
-        onClick={() => authApi.postLogin('sandor', 'janos')}
-        className={classes.button}
+        onClick={() => handleLogin()}
+        className={classes.loginButton}
       >
         Login
       </button>
 
+      {/* Remove this form of this */}
       {error && <p className={classes.error}>{error}</p>}
-
-      <div className={classes.textGroup}>
-        <p>
-          <a
-            href='/register'
-            className={classes.link}
-          >
-            Sign Up!
-          </a>
-        </p>
-        <p>
-          <a
-            href='/forgot-password'
-            className={classes.link}
-          >
-            Forgot Password?
-          </a>
-        </p>
+      <div className={classes.signUpContainer}>
+        <p>Don't have an account yet?</p>
+        <a
+          href='/register'
+          className={classes.link}
+        >
+          Sign Up
+        </a>
       </div>
     </div>
   );

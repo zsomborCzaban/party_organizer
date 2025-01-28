@@ -5,18 +5,21 @@ import App from './App.tsx';
 import { persistor, store } from './store/store.ts';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
+import { ApiContext } from './context/ApiContext.ts';
+import { Api } from './api/Api.ts';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    {/* Add aip context here */}
-    <Provider store={store}>
-      {/* todo: make a loading screen */}
-      <PersistGate
-        loading={<div>Loading...</div>}
-        persistor={persistor}
-      >
-        <App />
-      </PersistGate>
-    </Provider>
+    <ApiContext.Provider value={new Api()}>
+      <Provider store={store}>
+        {/* todo: make a loading screen */}
+        <PersistGate
+          loading={<div>Loading...</div>}
+          persistor={persistor}
+        >
+          <App />
+        </PersistGate>
+      </Provider>
+    </ApiContext.Provider>
   </StrictMode>,
 );

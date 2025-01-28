@@ -1,9 +1,10 @@
-import axios, { InternalAxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { InternalAxiosRequestConfig, AxiosResponse, AxiosInstance } from 'axios';
 import { getApiConfig, getImageUploaderApiConfig } from './ApiConfig';
 import { authService } from '../auth/AuthService';
 import { ApiResponse } from '../data/types/ApiResponseTypes';
+import { AuthApi } from './apis/AuthenticationApi';
 
-const apiClient = axios.create(getApiConfig());
+export const apiClient = axios.create(getApiConfig());
 const imageUploaderApiClient = axios.create(getImageUploaderApiConfig());
 
 const addAuthHeaderToRequest = (request: InternalAxiosRequestConfig) => {
@@ -29,7 +30,6 @@ apiClient.interceptors.request.use(addAuthHeaderToRequest);
 apiClient.interceptors.response.use((res) => res, interceptErrorReponse);
 imageUploaderApiClient.interceptors.request.use(addAuthHeaderToRequest);
 imageUploaderApiClient.interceptors.response.use((res) => res, interceptErrorReponse);
-
 
 export const parseResponse = <T>(response: AxiosResponse<ApiResponse<T>>) =>
   new Promise<T>((resolve, reject) => {
@@ -108,4 +108,12 @@ export const DELETE = <T>(url: string) =>
       .catch((error) => reject(error));
   });
 
-export default apiClient;
+export class Api {
+  private axiosInstance: AxiosInstance;
+  public authApi: AuthApi;
+
+  constructor() {
+    this.axiosInstance = axios.create(getApiConfig());
+    this.authApi = new AuthApi(this.axiosInstance);
+  }
+}
