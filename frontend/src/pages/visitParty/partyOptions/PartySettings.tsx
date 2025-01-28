@@ -9,11 +9,11 @@ import { getUser } from '../../../auth/AuthUserUtil';
 import { authService } from '../../../auth/AuthService';
 import { ApiError } from '../../../data/types/ApiResponseTypes';
 import { Party } from '../../../data/types/Party';
-import { setSelectedParty } from '../../../data/sclices/PartySlice';
 import { setForTime } from '../../../data/utils/timeoutSetterUtils';
 import VisitPartyNavBar from '../../../components/navigation-bar/VisitPartyNavBar';
 import VisitPartyProfile from '../../../components/drawer/VisitPartyProfile';
 import { updateParty } from '../../../api/apis/PartyApi';
+import { setSelectedParty } from '../../../store/sclices/PartySlice';
 
 const styles: { [key: string]: CSSProperties } = {
   outerContainer: {

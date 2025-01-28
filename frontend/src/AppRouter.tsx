@@ -9,108 +9,111 @@ import Contributions from './pages/visitParty/contribution/Contributions';
 import HallOfFame from './pages/visitParty/hallOfFame/HallOfFame';
 import ManageParty from './pages/visitParty/manageParty/ManageParty';
 import PartySettings from './pages/visitParty/partyOptions/PartySettings';
-import Login from './pages/authtentication/Login';
+import { Login } from './pages/authtentication/login/Login';
 import Register from './pages/authtentication/Register';
 import { Homepage } from './pages/HomePage';
 import { NavigationBar } from './components/navigation-bar/NavigationBar';
+import classes from './AppRouter.module.scss';
 
 export const AppRouter = () => (
   <BrowserRouter>
     <NavigationBar />
-    <Routes>
-      <Route
-        path='/'
-        element={<Homepage />}
-      />
-      <Route
-        path='/overview/discover'
-        element={<PrivateRoute />}
-      >
+    <div className={classes.appContent}>
+      <Routes>
+        <Route
+          path='/'
+          element={<Homepage />}
+        />
         <Route
           path='/overview/discover'
-          element={<Discover />}
-        />
-      </Route>
-      <Route
-        path='/overview/parties'
-        element={<PrivateRoute />}
-      >
+          element={<PrivateRoute />}
+        >
+          <Route
+            path='/overview/discover'
+            element={<Discover />}
+          />
+        </Route>
         <Route
           path='/overview/parties'
-          element={<PartiesPage />}
-        />
-      </Route>
-      <Route
-        path='/overview/friends'
-        element={<PrivateRoute />}
-      >
+          element={<PrivateRoute />}
+        >
+          <Route
+            path='/overview/parties'
+            element={<PartiesPage />}
+          />
+        </Route>
         <Route
           path='/overview/friends'
-          element={<Friends />}
-        />
-      </Route>
-      <Route
-        path='/createParty'
-        element={<PrivateRoute />}
-      >
+          element={<PrivateRoute />}
+        >
+          <Route
+            path='/overview/friends'
+            element={<Friends />}
+          />
+        </Route>
         <Route
           path='/createParty'
-          element={<CreateParty />}
-        />
-      </Route>
-      <Route
-        path='/visitParty/partyHome'
-        element={<PrivateRoute />}
-      >
+          element={<PrivateRoute />}
+        >
+          <Route
+            path='/createParty'
+            element={<CreateParty />}
+          />
+        </Route>
         <Route
           path='/visitParty/partyHome'
-          element={<PartyHome />}
-        />
-      </Route>
-      <Route
-        path='/visitParty/contributions'
-        element={<PrivateRoute />}
-      >
+          element={<PrivateRoute />}
+        >
+          <Route
+            path='/visitParty/partyHome'
+            element={<PartyHome />}
+          />
+        </Route>
         <Route
           path='/visitParty/contributions'
-          element={<Contributions />}
-        />
-      </Route>
-      <Route
-        path='/visitParty/hallOfFame'
-        element={<PrivateRoute />}
-      >
+          element={<PrivateRoute />}
+        >
+          <Route
+            path='/visitParty/contributions'
+            element={<Contributions />}
+          />
+        </Route>
         <Route
           path='/visitParty/hallOfFame'
-          element={<HallOfFame />}
-        />
-      </Route>
-      <Route
-        path='/visitParty/manageParty'
-        element={<PrivateRoute />}
-      >
+          element={<PrivateRoute />}
+        >
+          <Route
+            path='/visitParty/hallOfFame'
+            element={<HallOfFame />}
+          />
+        </Route>
         <Route
           path='/visitParty/manageParty'
-          element={<ManageParty />}
-        />
-      </Route>
-      <Route
-        path='/visitParty/partySettings'
-        element={<PrivateRoute />}
-      >
+          element={<PrivateRoute />}
+        >
+          <Route
+            path='/visitParty/manageParty'
+            element={<ManageParty />}
+          />
+        </Route>
         <Route
           path='/visitParty/partySettings'
-          element={<PartySettings />}
+          element={<PrivateRoute />}
+        >
+          <Route
+            path='/visitParty/partySettings'
+            element={<PartySettings />}
+          />
+        </Route>
+        <Route
+          path='/login'
+          element={<Login />}
         />
-      </Route>
-      <Route
-        path='/login'
-        element={<Login />}
-      />
-      <Route
-        path='/register'
-        element={<Register />}
-      />
-    </Routes>
+        <Route
+          path='/register'
+          element={<Register />}
+        />
+      </Routes>
+    </div>
   </BrowserRouter>
 );

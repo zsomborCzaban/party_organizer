@@ -1,7 +1,7 @@
 .navBar {
   width: 100%;
   background-color: #fffffe;
-  position: fixed;
+  position: static;
   top: 0;
   left: 0;
   display: flex;
@@ -9,6 +9,7 @@
   padding: 20px;
   gap: 10px;
   border-bottom: solid 1px rgb(208, 202, 202);
+  height: 8vh;
 
   .pageTitle {
     font-weight: 800;

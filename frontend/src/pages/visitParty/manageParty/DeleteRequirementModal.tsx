@@ -3,9 +3,9 @@ import { Button, Modal } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store/store';
 import { ApiError } from '../../../data/types/ApiResponseTypes';
-import { loadDrinkRequirements } from '../../../data/sclices/DrinkRequirementSlice';
-import { loadFoodRequirements } from '../../../data/sclices/FoodRequirementSlice';
 import { deleteDrinkRequirement, deleteFoodRequirement } from '../../../api/apis/RequirementApi';
+import { loadDrinkRequirements } from '../../../store/sclices/DrinkRequirementSlice';
+import { loadFoodRequirements } from '../../../store/sclices/FoodRequirementSlice';
 
 const styles: { [key: string]: React.CSSProperties } = {
   modalContent: {

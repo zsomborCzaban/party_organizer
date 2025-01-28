@@ -36,7 +36,7 @@ export const NavigationBar = () => {
 
         <NavigationButton
           buttonText='Login' // if not logged in, login page
-          navigateToLink='/'
+          navigateToLink='/login'
         />
       </div>
     </div>
