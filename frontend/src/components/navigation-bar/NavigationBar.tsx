@@ -5,44 +5,51 @@ import { NavigationButton } from './navigation-button/NavigationButton';
 export const NavigationBar = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  // check if we are logged in
 
   return (
-    <div className={classes.navBar}>
-      <span
-        className={classes.pageTitle}
-        onClick={() => navigate('/')}
-      >
-        Party Organizer
-      </span>
-      <div className={classes.buttonContainer}>
+    <nav className={classes.navBar}>
+      <div className={classes.leftSection}>
+        <span
+          className={classes.pageTitle}
+          onClick={() => navigate('/')}
+        >
+          Party Organizer
+        </span>
+      </div>
+
+      <div className={classes.centerSection}>
         <NavigationButton
           buttonText='Discover'
           navigateToLink='/'
+          isActive={location.pathname === '/'}
         />
         <NavigationButton
-          buttonText='My Parties' // visible if logged in
-          navigateToLink='/'
+          buttonText='My Parties'
+          navigateToLink='/my-parties'
+          isActive={location.pathname === '/my-parties'}
         />
         <NavigationButton
-          buttonText='Friends' // visivle if logged in
-          navigateToLink='/'
+          buttonText='Friends'
+          navigateToLink='/friends'
+          isActive={location.pathname === '/friends'}
         />
       </div>
-      <div className={classes.authInformationContainer}>
-        <NavigationButton
-          buttonText='Profile' // if logged in, open profile modal
-          navigateToLink='/'
-        />
 
-        {/* TODO: add user logged in to also hide button */}
+      <div className={classes.rightSection}>
+        <NavigationButton
+          buttonText='Profile'
+          navigateToLink='/profile'
+          isActive={location.pathname === '/profile'}
+        />
         {location.pathname !== '/login' && (
-          <NavigationButton
-            buttonText='Login' // if not logged in, login page
-            navigateToLink='/login'
-          />
+          <button 
+            className={classes.authButton}
+            onClick={() => navigate('/login')}
+          >
+            Sign In
+          </button>
         )}
       </div>
-    </div>
+    </nav>
   );
 };

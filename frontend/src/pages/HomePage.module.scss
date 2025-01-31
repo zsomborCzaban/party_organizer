@@ -1,0 +1,244 @@
+.homepage {
+  min-height: 100vh;
+  background-color: #f7fafc;
+  margin-top: 70px;
+}
+
+.hero {
+  background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+  padding: 80px 48px;
+  text-align: center;
+  color: white;
+
+  .heroContent {
+    max-width: 800px;
+    margin: 0 auto;
+
+    h1 {
+      font-size: 48px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      letter-spacing: -1px;
+    }
+
+    p {
+      font-size: 20px;
+      margin-bottom: 32px;
+      opacity: 0.9;
+    }
+  }
+
+  .heroButtons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+  }
+}
+
+.primaryButton {
+  padding: 12px 24px;
+  background-color: white;
+  color: #3182ce;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.secondaryButton {
+  padding: 12px 24px;
+  background-color: transparent;
+  color: white;
+  border: 2px solid white;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+  }
+}
+
+.features {
+  padding: 80px 48px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  h2 {
+    text-align: center;
+    font-size: 36px;
+    color: #2d3748;
+    margin-bottom: 48px;
+    font-weight: 700;
+  }
+
+  .featureGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 32px;
+  }
+
+  .featureCard {
+    background: white;
+    padding: 32px;
+    border-radius: 16px;
+    text-align: center;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.05);
+    }
+
+    .featureIcon {
+      font-size: 40px;
+      margin-bottom: 16px;
+    }
+
+    h3 {
+      font-size: 20px;
+      color: #2d3748;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    p {
+      color: #718096;
+      line-height: 1.6;
+    }
+  }
+}
+
+.localParties {
+  padding: 80px 48px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  h2 {
+    text-align: center;
+    font-size: 36px;
+    color: #2d3748;
+    margin-bottom: 48px;
+    font-weight: 700;
+  }
+
+  .partyGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 32px;
+  }
+
+  .partyCard {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.05);
+    }
+
+    .partyImage {
+      height: 200px;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .partyContent {
+      padding: 24px;
+
+      h3 {
+        font-size: 20px;
+        color: #2d3748;
+        margin-bottom: 16px;
+        font-weight: 600;
+      }
+
+      .partyDetails {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 16px;
+
+        span {
+          color: #718096;
+          font-size: 14px;
+        }
+      }
+
+      p {
+        color: #4a5568;
+        line-height: 1.6;
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+.loading {
+  text-align: center;
+  color: #718096;
+  padding: 48px;
+}
+
+.noParties {
+  text-align: center;
+  padding: 48px;
+  background: white;
+  border-radius: 16px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+
+  p {
+    color: #718096;
+    margin-bottom: 24px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .hero, .features, .localParties {
+    padding: 80px 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding: 60px 16px;
+
+    .heroContent {
+      h1 {
+        font-size: 36px;
+      }
+
+      p {
+        font-size: 18px;
+      }
+    }
+  }
+
+  .features, .localParties {
+    padding: 60px 16px;
+
+    h2 {
+      font-size: 30px;
+      margin-bottom: 36px;
+    }
+  }
+
+  .featureGrid {
+    grid-template-columns: 1fr;
+  }
+} 

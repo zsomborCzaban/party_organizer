@@ -36,7 +36,7 @@ export const Login = () => {
 
   return (
     <div className={classes.container}>
-      <h2 className={classes.title}>Login</h2>
+      <h2 className={classes.title}>Welcome Back</h2>
       <div className={classes.inputGroup}>
         <label
           htmlFor='username'
@@ -82,18 +82,18 @@ export const Login = () => {
         onClick={() => handleLogin()}
         className={classes.loginButton}
       >
-        Login
+        Sign In
       </button>
 
-      {/* Remove this form of this */}
       {error && <p className={classes.error}>{error}</p>}
+      
       <div className={classes.signUpContainer}>
-        <p>Don't have an account yet?</p>
+        <p>New to the platform?</p>
         <a
           href='/register'
           className={classes.link}
         >
-          Sign Up
+          Create an account
         </a>
       </div>
     </div>

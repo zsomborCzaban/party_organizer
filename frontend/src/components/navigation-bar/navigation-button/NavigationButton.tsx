@@ -1,14 +1,21 @@
 import { useNavigate } from 'react-router-dom';
 import classes from './NavigationButton.module.scss';
 
-export const NavigationButton = ({ buttonText, navigateToLink }: { buttonText: string; navigateToLink: string }) => {
+interface Props {
+  buttonText: string;
+  navigateToLink: string;
+  isActive?: boolean;
+}
+
+export const NavigationButton = ({ buttonText, navigateToLink, isActive }: Props) => {
   const navigate = useNavigate();
+
   return (
-    <div
+    <button
+      className={`${classes.button} ${isActive ? classes.active : ''}`}
       onClick={() => navigate(navigateToLink)}
-      className={classes.navigationButton}
     >
       {buttonText}
-    </div>
+    </button>
   );
 };
