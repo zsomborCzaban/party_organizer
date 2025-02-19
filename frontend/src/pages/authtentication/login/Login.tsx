@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { login } from '../../../api/apis/AuthenticationApi';
 import classes from './Login.module.scss';
+import { useApi } from '../../../context/ApiContext';
+import { useAppDispatch } from '../../../store/store-helper';
+import { userLogin } from '../../../store/sclices/UserSlice';
 
 type InvalidCred = {
   err: string;
@@ -11,6 +13,7 @@ type InvalidCred = {
 
 export const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   // TODO: Remove these
   const [username, setUsername] = useState<string>('');
@@ -20,19 +23,8 @@ export const Login = () => {
     setError(data[0].err);
   };
 
-  const handleLogin = () => {
-    login(username, password)
-      .then((responseData: InvalidCred[]) => {
-        if (!responseData) {
-          navigate('/overview/discover');
-        }
-        handleError(responseData);
-      })
-      .catch(() => {
-        setError('Unexpected error, please try again');
-      });
-    console.log('Logging in with', { username, password });
-  };
+  const api = useApi();
+
 
   return (
     <div className={classes.container}>
@@ -79,7 +71,7 @@ export const Login = () => {
       </div>
 
       <button
-        onClick={() => handleLogin()}
+        onClick={() => dispatch(userLogin({api, password, username}))}
         className={classes.loginButton}
       >
         Sign In

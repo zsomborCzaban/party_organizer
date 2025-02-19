@@ -1,10 +1,13 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import classes from './NavigationBar.module.scss';
 import { NavigationButton } from './navigation-button/NavigationButton';
+import { useAppSelector } from '../../store/store-helper';
+import { getUserJwt } from '../../store/sclices/UserSlice';
 
 export const NavigationBar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const userJwt = useAppSelector(getUserJwt);
 
   return (
     <nav className={classes.navBar}>
@@ -41,7 +44,7 @@ export const NavigationBar = () => {
           navigateToLink='/profile'
           isActive={location.pathname === '/profile'}
         />
-        {location.pathname !== '/login' && (
+        {location.pathname !== '/login' && !userJwt && (
           <button 
             className={classes.authButton}
             onClick={() => navigate('/login')}

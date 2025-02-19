@@ -22,7 +22,9 @@ export type LoginPostProps = {
 };
 
 export type LoginPostResponse = {
-  jwt: string;
+  data: {
+    jwt: string;
+  };
 };
 
 export interface RegisterPostRequestProps {
@@ -41,7 +43,6 @@ export class AuthApi {
 
   async postLogin(username: string, password: string): Promise<LoginPostResponse | undefined> {
     try {
-        console.log('sa',getApiUrl());
       const response = await this.axiosInstance.post<LoginPostResponse>(`${getApiUrl()}/user/login`, { username, password });
       return handleApiResponse(response);
     } catch (error) {
