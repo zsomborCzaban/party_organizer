@@ -19,6 +19,10 @@ export const userLogin = createAsyncThunk('user/loginUser', async ({ api, userna
   return response;
 });
 
+export const userRegister = createAsyncThunk('user/register', async ({api}: {api: Api}) => {
+  const registerResponse = await api.authApi.postRegister({});
+});
+
 export const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -39,7 +43,7 @@ export const userSlice = createSlice({
       })
       .addCase(userLogin.fulfilled, (state, action) => {
         state.isLoading = false;
-        console.log('jwt,', action.payload)
+        console.log('jwt,', action.payload);
         if (action.payload?.data.jwt) {
           setJwtAuthToken(action.payload.data.jwt);
           state.jwt = action.payload.data.jwt;

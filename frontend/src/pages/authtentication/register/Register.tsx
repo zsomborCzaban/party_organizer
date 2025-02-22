@@ -107,12 +107,15 @@ const Register: React.FC = () => {
       <h2 className={classes.title}>Create Account</h2>
       <form onSubmit={handleSubmit}>
         <div className={classes.inputGroup}>
-          <label htmlFor="username" className={classes.inputLabel}>
+          <label
+            htmlFor='username'
+            className={classes.inputLabel}
+          >
             Username
           </label>
           <input
-            type="text"
-            id="username"
+            type='text'
+            id='username'
             className={classes.input}
             value={username}
             onChange={(e) => setUsername(e.target.value)}
@@ -121,12 +124,15 @@ const Register: React.FC = () => {
         </div>
 
         <div className={classes.inputGroup}>
-          <label htmlFor="email" className={classes.inputLabel}>
+          <label
+            htmlFor='email'
+            className={classes.inputLabel}
+          >
             Email
           </label>
           <input
-            type="email"
-            id="email"
+            type='email'
+            id='email'
             className={classes.input}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -135,12 +141,15 @@ const Register: React.FC = () => {
         </div>
 
         <div className={classes.inputGroup}>
-          <label htmlFor="password" className={classes.inputLabel}>
+          <label
+            htmlFor='password'
+            className={classes.inputLabel}
+          >
             Password
           </label>
           <input
-            type="password"
-            id="password"
+            type='password'
+            id='password'
             className={classes.input}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -149,12 +158,15 @@ const Register: React.FC = () => {
         </div>
 
         <div className={classes.inputGroup}>
-          <label htmlFor="confirmPassword" className={classes.inputLabel}>
+          <label
+            htmlFor='confirmPassword'
+            className={classes.inputLabel}
+          >
             Confirm Password
           </label>
           <input
-            type="password"
-            id="confirmPassword"
+            type='password'
+            id='confirmPassword'
             className={classes.input}
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
@@ -164,13 +176,11 @@ const Register: React.FC = () => {
               {passwordsMatch ? 'Passwords match ✓' : 'Passwords do not match ✗'}
             </div>
           )}
-          {feedbacks.confirmPassword && (
-            <p className={classes.error}>{feedbacks.confirmPassword}</p>
-          )}
+          {feedbacks.confirmPassword && <p className={classes.error}>{feedbacks.confirmPassword}</p>}
         </div>
 
-        <button 
-          type="submit" 
+        <button
+          type='submit'
           className={classes.registerButton}
           disabled={passwordsMatch === false}
         >
@@ -184,7 +194,10 @@ const Register: React.FC = () => {
           <div className={classes.divider}>
             <span>or</span>
           </div>
-          <a href="/login" className={classes.signInButton}>
+          <a
+            href='/login'
+            className={classes.signInButton}
+          >
             Sign in to existing account
           </a>
         </div>

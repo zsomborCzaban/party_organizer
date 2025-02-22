@@ -51,6 +51,7 @@
     background-color: #ffffff;
     font-size: 15px;
     transition: all 0.2s ease;
+    z-index: 2;
     
     &:hover {
       border-color: rgba(66, 153, 225, 0.5);
@@ -78,7 +79,7 @@
   color: white;
   cursor: pointer;
   transition: all 0.2s ease;
-  margin: 32px 0;
+  margin: 20px 0 0 0;
 
   &:hover {
     background-image: linear-gradient(to right, #3182ce, #2c5282);
@@ -102,13 +103,14 @@
 }
 
 .error {
+  transform: translateY(-10px);
   color: #e53e3e;
   font-size: 14px;
   margin-bottom: 16px;
   text-align: center;
-  padding: 12px;
+  padding: 20px 12px 12px 12px;
   background-color: rgba(229, 62, 62, 0.1);
-  border-radius: 8px;
+  border-radius: 0 0 12px 12px;
   width: 100%;
 }
 
