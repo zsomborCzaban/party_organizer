@@ -1,5 +1,4 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import PrivateRoute from './auth/PrivateRoute';
 import Discover from './pages/overView/discover/Discover';
 import PartiesPage from './pages/overView/partiesPage/PartiesPage';
 import Friends from './pages/overView/friends/Friends';
@@ -15,6 +14,7 @@ import { Homepage } from './pages/HomePage';
 import { NavigationBar } from './components/navigation-bar/NavigationBar';
 import classes from './AppRouter.module.scss';
 import { Footer } from './components/footer/Footer';
+import { RequireAuthForRoute } from './auth/RequireAuthForRoute';
 
 export const AppRouter = () => (
   <BrowserRouter>
@@ -22,91 +22,11 @@ export const AppRouter = () => (
       <NavigationBar />
       <div className={classes.appContent}>
         <Routes>
+          {/* Public routes */}
           <Route
             path='/'
             element={<Homepage />}
           />
-          <Route
-            path='/overview/discover'
-            element={<PrivateRoute />}
-          >
-            <Route
-              path='/overview/discover'
-              element={<Discover />}
-            />
-          </Route>
-          <Route
-            path='/overview/parties'
-            element={<PrivateRoute />}
-          >
-            <Route
-              path='/overview/parties'
-              element={<PartiesPage />}
-            />
-          </Route>
-          <Route
-            path='/overview/friends'
-            element={<PrivateRoute />}
-          >
-            <Route
-              path='/overview/friends'
-              element={<Friends />}
-            />
-          </Route>
-          <Route
-            path='/createParty'
-            element={<PrivateRoute />}
-          >
-            <Route
-              path='/createParty'
-              element={<CreateParty />}
-            />
-          </Route>
-          <Route
-            path='/visitParty/partyHome'
-            element={<PrivateRoute />}
-          >
-            <Route
-              path='/visitParty/partyHome'
-              element={<PartyHome />}
-            />
-          </Route>
-          <Route
-            path='/visitParty/contributions'
-            element={<PrivateRoute />}
-          >
-            <Route
-              path='/visitParty/contributions'
-              element={<Contributions />}
-            />
-          </Route>
-          <Route
-            path='/visitParty/hallOfFame'
-            element={<PrivateRoute />}
-          >
-            <Route
-              path='/visitParty/hallOfFame'
-              element={<HallOfFame />}
-            />
-          </Route>
-          <Route
-            path='/visitParty/manageParty'
-            element={<PrivateRoute />}
-          >
-            <Route
-              path='/visitParty/manageParty'
-              element={<ManageParty />}
-            />
-          </Route>
-          <Route
-            path='/visitParty/partySettings'
-            element={<PrivateRoute />}
-          >
-            <Route
-              path='/visitParty/partySettings'
-              element={<PartySettings />}
-            />
-          </Route>
           <Route
             path='/login'
             element={<Login />}
@@ -115,6 +35,46 @@ export const AppRouter = () => (
             path='/register'
             element={<Register />}
           />
+          {/* Private routes */}
+          <Route element={<RequireAuthForRoute />}>
+            <Route
+              path='/overview/discover'
+              element={<Discover />}
+            />
+            <Route
+              path='/overview/parties'
+              element={<PartiesPage />}
+            />
+            <Route
+              path='/overview/friends'
+              element={<Friends />}
+            />
+            <Route
+              path='/createParty'
+              element={<CreateParty />}
+            />
+            <Route
+              path='/visitParty/partyHome'
+              element={<PartyHome />}
+            />
+            <Route
+              path='/visitParty/contributions'
+              element={<Contributions />}
+            />
+
+            <Route
+              path='/visitParty/manageParty'
+              element={<ManageParty />}
+            />
+            <Route
+              path='/visitParty/partySettings'
+              element={<PartySettings />}
+            />
+            <Route
+              path='/visitParty/hallOfFame'
+              element={<HallOfFame />}
+            />
+          </Route>
         </Routes>
       </div>
       <Footer />

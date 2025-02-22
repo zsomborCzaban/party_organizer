@@ -19,7 +19,7 @@ export const userLogin = createAsyncThunk('user/loginUser', async ({ api, userna
   return response;
 });
 
-export const userRegister = createAsyncThunk('user/register', async ({api}: {api: Api}) => {
+export const userRegister = createAsyncThunk('user/register', async ({ api }: { api: Api }) => {
   const registerResponse = await api.authApi.postRegister({});
 });
 
@@ -58,3 +58,4 @@ export const userSlice = createSlice({
 export const { setUserJwt, deleteUserJwt } = userSlice.actions;
 
 export const getUserJwt = (state: RootState) => state.userStore.jwt;
+export const isUserLoggedIn = (state: RootState): boolean => !!state.userStore.jwt && state.userStore.isLoading === false;
