@@ -215,7 +215,7 @@ func (ps PartyInviteService) JoinPublicParty(partyId, userId uint) api.IResponse
 	invite.State = domains.ACCEPTED
 
 	//todo: put this in transaction
-	err4 := ps.PartyInviteRepository.Save(invite)
+	err4 := ps.PartyInviteRepository.Update(invite)
 	if err4 != nil {
 		return api.ErrorInternalServerError(err4.Error())
 	}
@@ -272,7 +272,7 @@ func (ps PartyInviteService) JoinPrivateParty(userId uint, accessCode string) ap
 	invite.State = domains.ACCEPTED
 
 	//todo: put this in transaction
-	err4 := ps.PartyInviteRepository.Save(invite)
+	err4 := ps.PartyInviteRepository.Update(invite)
 	if err4 != nil {
 		return api.ErrorInternalServerError(err4.Error())
 	}

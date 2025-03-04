@@ -1,5 +1,7 @@
 package db
 
+import "github.com/rs/zerolog/log"
+
 type DatabaseAccessImpl struct {
 	DBEntityProvider IEntityProvider
 	DB               IDatabase
@@ -13,6 +15,7 @@ func (dbHandler DatabaseAccessImpl) Create(entity interface{}) error {
 	dbHandler.DB.NewSession()
 
 	if err := dbHandler.DB.Create(entity); err != nil {
+		log.Print(err.Error())
 		return NewDBError(err.Error())
 	}
 	return nil
@@ -21,46 +24,35 @@ func (dbHandler DatabaseAccessImpl) Create(entity interface{}) error {
 func (dbHandler DatabaseAccessImpl) FindById(id interface{}, associations ...string) (interface{}, error) {
 	dbHandler.DB.NewSession()
 
-	for _, association := range associations {
-		dbHandler.DB.Preload(association)
-	}
-
 	result := dbHandler.DBEntityProvider.Create()
-	err := dbHandler.DB.First(result, id)
+	err := dbHandler.DB.First(result, associations, id)
 	if err != nil {
+		log.Print(err.Error())
 		return nil, NewDBError(err.Error())
 	}
 	return result, nil
 }
 
-func (dbHandler DatabaseAccessImpl) Save(entity interface{}) error {
+func (dbHandler DatabaseAccessImpl) FindAll(associations ...string) (interface{}, error) {
 	dbHandler.DB.NewSession()
 
-	err := dbHandler.DB.Save(entity)
+	entities := dbHandler.DBEntityProvider.CreateArray()
+	err := dbHandler.DB.Find(entities, associations)
 	if err != nil {
-		return NewDBError(err.Error())
+		log.Print(err.Error())
+		return entities, NewDBError(err.Error())
 	}
-	return nil
+	return entities, nil
 }
 
 func (dbHandler DatabaseAccessImpl) Update(entity interface{}) error {
 	dbHandler.DB.NewSession()
 
 	if err := dbHandler.DB.Update(entity); err != nil {
+		log.Print(err.Error())
 		return NewDBError(err.Error())
 	}
 	return nil
-}
-
-func (dbHandler DatabaseAccessImpl) FindAll() (interface{}, error) {
-	dbHandler.DB.NewSession()
-
-	entities := dbHandler.DBEntityProvider.CreateArray()
-	err := dbHandler.DB.Find(entities)
-	if err != nil {
-		return entities, NewDBError(err.Error())
-	}
-	return entities, nil
 }
 
 func (dbHandler DatabaseAccessImpl) Delete(entity interface{}) error {
@@ -68,6 +60,7 @@ func (dbHandler DatabaseAccessImpl) Delete(entity interface{}) error {
 
 	err := dbHandler.DB.Delete(entity)
 	if err != nil {
+		log.Print(err.Error())
 		return NewDBError(err.Error())
 	}
 	return nil
@@ -80,6 +73,7 @@ func (dbHandler DatabaseAccessImpl) BatchDelete(conds []QueryParameter) error {
 	entity := dbHandler.DBEntityProvider.Create()
 	err := dbHandler.DB.Delete(entity)
 	if err != nil {
+		log.Print(err.Error())
 		return NewDBError(err.Error())
 	}
 	return nil
@@ -89,6 +83,7 @@ func (dbHandler DatabaseAccessImpl) AddToAssociation(entity interface{}, associa
 	dbHandler.DB.NewSession()
 
 	if err := dbHandler.DB.AddToAssociation(entity, association, associatedEntities); err != nil {
+		log.Print(err.Error())
 		return NewDBError(err.Error())
 	}
 	return nil
@@ -98,6 +93,7 @@ func (dbHandler DatabaseAccessImpl) DeleteFromAssociation(entity interface{}, as
 	dbHandler.DB.NewSession()
 
 	if err := dbHandler.DB.DeleteFromAssociation(entity, association, associatedEntities); err != nil {
+		log.Print(err.Error())
 		return NewDBError(err.Error())
 	}
 	return nil
@@ -107,6 +103,7 @@ func (dbHandler DatabaseAccessImpl) ClearAssociation(entity interface{}, associa
 
 	for _, association := range associations {
 		if err := dbHandler.DB.ClearAssociation(entity, association); err != nil {
+			log.Print(err.Error())
 			return NewDBError(err.Error())
 		}
 	}
@@ -118,13 +115,11 @@ func (dbHandler DatabaseAccessImpl) Query(conds []QueryParameter, associations .
 	dbHandler.DB.NewSession()
 	dbHandler.DB.ProcessWhereStatements(conds)
 
-	for _, association := range associations {
-		dbHandler.DB.Preload(association)
-	}
-
 	entities := dbHandler.DBEntityProvider.CreateArray()
-	err := dbHandler.DB.Find(entities)
+	err := dbHandler.DB.Find(entities, associations)
 	if err != nil {
+		log.Print(err.Error())
+
 		return entities, NewDBError(err.Error())
 	}
 	return entities, nil
@@ -138,13 +133,10 @@ func (dbHandler DatabaseAccessImpl) Query(conds []QueryParameter, associations .
 func (dbHandler DatabaseAccessImpl) Many2ManyQueryId(cond Many2ManyQueryParameter, associations ...string) (interface{}, error) {
 	dbHandler.DB.NewSession()
 
-	for _, association := range associations {
-		dbHandler.DB.Preload(association)
-	}
-
 	entities := dbHandler.DBEntityProvider.CreateArray()
-	err := dbHandler.DB.Many2ManyQueryId(entities, cond)
+	err := dbHandler.DB.Many2ManyQueryId(entities, associations, cond)
 	if err != nil {
+		log.Print(err.Error())
 		return entities, NewDBError(err.Error())
 	}
 	return entities, nil

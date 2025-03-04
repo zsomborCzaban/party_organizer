@@ -33,13 +33,6 @@ func (pr PartyInviteRepository) Update(invitation *domains.PartyInvite) error {
 	return nil
 }
 
-func (pr PartyInviteRepository) Save(invitation *domains.PartyInvite) error {
-	if err := pr.DbAccess.Save(invitation); err != nil {
-		return err
-	}
-	return nil
-}
-
 func (pr PartyInviteRepository) DeleteByPartyId(partyId uint) error {
 	queryParams := []db.QueryParameter{
 		{Field: "party_id", Operator: "=", Value: partyId},

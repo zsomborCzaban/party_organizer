@@ -51,7 +51,7 @@ func SetupRoutes(router *mux.Router, dbAccessManager db.IDatabaseAccessManager) 
 
 	partyService := partyInterfaces.NewPartyService(repoCollector, vali)
 	userService := userInterfaces.NewUserService(repoCollector, vali, GetAwsS3Client())
-	drinkRequirementService := drinkRequirementInterfaces.NewDrinkRequirementService(repoCollector, vali)
+	drinkRequirementService := drinkRequirementUsecases.NewDrinkRequirementService(repoCollector, vali)
 	foodRequirementService := foodRequirementInterfaces.NewFoodRequirementService(repoCollector, vali)
 	friendInviteService := friendInvitationInterfaces.NewFriendInviteService(repoCollector)
 	partyInviteService := partyInvitationInterfaces.NewPartyInviteService(repoCollector)

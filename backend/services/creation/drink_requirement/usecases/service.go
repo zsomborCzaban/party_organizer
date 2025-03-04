@@ -1,4 +1,4 @@
-package interfaces
+package usecases
 
 import (
 	"github.com/zsomborCzaban/party_organizer/services/creation/drink_requirement/domains"

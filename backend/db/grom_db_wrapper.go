@@ -9,6 +9,8 @@ type GormDBWrapper struct {
 	DB *gorm.DB
 }
 
+var COLUMNS_TO_OMIT_DURING_UPDATE = []string{"created_at", "deleted_at"}
+
 func NewGormDBWrapper(db *gorm.DB) *GormDBWrapper {
 	return &GormDBWrapper{DB: db}
 }
@@ -25,20 +27,23 @@ func (dbWrapper *GormDBWrapper) Create(entity interface{}) error {
 	return dbWrapper.DB.Create(entity).Error
 }
 
-func (dbWrapper *GormDBWrapper) First(dest interface{}, conds ...interface{}) error {
+func (dbWrapper *GormDBWrapper) First(dest interface{}, associations []string, conds ...interface{}) error {
+	dbWrapper.DB = dbWrapper.DB.Session(&gorm.Session{NewDB: true})
+	for _, association := range associations {
+		dbWrapper.DB = dbWrapper.DB.Preload(association)
+	}
 	return dbWrapper.DB.First(dest, conds).Error
 }
 
-func (dbWrapper *GormDBWrapper) Update(entity interface{}) error {
-	return dbWrapper.DB.Model(entity).Omit("id", "created_at", "deleted_at").Updates(entity).Error
-}
-
-func (dbWrapper *GormDBWrapper) Save(entity interface{}) error {
-	return dbWrapper.DB.Omit("created_at", "deleted_at").Save(entity).Error
-}
-
-func (dbWrapper *GormDBWrapper) Find(dest interface{}, conds ...interface{}) error {
+func (dbWrapper *GormDBWrapper) Find(dest interface{}, associations []string, conds ...interface{}) error {
+	for _, association := range associations {
+		dbWrapper.DB = dbWrapper.DB.Preload(association)
+	}
 	return dbWrapper.DB.Find(dest, conds).Error
+}
+
+func (dbWrapper *GormDBWrapper) Update(entity interface{}) error {
+	return dbWrapper.DB.Model(entity).Omit(COLUMNS_TO_OMIT_DURING_UPDATE...).Updates(entity).Error
 }
 
 func (dbWrapper *GormDBWrapper) Delete(entity interface{}) error {
@@ -74,23 +79,26 @@ func (dbWrapper *GormDBWrapper) ProcessWhereStatements(conds []QueryParameter) {
 //	return err
 //}
 
-func (dbWrapper *GormDBWrapper) Many2ManyQueryId(dest interface{}, cond Many2ManyQueryParameter) error {
+func (dbWrapper *GormDBWrapper) Many2ManyQueryId(dest interface{}, associations []string, cond Many2ManyQueryParameter) error {
 	if !cond.OrActive {
 		query := fmt.Sprintf(
 			"SELECT * FROM %s WHERE id IN (SELECT %s FROM %s WHERE %s = ?)",
 			cond.QueriedTable, cond.M2MQueriedColumnName, cond.Many2ManyTable, cond.M2MConditionColumnName,
 		)
+		for _, preloadColumn := range associations {
+			dbWrapper.DB = dbWrapper.DB.Preload(preloadColumn)
+		}
 		return dbWrapper.DB.Raw(query, cond.M2MConditionColumnValue).Find(dest).Error
+
 	} else {
 		query := fmt.Sprintf(
 			"SELECT * FROM %s WHERE id IN (SELECT %s FROM %s WHERE %s = ? OR %s = ?)",
 			cond.QueriedTable, cond.M2MQueriedColumnName, cond.Many2ManyTable, cond.M2MConditionColumnName, cond.OrConditionColumnName,
 		)
+		for _, preloadColumn := range associations {
+			dbWrapper.DB = dbWrapper.DB.Preload(preloadColumn)
+		}
 		return dbWrapper.DB.Raw(query, cond.M2MConditionColumnValue, cond.OrConditionColumnValue).Find(dest).Error
 	}
 	//return dbWrapper.DB.Model(model).Preload(preload, "id = ?", 3).Find(dest).Error
-}
-
-func (dbWrapper *GormDBWrapper) Preload(association string) {
-	dbWrapper.DB = dbWrapper.DB.Preload(association)
 }
