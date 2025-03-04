@@ -18,6 +18,7 @@ const selectedPartySlice = createSlice({
         reducers: {
             setSelectedParty: (state, action:  { payload: Party, type: string }) => {
                 state.selectedParty = action.payload; // Set data in the state
+                // state.selectedParty.organizer = action.payload.organizer;
             },
         },
 });
