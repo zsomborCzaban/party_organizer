@@ -1,4 +1,4 @@
-package interfaces
+package usecases
 
 import (
 	"github.com/zsomborCzaban/party_organizer/services/creation/food_requirement/domains"
@@ -46,7 +46,7 @@ func (fs FoodRequirementService) CreateFoodRequirement(foodRequirementDTO domain
 		return api.ErrorInternalServerError(err)
 	}
 
-	return api.Success(foodRequirement.TransformToFoodRequirementDTO())
+	return api.Success(foodRequirement)
 }
 
 func (fs FoodRequirementService) GetFoodRequirement(foodReqId, userId uint) api.IResponse {
@@ -55,7 +55,7 @@ func (fs FoodRequirementService) GetFoodRequirement(foodReqId, userId uint) api.
 		return api.ErrorInternalServerError(err)
 	}
 
-	if foodRequirement.Party.CanBeAccessedBy(userId) {
+	if !foodRequirement.Party.CanBeAccessedBy(userId) {
 		return api.ErrorUnauthorized("you are not in the party")
 	}
 

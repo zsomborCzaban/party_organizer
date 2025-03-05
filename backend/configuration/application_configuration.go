@@ -26,6 +26,7 @@ import (
 	userInterfaces "github.com/zsomborCzaban/party_organizer/services/user/interfaces"
 	userUsecases "github.com/zsomborCzaban/party_organizer/services/user/usecases"
 	"github.com/zsomborCzaban/party_organizer/utils/api"
+	"github.com/zsomborCzaban/party_organizer/utils/jwt"
 	"github.com/zsomborCzaban/party_organizer/utils/repo"
 	"net/http"
 	"os"
@@ -34,7 +35,7 @@ import (
 
 func SetupRoutes(router *mux.Router, dbAccessManager db.IDatabaseAccessManager) *mux.Router {
 	apiRouter := router.PathPrefix("/api/v1").Subrouter()
-	//apiRouter.Use(jwt.ValidateJWTMiddleware)
+	apiRouter.Use(jwt.ValidateJWTMiddleware)
 
 	vali := api.NewValidator(validator.New())
 
@@ -52,7 +53,7 @@ func SetupRoutes(router *mux.Router, dbAccessManager db.IDatabaseAccessManager) 
 	partyService := partyInterfaces.NewPartyService(repoCollector, vali)
 	userService := userInterfaces.NewUserService(repoCollector, vali, GetAwsS3Client())
 	drinkRequirementService := drinkRequirementUsecases.NewDrinkRequirementService(repoCollector, vali)
-	foodRequirementService := foodRequirementInterfaces.NewFoodRequirementService(repoCollector, vali)
+	foodRequirementService := foodRequirementUsecases.NewFoodRequirementService(repoCollector, vali)
 	friendInviteService := friendInvitationInterfaces.NewFriendInviteService(repoCollector)
 	partyInviteService := partyInvitationInterfaces.NewPartyInviteService(repoCollector)
 	drinkContributionService := drinkContributionInterfaces.NewDrinkContributionService(repoCollector, vali)

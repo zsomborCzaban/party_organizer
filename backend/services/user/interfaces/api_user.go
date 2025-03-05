@@ -6,8 +6,8 @@ import (
 )
 
 func NewUserAuthRouter(router *mux.Router, controller domains.IUserController) {
-	router.HandleFunc("/user/login", controller.LoginController).Methods("POST")
-	router.HandleFunc("/user/register", controller.RegisterController).Methods("POST")
+	router.HandleFunc("/login", controller.LoginController).Methods("POST")
+	router.HandleFunc("/register", controller.RegisterController).Methods("POST")
 }
 
 func NewUserRouter(router *mux.Router, controller domains.IUserController) {

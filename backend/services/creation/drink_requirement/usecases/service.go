@@ -46,7 +46,7 @@ func (ds DrinkRequirementService) CreateDrinkRequirement(drinkRequirementDTO dom
 		return api.ErrorInternalServerError(err3)
 	}
 
-	return api.Success(drinkRequirement.TransformToDrinkRequirementDTO())
+	return api.Success(drinkRequirement)
 }
 
 func (ds DrinkRequirementService) GetDrinkRequirement(drinkReqId, userId uint) api.IResponse {
@@ -59,7 +59,7 @@ func (ds DrinkRequirementService) GetDrinkRequirement(drinkReqId, userId uint) a
 		return api.ErrorUnauthorized("you are not in the party")
 	}
 
-	return api.Success(drinkRequirement.TransformToDrinkRequirementDTO())
+	return api.Success(drinkRequirement)
 }
 
 func (ds DrinkRequirementService) DeleteDrinkRequirement(drinkReqId, userId uint) api.IResponse {

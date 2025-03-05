@@ -3,7 +3,7 @@ package domains
 import "gorm.io/gorm"
 
 type DrinkRequirementDTO struct {
-	ID             uint    `json:"id,omitempty"`
+	ID             uint    `json:"ID,omitempty"`
 	PartyID        uint    `json:"party_id,omitempty" validate:"required"`
 	Type           string  `json:"type,omitempty" validate:"required"`
 	TargetQuantity float32 `json:"target_quantity,omitempty" validate:"required,min=1,gt=0"`
