@@ -18,12 +18,13 @@ type Party struct {
 	WhatsappLink      string         `json:"whatsapp_link"`
 	Private           bool           `json:"is_private"`
 	AccessCodeEnabled bool           `json:"access_code_enabled"`
-	AccessCode        string         `json:"access_code"` //starts with the id of the party and after that has a '_' character. The "partyId_" part is appended to the code in the buisness logic. the user only sends the code part of the code
+	AccessCode        string         `json:"access_code"` //starts with the id of the party and after that has a '_' character. The "{partyId}_" part is appended to the code in the buisness logic. the user only sends the code part of the code
 	OrganizerID       uint           `json:"organizer_id"`
 	Organizer         domains.User   `json:"organizer"`
 	Participants      []domains.User `json:"-" gorm:"many2many:party_participants;"`
 }
 
+// todo: refactor this to usecases, bc Organiter and accessCode is set dynamicly, after this function call. which is bad practice and counts as buisness logic
 func (p *Party) TransformToPartyDTO() *PartyDTO {
 	return &PartyDTO{
 		ID:                p.ID,
@@ -40,6 +41,7 @@ func (p *Party) TransformToPartyDTO() *PartyDTO {
 	}
 }
 
+// todo: refactor these methods into the usecases folder
 func (p *Party) CanBeAccessedBy(userId uint) bool {
 	return p.HasParticipant(userId) || userId == adminUser.ADMIN_USER_ID //we dont check for private bc it only means anyone cna join them
 }

@@ -7,7 +7,7 @@ import (
 )
 
 type PartyDTO struct {
-	ID                uint           `json:"id,omitempty"`
+	ID                uint           `json:"ID,omitempty"`
 	Place             string         `json:"place,omitempty" validate:"required,min=3"`
 	StartTime         time.Time      `json:"start_time,omitempty" validate:"required"`
 	Name              string         `json:"name,omitempty" validate:"required"`

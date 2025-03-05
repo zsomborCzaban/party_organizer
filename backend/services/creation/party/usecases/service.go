@@ -1,4 +1,4 @@
-package interfaces
+package usecases
 
 import (
 	"fmt"
@@ -70,7 +70,7 @@ func (ps PartyService) GetParty(partyId, userId uint) api.IResponse {
 		party.AccessCode = ""
 	}
 
-	return api.Success(party.TransformToPartyDTO())
+	return api.Success(party)
 }
 
 func (ps PartyService) UpdateParty(partyDTO domains.PartyDTO, userId uint) api.IResponse {
