@@ -1,4 +1,4 @@
-package interfaces
+package usecases
 
 import (
 	foodReqDomain "github.com/zsomborCzaban/party_organizer/services/creation/food_requirement/domains"
