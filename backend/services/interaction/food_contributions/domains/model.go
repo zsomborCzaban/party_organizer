@@ -11,7 +11,7 @@ type FoodContribution struct {
 	gorm.Model
 
 	ContributorId uint                          `json:"contributor_id"`
-	Contributor   userDomain.User               `json:"-"`
+	Contributor   userDomain.User               `json:"contributor"`
 	FoodReqId     uint                          `json:"requirement_id" validate:"required"`
 	FoodReq       foodReqDomain.FoodRequirement `json:"requirement"`
 	PartyId       uint                          `json:"-"`
