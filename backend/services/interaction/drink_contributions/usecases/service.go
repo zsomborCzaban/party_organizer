@@ -79,7 +79,7 @@ func (ds DrinkContributionService) Update(contribution domains.DrinkContribution
 	contribution.ContributorId = oldContribution.ContributorId
 	contribution.PartyId = oldContribution.PartyId
 
-	if err6 := ds.ContributionRepository.Create(&contribution); err6 != nil {
+	if err6 := ds.ContributionRepository.Update(&contribution); err6 != nil {
 		return api.ErrorInternalServerError(err6.Error())
 	}
 
@@ -104,12 +104,12 @@ func (ds DrinkContributionService) Delete(contributionId, userId uint) api.IResp
 }
 
 func (ds DrinkContributionService) GetByPartyIdAndContributorId(partyId, contributorId, userId uint) api.IResponse {
-	party, err := ds.PartyRepository.FindById(partyId, partyDomains.FullPartyNestedPreload...)
+	party, err := ds.PartyRepository.FindById(partyId, partyDomains.FullPartyPreload...)
 	if err != nil {
 		return api.ErrorBadRequest(err.Error())
 	}
 
-	if party.CanBeAccessedBy(userId) {
+	if !party.CanBeAccessedBy(userId) {
 		return api.ErrorUnauthorized(domains.NO_ACCESS_TO_PARTY)
 	}
 
@@ -130,7 +130,7 @@ func (ds DrinkContributionService) GetByRequirementId(requirementId, userId uint
 		return api.ErrorBadRequest(err.Error())
 	}
 
-	if requirement.Party.CanBeAccessedBy(userId) {
+	if !requirement.Party.CanBeAccessedBy(userId) {
 		return api.ErrorUnauthorized(domains.NO_ACCESS_TO_PARTY)
 	}
 
