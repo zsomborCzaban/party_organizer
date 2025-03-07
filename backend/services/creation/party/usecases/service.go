@@ -33,6 +33,7 @@ func NewPartyService(repoCollector *repo.RepoCollector, validator api.IValidator
 		DrinkContribRepository: *repoCollector.DrinkContribRepo,
 		FoodReqRepository:      *repoCollector.FoodReqReqRepo,
 		FoodContribRepository:  *repoCollector.FoodContribRepo,
+		PartyInviteRepository:  *repoCollector.PartyInviteRepo,
 	}
 }
 
@@ -48,11 +49,17 @@ func (ps PartyService) CreateParty(partyDTO domains.PartyDTO, userId uint) api.I
 		party.AccessCode = fmt.Sprintf("%d_%s", party.ID, party.AccessCode)
 	}
 
+	organizer, err := ps.UserRepository.FindById(userId)
+	if err != nil {
+		return api.ErrorInternalServerError(domains.DeletedUser)
+	}
+
 	err2 := ps.PartyRepository.CreateParty(party)
 	if err2 != nil {
 		return api.ErrorInternalServerError(err2.Error())
 	}
 
+	party.Organizer = *organizer
 	return api.Success(party)
 }
 

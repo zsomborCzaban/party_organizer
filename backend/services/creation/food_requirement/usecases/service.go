@@ -63,7 +63,7 @@ func (fs FoodRequirementService) GetFoodRequirement(foodReqId, userId uint) api.
 }
 
 func (fs FoodRequirementService) DeleteFoodRequirement(foodReqId, userId uint) api.IResponse {
-	foodRequirement, err := fs.FoodRequirementRepository.FindById(foodReqId, partyDomains.FullPartyNestedPreload...)
+	foodRequirement, err := fs.FoodRequirementRepository.FindById(foodReqId, "Party", "Party.Organizer")
 	if err != nil {
 		return api.ErrorBadRequest(err.Error())
 	}

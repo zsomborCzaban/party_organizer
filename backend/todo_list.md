@@ -1,3 +1,5 @@
+drinkReq/foodReq: ha már kitörölt requirementet akarunk kitörölni, akkor "ambiguous column name: food_requirements.id, invlaid trasnaction" nel tér vissza, és utana internal server errort kap minden endpoint arra a collectionre.
+party: deletenel "unexpected error while deleting the requirements of the party" kapunk. Illetve ha mukodik a requirement delete akkor meg "ambiguous column name: parties.id"
 
 
 # Todos
