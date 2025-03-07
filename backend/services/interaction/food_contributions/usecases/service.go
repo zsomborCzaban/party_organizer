@@ -64,7 +64,7 @@ func (ds FoodContributionService) Update(contribution domains.FoodContribution, 
 		return api.ErrorBadRequest(err2.Error())
 	}
 
-	if oldContribution.Party.CanBeAccessedBy(userId) {
+	if !oldContribution.Party.CanBeAccessedBy(userId) {
 		return api.ErrorUnauthorized(domains.NO_ACCESS_TO_PARTY)
 	}
 
@@ -79,7 +79,7 @@ func (ds FoodContributionService) Update(contribution domains.FoodContribution, 
 	contribution.ContributorId = oldContribution.ContributorId
 	contribution.PartyId = oldContribution.PartyId
 
-	if err6 := ds.ContributionRepository.Create(&contribution); err6 != nil {
+	if err6 := ds.ContributionRepository.Update(&contribution); err6 != nil {
 		return api.ErrorInternalServerError(err6.Error())
 	}
 
@@ -109,14 +109,14 @@ func (ds FoodContributionService) GetByPartyIdAndContributorId(partyId, contribu
 		return api.ErrorBadRequest(err.Error())
 	}
 
-	if party.CanBeAccessedBy(userId) {
+	if !party.CanBeAccessedBy(userId) {
 		return api.ErrorUnauthorized(domains.NO_ACCESS_TO_PARTY)
 	}
 
 	columnNames := []string{"party_id", "contributor_id"}
 	values := []interface{}{partyId, contributorId}
 
-	contributions, err := ds.ContributionRepository.FindAllBy(columnNames, values, "Contributor")
+	contributions, err := ds.ContributionRepository.FindAllBy(columnNames, values, "FoodReq")
 	if err != nil {
 		return api.ErrorInternalServerError(err.Error())
 	}
@@ -130,14 +130,14 @@ func (ds FoodContributionService) GetByRequirementId(requirementId, userId uint)
 		return api.ErrorBadRequest(err.Error())
 	}
 
-	if requirement.Party.CanBeAccessedBy(userId) {
+	if !requirement.Party.CanBeAccessedBy(userId) {
 		return api.ErrorUnauthorized(domains.NO_ACCESS_TO_PARTY)
 	}
 
 	columnNames := []string{"food_req_id"}
 	values := []interface{}{requirementId}
 
-	contributions, err := ds.ContributionRepository.FindAllBy(columnNames, values, "Contributor")
+	contributions, err := ds.ContributionRepository.FindAllBy(columnNames, values, "FoodReq")
 	if err != nil {
 		return api.ErrorInternalServerError(err.Error())
 	}
@@ -158,7 +158,7 @@ func (ds FoodContributionService) GetByPartyId(partyId, userId uint) api.IRespon
 	columnNames := []string{"party_id"}
 	values := []interface{}{partyId}
 
-	contributions, err := ds.ContributionRepository.FindAllBy(columnNames, values, "Contributor")
+	contributions, err := ds.ContributionRepository.FindAllBy(columnNames, values, "FoodReq")
 	if err != nil {
 		return api.ErrorInternalServerError(err.Error())
 	}
