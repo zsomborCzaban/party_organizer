@@ -80,8 +80,6 @@ func (dbHandler DatabaseAccessImpl) BatchDelete(conds []QueryParameter) error {
 }
 
 func (dbHandler DatabaseAccessImpl) AddToAssociation(entity interface{}, association string, associatedEntities ...interface{}) error {
-	dbHandler.DB.NewSession()
-
 	if err := dbHandler.DB.AddToAssociation(entity, association, associatedEntities); err != nil {
 		log.Print(err.Error())
 		return NewDBError(err.Error())
@@ -90,8 +88,6 @@ func (dbHandler DatabaseAccessImpl) AddToAssociation(entity interface{}, associa
 }
 
 func (dbHandler DatabaseAccessImpl) DeleteFromAssociation(entity interface{}, association string, associatedEntities ...interface{}) error {
-	dbHandler.DB.NewSession()
-
 	if err := dbHandler.DB.DeleteFromAssociation(entity, association, associatedEntities); err != nil {
 		log.Print(err.Error())
 		return NewDBError(err.Error())
@@ -99,8 +95,6 @@ func (dbHandler DatabaseAccessImpl) DeleteFromAssociation(entity interface{}, as
 	return nil
 }
 func (dbHandler DatabaseAccessImpl) ClearAssociation(entity interface{}, associations ...string) error {
-	dbHandler.DB.NewSession()
-
 	for _, association := range associations {
 		if err := dbHandler.DB.ClearAssociation(entity, association); err != nil {
 			log.Print(err.Error())
