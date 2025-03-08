@@ -39,7 +39,7 @@ func (fr FriendInviteRepository) FindByIds(invitorId, invitedId uint) (*domains.
 		{Field: "invited_id", Operator: "=", Value: invitedId},
 	}
 
-	fetchedInvites, fetchedError := fr.DbAccess.Query(queryParams)
+	fetchedInvites, fetchedError := fr.DbAccess.Query(queryParams, "Invited", "Invitor")
 	if fetchedError != nil {
 		return nil, errors.New("error, unexpected error while querying FriendInvite table")
 	}

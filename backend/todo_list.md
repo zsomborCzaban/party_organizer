@@ -1,4 +1,6 @@
--endpointokat (party), atirni hogy ne-automatikusan szedjuk ki az id-t hanem parameterben kelljen megadni
+-endpointokat (party, friendManager, partyAttendanceManager), atirni hogy ne-automatikusan szedjuk ki az id-t hanem parameterben kelljen megadni
+-test friendManager on bruno. on Removefriend we get: no such column: users.user_id
+-loginnal ha rossz a jelszo akkor valami felre megy a backenden. (internal server errort kapunk amikor nem kene)
 
 # Todos
  - validalni az a request adatokat (pl user email)

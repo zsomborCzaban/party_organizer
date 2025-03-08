@@ -21,7 +21,7 @@ func NewFriendInviteService(repoCollector *repo.RepoCollector) domains.IFriendIn
 }
 
 func (fs FriendInviteService) Accept(invitorId, userId uint) api.IResponse {
-	//should exists in database
+	//shouldnt exist in database
 	//if userId == invitorId {
 	//	return api.ErrorBadRequest("cannot accept yourself")
 	//}
