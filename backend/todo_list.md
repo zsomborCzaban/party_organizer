@@ -1,6 +1,13 @@
 -endpointokat (party, friendManager, partyAttendanceManager), atirni hogy ne-automatikusan szedjuk ki az id-t hanem parameterben kelljen megadni
--test friendManager on bruno. on Removefriend we get: no such column: users.user_id
+-(party manager kicknel is)test friendManager on bruno. on Removefriend we get: no such column: users.user_id
 -loginnal ha rossz a jelszo akkor valami felre megy a backenden. (internal server errort kapunk amikor nem kene)
+-create partynal az accesscode elejere az id 0 lesz uj partnal
+
+-party invite acceptnel+declinenal ures a visszakapott cuccos
+-get pending invitesnal a invited es a party.organizer ures
+-join public party-nal a party organizer ures
+
+
 
 # Todos
  - validalni az a request adatokat (pl user email)
