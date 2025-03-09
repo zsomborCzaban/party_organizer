@@ -1,4 +1,4 @@
-package interfaces
+package usecases
 
 import (
 	partyDomains "github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
