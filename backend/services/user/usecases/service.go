@@ -160,14 +160,5 @@ func (us *UserService) UploadProfilePicture(userId uint, file multipart.File, fi
 		return api.ErrorInternalServerError(err4.Error())
 	}
 
-	userDTO := user.TransformToUserDTO()
-
-	jwt, err5 := userDTO.GenerateJWT()
-	if err5 != nil {
-		return api.ErrorBadRequest("error while generating jwt")
-	}
-
-	return api.Success(
-		domains.JWTData{Jwt: *jwt},
-	)
+	return api.Success(user.TransformToUserDTO())
 }
