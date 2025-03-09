@@ -169,7 +169,7 @@ func (ps PartyInviteService) GetUserPendingInvites(userId uint) api.IResponse {
 	return api.Success(invites)
 }
 func (ps PartyInviteService) GetPartyPendingInvites(partyId, userId uint) api.IResponse {
-	party, err := ps.PartyRepository.FindById(partyId)
+	party, err := ps.PartyRepository.FindById(partyId, "Organizer")
 	if err != nil {
 		return api.ErrorBadRequest(err.Error())
 	}
@@ -187,7 +187,7 @@ func (ps PartyInviteService) GetPartyPendingInvites(partyId, userId uint) api.IR
 }
 
 func (ps PartyInviteService) JoinPublicParty(partyId, userId uint) api.IResponse {
-	party, err := ps.PartyRepository.FindById(partyId)
+	party, err := ps.PartyRepository.FindById(partyId, "Organizer")
 	if err != nil {
 		return api.ErrorBadRequest(err.Error())
 	}

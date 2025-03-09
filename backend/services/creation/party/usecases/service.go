@@ -86,7 +86,7 @@ func (ps PartyService) UpdateParty(partyDTO domains.PartyDTO, userId uint) api.I
 		return api.ErrorValidation(err)
 	}
 
-	originalParty, err2 := ps.PartyRepository.FindById(partyDTO.ID, "Organizer")
+	originalParty, err2 := ps.PartyRepository.FindById(partyDTO.ID, domains.FullPartyPreload...)
 	if err2 != nil {
 		return api.ErrorBadRequest(err2.Error())
 	}
@@ -96,6 +96,9 @@ func (ps PartyService) UpdateParty(partyDTO domains.PartyDTO, userId uint) api.I
 	}
 	party := partyDTO.TransformToParty()
 	party.OrganizerID = originalParty.OrganizerID
+	if party.AccessCodeEnabled {
+		party.AccessCode = fmt.Sprintf("%d_%s", party.ID, party.AccessCode)
+	}
 
 	err3 := ps.PartyRepository.UpdateParty(party)
 	if err3 != nil {
@@ -107,7 +110,7 @@ func (ps PartyService) UpdateParty(partyDTO domains.PartyDTO, userId uint) api.I
 
 func (ps PartyService) DeleteParty(partyId uint, userId uint) api.IResponse {
 	//bc the repository layer only checks for id
-	party, err := ps.PartyRepository.FindById(partyId, "Organizer")
+	party, err := ps.PartyRepository.FindById(partyId, domains.FullPartyPreload...)
 	if err != nil {
 		return api.ErrorBadRequest(err.Error())
 	}

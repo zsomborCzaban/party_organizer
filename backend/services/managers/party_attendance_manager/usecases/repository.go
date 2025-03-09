@@ -48,7 +48,7 @@ func (pr PartyInviteRepository) FindByIds(invitedId, partyId uint) (*domains.Par
 		{Field: "party_id", Operator: "=", Value: partyId},
 	}
 
-	fetchedInvites, fetchedError := pr.DbAccess.Query(queryParams)
+	fetchedInvites, fetchedError := pr.DbAccess.Query(queryParams, domains.FullPartyInvitePreload...)
 	if fetchedError != nil {
 		return nil, errors.New("error, unexpected error while querying PartyInvite table")
 	}
@@ -77,7 +77,7 @@ func (pr PartyInviteRepository) FindPendingByInvitedId(invitedId uint) (*[]domai
 		{Field: "invited_id", Operator: "=", Value: invitedId},
 	}
 
-	fetchedInvites, fetchedError := pr.DbAccess.Query(queryParams, "Party", "Invitor")
+	fetchedInvites, fetchedError := pr.DbAccess.Query(queryParams, domains.FullPartyInvitePreload...)
 	if fetchedError != nil {
 		return nil, fetchedError
 	}
@@ -96,7 +96,7 @@ func (pr PartyInviteRepository) FindPendingByPartyId(partyId uint) (*[]domains.P
 		{Field: "party_id", Operator: "=", Value: partyId},
 	}
 
-	fetchedInvites, fetchedError := pr.DbAccess.Query(queryParams, "Party", "Invitor", "Invited") //could cause concurrent map writes
+	fetchedInvites, fetchedError := pr.DbAccess.Query(queryParams, domains.FullPartyInvitePreload...) //could cause concurrent map writes
 	if fetchedError != nil {
 		return nil, fetchedError
 	}
