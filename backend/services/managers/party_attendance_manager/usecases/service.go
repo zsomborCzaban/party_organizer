@@ -201,23 +201,28 @@ func (ps PartyInviteService) JoinPublicParty(partyId, userId uint) api.IResponse
 		return api.Success(party)
 	}
 
+	//todo: put this in transaction (until end of method)
 	invite, err3 := ps.PartyInviteRepository.FindByIds(userId, partyId)
 	if err3 != nil {
-		invite = &domains.PartyInvite{
+		inviteToBeCreated := &domains.PartyInvite{
 			InvitorId: party.OrganizerID,
 			Invitor:   party.Organizer,
 			InvitedId: userId,
 			Invited:   *user,
 			PartyId:   partyId,
 			Party:     *party,
+			State:     domains.ACCEPTED,
 		}
-	}
-	invite.State = domains.ACCEPTED
-
-	//todo: put this in transaction
-	err4 := ps.PartyInviteRepository.Update(invite)
-	if err4 != nil {
-		return api.ErrorInternalServerError(err4.Error())
+		err4 := ps.PartyInviteRepository.Create(inviteToBeCreated)
+		if err4 != nil {
+			return api.ErrorInternalServerError(err4.Error())
+		}
+	} else {
+		invite.State = domains.ACCEPTED
+		err4 := ps.PartyInviteRepository.Update(invite)
+		if err4 != nil {
+			return api.ErrorInternalServerError(err4.Error())
+		}
 	}
 
 	err5 := ps.PartyRepository.AddUserToParty(party, user)
@@ -258,24 +263,30 @@ func (ps PartyInviteService) JoinPrivateParty(userId uint, accessCode string) ap
 		return api.Success(party)
 	}
 
+	//todo: put this in transaction (until end of method)
 	invite, err3 := ps.PartyInviteRepository.FindByIds(userId, uint(partyId))
 	if err3 != nil {
-		invite = &domains.PartyInvite{
+		inviteToBeCreated := &domains.PartyInvite{
 			InvitorId: party.OrganizerID,
 			Invitor:   party.Organizer,
 			InvitedId: userId,
 			Invited:   *user,
 			PartyId:   uint(partyId),
 			Party:     *party,
+			State:     domains.ACCEPTED,
+		}
+		err4 := ps.PartyInviteRepository.Create(inviteToBeCreated)
+		if err4 != nil {
+			return api.ErrorInternalServerError(err4.Error())
+		}
+	} else {
+		invite.State = domains.ACCEPTED
+		err4 := ps.PartyInviteRepository.Update(invite)
+		if err4 != nil {
+			return api.ErrorInternalServerError(err4.Error())
 		}
 	}
-	invite.State = domains.ACCEPTED
 
-	//todo: put this in transaction
-	err4 := ps.PartyInviteRepository.Update(invite)
-	if err4 != nil {
-		return api.ErrorInternalServerError(err4.Error())
-	}
 	if err5 := ps.PartyRepository.AddUserToParty(party, user); err5 != nil {
 		//todo: rollback
 		return api.ErrorInternalServerError(err5.Error())
@@ -290,7 +301,7 @@ func (ps PartyInviteService) Kick(kickedId, userId, partyId uint) api.IResponse 
 		return api.ErrorBadRequest(err.Error())
 	}
 
-	party, err3 := ps.PartyRepository.FindById(partyId)
+	party, err3 := ps.PartyRepository.FindById(partyId, partyDomains.FullPartyPreload...)
 	if err3 != nil {
 		return api.ErrorBadRequest(err3.Error())
 	}
