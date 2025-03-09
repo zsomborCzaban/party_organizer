@@ -1,0 +1,15 @@
+meta {
+  name: Join Private
+  type: http
+  seq: 9
+}
+
+get {
+  url: {{BACKEND_URL}}{{API_PATH}}/partyAttendanceManager/joinPrivateParty/4_asd
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{BEARER_TOKEN_JWT}}
+}

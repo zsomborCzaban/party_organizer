@@ -1,0 +1,24 @@
+meta {
+  name: Create
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{BACKEND_URL}}{{API_PATH}}/foodRequirement
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{BEARER_TOKEN_JWT}}
+}
+
+body:json {
+  {
+    "type": "chips",
+    "target_quantity": 22,
+    "quantity_mark": "kg",
+    "party_id": 7
+  }
+}

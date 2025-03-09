@@ -1,0 +1,15 @@
+meta {
+  name: Invite
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{BACKEND_URL}}{{API_PATH}}/partyAttendanceManager/invite/2/asd2
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{BEARER_TOKEN_JWT}}
+}

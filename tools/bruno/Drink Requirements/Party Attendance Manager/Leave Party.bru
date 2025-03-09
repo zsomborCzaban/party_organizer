@@ -1,0 +1,15 @@
+meta {
+  name: Leave Party
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{BACKEND_URL}}{{API_PATH}}/partyAttendanceManager/leaveParty/1
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{BEARER_TOKEN_JWT}}
+}

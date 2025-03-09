@@ -1,0 +1,15 @@
+meta {
+  name: Get Public Parties
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{BACKEND_URL}}{{API_PATH}}/party/getPublicParties
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{BEARER_TOKEN_JWT}}
+}

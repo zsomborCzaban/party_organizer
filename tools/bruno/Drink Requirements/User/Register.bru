@@ -1,0 +1,20 @@
+meta {
+  name: Register
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{BACKEND_URL}}{{API_PATH}}/register
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "username": "asd3",
+      "password": "asd0",
+      "confirm_password": "asd0",
+      "email": "nocap@email.com"
+  }
+}
