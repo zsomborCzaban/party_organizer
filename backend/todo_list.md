@@ -3,6 +3,8 @@
 -loginnal ha rossz a jelszo akkor valami felre megy a backenden. (internal server errort kapunk amikor nem kene)
 -create partynal az accesscode elejere az id 0 lesz uj partnal
 
+-publikus endpoint lehet a adiscover és a party home page
+
 
 
 # Todos

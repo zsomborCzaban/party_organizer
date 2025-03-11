@@ -2,8 +2,8 @@ import {post} from '../../api/Api';
 import {authService} from '../../auth/AuthService';
 import {getApiUrl} from '../../api/ApiHelper';
 
-const LOGIN_PATH = `${getApiUrl()  }/user/login`;
-const REGISTER_PATH = `${getApiUrl()  }/user/register`;
+const LOGIN_PATH = `${getApiUrl()  }/login`;
+const REGISTER_PATH = `${getApiUrl()  }/register`;
 
 export interface LoginRequestDataInterface {
     username: string;
