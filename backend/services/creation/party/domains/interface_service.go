@@ -7,6 +7,7 @@ import (
 type IPartyService interface {
 	GetParticipants(partyId, userId uint) api.IResponse
 	GetPublicParties() api.IResponse
+	GetPublicParty(partyId uint) api.IResponse
 	GetPartiesByOrganizerId(uint) api.IResponse
 	GetPartiesByParticipantId(uint) api.IResponse
 

@@ -129,14 +129,25 @@ func (pc PartyController) DeleteController(w http.ResponseWriter, r *http.Reques
 }
 
 func (pc PartyController) GetPublicParties(w http.ResponseWriter, r *http.Request) {
-	if _, err := jwt.GetIdFromJWT(r.Header.Get("Authorization")); err != nil {
-		br := api.ErrorBadRequest(err.Error())
+	resp := pc.PartyService.GetPublicParties()
+	couldSend := resp.Send(w)
+	if !couldSend {
+		//todo: handle logging
+		return
+	}
+}
+
+func (pc PartyController) GetPublicParty(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, err := strconv.ParseUint(vars["id"], 10, 32)
+	if err != nil {
+		br := api.ErrorBadRequest(domains.BadRequest)
 
 		br.Send(w)
 		return
 	}
 
-	resp := pc.PartyService.GetPublicParties()
+	resp := pc.PartyService.GetPublicParty(uint(id))
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging

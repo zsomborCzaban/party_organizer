@@ -70,12 +70,27 @@ func (ps PartyService) GetParty(partyId, userId uint) api.IResponse {
 	}
 
 	if !party.CanBeAccessedBy(userId) {
-		return api.ErrorUnauthorized("you have to be in the party for private parties")
+		return api.ErrorUnauthorized("you cannot access this party")
 	}
 
 	if !party.CanBeOrganizedBy(userId) {
 		party.AccessCode = ""
 	}
+
+	return api.Success(party)
+}
+
+func (ps PartyService) GetPublicParty(partyId uint) api.IResponse {
+	party, err := ps.PartyRepository.FindById(partyId, domains.FullPartyPreload...)
+	if err != nil {
+		return api.ErrorInternalServerError(err.Error())
+	}
+
+	if party.Private {
+		return api.ErrorUnauthorized("this party is private")
+	}
+
+	party.AccessCode = ""
 
 	return api.Success(party)
 }
