@@ -6,15 +6,14 @@ type IDatabase interface {
 	//AppendAssociation(entity, associatedEntity interface{}, associationName string) error
 
 	Create(entity interface{}) error
-	First(dest interface{}, conds ...interface{}) error
-	Find(dest interface{}, conds ...interface{}) error
+	First(dest interface{}, associations []string, conds ...interface{}) error
+	Find(dest interface{}, associations []string, conds ...interface{}) error
 	Update(entity interface{}) error
-	Save(entity interface{}) error
 	Delete(entity interface{}) error
+
 	AddToAssociation(entity interface{}, association string, associatedEntities ...interface{}) error
 	DeleteFromAssociation(entity interface{}, association string, associatedEntities ...interface{}) error
 	ClearAssociation(entity interface{}, association string) error
 	ProcessWhereStatements(conds []QueryParameter)
-	Preload(association string)
-	Many2ManyQueryId(dest interface{}, cond Many2ManyQueryParameter) error
+	Many2ManyQueryId(dest interface{}, associations []string, cond Many2ManyQueryParameter) error
 }

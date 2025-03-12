@@ -45,3 +45,11 @@ func (dam GormDatabaseAccessManager) RegisterEntity(name string, dbEntityProvide
 func (dam GormDatabaseAccessManager) GetRegisteredDBAccess(name string) IDatabaseAccess {
 	return dam.DBAccessRegistry[name]
 }
+
+func (dam GormDatabaseAccessManager) Close() error {
+	sqlDB, err := dam.DB.DB()
+	if err != nil {
+		return err
+	}
+	return sqlDB.Close()
+}
