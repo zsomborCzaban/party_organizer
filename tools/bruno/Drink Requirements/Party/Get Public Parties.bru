@@ -5,11 +5,7 @@ meta {
 }
 
 get {
-  url: {{BACKEND_URL}}{{API_PATH}}/party/getPublicParties
+  url: {{BACKEND_URL}}{{API_PATH}}/publicParties
   body: none
   auth: none
-}
-
-headers {
-  Authorization: Bearer {{BEARER_TOKEN_JWT}}
 }
