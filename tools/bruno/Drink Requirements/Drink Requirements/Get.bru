@@ -1,0 +1,15 @@
+meta {
+  name: Get
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{BACKEND_URL}}{{API_PATH}}/drinkRequirement/6
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{BEARER_TOKEN_JWT}}
+}

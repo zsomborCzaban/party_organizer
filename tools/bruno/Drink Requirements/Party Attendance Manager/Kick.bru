@@ -1,0 +1,15 @@
+meta {
+  name: Kick
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{BACKEND_URL}}{{API_PATH}}/partyAttendanceManager/kick/1/2
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{BEARER_TOKEN_JWT}}
+}

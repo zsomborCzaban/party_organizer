@@ -1,0 +1,23 @@
+meta {
+  name: Login
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{BACKEND_URL}}{{API_PATH}}/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "username": "asd2",
+      "password": "asd0"
+  }
+}
+
+script:post-response {
+  let data = res.body;
+  bru.setEnvVar("BEARER_TOKEN_JWT", data.data.jwt);
+}

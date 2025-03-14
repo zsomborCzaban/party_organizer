@@ -65,6 +65,8 @@ const VisitPartyNavBar: React.FC<VisitPartyNavBarProps> = ({ onProfileClick }) =
     }
 
     const userIdString = getUserId();
+    console.log(userIdString);
+    console.log(selectedParty.organizer.ID);
     if(!userIdString){
         authService.handleUnauthorized();
         return <div>error, couldn&#39;t get userId</div>;
