@@ -135,8 +135,8 @@ const Discover = () => {
 
     const handleVisitClicked = (record: Party) => {
         joinPublicParty(record.ID || -1)
-            .then((joinedParty) => {
-                dispatch(setSelectedParty(joinedParty));
+            .then(() => {
+                dispatch(setSelectedParty(record));
                 navigate('/visitParty/partyHome');
             })
             .catch(() => {

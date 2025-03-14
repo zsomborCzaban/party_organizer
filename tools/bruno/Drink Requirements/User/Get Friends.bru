@@ -1,0 +1,15 @@
+meta {
+  name: Get Friends
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{BACKEND_URL}}{{API_PATH}}/user/getFriends
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{BEARER_TOKEN_JWT}}
+}

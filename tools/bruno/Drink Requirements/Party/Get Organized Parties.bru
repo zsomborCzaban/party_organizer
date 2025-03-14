@@ -1,0 +1,15 @@
+meta {
+  name: Get Organized Parties
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{BACKEND_URL}}{{API_PATH}}/party/getPartiesByOrganizerId
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{BEARER_TOKEN_JWT}}
+}

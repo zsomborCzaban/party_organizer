@@ -103,6 +103,9 @@ const PartiesPage = () => {
 
     useEffect( () => {
         dispatch(loadOrganizedParties());
+        dispatch(loadAttendedParties());
+        dispatch(loadPartyInvites());
+        
         const currentUser = getUser();
 
         if(!currentUser) {
@@ -111,16 +114,11 @@ const PartiesPage = () => {
         }
 
         setUser(currentUser);
-    }, [dispatch]);
-
-    useEffect( () => {
-        dispatch(loadAttendedParties());
-        dispatch(loadPartyInvites());
     }, [dispatch, reload]);
-
 
     const handleVisitClicked = (record: Party) => {
         dispatch(setSelectedParty(record));
+        console.log(record);
         navigate('/visitParty/partyHome');
     };
 

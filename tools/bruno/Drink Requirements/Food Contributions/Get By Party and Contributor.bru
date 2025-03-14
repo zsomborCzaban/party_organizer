@@ -1,0 +1,23 @@
+meta {
+  name: Get By Party and Contributor
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{BACKEND_URL}}{{API_PATH}}/foodContribution/getByPartyAndContributor/3/5
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{BEARER_TOKEN_JWT}}
+}
+
+body:json {
+  {
+    "requirement_id": 1,
+    "quantity": 2,
+    "description": "nem meggyes mar 2"
+  }
+}

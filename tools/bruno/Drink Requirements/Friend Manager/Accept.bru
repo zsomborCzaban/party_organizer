@@ -1,0 +1,15 @@
+meta {
+  name: Accept
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{BACKEND_URL}}{{API_PATH}}/friendManager/accept/1
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{BEARER_TOKEN_JWT}}
+}

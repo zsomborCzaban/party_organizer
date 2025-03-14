@@ -1,0 +1,24 @@
+meta {
+  name: Create
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{BACKEND_URL}}{{API_PATH}}/drinkRequirement
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{BEARER_TOKEN_JWT}}
+}
+
+body:json {
+  {
+    "type": "vodkfghaa",
+    "target_quantity": 22,
+    "quantity_mark": "La",
+    "party_id": 13
+  }
+}

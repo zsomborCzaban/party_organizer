@@ -1,0 +1,15 @@
+meta {
+  name: Get
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{BACKEND_URL}}{{API_PATH}}/party/4
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{BEARER_TOKEN_JWT}}
+}

@@ -1,0 +1,28 @@
+meta {
+  name: Create REQUIRED ONLY
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{BACKEND_URL}}{{API_PATH}}/party
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{BEARER_TOKEN_JWT}}
+}
+
+body:json {
+  {
+    "name": "hal",
+    "place": "csirke",
+    "start_time": "2024-09-30T12:00:00Z",
+    "google_maps_link": "https://maps.app.goo.gl/ewW9aTznyz5ejiRv5",
+      "facebook_link": "https://www.facebook.com/",
+      "whatsapp_link": "https://www.whatsapp.com/",
+    "is_private": false,
+    "access_code_enabled": false
+  }
+}
