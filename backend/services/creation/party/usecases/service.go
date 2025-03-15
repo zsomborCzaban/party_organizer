@@ -31,7 +31,7 @@ func NewPartyService(repoCollector *repo.RepoCollector, validator api.IValidator
 		UserRepository:         *repoCollector.UserRepo,
 		DrinkReqRepository:     *repoCollector.DrinkReqRepo,
 		DrinkContribRepository: *repoCollector.DrinkContribRepo,
-		FoodReqRepository:      *repoCollector.FoodReqReqRepo,
+		FoodReqRepository:      *repoCollector.FoodReqRepo,
 		FoodContribRepository:  *repoCollector.FoodContribRepo,
 		PartyInviteRepository:  *repoCollector.PartyInviteRepo,
 	}

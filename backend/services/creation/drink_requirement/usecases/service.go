@@ -41,7 +41,7 @@ func (ds DrinkRequirementService) CreateDrinkRequirement(drinkRequirementDTO dom
 		return api.ErrorUnauthorized("cannot create drinkRequirements for other peoples party")
 	}
 
-	err3 := ds.DrinkRequirementRepository.CreateDrinkRequirement(drinkRequirement)
+	err3 := ds.DrinkRequirementRepository.Create(drinkRequirement)
 	if err3 != nil {
 		return api.ErrorInternalServerError(err3)
 	}
@@ -77,7 +77,7 @@ func (ds DrinkRequirementService) DeleteDrinkRequirement(drinkReqId, userId uint
 		return api.ErrorInternalServerError(err2.Error())
 	}
 
-	err3 := ds.DrinkRequirementRepository.DeleteDrinkRequirement(drinkRequirement)
+	err3 := ds.DrinkRequirementRepository.Delete(drinkRequirement)
 	if err3 != nil {
 		return api.ErrorInternalServerError(err3)
 	}

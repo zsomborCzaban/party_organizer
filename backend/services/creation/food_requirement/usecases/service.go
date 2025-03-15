@@ -18,7 +18,7 @@ type FoodRequirementService struct {
 func NewFoodRequirementService(repoCollector *repo.RepoCollector, validator api.IValidator) domains.IFoodRequirementService {
 	return &FoodRequirementService{
 		Validator:                  validator,
-		FoodRequirementRepository:  *repoCollector.FoodReqReqRepo,
+		FoodRequirementRepository:  *repoCollector.FoodReqRepo,
 		PartyRepository:            *repoCollector.PartyRepo,
 		FoodContributionRepository: *repoCollector.FoodContribRepo,
 	}
@@ -41,7 +41,7 @@ func (fs FoodRequirementService) CreateFoodRequirement(foodRequirementDTO domain
 		return api.ErrorUnauthorized("cannot create foodRequirement for other people's party")
 	}
 
-	err3 := fs.FoodRequirementRepository.CreateFoodRequirement(foodRequirement)
+	err3 := fs.FoodRequirementRepository.Create(foodRequirement)
 	if err3 != nil {
 		return api.ErrorInternalServerError(err)
 	}
@@ -77,7 +77,7 @@ func (fs FoodRequirementService) DeleteFoodRequirement(foodReqId, userId uint) a
 		return api.ErrorInternalServerError(err2.Error())
 	}
 
-	err3 := fs.FoodRequirementRepository.DeleteFoodRequirement(foodRequirement)
+	err3 := fs.FoodRequirementRepository.Delete(foodRequirement)
 	if err3 != nil {
 		return api.ErrorInternalServerError(err3)
 	}

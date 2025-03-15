@@ -17,7 +17,7 @@ type RepoCollector struct {
 	UserRepo         *domains2.IUserRepository
 	DrinkReqRepo     *domains3.IDrinkRequirementRepository
 	DrinkContribRepo *domains4.IDrinkContributionRepository
-	FoodReqReqRepo   *domains5.IFoodRequirementRepository
+	FoodReqRepo      *domains5.IFoodRequirementRepository
 	FoodContribRepo  *domains6.IFoodContributionRepository
 	PartyInviteRepo  *domains7.IPartyInviteRepository
 	FriendInviteRepo *domains8.IFriendInviteRepository
@@ -28,7 +28,7 @@ func NewRepoCollector(
 	userRepo domains2.IUserRepository,
 	drinkReqRepo domains3.IDrinkRequirementRepository,
 	drinkContribRepo domains4.IDrinkContributionRepository,
-	foodReqReqRepo domains5.IFoodRequirementRepository,
+	foodReqRepo domains5.IFoodRequirementRepository,
 	foodContribRepo domains6.IFoodContributionRepository,
 	partyInviteRepo domains7.IPartyInviteRepository,
 	friendInviteRepo domains8.IFriendInviteRepository,
@@ -38,7 +38,7 @@ func NewRepoCollector(
 		UserRepo:         &userRepo,
 		DrinkReqRepo:     &drinkReqRepo,
 		DrinkContribRepo: &drinkContribRepo,
-		FoodReqReqRepo:   &foodReqReqRepo,
+		FoodReqRepo:      &foodReqRepo,
 		FoodContribRepo:  &foodContribRepo,
 		PartyInviteRepo:  &partyInviteRepo,
 		FriendInviteRepo: &friendInviteRepo,
