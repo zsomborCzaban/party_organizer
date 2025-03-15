@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestTransformToFoodRequirement(t *testing.T) {
+func Test_TransformToFoodRequirement(t *testing.T) {
 	dto := FoodRequirementDTO{
 		ID:             1,
 		PartyID:        2,

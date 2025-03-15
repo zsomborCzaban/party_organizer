@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestTransformToDrinkRequirement(t *testing.T) {
+func Test_TransformToDrinkRequirement(t *testing.T) {
 	dto := DrinkRequirementDTO{
 		ID:             1,
 		PartyID:        2,

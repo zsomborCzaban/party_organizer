@@ -24,23 +24,23 @@ type RepoCollector struct {
 }
 
 func NewRepoCollector(
-	partyRepo domains.IPartyRepository,
-	userRepo domains2.IUserRepository,
-	drinkReqRepo domains3.IDrinkRequirementRepository,
-	drinkContribRepo domains4.IDrinkContributionRepository,
-	foodReqRepo domains5.IFoodRequirementRepository,
-	foodContribRepo domains6.IFoodContributionRepository,
-	partyInviteRepo domains7.IPartyInviteRepository,
-	friendInviteRepo domains8.IFriendInviteRepository,
+	partyRepo *domains.IPartyRepository,
+	userRepo *domains2.IUserRepository,
+	drinkReqRepo *domains3.IDrinkRequirementRepository,
+	drinkContribRepo *domains4.IDrinkContributionRepository,
+	foodReqRepo *domains5.IFoodRequirementRepository,
+	foodContribRepo *domains6.IFoodContributionRepository,
+	partyInviteRepo *domains7.IPartyInviteRepository,
+	friendInviteRepo *domains8.IFriendInviteRepository,
 ) *RepoCollector {
 	return &RepoCollector{
-		PartyRepo:        &partyRepo,
-		UserRepo:         &userRepo,
-		DrinkReqRepo:     &drinkReqRepo,
-		DrinkContribRepo: &drinkContribRepo,
-		FoodReqRepo:      &foodReqRepo,
-		FoodContribRepo:  &foodContribRepo,
-		PartyInviteRepo:  &partyInviteRepo,
-		FriendInviteRepo: &friendInviteRepo,
+		PartyRepo:        partyRepo,
+		UserRepo:         userRepo,
+		DrinkReqRepo:     drinkReqRepo,
+		DrinkContribRepo: drinkContribRepo,
+		FoodReqRepo:      foodReqRepo,
+		FoodContribRepo:  foodContribRepo,
+		PartyInviteRepo:  partyInviteRepo,
+		FriendInviteRepo: friendInviteRepo,
 	}
 }
