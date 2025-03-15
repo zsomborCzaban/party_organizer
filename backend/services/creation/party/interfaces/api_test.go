@@ -59,17 +59,17 @@ func Test_NewPartyRouter(t *testing.T) {
 	router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
 		path, err := route.GetPathTemplate()
 		if err != nil {
-			return nil
+			t.FailNow()
 		}
 
 		methods, err := route.GetMethods()
 		if err != nil {
-			return nil
+			t.FailNow()
 		}
 
 		val, ok := Routes[path]
 		if !ok {
-			return nil
+			t.FailNow()
 		}
 
 		found := false

@@ -5,7 +5,7 @@ import (
 	"github.com/zsomborCzaban/party_organizer/services/managers/party_attendance_manager/domains"
 )
 
-func NewPartyInviteRouter(router *mux.Router, controller domains.IPartyInviteController) {
+func NewRouter(router *mux.Router, controller domains.IPartyInviteController) {
 	router.HandleFunc("/partyAttendanceManager/accept/{party_id}", controller.Accept).Methods("GET")
 	router.HandleFunc("/partyAttendanceManager/decline/{party_id}", controller.Decline).Methods("GET")
 	router.HandleFunc("/partyAttendanceManager/invite/{party_id}/{invited_username}", controller.Invite).Methods("GET")

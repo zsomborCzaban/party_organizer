@@ -18,7 +18,7 @@ var Routes = map[string][]string{
 	"/drinkRequirement/getByPartyId/{party_id}": {"GET"},
 }
 
-func TestNewDrinkRequirementRouter(t *testing.T) {
+func Test_NewRouter(t *testing.T) {
 	router := mux.NewRouter()
 
 	dbAccess := db.CreateGormDatabaseAccessManager(":memory:", nil)
@@ -32,22 +32,22 @@ func TestNewDrinkRequirementRouter(t *testing.T) {
 	repo.DrinkContribRepo = &drinkContribRepo
 	service := usecases.NewDrinkRequirementService(&repo, vali)
 	controller := NewDrinkRequirementController(service)
-	NewDrinkRequirementRouter(router, controller)
+	NewRouter(router, controller)
 
 	router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
 		path, err := route.GetPathTemplate()
 		if err != nil {
-			return nil
+			t.FailNow()
 		}
 
 		methods, err := route.GetMethods()
 		if err != nil {
-			return nil
+			t.FailNow()
 		}
 
 		val, ok := Routes[path]
 		if !ok {
-			return nil
+			t.FailNow()
 		}
 
 		found := false
