@@ -19,7 +19,7 @@ func NewDrinkRequirementRepository(databaseAccessManager db.IDatabaseAccessManag
 	}
 }
 
-func (dr DrinkRequirementRepository) CreateDrinkRequirement(drinkRequirement *domains.DrinkRequirement) error {
+func (dr DrinkRequirementRepository) Create(drinkRequirement *domains.DrinkRequirement) error {
 	err := dr.DbAccess.Create(drinkRequirement)
 	if err != nil {
 		return err
@@ -41,7 +41,7 @@ func (dr DrinkRequirementRepository) FindById(id uint, associations ...string) (
 	return drinkRequirement2, nil
 }
 
-func (dr DrinkRequirementRepository) DeleteDrinkRequirement(drinkRequirement *domains.DrinkRequirement) error {
+func (dr DrinkRequirementRepository) Delete(drinkRequirement *domains.DrinkRequirement) error {
 	err := dr.DbAccess.Delete(drinkRequirement)
 	if err != nil {
 		return err
@@ -73,14 +73,9 @@ func (dr DrinkRequirementRepository) GetByPartyId(id uint) (*[]domains.DrinkRequ
 		return nil, fetchedError
 	}
 
-	drinkReqs, err := fetchedDrinkReqs.(*[]domains.DrinkRequirement)
-	if !err {
+	drinkReqs, ok := fetchedDrinkReqs.(*[]domains.DrinkRequirement)
+	if !ok {
 		return nil, errors.New("unable to parse fetched data to DrinkRequirements")
-	}
-
-	//not sure if parties can be nil after the db function call
-	if drinkReqs == nil {
-		return nil, errors.New("error. DrinkRequirements were nil")
 	}
 
 	return drinkReqs, nil

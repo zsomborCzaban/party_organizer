@@ -24,7 +24,7 @@ func NewFoodContributionService(repoCollector *repo.RepoCollector, vali api.IVal
 		ContributionRepository: *repoCollector.FoodContribRepo,
 		UserRepository:         *repoCollector.UserRepo,
 		PartyRepository:        *repoCollector.PartyRepo,
-		FoodReqRepository:      *repoCollector.FoodReqReqRepo,
+		FoodReqRepository:      *repoCollector.FoodReqRepo,
 	}
 }
 

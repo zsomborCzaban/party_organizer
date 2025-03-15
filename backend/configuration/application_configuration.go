@@ -39,16 +39,25 @@ func SetupRoutes(router *mux.Router, dbAccessManager db.IDatabaseAccessManager) 
 
 	vali := api.NewValidator(validator.New())
 
-	partyRepository := partyUsecases.NewPartyRepository(dbAccessManager)
-	userRepository := userUsecases.NewUserRepository(dbAccessManager)
-	drinkRequirementRepository := drinkRequirementUsecases.NewDrinkRequirementRepository(dbAccessManager)
-	foodRequirementRepository := foodRequirementUsecases.NewFoodRequirementRepository(dbAccessManager)
-	friendInviteRepository := friendInvitationUsecases.NewFriendInviteRepository(dbAccessManager)
-	partyInviteRepository := partyInvitationUsecases.NewPartyInviteRepository(dbAccessManager)
-	drinkContributionRepository := drinkContributionUsecases.NewDrinkContributionRepository(dbAccessManager)
-	foodContributionRepository := foodContributionUsecases.NewFoodContributionRepository(dbAccessManager)
+	partyRepo := partyUsecases.NewPartyRepository(dbAccessManager)
+	userRepo := userUsecases.NewUserRepository(dbAccessManager)
+	drinkRequirementRepo := drinkRequirementUsecases.NewDrinkRequirementRepository(dbAccessManager)
+	drinkContributionRepo := drinkContributionUsecases.NewDrinkContributionRepository(dbAccessManager)
+	foodRequirementRepo := foodRequirementUsecases.NewFoodRequirementRepository(dbAccessManager)
+	foodContributionRepo := foodContributionUsecases.NewFoodContributionRepository(dbAccessManager)
+	partyInviteRepo := partyInvitationUsecases.NewPartyInviteRepository(dbAccessManager)
+	friendInviteRepo := friendInvitationUsecases.NewFriendInviteRepository(dbAccessManager)
 
-	repoCollector := repo.NewRepoCollector(partyRepository, userRepository, drinkRequirementRepository, drinkContributionRepository, foodRequirementRepository, foodContributionRepository, partyInviteRepository, friendInviteRepository)
+	repoCollector := repo.NewRepoCollector(
+		&partyRepo,
+		&userRepo,
+		&drinkRequirementRepo,
+		&drinkContributionRepo,
+		&foodRequirementRepo,
+		&foodContributionRepo,
+		&partyInviteRepo,
+		&friendInviteRepo,
+	)
 
 	partyService := partyUsecases.NewPartyService(repoCollector, vali)
 	userService := userUsecases.NewUserService(repoCollector, vali, GetAwsS3Client())
@@ -71,13 +80,13 @@ func SetupRoutes(router *mux.Router, dbAccessManager db.IDatabaseAccessManager) 
 	partyInterfaces.NewPublicPartyRouter(router.PathPrefix("/api/v1").Subrouter(), partyController)
 	partyInterfaces.NewPartyRouter(apiRouter, partyController)
 	userInterfaces.NewUserAuthRouter(router.PathPrefix("/api/v1").Subrouter(), userController)
-	userInterfaces.NewUserRouter(apiRouter, userController)
-	drinkRequirementInterfaces.NewDrinkRequirementRouter(apiRouter, drinkRequirementController)
-	foodRequirementInterfaces.NewFoodRequirementRouter(apiRouter, foodRequirementController)
-	friendInvitationInterfaces.NewFriendInviteRouter(apiRouter, friendInviteController)
-	partyInvitationInterfaces.NewPartyInviteRouter(apiRouter, partyInviteController)
-	drinkContributionInterfaces.NewDrinkContributionRouter(apiRouter, drinkContributionController)
-	foodContributionInterfaces.NewFoodContributionRouter(apiRouter, foodContributionController)
+	userInterfaces.NewUserPublicRouter(apiRouter, userController)
+	drinkRequirementInterfaces.NewRouter(apiRouter, drinkRequirementController)
+	foodRequirementInterfaces.NewRouter(apiRouter, foodRequirementController)
+	friendInvitationInterfaces.NewRouter(apiRouter, friendInviteController)
+	partyInvitationInterfaces.NewRouter(apiRouter, partyInviteController)
+	drinkContributionInterfaces.NewRouter(apiRouter, drinkContributionController)
+	foodContributionInterfaces.NewRouter(apiRouter, foodContributionController)
 
 	return router
 }
@@ -111,3 +120,25 @@ func DefaultApplicationSetup() http.Handler {
 	return AddCorsSettings(
 		SetupRoutes(mux.NewRouter(), CreateDbAccessManager(db.CreateGormDatabaseAccessManager)))
 }
+
+//func InitRepoCollector(dbAccess db.IDatabaseAccessManager) *repo.RepoCollector {
+//	partyRepo := partyUsecases.NewPartyRepository(dbAccess)
+//	userRepo := userUsecases.NewUserRepository(dbAccess)
+//	drinkRequirementRepo := drinkRequirementUsecases.NewDrinkRequirementRepository(dbAccess)
+//	drinkContributionRepo := drinkContributionUsecases.NewDrinkContributionRepository(dbAccess)
+//	foodRequirementRepo := foodRequirementUsecases.NewFoodRequirementRepository(dbAccess)
+//	foodContributionRepo := foodContributionUsecases.NewFoodContributionRepository(dbAccess)
+//	partyInviteRepo := partyInvitationUsecases.NewPartyInviteRepository(dbAccess)
+//	friendInviteRepo := friendInvitationUsecases.NewFriendInviteRepository(dbAccess)
+//
+//	return repo.NewRepoCollector(
+//		&partyRepo,
+//		&userRepo,
+//		&drinkRequirementRepo,
+//		&drinkContributionRepo,
+//		&foodRequirementRepo,
+//		&foodContributionRepo,
+//		&partyInviteRepo,
+//		&friendInviteRepo,
+//	)
+//}

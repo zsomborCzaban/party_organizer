@@ -41,7 +41,7 @@ func (m *MockDatabaseAccess) DeleteFromAssociation(entity interface{}, associati
 	return args.Error(0)
 }
 
-func (m *MockDatabaseAccess) ClearAssociation(entity interface{}, association string) error {
+func (m *MockDatabaseAccess) ClearAssociation(entity interface{}, association ...string) error {
 	args := m.Called(entity, association)
 	return args.Error(0)
 }

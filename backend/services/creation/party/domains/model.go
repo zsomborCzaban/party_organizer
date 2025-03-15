@@ -24,23 +24,6 @@ type Party struct {
 	Participants      []domains.User `json:"-" gorm:"many2many:party_participants;"`
 }
 
-// todo: refactor this to usecases, bc Organiter and accessCode is set dynamicly, after this function call. which is bad practice and counts as buisness logic
-func (p *Party) TransformToPartyDTO() *PartyDTO {
-	return &PartyDTO{
-		ID:                p.ID,
-		Place:             p.Place,
-		StartTime:         p.StartTime,
-		Name:              p.Name,
-		GoogleMapsLink:    p.GoogleMapsLink,
-		FacebookLink:      p.FacebookLink,
-		WhatsappLink:      p.WhatsappLink,
-		Private:           p.Private,
-		AccessCodeEnabled: p.AccessCodeEnabled,
-		AccessCode:        p.AccessCode,
-		OrganizerID:       p.OrganizerID,
-	}
-}
-
 // todo: refactor these methods into the usecases folder
 func (p *Party) CanBeAccessedBy(userId uint) bool {
 	return p.HasParticipant(userId) || userId == adminUser.ADMIN_USER_ID //we dont check for private bc it only means anyone cna join them

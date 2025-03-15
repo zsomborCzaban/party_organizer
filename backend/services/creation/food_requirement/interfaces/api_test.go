@@ -4,18 +4,18 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
 	"github.com/zsomborCzaban/party_organizer/db"
-	"github.com/zsomborCzaban/party_organizer/services/creation/drink_requirement/usecases"
+	"github.com/zsomborCzaban/party_organizer/services/creation/food_requirement/usecases"
 	usecases2 "github.com/zsomborCzaban/party_organizer/services/creation/party/usecases"
-	usecases3 "github.com/zsomborCzaban/party_organizer/services/interaction/drink_contributions/usecases"
+	usecases3 "github.com/zsomborCzaban/party_organizer/services/interaction/food_contributions/usecases"
 	"github.com/zsomborCzaban/party_organizer/utils/api"
 	repoUtils "github.com/zsomborCzaban/party_organizer/utils/repo"
 	"testing"
 )
 
 var Routes = map[string][]string{
-	"/drinkRequirement":                         {"POST"},
-	"/drinkRequirement/{id}":                    {"GET", "DELETE"},
-	"/drinkRequirement/getByPartyId/{party_id}": {"GET"},
+	"/foodRequirement":                         {"POST"},
+	"/foodRequirement/{id}":                    {"GET", "DELETE"},
+	"/foodRequirement/getByPartyId/{party_id}": {"GET"},
 }
 
 func Test_NewRouter(t *testing.T) {
@@ -24,14 +24,14 @@ func Test_NewRouter(t *testing.T) {
 	dbAccess := db.CreateGormDatabaseAccessManager(":memory:", nil)
 	vali := api.NewValidator(validator.New())
 	repo := repoUtils.RepoCollector{}
-	drinkReqRepo := usecases.NewDrinkRequirementRepository(dbAccess)
+	foodReqRepo := usecases.NewFoodRequirementRepository(dbAccess)
 	partyRepo := usecases2.NewPartyRepository(dbAccess)
-	drinkContribRepo := usecases3.NewDrinkContributionRepository(dbAccess)
-	repo.DrinkReqRepo = &drinkReqRepo
+	foodContribRepo := usecases3.NewFoodContributionRepository(dbAccess)
+	repo.FoodReqRepo = &foodReqRepo
 	repo.PartyRepo = &partyRepo
-	repo.DrinkContribRepo = &drinkContribRepo
-	service := usecases.NewDrinkRequirementService(&repo, vali)
-	controller := NewDrinkRequirementController(service)
+	repo.FoodContribRepo = &foodContribRepo
+	service := usecases.NewFoodRequirementService(&repo, vali)
+	controller := NewFoodRequirementController(service)
 	NewRouter(router, controller)
 
 	router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
