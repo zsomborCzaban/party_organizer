@@ -181,12 +181,12 @@ func (fs FriendInviteService) GetPendingInvites(userId uint) api.IResponse {
 }
 
 func (fs FriendInviteService) RemoveFriend(userId, friendId uint) api.IResponse {
-	user, err := fs.UserRepository.FindByIdWithFriends(userId)
+	user, err := fs.UserRepository.FindById(userId, "Friends")
 	if err != nil {
 		return api.ErrorBadRequest(err.Error())
 	}
 
-	friend, err2 := fs.UserRepository.FindByIdWithFriends(friendId)
+	friend, err2 := fs.UserRepository.FindById(friendId, "Friends")
 	if err2 != nil {
 		return api.ErrorBadRequest(err2.Error())
 	}

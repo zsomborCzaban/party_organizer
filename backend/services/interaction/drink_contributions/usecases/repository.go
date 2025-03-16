@@ -2,7 +2,6 @@ package usecases
 
 import (
 	"errors"
-	"fmt"
 	"github.com/zsomborCzaban/party_organizer/db"
 	"github.com/zsomborCzaban/party_organizer/services/interaction/drink_contributions/domains"
 )
@@ -99,7 +98,7 @@ func (dr DrinkContributionRepository) FindById(id uint, associations ...string) 
 // FindAllBy culd also get the []db.QueryParameter as param, but then maybe move QueryParamter to utils package
 func (dr DrinkContributionRepository) FindAllBy(columnNames []string, values []interface{}, associations ...string) (*[]domains.DrinkContribution, error) {
 	if len(columnNames) != len(values) || len(columnNames) == 0 {
-		return nil, errors.New("incorrect use of FindAllBy")
+		return nil, errors.New(domains.FIND_ALL_BY_INCORRECT_PARAMS)
 	}
 
 	queryParams := make([]db.QueryParameter, len(columnNames))
@@ -115,17 +114,12 @@ func (dr DrinkContributionRepository) FindAllBy(columnNames []string, values []i
 	fetchedContributions, fetchedError := dr.DbAccess.Query(queryParams, associations...)
 	if fetchedError != nil {
 		//we should return errors from the database layer
-		return nil, errors.New(fmt.Sprintf("Error while fetching contributions"))
+		return nil, errors.New(domains.FETCH_ERROR)
 	}
 
 	contributions, err := fetchedContributions.(*[]domains.DrinkContribution)
 	if !err {
 		return nil, errors.New(domains.FAILED_PARSE_TO_ARRAY)
-	}
-
-	//not sure if contributions can be nil after the db function call
-	if contributions == nil {
-		return nil, errors.New(domains.NOT_FOUND)
 	}
 
 	return contributions, nil

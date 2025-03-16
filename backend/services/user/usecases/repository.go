@@ -32,19 +32,6 @@ func (ur UserRepository) FindById(id uint, associations ...string) (*domains.Use
 	return user2, nil
 }
 
-func (ur UserRepository) FindByIdWithFriends(id uint) (*domains.User, error) {
-	user, err := ur.DbAccess.FindById(id, "Friends")
-	if err != nil {
-		return nil, err
-	}
-
-	user2, err2 := user.(*domains.User)
-	if !err2 {
-		return nil, errors.New("failed to convert database entity to party")
-	}
-	return user2, nil
-}
-
 func (ur UserRepository) FindByUsername(username string) (*domains.User, error) {
 	queryParams := []db.QueryParameter{
 		{Field: "username", Operator: "=", Value: username},
