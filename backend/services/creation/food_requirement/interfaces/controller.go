@@ -40,7 +40,7 @@ func (fc FoodRequirementController) CreateController(w http.ResponseWriter, r *h
 		return
 	}
 
-	resp := fc.FoodRequirementService.CreateFoodRequirement(createFoodRequirementReq, userId)
+	resp := fc.FoodRequirementService.Create(createFoodRequirementReq, userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging
@@ -66,7 +66,7 @@ func (fc FoodRequirementController) GetController(w http.ResponseWriter, r *http
 		return
 	}
 
-	resp := fc.FoodRequirementService.GetFoodRequirement(uint(foodReqId), userId)
+	resp := fc.FoodRequirementService.FindById(uint(foodReqId), userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging
@@ -92,7 +92,7 @@ func (fc FoodRequirementController) DeleteController(w http.ResponseWriter, r *h
 		return
 	}
 
-	resp := fc.FoodRequirementService.DeleteFoodRequirement(uint(foodReqId), userId)
+	resp := fc.FoodRequirementService.Delete(uint(foodReqId), userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging

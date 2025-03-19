@@ -43,7 +43,7 @@ func (ds DrinkRequirementService) Create(drinkRequirementDTO domains.DrinkRequir
 
 	err3 := ds.DrinkRequirementRepository.Create(drinkRequirement)
 	if err3 != nil {
-		return api.ErrorInternalServerError(err3)
+		return api.ErrorInternalServerError(err3.Error())
 	}
 
 	return api.Success(drinkRequirement)
@@ -52,7 +52,7 @@ func (ds DrinkRequirementService) Create(drinkRequirementDTO domains.DrinkRequir
 func (ds DrinkRequirementService) FindById(drinkReqId, userId uint) api.IResponse {
 	drinkRequirement, err := ds.DrinkRequirementRepository.FindById(drinkReqId, partyDomains.FullPartyNestedPreload...)
 	if err != nil {
-		return api.ErrorBadRequest(domains.PartyNotFound)
+		return api.ErrorBadRequest(domains.RequirementNotFound)
 	}
 
 	if !drinkRequirement.Party.CanBeAccessedBy(userId) {

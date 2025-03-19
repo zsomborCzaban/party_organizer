@@ -4,40 +4,40 @@ import (
 	"errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"github.com/zsomborCzaban/party_organizer/services/creation/drink_requirement/domains"
+	"github.com/zsomborCzaban/party_organizer/services/creation/food_requirement/domains"
 	domains2 "github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
 	partyUsecases "github.com/zsomborCzaban/party_organizer/services/creation/party/usecases"
-	drinkContributionUsecases "github.com/zsomborCzaban/party_organizer/services/interaction/drink_contributions/usecases"
+	foodContributionUsecases "github.com/zsomborCzaban/party_organizer/services/interaction/food_contributions/usecases"
 	"github.com/zsomborCzaban/party_organizer/utils/api"
 	repo2 "github.com/zsomborCzaban/party_organizer/utils/repo"
 	"testing"
 )
 
-func setupDefaultService() (domains.IDrinkRequirementService, *api.MockValidator, *MockRepository, *partyUsecases.MockRepository, *drinkContributionUsecases.MockRepository) {
-	drinkReqRepo := new(MockRepository)
+func setupDefaultService() (domains.IFoodRequirementService, *api.MockValidator, *MockRepository, *partyUsecases.MockRepository, *foodContributionUsecases.MockRepository) {
+	foodReqRepo := new(MockRepository)
 	partyRepo := new(partyUsecases.MockRepository)
-	drinkContribRepo := new(drinkContributionUsecases.MockRepository)
+	foodContribRepo := new(foodContributionUsecases.MockRepository)
 	repo := repo2.RepoCollector{
 		PartyRepo:        partyRepo,
 		UserRepo:         nil,
-		DrinkReqRepo:     drinkReqRepo,
-		DrinkContribRepo: drinkContribRepo,
-		FoodReqRepo:      nil,
-		FoodContribRepo:  nil,
+		DrinkReqRepo:     nil,
+		DrinkContribRepo: nil,
+		FoodReqRepo:      foodReqRepo,
+		FoodContribRepo:  foodContribRepo,
 		PartyInviteRepo:  nil,
 		FriendInviteRepo: nil,
 	}
 	validator := new(api.MockValidator)
-	service := NewDrinkRequirementService(&repo, validator)
+	service := NewFoodRequirementService(&repo, validator)
 
-	return service, validator, drinkReqRepo, partyRepo, drinkContribRepo
+	return service, validator, foodReqRepo, partyRepo, foodContribRepo
 }
 
 func Test_ServiceCreate_Success(t *testing.T) {
-	service, vali, drinkReqRepo, partyRepo, _ := setupDefaultService()
+	service, vali, foodReqRepo, partyRepo, _ := setupDefaultService()
 
 	userId := uint(1)
-	drinkReqDto := domains.DrinkRequirementDTO{
+	foodReqDto := domains.FoodRequirementDTO{
 		PartyID: 1,
 	}
 	party := domains2.Party{
@@ -46,16 +46,16 @@ func Test_ServiceCreate_Success(t *testing.T) {
 
 	vali.On("Validate", mock.Anything).Return(nil)
 	partyRepo.On("FindById", mock.Anything, mock.Anything).Return(&party, nil)
-	drinkReqRepo.On("Create", mock.Anything).Return(nil)
+	foodReqRepo.On("Create", mock.Anything).Return(nil)
 
-	service.Create(drinkReqDto, userId)
+	service.Create(foodReqDto, userId)
 }
 
 func Test_ServiceCreate_FailOnValidator(t *testing.T) {
 	service, vali, _, _, _ := setupDefaultService()
 
 	userId := uint(1)
-	drinkReqDto := domains.DrinkRequirementDTO{
+	foodReqDto := domains.FoodRequirementDTO{
 		PartyID: 1,
 	}
 
@@ -64,7 +64,7 @@ func Test_ServiceCreate_FailOnValidator(t *testing.T) {
 
 	vali.On("Validate", mock.Anything).Return(validationError)
 
-	response := service.Create(drinkReqDto, userId)
+	response := service.Create(foodReqDto, userId)
 
 	assert.Equal(t, expectedResponse, response)
 }
@@ -73,7 +73,7 @@ func Test_ServiceCreate_FailOnNoParty(t *testing.T) {
 	service, vali, _, partyRepo, _ := setupDefaultService()
 
 	userId := uint(1)
-	drinkReqDto := domains.DrinkRequirementDTO{
+	foodReqDto := domains.FoodRequirementDTO{
 		PartyID: 1,
 	}
 
@@ -82,7 +82,7 @@ func Test_ServiceCreate_FailOnNoParty(t *testing.T) {
 	vali.On("Validate", mock.Anything).Return(nil)
 	partyRepo.On("FindById", mock.Anything, mock.Anything).Return(&domains2.Party{}, errors.New(""))
 
-	response := service.Create(drinkReqDto, userId)
+	response := service.Create(foodReqDto, userId)
 
 	assert.Equal(t, expectedResponse, response)
 }
@@ -91,7 +91,7 @@ func Test_ServiceCreate_FailOnPartyAuth(t *testing.T) {
 	service, vali, _, partyRepo, _ := setupDefaultService()
 
 	userId := uint(1)
-	drinkReqDto := domains.DrinkRequirementDTO{
+	foodReqDto := domains.FoodRequirementDTO{
 		PartyID: 1,
 	}
 	party := domains2.Party{
@@ -102,16 +102,16 @@ func Test_ServiceCreate_FailOnPartyAuth(t *testing.T) {
 	vali.On("Validate", mock.Anything).Return(nil)
 	partyRepo.On("FindById", mock.Anything, mock.Anything).Return(&party, nil)
 
-	response := service.Create(drinkReqDto, userId)
+	response := service.Create(foodReqDto, userId)
 
 	assert.Equal(t, expectedResponse, response)
 }
 
 func Test_ServiceCreate_FailOnCreate(t *testing.T) {
-	service, vali, drinkReqRepo, partyRepo, _ := setupDefaultService()
+	service, vali, foodReqRepo, partyRepo, _ := setupDefaultService()
 
 	userId := uint(1)
-	drinkReqDto := domains.DrinkRequirementDTO{
+	foodReqDto := domains.FoodRequirementDTO{
 		PartyID: 1,
 	}
 	party := domains2.Party{
@@ -122,25 +122,25 @@ func Test_ServiceCreate_FailOnCreate(t *testing.T) {
 
 	vali.On("Validate", mock.Anything).Return(nil)
 	partyRepo.On("FindById", mock.Anything, mock.Anything).Return(&party, nil)
-	drinkReqRepo.On("Create", mock.Anything).Return(err)
+	foodReqRepo.On("Create", mock.Anything).Return(err)
 
-	response := service.Create(drinkReqDto, userId)
+	response := service.Create(foodReqDto, userId)
 
 	assert.Equal(t, expectedResponse, response)
 }
 
 func Test_ServiceGet_Success(t *testing.T) {
-	service, _, drinkReqRepo, _, _ := setupDefaultService()
+	service, _, foodReqRepo, _, _ := setupDefaultService()
 
 	userId := uint(1)
-	drinkReq := domains.DrinkRequirement{
+	foodReq := domains.FoodRequirement{
 		Party: domains2.Party{
 			OrganizerID: userId,
 		},
 	}
-	expectedResponse := api.Success(&drinkReq)
+	expectedResponse := api.Success(&foodReq)
 
-	drinkReqRepo.On("FindById", mock.Anything, mock.Anything).Return(&drinkReq, nil)
+	foodReqRepo.On("FindById", mock.Anything, mock.Anything).Return(&foodReq, nil)
 
 	response := service.FindById(0, userId)
 
@@ -148,12 +148,12 @@ func Test_ServiceGet_Success(t *testing.T) {
 }
 
 func Test_ServiceGet_FailOnFind(t *testing.T) {
-	service, _, drinkReqRepo, _, _ := setupDefaultService()
+	service, _, foodReqRepo, _, _ := setupDefaultService()
 
 	err := errors.New("error")
 	expectedResponse := api.ErrorBadRequest(domains.RequirementNotFound)
 
-	drinkReqRepo.On("FindById", mock.Anything, mock.Anything).Return(&domains.DrinkRequirement{}, err)
+	foodReqRepo.On("FindById", mock.Anything, mock.Anything).Return(&domains.FoodRequirement{}, err)
 
 	response := service.FindById(0, 0)
 
@@ -161,17 +161,17 @@ func Test_ServiceGet_FailOnFind(t *testing.T) {
 }
 
 func Test_ServiceGet_FailOnPartyAuth(t *testing.T) {
-	service, _, drinkReqRepo, _, _ := setupDefaultService()
+	service, _, foodReqRepo, _, _ := setupDefaultService()
 
 	userId := uint(1)
-	drinkReq := domains.DrinkRequirement{
+	foodReq := domains.FoodRequirement{
 		Party: domains2.Party{
 			OrganizerID: 2,
 		},
 	}
 	expectedResponse := api.ErrorUnauthorized(domains.NoViewAccess)
 
-	drinkReqRepo.On("FindById", mock.Anything, mock.Anything).Return(&drinkReq, nil)
+	foodReqRepo.On("FindById", mock.Anything, mock.Anything).Return(&foodReq, nil)
 
 	response := service.FindById(0, userId)
 
@@ -179,19 +179,19 @@ func Test_ServiceGet_FailOnPartyAuth(t *testing.T) {
 }
 
 func Test_ServiceDelete_Success(t *testing.T) {
-	service, _, drinkReqRepo, _, drinkContribRepo := setupDefaultService()
+	service, _, foodReqRepo, _, foodContribRepo := setupDefaultService()
 
 	userId := uint(1)
-	drinkReq := domains.DrinkRequirement{
+	foodReq := domains.FoodRequirement{
 		Party: domains2.Party{
 			OrganizerID: userId,
 		},
 	}
 	expectedResponse := api.Success("delete_success")
 
-	drinkReqRepo.On("FindById", mock.Anything, mock.Anything).Return(&drinkReq, nil)
-	drinkContribRepo.On("DeleteByReqId", mock.Anything).Return(nil)
-	drinkReqRepo.On("Delete", mock.Anything).Return(nil)
+	foodReqRepo.On("FindById", mock.Anything, mock.Anything).Return(&foodReq, nil)
+	foodContribRepo.On("DeleteByReqId", mock.Anything).Return(nil)
+	foodReqRepo.On("Delete", mock.Anything).Return(nil)
 
 	response := service.Delete(0, userId)
 
@@ -199,13 +199,13 @@ func Test_ServiceDelete_Success(t *testing.T) {
 }
 
 func Test_ServiceDelete_FailOnFind(t *testing.T) {
-	service, _, drinkReqRepo, _, _ := setupDefaultService()
+	service, _, foodReqRepo, _, _ := setupDefaultService()
 
 	userId := uint(1)
-	drinkReq := domains.DrinkRequirement{}
+	foodReq := domains.FoodRequirement{}
 	expectedResponse := api.ErrorBadRequest(domains.RequirementNotFound)
 
-	drinkReqRepo.On("FindById", mock.Anything, mock.Anything).Return(&drinkReq, errors.New(""))
+	foodReqRepo.On("FindById", mock.Anything, mock.Anything).Return(&foodReq, errors.New(""))
 
 	response := service.Delete(0, userId)
 
@@ -213,17 +213,17 @@ func Test_ServiceDelete_FailOnFind(t *testing.T) {
 }
 
 func Test_ServiceDelete_FailOnPartyAuth(t *testing.T) {
-	service, _, drinkReqRepo, _, _ := setupDefaultService()
+	service, _, foodReqRepo, _, _ := setupDefaultService()
 
 	userId := uint(1)
-	drinkReq := domains.DrinkRequirement{
+	foodReq := domains.FoodRequirement{
 		Party: domains2.Party{
 			OrganizerID: 2,
 		},
 	}
 	expectedResponse := api.ErrorUnauthorized(domains.NoOrganizerAccess)
 
-	drinkReqRepo.On("FindById", mock.Anything, mock.Anything).Return(&drinkReq, nil)
+	foodReqRepo.On("FindById", mock.Anything, mock.Anything).Return(&foodReq, nil)
 
 	response := service.Delete(0, userId)
 
@@ -231,10 +231,10 @@ func Test_ServiceDelete_FailOnPartyAuth(t *testing.T) {
 }
 
 func Test_ServiceDelete_FailOnContributionDelete(t *testing.T) {
-	service, _, drinkReqRepo, _, drinkContribRepo := setupDefaultService()
+	service, _, foodReqRepo, _, foodContribRepo := setupDefaultService()
 
 	userId := uint(1)
-	drinkReq := domains.DrinkRequirement{
+	foodReq := domains.FoodRequirement{
 		Party: domains2.Party{
 			OrganizerID: userId,
 		},
@@ -242,8 +242,8 @@ func Test_ServiceDelete_FailOnContributionDelete(t *testing.T) {
 	err := errors.New("")
 	expectedResponse := api.ErrorInternalServerError(err.Error())
 
-	drinkReqRepo.On("FindById", mock.Anything, mock.Anything).Return(&drinkReq, nil)
-	drinkContribRepo.On("DeleteByReqId", mock.Anything).Return(err)
+	foodReqRepo.On("FindById", mock.Anything, mock.Anything).Return(&foodReq, nil)
+	foodContribRepo.On("DeleteByReqId", mock.Anything).Return(err)
 
 	response := service.Delete(0, userId)
 
@@ -251,10 +251,10 @@ func Test_ServiceDelete_FailOnContributionDelete(t *testing.T) {
 }
 
 func Test_ServiceDelete_FailOnDelete(t *testing.T) {
-	service, _, drinkReqRepo, _, drinkContribRepo := setupDefaultService()
+	service, _, foodReqRepo, _, foodContribRepo := setupDefaultService()
 
 	userId := uint(1)
-	drinkReq := domains.DrinkRequirement{
+	foodReq := domains.FoodRequirement{
 		Party: domains2.Party{
 			OrganizerID: userId,
 		},
@@ -262,9 +262,9 @@ func Test_ServiceDelete_FailOnDelete(t *testing.T) {
 	err := errors.New("")
 	expectedResponse := api.ErrorInternalServerError(err.Error())
 
-	drinkReqRepo.On("FindById", mock.Anything, mock.Anything).Return(&drinkReq, nil)
-	drinkContribRepo.On("DeleteByReqId", mock.Anything).Return(nil)
-	drinkReqRepo.On("Delete", mock.Anything).Return(err)
+	foodReqRepo.On("FindById", mock.Anything, mock.Anything).Return(&foodReq, nil)
+	foodContribRepo.On("DeleteByReqId", mock.Anything).Return(nil)
+	foodReqRepo.On("Delete", mock.Anything).Return(err)
 
 	response := service.Delete(0, userId)
 
@@ -272,21 +272,21 @@ func Test_ServiceDelete_FailOnDelete(t *testing.T) {
 }
 
 func Test_ServiceGetByPartyId_Success(t *testing.T) {
-	service, _, drinkReqRepo, partyRepo, _ := setupDefaultService()
+	service, _, foodReqRepo, partyRepo, _ := setupDefaultService()
 
 	userId := uint(1)
 	party := domains2.Party{
 		OrganizerID: userId,
 	}
-	drinkReqs := []domains.DrinkRequirement{{
+	foodReqs := []domains.FoodRequirement{{
 		Party: domains2.Party{
 			OrganizerID: userId,
 		},
 	}}
-	expectedResponse := api.Success(&drinkReqs)
+	expectedResponse := api.Success(&foodReqs)
 
 	partyRepo.On("FindById", mock.Anything, mock.Anything).Return(&party, nil)
-	drinkReqRepo.On("GetByPartyId", mock.Anything, mock.Anything).Return(&drinkReqs, nil)
+	foodReqRepo.On("GetByPartyId", mock.Anything, mock.Anything).Return(&foodReqs, nil)
 
 	response := service.GetByPartyId(0, userId)
 
@@ -326,13 +326,13 @@ func Test_ServiceGetByPartyId_FailOnPartyAuth(t *testing.T) {
 }
 
 func Test_ServiceGetByPartyId_FailOnFind(t *testing.T) {
-	service, _, drinkReqRepo, partyRepo, _ := setupDefaultService()
+	service, _, foodReqRepo, partyRepo, _ := setupDefaultService()
 
 	userId := uint(1)
 	party := domains2.Party{
 		OrganizerID: userId,
 	}
-	drinkReqs := []domains.DrinkRequirement{{
+	foodReqs := []domains.FoodRequirement{{
 		Party: domains2.Party{
 			OrganizerID: userId,
 		},
@@ -341,7 +341,7 @@ func Test_ServiceGetByPartyId_FailOnFind(t *testing.T) {
 	expectedResponse := api.ErrorInternalServerError(err.Error())
 
 	partyRepo.On("FindById", mock.Anything, mock.Anything).Return(&party, nil)
-	drinkReqRepo.On("GetByPartyId", mock.Anything, mock.Anything).Return(&drinkReqs, err)
+	foodReqRepo.On("GetByPartyId", mock.Anything, mock.Anything).Return(&foodReqs, err)
 
 	response := service.GetByPartyId(0, userId)
 
