@@ -43,13 +43,13 @@ func Test_NewPartyRouter(t *testing.T) {
 	foodContribRepo := usecases6.NewFoodContributionRepository(dbAccess)
 	partyInviteRepo := usecases7.NewPartyInviteRepository(dbAccess)
 	repoCollector := repoUtils.RepoCollector{
-		PartyRepo:        &partyRepo,
-		UserRepo:         &userRepo,
-		DrinkReqRepo:     &drinkReqRepo,
-		DrinkContribRepo: &drinkContribRepo,
-		FoodReqRepo:      &foodReqRepo,
-		FoodContribRepo:  &foodContribRepo,
-		PartyInviteRepo:  &partyInviteRepo,
+		PartyRepo:        partyRepo,
+		UserRepo:         userRepo,
+		DrinkReqRepo:     drinkReqRepo,
+		DrinkContribRepo: drinkContribRepo,
+		FoodReqRepo:      foodReqRepo,
+		FoodContribRepo:  foodContribRepo,
+		PartyInviteRepo:  partyInviteRepo,
 	}
 
 	service := usecases.NewPartyService(&repoCollector, vali)
@@ -105,13 +105,13 @@ func Test_NewPublicPartyRouter(t *testing.T) {
 	foodContribRepo := usecases6.NewFoodContributionRepository(dbAccess)
 	partyInviteRepo := usecases7.NewPartyInviteRepository(dbAccess)
 	repoCollector := repoUtils.RepoCollector{
-		PartyRepo:        &partyRepo,
-		UserRepo:         &userRepo,
-		DrinkReqRepo:     &drinkReqRepo,
-		DrinkContribRepo: &drinkContribRepo,
-		FoodReqRepo:      &foodReqRepo,
-		FoodContribRepo:  &foodContribRepo,
-		PartyInviteRepo:  &partyInviteRepo,
+		PartyRepo:        partyRepo,
+		UserRepo:         userRepo,
+		DrinkReqRepo:     drinkReqRepo,
+		DrinkContribRepo: drinkContribRepo,
+		FoodReqRepo:      foodReqRepo,
+		FoodContribRepo:  foodContribRepo,
+		PartyInviteRepo:  partyInviteRepo,
 	}
 
 	service := usecases.NewPartyService(&repoCollector, vali)

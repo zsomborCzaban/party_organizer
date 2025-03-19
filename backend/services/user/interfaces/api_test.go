@@ -28,7 +28,7 @@ func Test_NewUserAuthRouter(t *testing.T) {
 
 	userRepo := usecases.NewUserRepository(dbAccess)
 	repoCollector := repoUtils.RepoCollector{
-		UserRepo: &userRepo,
+		UserRepo: userRepo,
 	}
 
 	service := usecases.NewUserService(&repoCollector, vali, nil)
@@ -78,7 +78,7 @@ func Test_NewUserRouter(t *testing.T) {
 
 	userRepo := usecases.NewUserRepository(dbAccess)
 	repoCollector := repoUtils.RepoCollector{
-		UserRepo: &userRepo,
+		UserRepo: userRepo,
 	}
 
 	service := usecases.NewUserService(&repoCollector, vali, nil)

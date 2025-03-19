@@ -37,11 +37,11 @@ func Test_NewRouter(t *testing.T) {
 	foodContribRepo := usecases5.NewFoodContributionRepository(dbAccess)
 
 	repoCollector := repoUtils.RepoCollector{
-		PartyRepo:        &partyRepo,
-		UserRepo:         &userRepo,
-		DrinkContribRepo: &drinkContribRepo,
-		FoodContribRepo:  &foodContribRepo,
-		PartyInviteRepo:  &partyIniviteRepo,
+		PartyRepo:        partyRepo,
+		UserRepo:         userRepo,
+		DrinkContribRepo: drinkContribRepo,
+		FoodContribRepo:  foodContribRepo,
+		PartyInviteRepo:  partyIniviteRepo,
 	}
 
 	service := usecases.NewPartyInviteService(&repoCollector)

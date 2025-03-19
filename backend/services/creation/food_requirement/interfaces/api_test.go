@@ -27,9 +27,9 @@ func Test_NewRouter(t *testing.T) {
 	foodReqRepo := usecases.NewFoodRequirementRepository(dbAccess)
 	partyRepo := usecases2.NewPartyRepository(dbAccess)
 	foodContribRepo := usecases3.NewFoodContributionRepository(dbAccess)
-	repo.FoodReqRepo = &foodReqRepo
-	repo.PartyRepo = &partyRepo
-	repo.FoodContribRepo = &foodContribRepo
+	repo.FoodReqRepo = foodReqRepo
+	repo.PartyRepo = partyRepo
+	repo.FoodContribRepo = foodContribRepo
 	service := usecases.NewFoodRequirementService(&repo, vali)
 	controller := NewFoodRequirementController(service)
 	NewRouter(router, controller)

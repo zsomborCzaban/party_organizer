@@ -26,8 +26,8 @@ func Test_NewRouter(t *testing.T) {
 	friendInviteRepo := usecases.NewFriendInviteRepository(dbAccess)
 
 	repoCollector := repoUtils.RepoCollector{
-		UserRepo:         &userRepo,
-		FriendInviteRepo: &friendInviteRepo,
+		UserRepo:         userRepo,
+		FriendInviteRepo: friendInviteRepo,
 	}
 
 	service := usecases.NewFriendInviteService(&repoCollector)
