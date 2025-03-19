@@ -23,7 +23,7 @@ type UserService struct {
 
 func NewUserService(repoCollector *repo.RepoCollector, validator api.IValidator, s3 *s3.Client) *UserService {
 	return &UserService{
-		UserRepository: *repoCollector.UserRepo,
+		UserRepository: repoCollector.UserRepo,
 		Validator:      validator,
 		S3Client:       s3,
 	}

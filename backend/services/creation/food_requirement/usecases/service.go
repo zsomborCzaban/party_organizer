@@ -18,9 +18,9 @@ type FoodRequirementService struct {
 func NewFoodRequirementService(repoCollector *repo.RepoCollector, validator api.IValidator) domains.IFoodRequirementService {
 	return &FoodRequirementService{
 		Validator:                  validator,
-		FoodRequirementRepository:  *repoCollector.FoodReqRepo,
-		PartyRepository:            *repoCollector.PartyRepo,
-		FoodContributionRepository: *repoCollector.FoodContribRepo,
+		FoodRequirementRepository:  repoCollector.FoodReqRepo,
+		PartyRepository:            repoCollector.PartyRepo,
+		FoodContributionRepository: repoCollector.FoodContribRepo,
 	}
 }
 

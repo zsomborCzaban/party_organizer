@@ -40,7 +40,7 @@ func (dc DrinkRequirementController) CreateController(w http.ResponseWriter, r *
 		return
 	}
 
-	resp := dc.DrinkRequirementService.CreateDrinkRequirement(createDrinkRequirementReq, userId)
+	resp := dc.DrinkRequirementService.Create(createDrinkRequirementReq, userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging
@@ -66,7 +66,7 @@ func (dc DrinkRequirementController) GetController(w http.ResponseWriter, r *htt
 		return
 	}
 
-	resp := dc.DrinkRequirementService.GetDrinkRequirement(uint(drinkReqId), userId)
+	resp := dc.DrinkRequirementService.FindById(uint(drinkReqId), userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging
@@ -92,7 +92,7 @@ func (dc DrinkRequirementController) DeleteController(w http.ResponseWriter, r *
 		return
 	}
 
-	resp := dc.DrinkRequirementService.DeleteDrinkRequirement(uint(drinkReqId), userId)
+	resp := dc.DrinkRequirementService.Delete(uint(drinkReqId), userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging

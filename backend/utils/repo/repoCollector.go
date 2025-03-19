@@ -13,14 +13,14 @@ import (
 
 // we could use a map for the repositories so it would be dynamic
 type RepoCollector struct {
-	PartyRepo        *domains.IPartyRepository
-	UserRepo         *domains2.IUserRepository
-	DrinkReqRepo     *domains3.IDrinkRequirementRepository
-	DrinkContribRepo *domains4.IDrinkContributionRepository
-	FoodReqRepo      *domains5.IFoodRequirementRepository
-	FoodContribRepo  *domains6.IFoodContributionRepository
-	PartyInviteRepo  *domains7.IPartyInviteRepository
-	FriendInviteRepo *domains8.IFriendInviteRepository
+	PartyRepo        domains.IPartyRepository
+	UserRepo         domains2.IUserRepository
+	DrinkReqRepo     domains3.IDrinkRequirementRepository
+	DrinkContribRepo domains4.IDrinkContributionRepository
+	FoodReqRepo      domains5.IFoodRequirementRepository
+	FoodContribRepo  domains6.IFoodContributionRepository
+	PartyInviteRepo  domains7.IPartyInviteRepository
+	FriendInviteRepo domains8.IFriendInviteRepository
 }
 
 func NewRepoCollector(
@@ -34,13 +34,13 @@ func NewRepoCollector(
 	friendInviteRepo *domains8.IFriendInviteRepository,
 ) *RepoCollector {
 	return &RepoCollector{
-		PartyRepo:        partyRepo,
-		UserRepo:         userRepo,
-		DrinkReqRepo:     drinkReqRepo,
-		DrinkContribRepo: drinkContribRepo,
-		FoodReqRepo:      foodReqRepo,
-		FoodContribRepo:  foodContribRepo,
-		PartyInviteRepo:  partyInviteRepo,
-		FriendInviteRepo: friendInviteRepo,
+		PartyRepo:        *partyRepo,
+		UserRepo:         *userRepo,
+		DrinkReqRepo:     *drinkReqRepo,
+		DrinkContribRepo: *drinkContribRepo,
+		FoodReqRepo:      *foodReqRepo,
+		FoodContribRepo:  *foodContribRepo,
+		PartyInviteRepo:  *partyInviteRepo,
+		FriendInviteRepo: *friendInviteRepo,
 	}
 }

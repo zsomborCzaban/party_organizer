@@ -15,8 +15,8 @@ type FriendInviteService struct {
 
 func NewFriendInviteService(repoCollector *repo.RepoCollector) domains.IFriendInviteService {
 	return &FriendInviteService{
-		FriendInviteRepository: *repoCollector.FriendInviteRepo,
-		UserRepository:         *repoCollector.UserRepo,
+		FriendInviteRepository: repoCollector.FriendInviteRepo,
+		UserRepository:         repoCollector.UserRepo,
 	}
 }
 
