@@ -40,7 +40,7 @@ func (pc PartyController) CreateController(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	resp := pc.PartyService.CreateParty(createPartyReq, userId)
+	resp := pc.PartyService.Create(createPartyReq, userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging
@@ -66,7 +66,7 @@ func (pc PartyController) GetController(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	resp := pc.PartyService.GetParty(uint(id), userId)
+	resp := pc.PartyService.Get(uint(id), userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging
@@ -94,7 +94,7 @@ func (pc PartyController) UpdateController(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	resp := pc.PartyService.UpdateParty(updatePartyReq, userId)
+	resp := pc.PartyService.Update(updatePartyReq, userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging
@@ -120,7 +120,7 @@ func (pc PartyController) DeleteController(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	resp := pc.PartyService.DeleteParty(uint(id), userId)
+	resp := pc.PartyService.Delete(uint(id), userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging

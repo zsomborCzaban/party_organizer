@@ -37,7 +37,7 @@ func NewPartyService(repoCollector *repo.RepoCollector, validator api.IValidator
 	}
 }
 
-func (ps PartyService) CreateParty(partyDTO domains.PartyDTO, userId uint) api.IResponse {
+func (ps PartyService) Create(partyDTO domains.PartyDTO, userId uint) api.IResponse {
 	errors := ps.Validator.Validate(partyDTO)
 	if errors != nil {
 		return api.ErrorValidation(errors)
@@ -63,7 +63,7 @@ func (ps PartyService) CreateParty(partyDTO domains.PartyDTO, userId uint) api.I
 	return api.Success(party)
 }
 
-func (ps PartyService) GetParty(partyId, userId uint) api.IResponse {
+func (ps PartyService) Get(partyId, userId uint) api.IResponse {
 	party, err := ps.PartyRepository.FindById(partyId, domains.FullPartyPreload...)
 	if err != nil {
 		return api.ErrorInternalServerError(err.Error())
@@ -83,7 +83,7 @@ func (ps PartyService) GetParty(partyId, userId uint) api.IResponse {
 func (ps PartyService) GetPublicParty(partyId uint) api.IResponse {
 	party, err := ps.PartyRepository.FindById(partyId, domains.FullPartyPreload...)
 	if err != nil {
-		return api.ErrorInternalServerError(err.Error())
+		return api.ErrorBadRequest(err.Error())
 	}
 
 	if party.Private {
@@ -95,7 +95,7 @@ func (ps PartyService) GetPublicParty(partyId uint) api.IResponse {
 	return api.Success(party)
 }
 
-func (ps PartyService) UpdateParty(partyDTO domains.PartyDTO, userId uint) api.IResponse {
+func (ps PartyService) Update(partyDTO domains.PartyDTO, userId uint) api.IResponse {
 	err := ps.Validator.Validate(partyDTO)
 	if err != nil {
 		return api.ErrorValidation(err)
@@ -123,7 +123,7 @@ func (ps PartyService) UpdateParty(partyDTO domains.PartyDTO, userId uint) api.I
 	return api.Success(party)
 }
 
-func (ps PartyService) DeleteParty(partyId uint, userId uint) api.IResponse {
+func (ps PartyService) Delete(partyId uint, userId uint) api.IResponse {
 	//bc the repository layer only checks for id
 	party, err := ps.PartyRepository.FindById(partyId, domains.FullPartyPreload...)
 	if err != nil {
@@ -195,7 +195,7 @@ func (ps PartyService) GetParticipants(partyId, userId uint) api.IResponse {
 	}
 
 	if !party.CanBeAccessedBy(userId) {
-		return api.ErrorUnauthorized(err.Error())
+		return api.ErrorUnauthorized(domains.NoAccessToParty)
 	}
 
 	return api.Success(append(party.Participants, party.Organizer))
