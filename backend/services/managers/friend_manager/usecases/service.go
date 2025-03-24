@@ -95,12 +95,15 @@ func (fs FriendInviteService) Invite(invitedUsername string, userId uint) api.IR
 	}
 
 	//check reverse invite
-	reverseInvite, _ := fs.FriendInviteRepository.FindByIds(invited.ID, userId)
-	if reverseInvite != nil && reverseInvite.State == domains.DECLINED {
+	reverseInvite, err := fs.FriendInviteRepository.FindByIds(invited.ID, userId)
+	if err == nil && reverseInvite.State == domains.DECLINED {
 		return fs.ReverseInvite(reverseInvite)
 	}
-	if reverseInvite != nil {
+	if err == nil {
 		return api.ErrorBadRequest("friend request already exists, try accepting it")
+	}
+	if err != nil && err.Error() != domains.NOT_FOUND {
+		return api.ErrorInternalServerError(err.Error())
 	}
 	//check reverse invite end
 
