@@ -8,6 +8,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 	"github.com/rs/zerolog/log"
+	"github.com/zsomborCzaban/party_organizer/common"
 	"github.com/zsomborCzaban/party_organizer/db"
 	drinkRequirementInterfaces "github.com/zsomborCzaban/party_organizer/services/creation/drink_requirement/interfaces"
 	drinkRequirementUsecases "github.com/zsomborCzaban/party_organizer/services/creation/drink_requirement/usecases"
@@ -106,7 +107,7 @@ func GetAwsS3Client() *s3.Client {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	cfg, err := config.LoadDefaultConfig(ctx, config.WithRegion(os.Getenv(AWS_REGION_ENV_KEY)))
+	cfg, err := config.LoadDefaultConfig(ctx, config.WithRegion(os.Getenv(common.AWS_REGION_ENV_KEY)))
 	if err != nil {
 		log.Fatal().Msg("unable to load SDK config, " + err.Error())
 	}
