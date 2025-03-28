@@ -12,8 +12,8 @@ type IPartyController interface {
 	GetPartiesByOrganizerId(http.ResponseWriter, *http.Request)
 	GetPartiesByParticipantId(http.ResponseWriter, *http.Request)
 
-	CreateController(http.ResponseWriter, *http.Request)
-	GetController(http.ResponseWriter, *http.Request)
-	UpdateController(http.ResponseWriter, *http.Request)
-	DeleteController(http.ResponseWriter, *http.Request)
+	Create(http.ResponseWriter, *http.Request)
+	Get(http.ResponseWriter, *http.Request)
+	Update(http.ResponseWriter, *http.Request)
+	Delete(http.ResponseWriter, *http.Request)
 }

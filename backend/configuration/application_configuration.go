@@ -69,7 +69,7 @@ func SetupRoutes(router *mux.Router, dbAccessManager db.IDatabaseAccessManager) 
 	drinkContributionService := drinkContributionUsecases.NewDrinkContributionService(repoCollector, vali)
 	foodContributionService := foodContributionUsecases.NewFoodContributionService(repoCollector, vali)
 
-	partyController := partyInterfaces.NewPartyController(partyService)
+	partyController := partyInterfaces.NewController(partyService)
 	userController := userInterfaces.NewUserController(userService)
 	drinkRequirementController := drinkRequirementInterfaces.NewDrinkRequirementController(drinkRequirementService)
 	foodRequirementController := foodRequirementInterfaces.NewFoodRequirementController(foodRequirementService)

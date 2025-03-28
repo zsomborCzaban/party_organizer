@@ -53,7 +53,7 @@ func Test_NewPartyRouter(t *testing.T) {
 	}
 
 	service := usecases.NewPartyService(&repoCollector, vali)
-	controller := NewPartyController(service)
+	controller := NewController(service)
 	NewPartyRouter(router, controller)
 
 	router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
@@ -115,7 +115,7 @@ func Test_NewPublicPartyRouter(t *testing.T) {
 	}
 
 	service := usecases.NewPartyService(&repoCollector, vali)
-	controller := NewPartyController(service)
+	controller := NewController(service)
 	NewPublicPartyRouter(router, controller)
 
 	router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
