@@ -20,7 +20,7 @@ func NewDrinkRequirementController(service domains.IDrinkRequirementService) dom
 	}
 }
 
-func (dc DrinkRequirementController) CreateController(w http.ResponseWriter, r *http.Request) {
+func (dc DrinkRequirementController) Create(w http.ResponseWriter, r *http.Request) {
 	var createDrinkRequirementReq domains.DrinkRequirementDTO
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&createDrinkRequirementReq)
@@ -48,7 +48,7 @@ func (dc DrinkRequirementController) CreateController(w http.ResponseWriter, r *
 	}
 }
 
-func (dc DrinkRequirementController) GetController(w http.ResponseWriter, r *http.Request) {
+func (dc DrinkRequirementController) Get(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	drinkReqId, err := strconv.ParseUint(vars["id"], 10, 32)
 	if err != nil {
@@ -74,7 +74,7 @@ func (dc DrinkRequirementController) GetController(w http.ResponseWriter, r *htt
 	}
 }
 
-func (dc DrinkRequirementController) DeleteController(w http.ResponseWriter, r *http.Request) {
+func (dc DrinkRequirementController) Delete(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	drinkReqId, err := strconv.ParseUint(vars["id"], 10, 32)
 	if err != nil {
@@ -100,7 +100,7 @@ func (dc DrinkRequirementController) DeleteController(w http.ResponseWriter, r *
 	}
 }
 
-func (dc DrinkRequirementController) GetByPartyIdController(w http.ResponseWriter, r *http.Request) {
+func (dc DrinkRequirementController) GetByPartyId(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	partyId, err := strconv.ParseUint(vars["party_id"], 10, 32)
 	if err != nil {

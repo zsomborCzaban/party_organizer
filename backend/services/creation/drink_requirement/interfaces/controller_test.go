@@ -4,151 +4,197 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/mock"
 	"github.com/zsomborCzaban/party_organizer/services/creation/drink_requirement/usecases"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"
 	"github.com/zsomborCzaban/party_organizer/services/creation/drink_requirement/domains"
 	"github.com/zsomborCzaban/party_organizer/utils/api"
 	"github.com/zsomborCzaban/party_organizer/utils/jwt"
 )
 
-func setupDefaultController() (domains.IDrinkRequirementController, *usecases.MockService, *api.MockResponseWriter) {
+func setupDefaultController() (domains.IDrinkRequirementController, *usecases.MockService, *httptest.ResponseRecorder) {
 	service := new(usecases.MockService)
 	controller := NewDrinkRequirementController(service)
-	writer := new(api.MockResponseWriter)
+	responseRecorder := httptest.NewRecorder()
 
-	return controller, service, writer
-}
-
-func Test_ControllerCreate_Success(t *testing.T) {
-	controller, service, writer := setupDefaultController()
-
-	req := domains.DrinkRequirement{}
-	requestData, _ := json.Marshal(req)
-	expectedResponse := api.Success("")
-	respJson, _ := json.Marshal(expectedResponse)
-
-	writer.On("Header").Return(make(http.Header))
-	writer.On("WriteHeader", mock.Anything).Return()
-	writer.On("Write", mock.Anything).Return(0, nil)
-	service.On("CreateDrinkRequirement", mock.Anything).Return(expectedResponse, nil)
-	request := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestData))
-
-	controller.CreateController(writer, request)
-
-	writer.AssertCalled(t, "Write", respJson)
+	return controller, service, responseRecorder
 }
 
 func TestCreateController_Success(t *testing.T) {
-	mockService := &MockDrinkRequirementService{}
-	mockService.On("Create", mock.Anything, uint(1)).Return(api.SuccessResponse(http.StatusCreated, nil))
+	controller, service, responseRecorder := setupDefaultController()
 
-	jwt.GetIdFromJWT = func(string) (uint, error) { return 1, nil }
+	jwt.GetIdFromJWTFunc = func(string) (uint, error) { return 1, nil }
+	service.On("Create", mock.Anything, uint(1)).Return(api.Success(nil))
 
-	controller := NewDrinkRequirementController(mockService)
-	reqBody := domains.DrinkRequirementDTO{Name: "Beer", Amount: 10, PartyID: 1}
+	reqBody := domains.DrinkRequirementDTO{
+		PartyID:        1,
+		Type:           "verytest",
+		TargetQuantity: 2,
+		QuantityMark:   "test",
+	}
 	body, _ := json.Marshal(reqBody)
 	req, _ := http.NewRequest("POST", "/", bytes.NewBuffer(body))
 	req.Header.Set("Authorization", "token")
-	rr := httptest.NewRecorder()
 
-	controller.CreateController(rr, req)
+	controller.Create(responseRecorder, req)
 
-	assert.Equal(t, http.StatusCreated, rr.Code)
-	mockService.AssertExpectations(t)
+	assert.Equal(t, http.StatusOK, responseRecorder.Code)
+	service.AssertExpectations(t)
 }
 
 func TestCreateController_InvalidBody(t *testing.T) {
-	controller := NewDrinkRequirementController(nil)
+	controller, _, responseRecorder := setupDefaultController()
+
 	req, _ := http.NewRequest("POST", "/", bytes.NewBufferString("invalid"))
-	rr := httptest.NewRecorder()
 
-	controller.CreateController(rr, req)
+	controller.Create(responseRecorder, req)
 
-	assert.Equal(t, http.StatusBadRequest, rr.Code)
+	assert.Equal(t, http.StatusBadRequest, responseRecorder.Code)
 }
 
 func TestCreateController_InvalidJWT(t *testing.T) {
-	jwt.GetIdFromJWT = func(string) (uint, error) { return 0, errors.New("invalid") }
+	controller, _, responseRecorder := setupDefaultController()
 
-	controller := NewDrinkRequirementController(nil)
-	reqBody := domains.DrinkRequirementDTO{Name: "Beer"}
+	jwt.GetIdFromJWTFunc = func(string) (uint, error) { return 0, errors.New("err") }
+
+	reqBody := domains.DrinkRequirementDTO{
+		PartyID:        1,
+		Type:           "test",
+		TargetQuantity: 2,
+		QuantityMark:   "testtest",
+	}
 	body, _ := json.Marshal(reqBody)
 	req, _ := http.NewRequest("POST", "/", bytes.NewBuffer(body))
 	req.Header.Set("Authorization", "token")
-	rr := httptest.NewRecorder()
 
-	controller.CreateController(rr, req)
+	controller.Create(responseRecorder, req)
 
-	assert.Equal(t, http.StatusBadRequest, rr.Code)
+	assert.Equal(t, http.StatusBadRequest, responseRecorder.Code)
 }
 
 func TestGetController_Success(t *testing.T) {
-	mockService := &MockDrinkRequirementService{}
-	mockService.On("FindById", uint(1), uint(1)).Return(api.SuccessResponse(http.StatusOK, nil))
+	controller, service, responseRecorder := setupDefaultController()
 
-	jwt.GetIdFromJWT = func(string) (uint, error) { return 1, nil }
+	jwt.GetIdFromJWTFunc = func(string) (uint, error) { return 1, nil }
+	service.On("FindById", uint(1), uint(1)).Return(api.Success(nil))
 
-	controller := NewDrinkRequirementController(mockService)
 	req, _ := http.NewRequest("GET", "/1", nil)
 	req.Header.Set("Authorization", "token")
 	req = mux.SetURLVars(req, map[string]string{"id": "1"})
-	rr := httptest.NewRecorder()
 
-	controller.GetController(rr, req)
+	controller.Get(responseRecorder, req)
 
-	assert.Equal(t, http.StatusOK, rr.Code)
-	mockService.AssertExpectations(t)
+	assert.Equal(t, http.StatusOK, responseRecorder.Code)
+	service.AssertExpectations(t)
 }
 
 func TestGetController_InvalidID(t *testing.T) {
-	controller := NewDrinkRequirementController(nil)
+	controller, _, responseRecorder := setupDefaultController()
+
 	req, _ := http.NewRequest("GET", "/invalid", nil)
 	req = mux.SetURLVars(req, map[string]string{"id": "invalid"})
-	rr := httptest.NewRecorder()
 
-	controller.GetController(rr, req)
+	controller.Get(responseRecorder, req)
 
-	assert.Equal(t, http.StatusBadRequest, rr.Code)
+	assert.Equal(t, http.StatusBadRequest, responseRecorder.Code)
+}
+
+func TestGetController_InvalidJWT(t *testing.T) {
+	controller, _, responseRecorder := setupDefaultController()
+	jwt.GetIdFromJWTFunc = func(string) (uint, error) { return 0, errors.New("invalid token") }
+
+	req, _ := http.NewRequest("GET", "/1", nil)
+	req.Header.Set("Authorization", "invalid_token")
+	req = mux.SetURLVars(req, map[string]string{"id": "1"})
+
+	controller.Get(responseRecorder, req)
+
+	assert.Equal(t, http.StatusBadRequest, responseRecorder.Code)
 }
 
 func TestDeleteController_Success(t *testing.T) {
-	mockService := &MockDrinkRequirementService{}
-	mockService.On("Delete", uint(1), uint(1)).Return(api.SuccessResponse(http.StatusOK, nil))
+	controller, service, responseRecorder := setupDefaultController()
 
-	jwt.GetIdFromJWT = func(string) (uint, error) { return 1, nil }
+	jwt.GetIdFromJWTFunc = func(string) (uint, error) { return 1, nil }
+	service.On("Delete", uint(1), uint(1)).Return(api.Success(nil))
 
-	controller := NewDrinkRequirementController(mockService)
 	req, _ := http.NewRequest("DELETE", "/1", nil)
 	req.Header.Set("Authorization", "token")
 	req = mux.SetURLVars(req, map[string]string{"id": "1"})
-	rr := httptest.NewRecorder()
 
-	controller.DeleteController(rr, req)
+	controller.Delete(responseRecorder, req)
 
-	assert.Equal(t, http.StatusOK, rr.Code)
-	mockService.AssertExpectations(t)
+	assert.Equal(t, http.StatusOK, responseRecorder.Code)
+	service.AssertExpectations(t)
+}
+
+func TestDeleteController_InvalidJWT(t *testing.T) {
+	controller, _, responseRecorder := setupDefaultController()
+
+	jwt.GetIdFromJWTFunc = func(string) (uint, error) { return 0, errors.New("invalid token") }
+
+	req, _ := http.NewRequest("DELETE", "/1", nil)
+	req.Header.Set("Authorization", "invalid_token")
+	req = mux.SetURLVars(req, map[string]string{"id": "1"})
+
+	controller.Delete(responseRecorder, req)
+
+	assert.Equal(t, http.StatusBadRequest, responseRecorder.Code)
+}
+
+func TestDeleteController_InvalidID(t *testing.T) {
+	controller, _, responseRecorder := setupDefaultController()
+
+	req, _ := http.NewRequest("DELETE", "/invalid", nil)
+	req = mux.SetURLVars(req, map[string]string{"id": "invalid"})
+
+	controller.Delete(responseRecorder, req)
+
+	assert.Equal(t, http.StatusBadRequest, responseRecorder.Code)
 }
 
 func TestGetByPartyIdController_Success(t *testing.T) {
-	mockService := &MockDrinkRequirementService{}
-	mockService.On("GetByPartyId", uint(1), uint(1)).Return(api.SuccessResponse(http.StatusOK, nil))
+	controller, service, responseRecorder := setupDefaultController()
 
-	jwt.GetIdFromJWT = func(string) (uint, error) { return 1, nil }
+	jwt.GetIdFromJWTFunc = func(string) (uint, error) { return 1, nil }
+	service.On("GetByPartyId", uint(1), uint(1)).Return(api.Success(nil))
 
-	controller := NewDrinkRequirementController(mockService)
 	req, _ := http.NewRequest("GET", "/party/1", nil)
 	req.Header.Set("Authorization", "token")
 	req = mux.SetURLVars(req, map[string]string{"party_id": "1"})
-	rr := httptest.NewRecorder()
 
-	controller.GetByPartyIdController(rr, req)
+	controller.GetByPartyId(responseRecorder, req)
 
-	assert.Equal(t, http.StatusOK, rr.Code)
-	mockService.AssertExpectations(t)
+	assert.Equal(t, http.StatusOK, responseRecorder.Code)
+	service.AssertExpectations(t)
+}
+
+func TestGetByPartyIdController_InvalidJWT(t *testing.T) {
+	controller, _, responseRecorder := setupDefaultController()
+
+	jwt.GetIdFromJWTFunc = func(string) (uint, error) { return 0, errors.New("invalid token") }
+
+	req, _ := http.NewRequest("GET", "/party/1", nil)
+	req.Header.Set("Authorization", "invalid_token")
+	req = mux.SetURLVars(req, map[string]string{"party_id": "1"})
+
+	controller.GetByPartyId(responseRecorder, req)
+
+	assert.Equal(t, http.StatusBadRequest, responseRecorder.Code)
+}
+
+func TestGetByPartyIdController_InvalidID(t *testing.T) {
+	controller, _, responseRecorder := setupDefaultController()
+
+	req, _ := http.NewRequest("GET", "/party/invalid", nil)
+	req = mux.SetURLVars(req, map[string]string{"party_id": "invalid"})
+
+	controller.GetByPartyId(responseRecorder, req)
+
+	assert.Equal(t, http.StatusBadRequest, responseRecorder.Code)
 }

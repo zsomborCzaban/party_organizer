@@ -6,9 +6,9 @@ import (
 )
 
 func NewRouter(router *mux.Router, controller domains.IFoodRequirementController) {
-	router.HandleFunc("/foodRequirement", controller.CreateController).Methods("POST")
-	router.HandleFunc("/foodRequirement/{id}", controller.GetController).Methods("GET")
-	router.HandleFunc("/foodRequirement/{id}", controller.DeleteController).Methods("DELETE")
+	router.HandleFunc("/foodRequirement", controller.Create).Methods("POST")
+	router.HandleFunc("/foodRequirement/{id}", controller.Get).Methods("GET")
+	router.HandleFunc("/foodRequirement/{id}", controller.Delete).Methods("DELETE")
 
-	router.HandleFunc("/foodRequirement/getByPartyId/{party_id}", controller.GetByPartyIdController).Methods("GET")
+	router.HandleFunc("/foodRequirement/getByPartyId/{party_id}", controller.GetByPartyId).Methods("GET")
 }
