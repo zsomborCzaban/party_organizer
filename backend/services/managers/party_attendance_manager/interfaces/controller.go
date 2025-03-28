@@ -71,9 +71,9 @@ func (fc PartyInviteController) Decline(w http.ResponseWriter, r *http.Request) 
 
 func (fc PartyInviteController) Invite(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	invitedUsername, err := vars["invited_username"]
-	if !err {
-		br := api.ErrorBadRequest("wrong parameter as 'invited_username'")
+	invitedUsername, ok := vars["invited_username"]
+	if !ok {
+		br := api.ErrorBadRequest("missing parameter 'invited_username'")
 
 		br.Send(w)
 		return
