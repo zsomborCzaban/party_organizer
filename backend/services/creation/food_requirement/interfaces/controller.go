@@ -32,7 +32,7 @@ func (fc FoodRequirementController) CreateController(w http.ResponseWriter, r *h
 		return
 	}
 
-	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err2 := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err2 != nil {
 		br := api.ErrorBadRequest(domains.BadRequest)
 
@@ -58,7 +58,7 @@ func (fc FoodRequirementController) GetController(w http.ResponseWriter, r *http
 		return
 	}
 
-	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err2 := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err2 != nil {
 		br := api.ErrorBadRequest(domains.BadRequest)
 
@@ -84,7 +84,7 @@ func (fc FoodRequirementController) DeleteController(w http.ResponseWriter, r *h
 		return
 	}
 
-	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err2 := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err2 != nil {
 		br := api.ErrorBadRequest(err2.Error())
 
@@ -110,7 +110,7 @@ func (fc FoodRequirementController) GetByPartyIdController(w http.ResponseWriter
 		return
 	}
 
-	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err2 := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err2 != nil {
 		br := api.ErrorBadRequest(domains.BadRequest)
 

@@ -32,7 +32,7 @@ func (dc DrinkRequirementController) CreateController(w http.ResponseWriter, r *
 		return
 	}
 
-	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err2 := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err2 != nil {
 		br := api.ErrorBadRequest(domains.BadRequest)
 
@@ -58,7 +58,7 @@ func (dc DrinkRequirementController) GetController(w http.ResponseWriter, r *htt
 		return
 	}
 
-	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err2 := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err2 != nil {
 		br := api.ErrorBadRequest(domains.BadRequest)
 
@@ -84,7 +84,7 @@ func (dc DrinkRequirementController) DeleteController(w http.ResponseWriter, r *
 		return
 	}
 
-	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err2 := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err2 != nil {
 		br := api.ErrorBadRequest(err2.Error())
 
@@ -110,7 +110,7 @@ func (dc DrinkRequirementController) GetByPartyIdController(w http.ResponseWrite
 		return
 	}
 
-	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err2 := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err2 != nil {
 		br := api.ErrorBadRequest(domains.BadRequest)
 

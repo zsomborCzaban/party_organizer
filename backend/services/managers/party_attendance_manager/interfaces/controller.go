@@ -27,7 +27,7 @@ func (fc PartyInviteController) Accept(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err2 := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err2 != nil {
 		br := api.ErrorBadRequest(err2.Error())
 
@@ -53,7 +53,7 @@ func (fc PartyInviteController) Decline(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err2 := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err2 != nil {
 		br := api.ErrorBadRequest(err2.Error())
 
@@ -87,7 +87,7 @@ func (fc PartyInviteController) Invite(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userId, err3 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err3 := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err3 != nil {
 		br := api.ErrorBadRequest(err3.Error())
 
@@ -104,7 +104,7 @@ func (fc PartyInviteController) Invite(w http.ResponseWriter, r *http.Request) {
 }
 
 func (fc PartyInviteController) GetUserPendingInvites(w http.ResponseWriter, r *http.Request) {
-	userId, err := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err != nil {
 		br := api.ErrorBadRequest(err.Error())
 
@@ -122,7 +122,7 @@ func (fc PartyInviteController) GetUserPendingInvites(w http.ResponseWriter, r *
 
 func (fc PartyInviteController) GetPartyPendingInvites(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	userId, err := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err != nil {
 		br := api.ErrorBadRequest(err.Error())
 
@@ -164,7 +164,7 @@ func (fc PartyInviteController) Kick(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userId, err3 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err3 := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err3 != nil {
 		br := api.ErrorBadRequest(err3.Error())
 
@@ -190,7 +190,7 @@ func (fc PartyInviteController) LeaveParty(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	userId, err3 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err3 := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err3 != nil {
 		br := api.ErrorBadRequest(err3.Error())
 
@@ -217,7 +217,7 @@ func (fc PartyInviteController) JoinPublicParty(w http.ResponseWriter, r *http.R
 		return
 	}
 
-	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err2 := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err2 != nil {
 		br := api.ErrorBadRequest(err2.Error())
 
@@ -243,7 +243,7 @@ func (fc PartyInviteController) JoinPrivateParty(w http.ResponseWriter, r *http.
 		return
 	}
 
-	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err2 := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err2 != nil {
 		br := api.ErrorBadRequest(err2.Error())
 
