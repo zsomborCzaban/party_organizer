@@ -30,7 +30,7 @@ func (mr *MockRepository) RemoveUserFromParty(*domains.Party, *userDomain.User) 
 	args := mr.Called()
 	return args.Error(0)
 }
-func (mr *MockRepository) CreateParty(*domains.Party) error {
+func (mr *MockRepository) Create(*domains.Party) error {
 	args := mr.Called()
 	return args.Error(0)
 }
@@ -38,11 +38,11 @@ func (mr *MockRepository) FindById(uint, ...string) (*domains.Party, error) {
 	args := mr.Called()
 	return args.Get(0).(*domains.Party), args.Error(1)
 }
-func (mr *MockRepository) UpdateParty(*domains.Party) error {
+func (mr *MockRepository) Update(*domains.Party) error {
 	args := mr.Called()
 	return args.Error(0)
 }
-func (mr *MockRepository) DeleteParty(*domains.Party) error {
+func (mr *MockRepository) Delete(*domains.Party) error {
 	args := mr.Called()
 	return args.Error(0)
 }

@@ -9,8 +9,8 @@ type IPartyRepository interface {
 	AddUserToParty(*Party, *userDomain.User) error
 	RemoveUserFromParty(*Party, *userDomain.User) error
 
-	CreateParty(*Party) error
+	Create(*Party) error
 	FindById(id uint, associations ...string) (*Party, error)
-	UpdateParty(*Party) error
-	DeleteParty(*Party) error
+	Update(*Party) error
+	Delete(*Party) error
 }

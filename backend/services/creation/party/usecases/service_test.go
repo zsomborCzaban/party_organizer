@@ -60,7 +60,7 @@ func Test_PartyService_Create_Success(t *testing.T) {
 
 	validator.On("Validate", partyDTO).Return(nil)
 	userRepo.On("FindById", userId, mock.Anything).Return(organizer, nil)
-	partyRepo.On("CreateParty", mock.Anything).Return(nil)
+	partyRepo.On("Create", mock.Anything).Return(nil)
 
 	response := service.Create(partyDTO, userId)
 
@@ -118,7 +118,7 @@ func Test_PartyService_Create_FailOnCreateParty(t *testing.T) {
 
 	validator.On("Validate", partyDTO).Return(nil)
 	userRepo.On("FindById", userId, mock.Anything).Return(organizer, nil)
-	partyRepo.On("CreateParty", mock.Anything).Return(errors.New("failed to create party"))
+	partyRepo.On("Create", mock.Anything).Return(errors.New("failed to create party"))
 
 	response := service.Create(partyDTO, userId)
 
@@ -254,7 +254,7 @@ func Test_PartyService_Update_Success(t *testing.T) {
 
 	validator.On("Validate", partyDTO).Return(nil)
 	partyRepo.On("FindById", mock.Anything, mock.Anything).Return(originalParty, nil)
-	partyRepo.On("UpdateParty", mock.Anything).Return(nil)
+	partyRepo.On("Update", mock.Anything).Return(nil)
 
 	response := service.Update(partyDTO, userId)
 
@@ -341,7 +341,7 @@ func Test_PartyService_Update_FailOnUpdate(t *testing.T) {
 
 	validator.On("Validate", partyDTO).Return(nil)
 	partyRepo.On("FindById", mock.Anything, mock.Anything).Return(originalParty, nil)
-	partyRepo.On("UpdateParty", mock.Anything).Return(expectedErr)
+	partyRepo.On("Update", mock.Anything).Return(expectedErr)
 
 	response := service.Update(partyDTO, userId)
 
@@ -365,7 +365,7 @@ func Test_PartyService_Delete_Success(t *testing.T) {
 	drinkReqRepo.On("DeleteByPartyId", mock.Anything).Return(nil)
 	foodContribRepo.On("DeleteByPartyId", mock.Anything).Return(nil)
 	foodReqRepo.On("DeleteByPartyId", mock.Anything).Return(nil)
-	partyRepo.On("DeleteParty", mock.Anything).Return(nil)
+	partyRepo.On("Delete", mock.Anything).Return(nil)
 	partyInviteRepo.On("DeleteByPartyId", mock.Anything).Return(nil)
 
 	response := service.Delete(partyId, userId)
@@ -443,7 +443,7 @@ func Test_PartyService_Delete_FailOnDeleteRequirements(t *testing.T) {
 	drinkReqRepo.On("DeleteByPartyId", mock.Anything).Return(nil)
 	foodContribRepo.On("DeleteByPartyId", mock.Anything).Return(nil)
 	foodReqRepo.On("DeleteByPartyId", mock.Anything).Return(errors.New(""))
-	partyRepo.On("DeleteParty", mock.Anything).Return(nil)
+	partyRepo.On("Delete", mock.Anything).Return(nil)
 	partyInviteRepo.On("DeleteByPartyId", mock.Anything).Return(nil)
 
 	response := service.Delete(partyId, userId)
@@ -468,7 +468,7 @@ func Test_PartyService_Delete_FailOnDeletePartyInvites(t *testing.T) {
 	drinkReqRepo.On("DeleteByPartyId", mock.Anything).Return(nil)
 	foodContribRepo.On("DeleteByPartyId", mock.Anything).Return(nil)
 	foodReqRepo.On("DeleteByPartyId", mock.Anything).Return(nil)
-	partyRepo.On("DeleteParty", mock.Anything).Return(nil)
+	partyRepo.On("Delete", mock.Anything).Return(nil)
 	partyInviteRepo.On("DeleteByPartyId", mock.Anything).Return(errors.New(""))
 
 	response := service.Delete(partyId, userId)
@@ -493,7 +493,7 @@ func Test_PartyService_Delete_FailOnDeleteParty(t *testing.T) {
 	drinkReqRepo.On("DeleteByPartyId", mock.Anything).Return(nil)
 	foodContribRepo.On("DeleteByPartyId", mock.Anything).Return(nil)
 	foodReqRepo.On("DeleteByPartyId", mock.Anything).Return(nil)
-	partyRepo.On("DeleteParty", mock.Anything).Return(errors.New("failed to delete party"))
+	partyRepo.On("Delete", mock.Anything).Return(errors.New("failed to delete party"))
 	partyInviteRepo.On("DeleteByPartyId", mock.Anything).Return(nil)
 
 	response := service.Delete(partyId, userId)

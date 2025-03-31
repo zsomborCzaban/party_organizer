@@ -54,7 +54,7 @@ func (ps PartyService) Create(partyDTO domains.PartyDTO, userId uint) api.IRespo
 		return api.ErrorInternalServerError(domains.DeletedUser)
 	}
 
-	err2 := ps.PartyRepository.CreateParty(party)
+	err2 := ps.PartyRepository.Create(party)
 	if err2 != nil {
 		return api.ErrorInternalServerError(err2.Error())
 	}
@@ -115,7 +115,7 @@ func (ps PartyService) Update(partyDTO domains.PartyDTO, userId uint) api.IRespo
 		party.AccessCode = fmt.Sprintf("%d_%s", party.ID, party.AccessCode)
 	}
 
-	err3 := ps.PartyRepository.UpdateParty(party)
+	err3 := ps.PartyRepository.Update(party)
 	if err3 != nil {
 		return api.ErrorInternalServerError(err3.Error())
 	}
@@ -152,7 +152,7 @@ func (ps PartyService) Delete(partyId uint, userId uint) api.IResponse {
 		return api.ErrorInternalServerError("unexpected error while deleting party invites of the party")
 	}
 
-	err7 := ps.PartyRepository.DeleteParty(party)
+	err7 := ps.PartyRepository.Delete(party)
 	if err7 != nil {
 		return api.ErrorInternalServerError(err7.Error())
 	}
