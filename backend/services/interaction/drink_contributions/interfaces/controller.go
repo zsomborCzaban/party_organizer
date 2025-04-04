@@ -30,7 +30,7 @@ func (dc DrinkContributionController) Create(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err2 := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err2 != nil {
 		br := api.ErrorBadRequest(err2.Error())
 
@@ -58,7 +58,7 @@ func (dc DrinkContributionController) Update(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err2 := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err2 != nil {
 		br := api.ErrorBadRequest(err2.Error())
 
@@ -85,7 +85,7 @@ func (dc DrinkContributionController) Update(w http.ResponseWriter, r *http.Requ
 }
 
 func (dc DrinkContributionController) Delete(w http.ResponseWriter, r *http.Request) {
-	userId, err := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err != nil {
 		br := api.ErrorBadRequest(err.Error())
 
@@ -111,7 +111,7 @@ func (dc DrinkContributionController) Delete(w http.ResponseWriter, r *http.Requ
 }
 
 func (dc DrinkContributionController) GetByPartyIdAndContributorId(w http.ResponseWriter, r *http.Request) {
-	userId, err := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err != nil {
 		br := api.ErrorBadRequest(err.Error())
 
@@ -145,7 +145,7 @@ func (dc DrinkContributionController) GetByPartyIdAndContributorId(w http.Respon
 }
 
 func (dc DrinkContributionController) GetByRequirementId(w http.ResponseWriter, r *http.Request) {
-	userId, err := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err != nil {
 		br := api.ErrorBadRequest(err.Error())
 
@@ -172,7 +172,7 @@ func (dc DrinkContributionController) GetByRequirementId(w http.ResponseWriter, 
 }
 
 func (dc DrinkContributionController) GetByPartyId(w http.ResponseWriter, r *http.Request) {
-	userId, err := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err != nil {
 		br := api.ErrorBadRequest(err.Error())
 

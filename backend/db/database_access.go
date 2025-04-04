@@ -79,32 +79,6 @@ func (dbHandler DatabaseAccessImpl) BatchDelete(conds []QueryParameter) error {
 	return nil
 }
 
-func (dbHandler DatabaseAccessImpl) AddToAssociation(entity interface{}, association string, associatedEntities ...interface{}) error {
-	if err := dbHandler.DB.AddToAssociation(entity, association, associatedEntities); err != nil {
-		log.Print(err.Error())
-		return NewDBError(err.Error())
-	}
-	return nil
-}
-
-func (dbHandler DatabaseAccessImpl) DeleteFromAssociation(entity interface{}, association string, associatedEntities ...interface{}) error {
-	if err := dbHandler.DB.DeleteFromAssociation(entity, association, associatedEntities); err != nil {
-		log.Print(err.Error())
-		return NewDBError(err.Error())
-	}
-	return nil
-}
-func (dbHandler DatabaseAccessImpl) ClearAssociation(entity interface{}, associations ...string) error {
-	for _, association := range associations {
-		if err := dbHandler.DB.ClearAssociation(entity, association); err != nil {
-			log.Print(err.Error())
-			return NewDBError(err.Error())
-		}
-	}
-
-	return nil
-}
-
 func (dbHandler DatabaseAccessImpl) Query(conds []QueryParameter, associations ...string) (interface{}, error) {
 	dbHandler.DB.NewSession()
 	dbHandler.DB.ProcessWhereStatements(conds)
@@ -134,4 +108,22 @@ func (dbHandler DatabaseAccessImpl) Many2ManyQueryId(cond Many2ManyQueryParamete
 		return entities, NewDBError(err.Error())
 	}
 	return entities, nil
+}
+
+func (dbHandler DatabaseAccessImpl) ReplaceAssociations(param AssociationParameter) error {
+	dbHandler.DB.NewSession()
+	return dbHandler.DB.ReplaceAssociations(param)
+}
+
+func (dbHandler DatabaseAccessImpl) TransactionBegin() IDatabaseAccess {
+	return NewDatabaseAccessImpl(dbHandler.DBEntityProvider, dbHandler.DB.TransactionBegin())
+}
+
+func (dbHandler DatabaseAccessImpl) TransactionCommit() error {
+	return dbHandler.DB.TransactionCommit()
+}
+
+func (dbHandler DatabaseAccessImpl) TransactionRollback() error {
+	return dbHandler.DB.TransactionRollback()
+
 }

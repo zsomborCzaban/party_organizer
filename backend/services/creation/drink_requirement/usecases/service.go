@@ -18,13 +18,13 @@ type DrinkRequirementService struct {
 func NewDrinkRequirementService(repoCollector *repo.RepoCollector, validator api.IValidator) domains.IDrinkRequirementService {
 	return &DrinkRequirementService{
 		Validator:                   validator,
-		DrinkRequirementRepository:  *repoCollector.DrinkReqRepo,
-		PartyRepository:             *repoCollector.PartyRepo,
-		DrinkContributionRepository: *repoCollector.DrinkContribRepo,
+		DrinkRequirementRepository:  repoCollector.DrinkReqRepo,
+		PartyRepository:             repoCollector.PartyRepo,
+		DrinkContributionRepository: repoCollector.DrinkContribRepo,
 	}
 }
 
-func (ds DrinkRequirementService) CreateDrinkRequirement(drinkRequirementDTO domains.DrinkRequirementDTO, userId uint) api.IResponse {
+func (ds DrinkRequirementService) Create(drinkRequirementDTO domains.DrinkRequirementDTO, userId uint) api.IResponse {
 	err := ds.Validator.Validate(drinkRequirementDTO)
 	if err != nil {
 		return api.ErrorValidation(err)
@@ -34,42 +34,42 @@ func (ds DrinkRequirementService) CreateDrinkRequirement(drinkRequirementDTO dom
 
 	party, err2 := ds.PartyRepository.FindById(drinkRequirement.PartyID, partyDomains.FullPartyPreload...)
 	if err2 != nil {
-		return api.ErrorBadRequest("Party id doesnt exists")
+		return api.ErrorBadRequest(domains.PartyNotFound)
 	}
 
 	if !party.CanBeOrganizedBy(userId) {
-		return api.ErrorUnauthorized("cannot create drinkRequirements for other peoples party")
+		return api.ErrorUnauthorized(domains.NoOrganizerAccess)
 	}
 
-	err3 := ds.DrinkRequirementRepository.CreateDrinkRequirement(drinkRequirement)
+	err3 := ds.DrinkRequirementRepository.Create(drinkRequirement)
 	if err3 != nil {
-		return api.ErrorInternalServerError(err3)
+		return api.ErrorInternalServerError(err3.Error())
 	}
 
 	return api.Success(drinkRequirement)
 }
 
-func (ds DrinkRequirementService) GetDrinkRequirement(drinkReqId, userId uint) api.IResponse {
+func (ds DrinkRequirementService) FindById(drinkReqId, userId uint) api.IResponse {
 	drinkRequirement, err := ds.DrinkRequirementRepository.FindById(drinkReqId, partyDomains.FullPartyNestedPreload...)
 	if err != nil {
-		return api.ErrorInternalServerError(err)
+		return api.ErrorBadRequest(domains.RequirementNotFound)
 	}
 
 	if !drinkRequirement.Party.CanBeAccessedBy(userId) {
-		return api.ErrorUnauthorized("you are not in the party")
+		return api.ErrorUnauthorized(domains.NoViewAccess)
 	}
 
 	return api.Success(drinkRequirement)
 }
 
-func (ds DrinkRequirementService) DeleteDrinkRequirement(drinkReqId, userId uint) api.IResponse {
+func (ds DrinkRequirementService) Delete(drinkReqId, userId uint) api.IResponse {
 	drinkRequirement, err := ds.DrinkRequirementRepository.FindById(drinkReqId, partyDomains.FullPartyNestedPreload...)
 	if err != nil {
-		return api.ErrorBadRequest(err.Error())
+		return api.ErrorBadRequest(domains.RequirementNotFound)
 	}
 
 	if !drinkRequirement.Party.CanBeOrganizedBy(userId) {
-		return api.ErrorUnauthorized(domains.UNAUTHORIZED)
+		return api.ErrorUnauthorized(domains.NoOrganizerAccess)
 	}
 
 	//todo: put this in transaction
@@ -77,9 +77,9 @@ func (ds DrinkRequirementService) DeleteDrinkRequirement(drinkReqId, userId uint
 		return api.ErrorInternalServerError(err2.Error())
 	}
 
-	err3 := ds.DrinkRequirementRepository.DeleteDrinkRequirement(drinkRequirement)
+	err3 := ds.DrinkRequirementRepository.Delete(drinkRequirement)
 	if err3 != nil {
-		return api.ErrorInternalServerError(err3)
+		return api.ErrorInternalServerError(err3.Error())
 	}
 	return api.Success("delete_success")
 }
@@ -87,16 +87,16 @@ func (ds DrinkRequirementService) DeleteDrinkRequirement(drinkReqId, userId uint
 func (ds DrinkRequirementService) GetByPartyId(partyId, userId uint) api.IResponse {
 	party, err := ds.PartyRepository.FindById(partyId, partyDomains.FullPartyPreload...)
 	if err != nil {
-		return api.ErrorBadRequest("party not found")
+		return api.ErrorBadRequest(domains.PartyNotFound)
 	}
 
 	if !party.CanBeAccessedBy(userId) {
-		return api.ErrorUnauthorized("you are not in the party")
+		return api.ErrorUnauthorized(domains.NoViewAccess)
 	}
 
 	drinkReqs, err3 := ds.DrinkRequirementRepository.GetByPartyId(partyId)
 	if err3 != nil {
-		return api.ErrorInternalServerError(err3)
+		return api.ErrorInternalServerError(err3.Error())
 	}
 
 	return api.Success(drinkReqs)

@@ -1,6 +1,7 @@
 package configuration
 
 import (
+	"github.com/zsomborCzaban/party_organizer/common"
 	"github.com/zsomborCzaban/party_organizer/db"
 	"gorm.io/gorm/logger"
 	log2 "log"
@@ -22,5 +23,5 @@ func CreateDbAccessManager(builderfunc DbAccessManagerBuilderFunc) db.IDatabaseA
 		},
 	)
 
-	return builderfunc(DEFAULT_LOCAL_DB_NAME, dbLogger)
+	return builderfunc(common.DEFAULT_LOCAL_DB_NAME, dbLogger)
 }

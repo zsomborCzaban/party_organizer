@@ -51,17 +51,17 @@ func (dbWrapper *GormDBWrapper) Delete(entity interface{}) error {
 	return dbWrapper.DB.Delete(entity).Error
 }
 
-func (dbWrapper *GormDBWrapper) AddToAssociation(entity interface{}, association string, associatedEntities ...interface{}) error {
-	return dbWrapper.DB.Model(entity).Association(association).Append(associatedEntities[0])
-}
+//func (dbWrapper *GormDBWrapper) AddToAssociation(entity interface{}, association string, associatedEntities ...interface{}) error {
+//	return dbWrapper.DB.Model(entity).Association(association).Append(associatedEntities[0])
+//}
+//
+//func (dbWrapper *GormDBWrapper) DeleteFromAssociation(entity interface{}, association string, associatedEntities ...interface{}) error {
+//	return dbWrapper.DB.Model(entity).Association(association).Delete(associatedEntities)
+//}
 
-func (dbWrapper *GormDBWrapper) DeleteFromAssociation(entity interface{}, association string, associatedEntities ...interface{}) error {
-	return dbWrapper.DB.Model(entity).Association(association).Delete(associatedEntities)
-}
-
-func (dbWrapper *GormDBWrapper) ClearAssociation(entity interface{}, association string) error {
-	return dbWrapper.DB.Model(entity).Association(association).Clear()
-}
+//func (dbWrapper *GormDBWrapper) ClearAssociation(entity interface{}, association string) error {
+//	return dbWrapper.DB.Model(entity).Association(association).Clear()
+//}
 
 func (dbWrapper *GormDBWrapper) ProcessWhereStatements(conds []QueryParameter) {
 	for _, queryParam := range conds {
@@ -102,4 +102,24 @@ func (dbWrapper *GormDBWrapper) Many2ManyQueryId(dest interface{}, associations 
 		return dbWrapper.DB.Raw(query, cond.M2MConditionColumnValue, cond.OrConditionColumnValue).Find(dest).Error
 	}
 	//return dbWrapper.DB.Model(model).Preload(preload, "id = ?", 3).Find(dest).Error
+}
+
+func (dbWrapper *GormDBWrapper) ReplaceAssociations(param AssociationParameter) error {
+	return dbWrapper.DB.Model(param.Model).Association(param.Association).Replace(param.Values)
+}
+
+func (dbWrapper *GormDBWrapper) TransactionBegin() IDatabase {
+	tr := GormDBWrapper{
+		DB: dbWrapper.DB.Begin(),
+	}
+	return &tr
+}
+
+func (dbWrapper *GormDBWrapper) TransactionCommit() error {
+	return dbWrapper.DB.Commit().Error
+}
+
+func (dbWrapper *GormDBWrapper) TransactionRollback() error {
+	return dbWrapper.DB.Rollback().Error
+
 }

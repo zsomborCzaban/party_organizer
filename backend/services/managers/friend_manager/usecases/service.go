@@ -15,8 +15,8 @@ type FriendInviteService struct {
 
 func NewFriendInviteService(repoCollector *repo.RepoCollector) domains.IFriendInviteService {
 	return &FriendInviteService{
-		FriendInviteRepository: *repoCollector.FriendInviteRepo,
-		UserRepository:         *repoCollector.UserRepo,
+		FriendInviteRepository: repoCollector.FriendInviteRepo,
+		UserRepository:         repoCollector.UserRepo,
 	}
 }
 
@@ -95,12 +95,15 @@ func (fs FriendInviteService) Invite(invitedUsername string, userId uint) api.IR
 	}
 
 	//check reverse invite
-	reverseInvite, _ := fs.FriendInviteRepository.FindByIds(invited.ID, userId)
-	if reverseInvite != nil && reverseInvite.State == domains.DECLINED {
+	reverseInvite, err := fs.FriendInviteRepository.FindByIds(invited.ID, userId)
+	if err == nil && reverseInvite.State == domains.DECLINED {
 		return fs.ReverseInvite(reverseInvite)
 	}
-	if reverseInvite != nil {
+	if err == nil {
 		return api.ErrorBadRequest("friend request already exists, try accepting it")
+	}
+	if err != nil && err.Error() != domains.NOT_FOUND {
+		return api.ErrorInternalServerError(err.Error())
 	}
 	//check reverse invite end
 
@@ -181,12 +184,12 @@ func (fs FriendInviteService) GetPendingInvites(userId uint) api.IResponse {
 }
 
 func (fs FriendInviteService) RemoveFriend(userId, friendId uint) api.IResponse {
-	user, err := fs.UserRepository.FindByIdWithFriends(userId)
+	user, err := fs.UserRepository.FindById(userId, "Friends")
 	if err != nil {
 		return api.ErrorBadRequest(err.Error())
 	}
 
-	friend, err2 := fs.UserRepository.FindByIdWithFriends(friendId)
+	friend, err2 := fs.UserRepository.FindById(friendId, "Friends")
 	if err2 != nil {
 		return api.ErrorBadRequest(err2.Error())
 	}

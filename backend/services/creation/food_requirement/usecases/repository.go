@@ -19,7 +19,7 @@ func NewFoodRequirementRepository(databaseAccessManager db.IDatabaseAccessManage
 	}
 }
 
-func (fr FoodRequirementRepository) CreateFoodRequirement(foodRequirement *domains.FoodRequirement) error {
+func (fr FoodRequirementRepository) Create(foodRequirement *domains.FoodRequirement) error {
 	err := fr.DbAccess.Create(foodRequirement)
 	if err != nil {
 		return err
@@ -41,15 +41,7 @@ func (fr FoodRequirementRepository) FindById(id uint, associations ...string) (*
 	return foodRequirement2, nil
 }
 
-func (fr FoodRequirementRepository) UpdateFoodRequirement(foodRequirement *domains.FoodRequirement) error {
-	err := fr.DbAccess.Update(foodRequirement)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (fr FoodRequirementRepository) DeleteFoodRequirement(foodRequirement *domains.FoodRequirement) error {
+func (fr FoodRequirementRepository) Delete(foodRequirement *domains.FoodRequirement) error {
 	err := fr.DbAccess.Delete(foodRequirement)
 	if err != nil {
 		return err
@@ -79,11 +71,6 @@ func (fr FoodRequirementRepository) GetByPartyId(id uint) (*[]domains.FoodRequir
 	foodReqs, err := fetchedFoodReqs.(*[]domains.FoodRequirement)
 	if !err {
 		return nil, errors.New("unable to parse fetched data to DrinkRequirements")
-	}
-
-	//not sure if parties can be nil after the db function call
-	if foodReqs == nil {
-		return nil, errors.New("Error. DrinkRequirements were nil")
 	}
 
 	return foodReqs, nil

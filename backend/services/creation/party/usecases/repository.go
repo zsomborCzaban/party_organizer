@@ -8,7 +8,7 @@ import (
 	userDomain "github.com/zsomborCzaban/party_organizer/services/user/domains"
 )
 
-type PartyRepository struct {
+type Repository struct {
 	DbAccess db.IDatabaseAccess //party DbAccess
 }
 
@@ -16,12 +16,12 @@ func NewPartyRepository(databaseAccessManager db.IDatabaseAccessManager) domains
 	entityProvider := PartyEntityProvider{}
 	databaseAccess := databaseAccessManager.RegisterEntity("partyProvider", entityProvider)
 
-	return &PartyRepository{
+	return &Repository{
 		DbAccess: databaseAccess,
 	}
 }
 
-func (pr PartyRepository) AddUserToParty(party *domains.Party, user *userDomain.User) error {
+func (pr Repository) AddUserToParty(party *domains.Party, user *userDomain.User) error {
 	//if err := pr.DbAccess.AddToAssociation(party, "Participants", user); err != nil {
 	//	return err
 	//}
@@ -30,7 +30,7 @@ func (pr PartyRepository) AddUserToParty(party *domains.Party, user *userDomain.
 	return pr.DbAccess.Update(party)
 }
 
-func (pr PartyRepository) RemoveUserFromParty(party *domains.Party, user *userDomain.User) error {
+func (pr Repository) RemoveUserFromParty(party *domains.Party, user *userDomain.User) error {
 	//return pr.DbAccess.DeleteFromAssociation(party, "Participants", user)
 
 	participants := []userDomain.User{}
@@ -39,16 +39,16 @@ func (pr PartyRepository) RemoveUserFromParty(party *domains.Party, user *userDo
 			participants = append(participants, participant)
 		}
 	}
-
-	if err := pr.DbAccess.ClearAssociation(party, "Participants"); err != nil {
-		return err
+	associationParam := db.AssociationParameter{
+		Model:       party,
+		Association: "Participants",
+		Values:      participants,
 	}
 
-	party.Participants = participants
-	return pr.DbAccess.Update(party)
+	return pr.DbAccess.ReplaceAssociations(associationParam)
 }
 
-func (pr PartyRepository) GetPublicParties() (*[]domains.Party, error) {
+func (pr Repository) GetPublicParties() (*[]domains.Party, error) {
 	queryParams := []db.QueryParameter{
 		{Field: "private", Operator: "=", Value: false},
 	}
@@ -72,7 +72,7 @@ func (pr PartyRepository) GetPublicParties() (*[]domains.Party, error) {
 	return parties, nil
 }
 
-func (pr PartyRepository) GetPartiesByOrganizerId(id uint) (*[]domains.Party, error) {
+func (pr Repository) GetPartiesByOrganizerId(id uint) (*[]domains.Party, error) {
 	queryParams := []db.QueryParameter{
 		{Field: "organizer_id", Operator: "=", Value: id},
 	}
@@ -96,7 +96,7 @@ func (pr PartyRepository) GetPartiesByOrganizerId(id uint) (*[]domains.Party, er
 	return parties, nil
 }
 
-func (pr PartyRepository) GetPartiesByParticipantId(id uint) (*[]domains.Party, error) {
+func (pr Repository) GetPartiesByParticipantId(id uint) (*[]domains.Party, error) {
 	queryCond := db.Many2ManyQueryParameter{
 		QueriedTable:            "parties",
 		Many2ManyTable:          "party_participants",
@@ -124,7 +124,7 @@ func (pr PartyRepository) GetPartiesByParticipantId(id uint) (*[]domains.Party, 
 	return parties, nil
 }
 
-//func (pr PartyRepository) FindUserInParty(userId, partyId uint) error {
+//func (pr Repository) FindUserInParty(userId, partyId uint) error {
 //	queryCond := db.Many2ManyQueryParameter{
 //		QueriedTable:            "parties",
 //		Many2ManyTable:          "party_participants",
@@ -134,7 +134,7 @@ func (pr PartyRepository) GetPartiesByParticipantId(id uint) (*[]domains.Party, 
 //	}
 //}
 
-func (pr PartyRepository) CreateParty(party *domains.Party) error {
+func (pr Repository) Create(party *domains.Party) error {
 	err := pr.DbAccess.Create(party)
 	if err != nil {
 		return err
@@ -143,7 +143,7 @@ func (pr PartyRepository) CreateParty(party *domains.Party) error {
 
 }
 
-func (pr PartyRepository) FindById(id uint, associations ...string) (*domains.Party, error) {
+func (pr Repository) FindById(id uint, associations ...string) (*domains.Party, error) {
 	party, err := pr.DbAccess.FindById(id, associations...) //todo: causes concurent mapwrites sometimes
 	if err != nil {
 		return nil, err
@@ -156,7 +156,7 @@ func (pr PartyRepository) FindById(id uint, associations ...string) (*domains.Pa
 	return party2, nil
 }
 
-func (pr PartyRepository) UpdateParty(party *domains.Party) error {
+func (pr Repository) Update(party *domains.Party) error {
 	err := pr.DbAccess.Update(party)
 	if err != nil {
 		return err
@@ -164,7 +164,7 @@ func (pr PartyRepository) UpdateParty(party *domains.Party) error {
 	return nil
 }
 
-func (pr PartyRepository) DeleteParty(party *domains.Party) error {
+func (pr Repository) Delete(party *domains.Party) error {
 	err := pr.DbAccess.Delete(party)
 	if err != nil {
 		return err

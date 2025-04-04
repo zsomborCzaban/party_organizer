@@ -21,10 +21,10 @@ type DrinkContributionService struct {
 func NewDrinkContributionService(repoCollector *repo.RepoCollector, vali api.IValidator) domains.IDrinkContributionService {
 	return &DrinkContributionService{
 		Validator:              vali,
-		ContributionRepository: *repoCollector.DrinkContribRepo,
-		UserRepository:         *repoCollector.UserRepo,
-		PartyRepository:        *repoCollector.PartyRepo,
-		DrinkReqRepository:     *repoCollector.DrinkReqRepo,
+		ContributionRepository: repoCollector.DrinkContribRepo,
+		UserRepository:         repoCollector.UserRepo,
+		PartyRepository:        repoCollector.PartyRepo,
+		DrinkReqRepository:     repoCollector.DrinkReqRepo,
 	}
 }
 

@@ -32,19 +32,6 @@ func (ur UserRepository) FindById(id uint, associations ...string) (*domains.Use
 	return user2, nil
 }
 
-func (ur UserRepository) FindByIdWithFriends(id uint) (*domains.User, error) {
-	user, err := ur.DbAccess.FindById(id, "Friends")
-	if err != nil {
-		return nil, err
-	}
-
-	user2, err2 := user.(*domains.User)
-	if !err2 {
-		return nil, errors.New("failed to convert database entity to party")
-	}
-	return user2, nil
-}
-
 func (ur UserRepository) FindByUsername(username string) (*domains.User, error) {
 	queryParams := []db.QueryParameter{
 		{Field: "username", Operator: "=", Value: username},
@@ -107,7 +94,6 @@ func (ur UserRepository) AddFriend(user, friend *domains.User) error {
 }
 
 func (ur UserRepository) RemoveFriend(user, friend *domains.User) error {
-	//todo: put this in transaction
 	//if err := ur.DbAccess.DeleteFromAssociation(user, "Friends", friend); err != nil {
 	//	return err
 	//}
@@ -116,20 +102,26 @@ func (ur UserRepository) RemoveFriend(user, friend *domains.User) error {
 	//	return err2
 	//}
 
-	friends := []domains.User{}
+	tr := ur.DbAccess.TransactionBegin()
+	var err error
+	defer func() {
+		err = errors.Join(err, tr.TransactionRollback())
+	}()
+
+	var friends []domains.User
 	for _, userFriend := range user.Friends {
 		if userFriend.ID != friend.ID {
 			friends = append(friends, userFriend)
 		}
 	}
-
-	if err := ur.DbAccess.ClearAssociation(user, "Friends"); err != nil {
-		return err
+	associationParam := db.AssociationParameter{
+		Model:       user,
+		Association: "Friends",
+		Values:      friends,
 	}
 
-	user.Friends = friends
-	if err2 := ur.DbAccess.Update(user); err2 != nil {
-		return err2
+	if err = tr.ReplaceAssociations(associationParam); err != nil {
+		return err
 	}
 
 	friends = []domains.User{}
@@ -138,16 +130,19 @@ func (ur UserRepository) RemoveFriend(user, friend *domains.User) error {
 			friends = append(friends, friendFriend)
 		}
 	}
-
-	if err3 := ur.DbAccess.ClearAssociation(friend, "Friends"); err3 != nil {
-		return err3
+	associationParam = db.AssociationParameter{
+		Model:       friend,
+		Association: "Friends",
+		Values:      friends,
 	}
 
-	friend.Friends = friends
-	if err4 := ur.DbAccess.Update(friend); err4 != nil {
-		return err4
+	if err = tr.ReplaceAssociations(associationParam); err != nil {
+		return err
 	}
 
+	if err = tr.TransactionCommit(); err != nil {
+		return err
+	}
 	return nil
 }
 

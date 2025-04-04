@@ -1,9 +1,9 @@
 package domains
 
 type IDrinkRequirementRepository interface {
-	CreateDrinkRequirement(*DrinkRequirement) error
+	Create(*DrinkRequirement) error
 	FindById(id uint, associations ...string) (*DrinkRequirement, error)
-	DeleteDrinkRequirement(*DrinkRequirement) error
+	Delete(*DrinkRequirement) error
 	DeleteByPartyId(uint) error
 	GetByPartyId(uint) (*[]DrinkRequirement, error)
 }

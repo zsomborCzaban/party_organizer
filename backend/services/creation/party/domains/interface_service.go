@@ -11,8 +11,8 @@ type IPartyService interface {
 	GetPartiesByOrganizerId(uint) api.IResponse
 	GetPartiesByParticipantId(uint) api.IResponse
 
-	CreateParty(PartyDTO PartyDTO, userId uint) api.IResponse
-	UpdateParty(partyDTO PartyDTO, userId uint) api.IResponse
-	GetParty(partyId, userId uint) api.IResponse
-	DeleteParty(partyId, userId uint) api.IResponse //auth this
+	Create(PartyDTO PartyDTO, userId uint) api.IResponse
+	Update(partyDTO PartyDTO, userId uint) api.IResponse
+	Get(partyId, userId uint) api.IResponse
+	Delete(partyId, userId uint) api.IResponse //auth this
 }

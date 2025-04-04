@@ -5,7 +5,7 @@ import (
 	"github.com/zsomborCzaban/party_organizer/services/interaction/drink_contributions/domains"
 )
 
-func NewDrinkContributionRouter(router *mux.Router, controller domains.IDrinkContributionController) {
+func NewRouter(router *mux.Router, controller domains.IDrinkContributionController) {
 	router.HandleFunc("/drinkContribution", controller.Create).Methods("POST")
 	router.HandleFunc("/drinkContribution/{id}", controller.Update).Methods("PUT")
 	router.HandleFunc("/drinkContribution/{id}", controller.Delete).Methods("DELETE")
