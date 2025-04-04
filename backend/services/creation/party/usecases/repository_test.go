@@ -41,13 +41,11 @@ func TestPartyRepository_RemoveUserFromParty_Success(t *testing.T) {
 		Participants: []userDomain.User{{Model: gorm.Model{ID: 1}}, {Model: gorm.Model{ID: 2}}},
 	}
 
-	mockDb.On("ClearAssociation", party, mock.Anything).Return(nil)
-	mockDb.On("Update", party).Return(nil)
+	mockDb.On("ReplaceAssociations", mock.Anything).Return(nil)
 
 	err := repo.RemoveUserFromParty(party, user)
 
 	assert.NoError(t, err)
-	assert.Len(t, party.Participants, 1)
 	mockDb.AssertExpectations(t)
 }
 

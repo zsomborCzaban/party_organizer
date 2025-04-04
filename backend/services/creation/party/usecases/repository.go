@@ -39,13 +39,13 @@ func (pr Repository) RemoveUserFromParty(party *domains.Party, user *userDomain.
 			participants = append(participants, participant)
 		}
 	}
-
-	if err := pr.DbAccess.ClearAssociation(party, "Participants"); err != nil {
-		return err
+	associationParam := db.AssociationParameter{
+		Model:       party,
+		Association: "Participants",
+		Values:      participants,
 	}
 
-	party.Participants = participants
-	return pr.DbAccess.Update(party)
+	return pr.DbAccess.ReplaceAssociations(associationParam)
 }
 
 func (pr Repository) GetPublicParties() (*[]domains.Party, error) {
