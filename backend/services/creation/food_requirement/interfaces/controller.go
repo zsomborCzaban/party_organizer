@@ -20,7 +20,7 @@ func NewFoodRequirementController(service domains.IFoodRequirementService) domai
 	}
 }
 
-func (fc FoodRequirementController) CreateController(w http.ResponseWriter, r *http.Request) {
+func (fc FoodRequirementController) Create(w http.ResponseWriter, r *http.Request) {
 	var createFoodRequirementReq domains.FoodRequirementDTO
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&createFoodRequirementReq)
@@ -32,7 +32,7 @@ func (fc FoodRequirementController) CreateController(w http.ResponseWriter, r *h
 		return
 	}
 
-	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err2 := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err2 != nil {
 		br := api.ErrorBadRequest(domains.BadRequest)
 
@@ -40,7 +40,7 @@ func (fc FoodRequirementController) CreateController(w http.ResponseWriter, r *h
 		return
 	}
 
-	resp := fc.FoodRequirementService.CreateFoodRequirement(createFoodRequirementReq, userId)
+	resp := fc.FoodRequirementService.Create(createFoodRequirementReq, userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging
@@ -48,7 +48,7 @@ func (fc FoodRequirementController) CreateController(w http.ResponseWriter, r *h
 	}
 }
 
-func (fc FoodRequirementController) GetController(w http.ResponseWriter, r *http.Request) {
+func (fc FoodRequirementController) Get(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	foodReqId, err := strconv.ParseUint(vars["id"], 10, 32)
 	if err != nil {
@@ -58,7 +58,7 @@ func (fc FoodRequirementController) GetController(w http.ResponseWriter, r *http
 		return
 	}
 
-	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err2 := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err2 != nil {
 		br := api.ErrorBadRequest(domains.BadRequest)
 
@@ -66,7 +66,7 @@ func (fc FoodRequirementController) GetController(w http.ResponseWriter, r *http
 		return
 	}
 
-	resp := fc.FoodRequirementService.GetFoodRequirement(uint(foodReqId), userId)
+	resp := fc.FoodRequirementService.FindById(uint(foodReqId), userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging
@@ -74,7 +74,7 @@ func (fc FoodRequirementController) GetController(w http.ResponseWriter, r *http
 	}
 }
 
-func (fc FoodRequirementController) DeleteController(w http.ResponseWriter, r *http.Request) {
+func (fc FoodRequirementController) Delete(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	foodReqId, err := strconv.ParseUint(vars["id"], 10, 32)
 	if err != nil {
@@ -84,7 +84,7 @@ func (fc FoodRequirementController) DeleteController(w http.ResponseWriter, r *h
 		return
 	}
 
-	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err2 := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err2 != nil {
 		br := api.ErrorBadRequest(err2.Error())
 
@@ -92,7 +92,7 @@ func (fc FoodRequirementController) DeleteController(w http.ResponseWriter, r *h
 		return
 	}
 
-	resp := fc.FoodRequirementService.DeleteFoodRequirement(uint(foodReqId), userId)
+	resp := fc.FoodRequirementService.Delete(uint(foodReqId), userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging
@@ -100,7 +100,7 @@ func (fc FoodRequirementController) DeleteController(w http.ResponseWriter, r *h
 	}
 }
 
-func (fc FoodRequirementController) GetByPartyIdController(w http.ResponseWriter, r *http.Request) {
+func (fc FoodRequirementController) GetByPartyId(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	partyId, err := strconv.ParseUint(vars["party_id"], 10, 32)
 	if err != nil {
@@ -110,7 +110,7 @@ func (fc FoodRequirementController) GetByPartyIdController(w http.ResponseWriter
 		return
 	}
 
-	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err2 := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err2 != nil {
 		br := api.ErrorBadRequest(domains.BadRequest)
 

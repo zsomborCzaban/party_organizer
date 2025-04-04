@@ -9,11 +9,9 @@ import (
 	"time"
 )
 
-//type JWTUserClaims struct {
-//	ID       string `json:"id"`
-//	Username string `json:"username"`
-//	jwt.RegisteredClaims
-//}
+var (
+	GetIdFromJWTFunc = getIdFromJWT // Default to real implementation
+)
 
 const ONE_DAY_IN_SECONDS = 86400
 const JWT_EXPIRATION_TIMEOUT_ENV_VAR_KEY = "JWT_EXPIRATION_TIMEOUT_KEY"
@@ -69,7 +67,7 @@ func WithClaims(subject string, additionalClaims map[string]string) (*string, er
 }
 
 // It's assumed that this is called after the jwt has been validated successfully
-func GetIdFromJWT(bearer string) (uint, error) {
+func getIdFromJWT(bearer string) (uint, error) {
 	tokenString := strings.Split(bearer, " ")
 
 	token, err := jwt.Parse(tokenString[1], ParseToken)

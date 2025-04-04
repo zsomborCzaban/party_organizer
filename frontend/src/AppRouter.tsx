@@ -1,8 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Discover from './pages/overView/discover/Discover';
 import PartiesPage from './pages/overView/partiesPage/PartiesPage';
-import Friends from './pages/overView/friends/Friends';
-import CreateParty from './pages/createParty/CreateParty';
+import { FriendsOld } from './pages/overView/friends/Friends';
 import PartyHome from './pages/visitParty/partyHome/PartyHome';
 import Contributions from './pages/visitParty/contribution/Contributions';
 import HallOfFame from './pages/visitParty/hallOfFame/HallOfFame';
@@ -15,6 +14,9 @@ import { NavigationBar } from './components/navigation-bar/NavigationBar';
 import classes from './AppRouter.module.scss';
 import { Footer } from './components/footer/Footer';
 import { RequireAuthForRoute } from './auth/RequireAuthForRoute';
+import { Parties } from './pages/party/parties/Parties';
+import { CreateParty } from './pages/party/create-party/CreateParty';
+import { Friends } from './pages/friends/Friends';
 
 export const AppRouter = () => (
   <BrowserRouter>
@@ -73,6 +75,22 @@ export const AppRouter = () => (
             <Route
               path='/visitParty/hallOfFame'
               element={<HallOfFame />}
+            />
+            <Route
+              path='/parties'
+              element={<Parties />}
+            />
+            <Route
+              path='/friends'
+              element={
+                <>
+                  <Friends /> <FriendsOld />
+                </>
+              }
+            />
+            <Route
+              path='/party/create'
+              element={<CreateParty />}
             />
           </Route>
         </Routes>

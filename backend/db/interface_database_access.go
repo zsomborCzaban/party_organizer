@@ -7,11 +7,13 @@ type IDatabaseAccess interface {
 	Update(entity interface{}) error
 	Delete(entity interface{}) error
 
-	AddToAssociation(entity interface{}, association string, associatedEntities ...interface{}) error
-	DeleteFromAssociation(entity interface{}, association string, associatedEntities ...interface{}) error
-	ClearAssociation(entity interface{}, associations ...string) error
 	BatchDelete(conds []QueryParameter) error
 	Query(conds []QueryParameter, associations ...string) (interface{}, error)
 	//AppendAssociation(entity, associatedEntity interface{}, associationName string) error
 	Many2ManyQueryId(cond Many2ManyQueryParameter, associations ...string) (interface{}, error)
+
+	ReplaceAssociations(param AssociationParameter) error
+	TransactionBegin() IDatabaseAccess
+	TransactionCommit() error
+	TransactionRollback() error
 }

@@ -2,12 +2,12 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import classes from './NavigationBar.module.scss';
 import { NavigationButton } from './navigation-button/NavigationButton';
 import { useAppSelector } from '../../store/store-helper';
-import { getUserJwt } from '../../store/sclices/UserSlice';
+import { isUserLoggedIn } from '../../store/sclices/UserSlice';
 
 export const NavigationBar = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const userJwt = useAppSelector(getUserJwt);
+  const userLoggedIn = useAppSelector(isUserLoggedIn);
 
   return (
     <nav className={classes.navBar}>
@@ -26,26 +26,32 @@ export const NavigationBar = () => {
           navigateToLink='/'
           isActive={location.pathname === '/'}
         />
-        <NavigationButton
-          buttonText='My Parties'
-          navigateToLink='/my-parties'
-          isActive={location.pathname === '/my-parties'}
-        />
-        <NavigationButton
-          buttonText='Friends'
-          navigateToLink='/friends'
-          isActive={location.pathname === '/friends'}
-        />
+        {userLoggedIn && (
+          <>
+            <NavigationButton
+              buttonText='Parties'
+              navigateToLink='/parties'
+              isActive={location.pathname === '/parties'}
+            />
+            <NavigationButton
+              buttonText='Friends'
+              navigateToLink='/friends'
+              isActive={location.pathname === '/friends'}
+            />
+          </>
+        )}
       </div>
 
       <div className={classes.rightSection}>
-        <NavigationButton
-          buttonText='Profile'
-          navigateToLink='/profile'
-          isActive={location.pathname === '/profile'}
-        />
-        {location.pathname !== '/login' && !userJwt && (
-          <button 
+        {userLoggedIn && (
+          <NavigationButton
+            buttonText='Profile'
+            navigateToLink='/profile'
+            isActive={location.pathname === '/profile'}
+          />
+        )}
+        {location.pathname !== '/login' && !userLoggedIn && (
+          <button
             className={classes.authButton}
             onClick={() => navigate('/login')}
           >

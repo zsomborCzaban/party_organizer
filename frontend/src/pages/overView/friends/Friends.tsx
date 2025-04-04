@@ -101,7 +101,7 @@ const styles: { [key: string]: CSSProperties } = {
   },
 };
 
-const Friends: React.FC = () => {
+export const FriendsOld: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const [reloadInvites, setReloadInvites] = useState(false);
@@ -313,5 +313,3 @@ const Friends: React.FC = () => {
     </div>
   );
 };
-
-export default Friends;

@@ -19,9 +19,14 @@ export const userLogin = createAsyncThunk('user/loginUser', async ({ api, userna
   return response;
 });
 
-export const userRegister = createAsyncThunk('user/register', async ({ api }: { api: Api }) => {
-  const registerResponse = await api.authApi.postRegister({});
-});
+export const userRegister = createAsyncThunk(
+  'user/register',
+  async ({ api, username, email, password, confirmPassword }: { api: Api; username: string; email: string; password: string; confirmPassword: string }) => {
+    const registerResponse = await api.authApi.postRegister({ username, email, password, confirmPassword });
+
+    return registerResponse;
+  },
+);
 
 export const userSlice = createSlice({
   name: 'user',
@@ -38,6 +43,7 @@ export const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+     // Login states
       .addCase(userLogin.pending, (state) => {
         state.isLoading = true;
       })
@@ -51,7 +57,9 @@ export const userSlice = createSlice({
       })
       .addCase(userLogin.rejected, (state) => {
         state.isLoading = false;
-      });
+      })
+     /*  .addCase() */
+      //TODO: Register states    
   },
 });
 

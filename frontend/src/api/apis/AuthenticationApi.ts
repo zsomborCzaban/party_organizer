@@ -31,7 +31,7 @@ export interface RegisterPostRequestProps {
   username: string;
   email: string;
   password: string;
-  confirm_password: string;
+  confirmPassword: string;
 }
 
 export class AuthApi {

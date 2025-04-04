@@ -20,7 +20,7 @@ func NewDrinkRequirementController(service domains.IDrinkRequirementService) dom
 	}
 }
 
-func (dc DrinkRequirementController) CreateController(w http.ResponseWriter, r *http.Request) {
+func (dc DrinkRequirementController) Create(w http.ResponseWriter, r *http.Request) {
 	var createDrinkRequirementReq domains.DrinkRequirementDTO
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&createDrinkRequirementReq)
@@ -32,7 +32,7 @@ func (dc DrinkRequirementController) CreateController(w http.ResponseWriter, r *
 		return
 	}
 
-	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err2 := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err2 != nil {
 		br := api.ErrorBadRequest(domains.BadRequest)
 
@@ -40,7 +40,7 @@ func (dc DrinkRequirementController) CreateController(w http.ResponseWriter, r *
 		return
 	}
 
-	resp := dc.DrinkRequirementService.CreateDrinkRequirement(createDrinkRequirementReq, userId)
+	resp := dc.DrinkRequirementService.Create(createDrinkRequirementReq, userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging
@@ -48,7 +48,7 @@ func (dc DrinkRequirementController) CreateController(w http.ResponseWriter, r *
 	}
 }
 
-func (dc DrinkRequirementController) GetController(w http.ResponseWriter, r *http.Request) {
+func (dc DrinkRequirementController) Get(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	drinkReqId, err := strconv.ParseUint(vars["id"], 10, 32)
 	if err != nil {
@@ -58,7 +58,7 @@ func (dc DrinkRequirementController) GetController(w http.ResponseWriter, r *htt
 		return
 	}
 
-	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err2 := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err2 != nil {
 		br := api.ErrorBadRequest(domains.BadRequest)
 
@@ -66,7 +66,7 @@ func (dc DrinkRequirementController) GetController(w http.ResponseWriter, r *htt
 		return
 	}
 
-	resp := dc.DrinkRequirementService.GetDrinkRequirement(uint(drinkReqId), userId)
+	resp := dc.DrinkRequirementService.FindById(uint(drinkReqId), userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging
@@ -74,7 +74,7 @@ func (dc DrinkRequirementController) GetController(w http.ResponseWriter, r *htt
 	}
 }
 
-func (dc DrinkRequirementController) DeleteController(w http.ResponseWriter, r *http.Request) {
+func (dc DrinkRequirementController) Delete(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	drinkReqId, err := strconv.ParseUint(vars["id"], 10, 32)
 	if err != nil {
@@ -84,7 +84,7 @@ func (dc DrinkRequirementController) DeleteController(w http.ResponseWriter, r *
 		return
 	}
 
-	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err2 := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err2 != nil {
 		br := api.ErrorBadRequest(err2.Error())
 
@@ -92,7 +92,7 @@ func (dc DrinkRequirementController) DeleteController(w http.ResponseWriter, r *
 		return
 	}
 
-	resp := dc.DrinkRequirementService.DeleteDrinkRequirement(uint(drinkReqId), userId)
+	resp := dc.DrinkRequirementService.Delete(uint(drinkReqId), userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging
@@ -100,7 +100,7 @@ func (dc DrinkRequirementController) DeleteController(w http.ResponseWriter, r *
 	}
 }
 
-func (dc DrinkRequirementController) GetByPartyIdController(w http.ResponseWriter, r *http.Request) {
+func (dc DrinkRequirementController) GetByPartyId(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	partyId, err := strconv.ParseUint(vars["party_id"], 10, 32)
 	if err != nil {
@@ -110,7 +110,7 @@ func (dc DrinkRequirementController) GetByPartyIdController(w http.ResponseWrite
 		return
 	}
 
-	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err2 := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err2 != nil {
 		br := api.ErrorBadRequest(domains.BadRequest)
 

@@ -42,26 +42,29 @@ func (m *MockDatabase) Delete(value interface{}, conds ...interface{}) error {
 	return args.Error(0)
 }
 
-func (m *MockDatabase) AddToAssociation(entity interface{}, association string, associatedEntities ...interface{}) error {
-	args := m.Called(entity, association, associatedEntities)
-	return args.Error(0)
-}
-
-func (m *MockDatabase) DeleteFromAssociation(entity interface{}, association string, associatedEntities ...interface{}) error {
-	args := m.Called(entity, association, associatedEntities)
-	return args.Error(0)
-}
-
-func (m *MockDatabase) ClearAssociation(entity interface{}, association string) error {
-	args := m.Called(entity, association)
-	return args.Error(0)
-}
-
 func (m *MockDatabase) ProcessWhereStatements(conds []QueryParameter) {
 	m.Called(conds)
 }
 
 func (m *MockDatabase) Many2ManyQueryId(dest interface{}, associations []string, cond Many2ManyQueryParameter) error {
 	args := m.Called(dest, associations, cond)
+	return args.Error(0)
+}
+
+func (m *MockDatabase) ReplaceAssociations(param AssociationParameter) error {
+	args := m.Called(param)
+	return args.Error(0)
+}
+
+func (m *MockDatabase) TransactionBegin() IDatabase {
+	args := m.Called()
+	return args.Get(0).(IDatabase)
+}
+func (m *MockDatabase) TransactionCommit() error {
+	args := m.Called()
+	return args.Error(0)
+}
+func (m *MockDatabase) TransactionRollback() error {
+	args := m.Called()
 	return args.Error(0)
 }

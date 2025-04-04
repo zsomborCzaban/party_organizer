@@ -27,7 +27,7 @@ func (fc FriendInviteController) Accept(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err2 := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err2 != nil {
 		br := api.ErrorBadRequest(err2.Error())
 
@@ -53,7 +53,7 @@ func (fc FriendInviteController) Decline(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err2 := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err2 != nil {
 		br := api.ErrorBadRequest(err2.Error())
 
@@ -79,7 +79,7 @@ func (fc FriendInviteController) Invite(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	userId, err2 := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err2 := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err2 != nil {
 		br := api.ErrorBadRequest(err2.Error())
 
@@ -96,7 +96,7 @@ func (fc FriendInviteController) Invite(w http.ResponseWriter, r *http.Request) 
 }
 
 func (fc FriendInviteController) GetPendingInvites(w http.ResponseWriter, r *http.Request) {
-	userId, err := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err != nil {
 		br := api.ErrorBadRequest(err.Error())
 
@@ -122,7 +122,7 @@ func (fc FriendInviteController) RemoveFriend(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	userId, err := jwt.GetIdFromJWT(r.Header.Get("Authorization"))
+	userId, err := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
 	if err != nil {
 		br := api.ErrorBadRequest(err.Error())
 

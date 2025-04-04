@@ -10,7 +10,7 @@ func NewUserAuthRouter(router *mux.Router, controller domains.IUserController) {
 	router.HandleFunc("/register", controller.RegisterController).Methods("POST")
 }
 
-func NewUserRouter(router *mux.Router, controller domains.IUserController) {
+func NewUserPublicRouter(router *mux.Router, controller domains.IUserController) {
 	router.HandleFunc("/user/getFriends", controller.GetFriendsController).Methods("GET")
 	router.HandleFunc("/user/uploadProfilePicture", controller.UploadProfilePicture).Methods("POST")
 
