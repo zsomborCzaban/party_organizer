@@ -21,6 +21,7 @@ type PartyDTO struct {
 	Participants      []domains.User `json:"participants"`
 }
 
+// todo: refactor this to usecases, bc Organiter and accessCode is set dynamicly, after this function call. which is bad practice and counts as buisness logic
 func (p *PartyDTO) TransformToParty() *Party {
 	return &Party{
 		Model:             gorm.Model{ID: p.ID},

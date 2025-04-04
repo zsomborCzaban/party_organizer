@@ -9,6 +9,7 @@ import (
 	"github.com/zsomborCzaban/party_organizer/services/user/domains"
 	"github.com/zsomborCzaban/party_organizer/utils/api"
 	"github.com/zsomborCzaban/party_organizer/utils/repo"
+	s3Wrapper "github.com/zsomborCzaban/party_organizer/utils/s3"
 	"mime/multipart"
 	"net/http"
 	"os"
@@ -16,16 +17,16 @@ import (
 )
 
 type UserService struct {
-	Validator      api.IValidator
-	UserRepository domains.IUserRepository
-	S3Client       *s3.Client
+	Validator       api.IValidator
+	UserRepository  domains.IUserRepository
+	S3ClientWrapper s3Wrapper.IS3ClientWrapper
 }
 
-func NewUserService(repoCollector *repo.RepoCollector, validator api.IValidator, s3 *s3.Client) *UserService {
+func NewUserService(repoCollector *repo.RepoCollector, validator api.IValidator, s3Wrapper s3Wrapper.IS3ClientWrapper) *UserService {
 	return &UserService{
-		UserRepository: *repoCollector.UserRepo,
-		Validator:      validator,
-		S3Client:       s3,
+		UserRepository:  repoCollector.UserRepo,
+		Validator:       validator,
+		S3ClientWrapper: s3Wrapper,
 	}
 }
 
@@ -60,8 +61,8 @@ func (us *UserService) Register(registerRequest domains.RegisterRequest) api.IRe
 		return api.ErrorValidation(err1.Errors)
 	}
 
-	duplicateUser, err2 := us.UserRepository.FindByUsername(registerRequest.Username)
-	if duplicateUser != nil {
+	_, err2 := us.UserRepository.FindByUsername(registerRequest.Username)
+	if err2 == nil {
 		errorUserAlreadyExists := api.NewValidationErrors()
 		errorUserAlreadyExists.CollectValidationError("username", "username already taken", registerRequest.Username)
 		return api.Error(http.StatusBadRequest, errorUserAlreadyExists.Errors)
@@ -144,7 +145,7 @@ func (us *UserService) UploadProfilePicture(userId uint, file multipart.File, fi
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	_, err3 := us.S3Client.PutObject(ctx, &s3.PutObjectInput{
+	_, err3 := us.S3ClientWrapper.PutObject(ctx, &s3.PutObjectInput{
 		Bucket:      aws.String(bucketName),
 		Key:         aws.String(key),
 		Body:        bytes.NewReader(buffer),

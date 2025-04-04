@@ -3,8 +3,8 @@ package domains
 import "net/http"
 
 type IDrinkRequirementController interface {
-	CreateController(http.ResponseWriter, *http.Request)
-	GetController(http.ResponseWriter, *http.Request)
-	DeleteController(http.ResponseWriter, *http.Request)
-	GetByPartyIdController(http.ResponseWriter, *http.Request)
+	Create(http.ResponseWriter, *http.Request)
+	Get(http.ResponseWriter, *http.Request)
+	Delete(http.ResponseWriter, *http.Request)
+	GetByPartyId(http.ResponseWriter, *http.Request)
 }

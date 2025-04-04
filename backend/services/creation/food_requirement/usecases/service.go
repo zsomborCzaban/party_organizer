@@ -18,13 +18,13 @@ type FoodRequirementService struct {
 func NewFoodRequirementService(repoCollector *repo.RepoCollector, validator api.IValidator) domains.IFoodRequirementService {
 	return &FoodRequirementService{
 		Validator:                  validator,
-		FoodRequirementRepository:  *repoCollector.FoodReqReqRepo,
-		PartyRepository:            *repoCollector.PartyRepo,
-		FoodContributionRepository: *repoCollector.FoodContribRepo,
+		FoodRequirementRepository:  repoCollector.FoodReqRepo,
+		PartyRepository:            repoCollector.PartyRepo,
+		FoodContributionRepository: repoCollector.FoodContribRepo,
 	}
 }
 
-func (fs FoodRequirementService) CreateFoodRequirement(foodRequirementDTO domains.FoodRequirementDTO, userId uint) api.IResponse {
+func (fs FoodRequirementService) Create(foodRequirementDTO domains.FoodRequirementDTO, userId uint) api.IResponse {
 	err := fs.Validator.Validate(foodRequirementDTO)
 	if err != nil {
 		return api.ErrorValidation(err)
@@ -34,42 +34,42 @@ func (fs FoodRequirementService) CreateFoodRequirement(foodRequirementDTO domain
 
 	party, err2 := fs.PartyRepository.FindById(foodRequirement.PartyID, partyDomains.FullPartyPreload...)
 	if err2 != nil {
-		return api.ErrorBadRequest("partyId does not exists")
+		return api.ErrorBadRequest(domains.PartyNotFound)
 	}
 
 	if !party.CanBeOrganizedBy(userId) {
-		return api.ErrorUnauthorized("cannot create foodRequirement for other people's party")
+		return api.ErrorUnauthorized(domains.NoOrganizerAccess)
 	}
 
-	err3 := fs.FoodRequirementRepository.CreateFoodRequirement(foodRequirement)
+	err3 := fs.FoodRequirementRepository.Create(foodRequirement)
 	if err3 != nil {
-		return api.ErrorInternalServerError(err)
+		return api.ErrorInternalServerError(err3.Error())
 	}
 
 	return api.Success(foodRequirement)
 }
 
-func (fs FoodRequirementService) GetFoodRequirement(foodReqId, userId uint) api.IResponse {
+func (fs FoodRequirementService) FindById(foodReqId, userId uint) api.IResponse {
 	foodRequirement, err := fs.FoodRequirementRepository.FindById(foodReqId, partyDomains.FullPartyNestedPreload...)
 	if err != nil {
-		return api.ErrorInternalServerError(err)
+		return api.ErrorBadRequest(domains.RequirementNotFound)
 	}
 
 	if !foodRequirement.Party.CanBeAccessedBy(userId) {
-		return api.ErrorUnauthorized("you are not in the party")
+		return api.ErrorUnauthorized(domains.NoViewAccess)
 	}
 
 	return api.Success(foodRequirement)
 }
 
-func (fs FoodRequirementService) DeleteFoodRequirement(foodReqId, userId uint) api.IResponse {
+func (fs FoodRequirementService) Delete(foodReqId, userId uint) api.IResponse {
 	foodRequirement, err := fs.FoodRequirementRepository.FindById(foodReqId, "Party", "Party.Organizer")
 	if err != nil {
-		return api.ErrorBadRequest(err.Error())
+		return api.ErrorBadRequest(domains.RequirementNotFound)
 	}
 
 	if !foodRequirement.Party.CanBeOrganizedBy(userId) {
-		return api.ErrorUnauthorized(domains.UNAUTHORIZED)
+		return api.ErrorUnauthorized(domains.NoOrganizerAccess)
 	}
 
 	//todo: put this in transaction
@@ -77,9 +77,9 @@ func (fs FoodRequirementService) DeleteFoodRequirement(foodReqId, userId uint) a
 		return api.ErrorInternalServerError(err2.Error())
 	}
 
-	err3 := fs.FoodRequirementRepository.DeleteFoodRequirement(foodRequirement)
+	err3 := fs.FoodRequirementRepository.Delete(foodRequirement)
 	if err3 != nil {
-		return api.ErrorInternalServerError(err3)
+		return api.ErrorInternalServerError(err3.Error())
 	}
 	return api.Success("delete_success")
 }
@@ -87,16 +87,16 @@ func (fs FoodRequirementService) DeleteFoodRequirement(foodReqId, userId uint) a
 func (fs FoodRequirementService) GetByPartyId(partyId, userId uint) api.IResponse {
 	party, err := fs.PartyRepository.FindById(partyId, partyDomains.FullPartyPreload...)
 	if err != nil {
-		return api.ErrorBadRequest("party not found")
+		return api.ErrorBadRequest(domains.PartyNotFound)
 	}
 
 	if !party.CanBeAccessedBy(userId) {
-		return api.ErrorUnauthorized("you are not in the party")
+		return api.ErrorUnauthorized(domains.NoViewAccess)
 	}
 
 	foodReqs, err3 := fs.FoodRequirementRepository.GetByPartyId(partyId)
 	if err3 != nil {
-		return api.ErrorInternalServerError(err3)
+		return api.ErrorInternalServerError(err3.Error())
 	}
 
 	return api.Success(foodReqs)

@@ -22,11 +22,11 @@ type PartyInviteService struct {
 
 func NewPartyInviteService(repoCollector *repo.RepoCollector) domains.IPartyInviteService {
 	return &PartyInviteService{
-		PartyInviteRepository:       *repoCollector.PartyInviteRepo,
-		UserRepository:              *repoCollector.UserRepo,
-		PartyRepository:             *repoCollector.PartyRepo,
-		FoodContributionRepository:  *repoCollector.FoodContribRepo,
-		DrinkContributionRepository: *repoCollector.DrinkContribRepo,
+		PartyInviteRepository:       repoCollector.PartyInviteRepo,
+		UserRepository:              repoCollector.UserRepo,
+		PartyRepository:             repoCollector.PartyRepo,
+		FoodContributionRepository:  repoCollector.FoodContribRepo,
+		DrinkContributionRepository: repoCollector.DrinkContribRepo,
 	}
 }
 

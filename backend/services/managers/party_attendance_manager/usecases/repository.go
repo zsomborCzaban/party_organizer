@@ -50,7 +50,7 @@ func (pr PartyInviteRepository) FindByIds(invitedId, partyId uint) (*domains.Par
 
 	fetchedInvites, fetchedError := pr.DbAccess.Query(queryParams, domains.FullPartyInvitePreload...)
 	if fetchedError != nil {
-		return nil, errors.New("error, unexpected error while querying PartyInvite table")
+		return nil, errors.New(domains.FETCH_ERROR)
 	}
 
 	invites, err := fetchedInvites.(*[]domains.PartyInvite)
@@ -59,7 +59,7 @@ func (pr PartyInviteRepository) FindByIds(invitedId, partyId uint) (*domains.Par
 	}
 
 	if len(*invites) > 1 {
-		return nil, errors.New("invalid datbase state, more than 1 invites found")
+		return nil, errors.New(domains.INVALID_DATABASE_STATE)
 	}
 
 	if len(*invites) == 0 {

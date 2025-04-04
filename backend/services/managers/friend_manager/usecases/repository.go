@@ -41,17 +41,17 @@ func (fr FriendInviteRepository) FindByIds(invitorId, invitedId uint) (*domains.
 
 	fetchedInvites, fetchedError := fr.DbAccess.Query(queryParams, "Invited", "Invitor")
 	if fetchedError != nil {
-		return nil, errors.New("error, unexpected error while querying FriendInvite table")
+		return nil, errors.New(domains.NOT_FOUND)
 	}
 
-	//possible is database state is invalid and more than 1 invite is found
+	//possible if database state is invalid and more than 1 invite is found
 	invites, err := fetchedInvites.(*[]domains.FriendInvite)
 	if !err {
 		return nil, errors.New(domains.FAILED_PARSE_TO_ARRAY)
 	}
 
 	if len(*invites) > 1 {
-		return nil, errors.New("invalid datbase state, more than 1 invites found")
+		return nil, errors.New(domains.INVALID_DATABASE_STATE)
 	}
 
 	if len(*invites) == 0 {
@@ -69,7 +69,7 @@ func (fr FriendInviteRepository) FindPendingByInvitedId(invitedId uint) (*[]doma
 		{Field: "invited_id", Operator: "=", Value: invitedId},
 	}
 
-	fetchedInvites, fetchedError := fr.DbAccess.Query(queryParams, "Invitor", "Invited")
+	fetchedInvites, fetchedError := fr.DbAccess.Query(queryParams, "Invited", "Invitor")
 	if fetchedError != nil {
 		return nil, fetchedError
 	}

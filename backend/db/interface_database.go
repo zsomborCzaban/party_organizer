@@ -11,9 +11,11 @@ type IDatabase interface {
 	Update(entity interface{}) error
 	Delete(entity interface{}) error
 
-	AddToAssociation(entity interface{}, association string, associatedEntities ...interface{}) error
-	DeleteFromAssociation(entity interface{}, association string, associatedEntities ...interface{}) error
-	ClearAssociation(entity interface{}, association string) error
 	ProcessWhereStatements(conds []QueryParameter)
 	Many2ManyQueryId(dest interface{}, associations []string, cond Many2ManyQueryParameter) error
+	ReplaceAssociations(param AssociationParameter) error
+
+	TransactionBegin() IDatabase
+	TransactionCommit() error
+	TransactionRollback() error
 }

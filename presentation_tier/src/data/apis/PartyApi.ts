@@ -4,6 +4,7 @@ import {User} from '../types/User';
 import {getApiUrl} from '../../api/ApiHelper';
 
 const PARTY_PATH =  `${getApiUrl()  }/party`;
+const PUBLIC_PARTY_PATH = `${getApiUrl()  }/publicParties`;
 
 
 export const createParty = async (requestBody: Party): Promise<Party> => new Promise<Party>((resolve, reject) => {
@@ -19,7 +20,7 @@ export const updateParty = async (requestBody: Party): Promise<Party> => new Pro
     });
 
 export const getPublicParties = async (): Promise<Party[]> => new Promise<Party[]>((resolve, reject) => {
-        get<Party[]>(`${PARTY_PATH  }/getPublicParties`)
+        get<Party[]>(`${PUBLIC_PARTY_PATH  }`)
             .then((parties: Party[]) => resolve(parties))
             .catch((err) => reject(err));
     });

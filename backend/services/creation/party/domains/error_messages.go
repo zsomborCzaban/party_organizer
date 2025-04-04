@@ -7,4 +7,5 @@ const (
 	InternalServerError = "internal server error"
 	InvalidCredentials  = "invalid or insufficient credentials"
 	DeletedUser         = "unable to find organizer, maybe the account is deleted"
+	NoAccessToParty     = "you cannot access this party"
 )
