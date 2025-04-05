@@ -24,6 +24,8 @@ import (
 	friendInvitationUsecases "github.com/zsomborCzaban/party_organizer/services/managers/friend_manager/usecases"
 	partyInvitationInterfaces "github.com/zsomborCzaban/party_organizer/services/managers/party_attendance_manager/interfaces"
 	partyInvitationUsecases "github.com/zsomborCzaban/party_organizer/services/managers/party_attendance_manager/usecases"
+	registrationInterfaces "github.com/zsomborCzaban/party_organizer/services/users/registration/interfaces"
+	registrationUsecases "github.com/zsomborCzaban/party_organizer/services/users/registration/usecases"
 	"github.com/zsomborCzaban/party_organizer/services/users/user/interfaces"
 	"github.com/zsomborCzaban/party_organizer/services/users/user/usecases"
 	"github.com/zsomborCzaban/party_organizer/utils/api"
@@ -48,6 +50,7 @@ func SetupRoutes(router *mux.Router, dbAccessManager db.IDatabaseAccessManager) 
 	foodContributionRepo := foodContributionUsecases.NewFoodContributionRepository(dbAccessManager)
 	partyInviteRepo := partyInvitationUsecases.NewPartyInviteRepository(dbAccessManager)
 	friendInviteRepo := friendInvitationUsecases.NewFriendInviteRepository(dbAccessManager)
+	registrationRepo := registrationUsecases.NewRegistrationRepository(dbAccessManager)
 
 	repoCollector := repo.NewRepoCollector(
 		&partyRepo,
@@ -58,6 +61,7 @@ func SetupRoutes(router *mux.Router, dbAccessManager db.IDatabaseAccessManager) 
 		&foodContributionRepo,
 		&partyInviteRepo,
 		&friendInviteRepo,
+		&registrationRepo,
 	)
 
 	partyService := partyUsecases.NewPartyService(repoCollector, vali)
@@ -68,6 +72,7 @@ func SetupRoutes(router *mux.Router, dbAccessManager db.IDatabaseAccessManager) 
 	partyInviteService := partyInvitationUsecases.NewPartyInviteService(repoCollector)
 	drinkContributionService := drinkContributionUsecases.NewDrinkContributionService(repoCollector, vali)
 	foodContributionService := foodContributionUsecases.NewFoodContributionService(repoCollector, vali)
+	registrationService := registrationUsecases.NewRegistrationService(repoCollector, vali)
 
 	partyController := partyInterfaces.NewController(partyService)
 	userController := interfaces.NewUserController(userService)
@@ -77,6 +82,7 @@ func SetupRoutes(router *mux.Router, dbAccessManager db.IDatabaseAccessManager) 
 	partyInviteController := partyInvitationInterfaces.NewPartyInviteController(partyInviteService)
 	drinkContributionController := drinkContributionInterfaces.NewDrinkContributionController(drinkContributionService)
 	foodContributionController := foodContributionInterfaces.NewFoodContributionController(foodContributionService)
+	registrationController := registrationInterfaces.NewRegistrationController(registrationService)
 
 	partyInterfaces.NewPublicPartyRouter(router.PathPrefix("/api/v1").Subrouter(), partyController)
 	partyInterfaces.NewPartyRouter(apiRouter, partyController)
@@ -88,6 +94,7 @@ func SetupRoutes(router *mux.Router, dbAccessManager db.IDatabaseAccessManager) 
 	partyInvitationInterfaces.NewRouter(apiRouter, partyInviteController)
 	drinkContributionInterfaces.NewRouter(apiRouter, drinkContributionController)
 	foodContributionInterfaces.NewRouter(apiRouter, foodContributionController)
+	registrationInterfaces.NewRegistrationRouter(router.PathPrefix("/api/v1").Subrouter(), registrationController)
 
 	return router
 }

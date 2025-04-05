@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-var checkEnvKeyOnSetup = []string{common.JWT_SINGING_KEY_ENV_KEY, common.AWS_ACCESS_KEY_ID_ENV_KEY, common.AWS_SECRET_ACCESS_KEY_ENV_KEY, common.AWS_REGION_ENV_KEY, common.AWS_BUCKET_NAME_ENV_KEY}
+var checkEnvKeyOnSetup = []string{common.JWT_SINGING_KEY_ENV_KEY, common.AWS_ACCESS_KEY_ID_ENV_KEY, common.AWS_SECRET_ACCESS_KEY_ENV_KEY, common.AWS_REGION_ENV_KEY, common.AWS_BUCKET_NAME_ENV_KEY, common.EMAIL_USERNAME_ENV_KEY, common.EMAIL_PASSWORD_ENV_KEY, common.EMAIL_FULL_ENV_KEY}
 
 func LoadEnvVariables() {
 	if err := godotenv.Load(); err != nil {

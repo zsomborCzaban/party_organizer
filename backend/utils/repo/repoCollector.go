@@ -8,6 +8,7 @@ import (
 	domains6 "github.com/zsomborCzaban/party_organizer/services/interaction/food_contributions/domains"
 	domains8 "github.com/zsomborCzaban/party_organizer/services/managers/friend_manager/domains"
 	domains7 "github.com/zsomborCzaban/party_organizer/services/managers/party_attendance_manager/domains"
+	domains9 "github.com/zsomborCzaban/party_organizer/services/users/registration/domains"
 	domains2 "github.com/zsomborCzaban/party_organizer/services/users/user/domains"
 )
 
@@ -21,6 +22,7 @@ type RepoCollector struct {
 	FoodContribRepo  domains6.IFoodContributionRepository
 	PartyInviteRepo  domains7.IPartyInviteRepository
 	FriendInviteRepo domains8.IFriendInviteRepository
+	RegistrationRepo domains9.IRegistrationRepository
 }
 
 func NewRepoCollector(
@@ -32,6 +34,7 @@ func NewRepoCollector(
 	foodContribRepo *domains6.IFoodContributionRepository,
 	partyInviteRepo *domains7.IPartyInviteRepository,
 	friendInviteRepo *domains8.IFriendInviteRepository,
+	registrationRepo *domains9.IRegistrationRepository,
 ) *RepoCollector {
 	return &RepoCollector{
 		PartyRepo:        *partyRepo,
@@ -42,5 +45,6 @@ func NewRepoCollector(
 		FoodContribRepo:  *foodContribRepo,
 		PartyInviteRepo:  *partyInviteRepo,
 		FriendInviteRepo: *friendInviteRepo,
+		RegistrationRepo: *registrationRepo,
 	}
 }

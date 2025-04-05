@@ -7,7 +7,7 @@ import (
 
 func NewUserAuthRouter(router *mux.Router, controller domains.IUserController) {
 	router.HandleFunc("/login", controller.LoginController).Methods("POST")
-	router.HandleFunc("/register", controller.RegisterController).Methods("POST")
+	//router.HandleFunc("/register", controller.RegisterController).Methods("POST")
 }
 
 func NewUserPrivateRouter(router *mux.Router, controller domains.IUserController) {

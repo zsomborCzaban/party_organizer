@@ -1,0 +1,11 @@
+package interfaces
+
+import (
+	"github.com/gorilla/mux"
+	"github.com/zsomborCzaban/party_organizer/services/users/registration/domains"
+)
+
+func NewRegistrationRouter(router *mux.Router, controller domains.IRegistrationController) {
+	router.HandleFunc("/register", controller.Register).Methods("POST")
+	router.HandleFunc("/confirmEmail", controller.ConfirmEmail).Methods("GET")
+}
