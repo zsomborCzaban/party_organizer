@@ -1,6 +1,8 @@
 package domains
 
-import userDomain "github.com/zsomborCzaban/party_organizer/services/user/domains"
+import (
+	userDomain "github.com/zsomborCzaban/party_organizer/services/users/user/domains"
+)
 
 type IPartyRepository interface {
 	GetPartiesByOrganizerId(uint) (*[]Party, error)

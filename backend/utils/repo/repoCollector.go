@@ -8,7 +8,7 @@ import (
 	domains6 "github.com/zsomborCzaban/party_organizer/services/interaction/food_contributions/domains"
 	domains8 "github.com/zsomborCzaban/party_organizer/services/managers/friend_manager/domains"
 	domains7 "github.com/zsomborCzaban/party_organizer/services/managers/party_attendance_manager/domains"
-	domains2 "github.com/zsomborCzaban/party_organizer/services/user/domains"
+	domains2 "github.com/zsomborCzaban/party_organizer/services/users/user/domains"
 )
 
 // we could use a map for the repositories so it would be dynamic

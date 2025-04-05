@@ -2,7 +2,7 @@ package interfaces
 
 import (
 	"github.com/gorilla/mux"
-	"github.com/zsomborCzaban/party_organizer/services/user/domains"
+	"github.com/zsomborCzaban/party_organizer/services/users/user/domains"
 )
 
 func NewUserAuthRouter(router *mux.Router, controller domains.IUserController) {
@@ -10,7 +10,7 @@ func NewUserAuthRouter(router *mux.Router, controller domains.IUserController) {
 	router.HandleFunc("/register", controller.RegisterController).Methods("POST")
 }
 
-func NewUserPublicRouter(router *mux.Router, controller domains.IUserController) {
+func NewUserPrivateRouter(router *mux.Router, controller domains.IUserController) {
 	router.HandleFunc("/user/getFriends", controller.GetFriendsController).Methods("GET")
 	router.HandleFunc("/user/uploadProfilePicture", controller.UploadProfilePicture).Methods("POST")
 
