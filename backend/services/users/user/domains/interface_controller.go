@@ -4,8 +4,10 @@ import "net/http"
 
 type IUserController interface {
 	LoginController(w http.ResponseWriter, r *http.Request)
-	RegisterController(w http.ResponseWriter, r *http.Request)
 	AddFriendController(w http.ResponseWriter, r *http.Request)
 	GetFriendsController(w http.ResponseWriter, r *http.Request)
 	UploadProfilePicture(w http.ResponseWriter, r *http.Request)
+
+	ForgotPassword(w http.ResponseWriter, r *http.Request)
+	ChangePassword(w http.ResponseWriter, r *http.Request)
 }

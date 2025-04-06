@@ -1,7 +1,9 @@
 package domains
 
 import (
+	"github.com/zsomborCzaban/party_organizer/utils/jwt"
 	"gorm.io/gorm"
+	"strconv"
 )
 
 type User struct {
@@ -33,4 +35,15 @@ func (u *User) HasFriend(friendId uint) bool {
 		}
 	}
 	return false
+}
+
+func (u *User) GenerateJWT() (*string, error) {
+	idString := strconv.FormatUint(uint64(u.ID), 10)
+
+	return jwt.WithClaims(idString, map[string]string{
+		"email":             u.Email,
+		"username":          u.Username,
+		"id":                idString,
+		"profilePictureUrl": u.ProfilePictureUrl,
+	})
 }

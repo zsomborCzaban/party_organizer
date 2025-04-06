@@ -1,9 +1,7 @@
 package domains
 
 import (
-	"github.com/zsomborCzaban/party_organizer/utils/jwt"
 	"gorm.io/gorm"
-	"strconv"
 )
 
 type UserDTO struct {
@@ -24,15 +22,4 @@ func (u *UserDTO) TransformToUser() *User {
 		Friends:           u.Friends,
 		//OrganizedParties: u.OrganizedParties,
 	}
-}
-
-func (u *UserDTO) GenerateJWT() (*string, error) {
-	idString := strconv.FormatUint(uint64(u.ID), 10)
-
-	return jwt.WithClaims(idString, map[string]string{
-		"email":             u.Email,
-		"username":          u.Username,
-		"id":                idString,
-		"profilePictureUrl": u.ProfilePictureUrl,
-	})
 }

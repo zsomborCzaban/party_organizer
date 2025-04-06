@@ -6,10 +6,12 @@ import (
 	"fmt"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
-	domains2 "github.com/zsomborCzaban/party_organizer/services/users/user/domains"
+	"github.com/zsomborCzaban/party_organizer/common"
+	"github.com/zsomborCzaban/party_organizer/services/users/user/domains"
 	"github.com/zsomborCzaban/party_organizer/utils/api"
 	"github.com/zsomborCzaban/party_organizer/utils/repo"
 	s3Wrapper "github.com/zsomborCzaban/party_organizer/utils/s3"
+	"gopkg.in/gomail.v2"
 	"mime/multipart"
 	"net/http"
 	"os"
@@ -18,7 +20,7 @@ import (
 
 type UserService struct {
 	Validator       api.IValidator
-	UserRepository  domains2.IUserRepository
+	UserRepository  domains.IUserRepository
 	S3ClientWrapper s3Wrapper.IS3ClientWrapper
 }
 
@@ -30,7 +32,7 @@ func NewUserService(repoCollector *repo.RepoCollector, validator api.IValidator,
 	}
 }
 
-func (us *UserService) Login(loginRequest domains2.LoginRequest) api.IResponse {
+func (us *UserService) Login(loginRequest domains.LoginRequest) api.IResponse {
 	if err1 := us.Validator.Validate(loginRequest); err1 != nil {
 		return api.ErrorValidation(err1.Errors)
 	}
@@ -44,19 +46,17 @@ func (us *UserService) Login(loginRequest domains2.LoginRequest) api.IResponse {
 		return api.ErrorInvalidCredentials()
 	}
 
-	userDTO := user.TransformToUserDTO()
-
-	jwt, err3 := userDTO.GenerateJWT()
+	jwt, err3 := user.GenerateJWT()
 	if err3 != nil {
 		return api.ErrorBadRequest("error while generating jwt")
 	}
 
 	return api.Success(
-		domains2.JWTData{Jwt: *jwt},
+		domains.JWTData{Jwt: *jwt},
 	)
 }
 
-func (us *UserService) Register(registerRequest domains2.RegisterRequest) api.IResponse {
+func (us *UserService) Register(registerRequest domains.RegisterRequest) api.IResponse {
 	if err1 := us.Validator.Validate(registerRequest); err1 != nil {
 		return api.ErrorValidation(err1.Errors)
 	}
@@ -67,7 +67,7 @@ func (us *UserService) Register(registerRequest domains2.RegisterRequest) api.IR
 		errorUserAlreadyExists.CollectValidationError("username", "username already taken", registerRequest.Username)
 		return api.Error(http.StatusBadRequest, errorUserAlreadyExists.Errors)
 	}
-	if err2.Error() != domains2.UserNotFound+registerRequest.Username {
+	if err2.Error() != domains.UserNotFound+registerRequest.Username {
 		return api.ErrorInternalServerError(err2.Error())
 	}
 
@@ -112,7 +112,7 @@ func (us *UserService) GetFriends(userId uint) api.IResponse {
 		return api.ErrorInternalServerError(err)
 	}
 
-	friendDTOs := []domains2.UserDTO{}
+	friendDTOs := []domains.UserDTO{}
 	for _, friend := range user.Friends {
 		friendDTOs = append(friendDTOs, *friend.TransformToUserDTO())
 	}
@@ -162,4 +162,38 @@ func (us *UserService) UploadProfilePicture(userId uint, file multipart.File, fi
 	}
 
 	return api.Success(user.TransformToUserDTO())
+}
+
+func (us *UserService) ForgotPassword(username string) api.IResponse {
+	user, err := us.UserRepository.FindByUsername(username)
+	if err != nil {
+		return api.ErrorBadRequest(err.Error())
+	}
+
+	jwt, err2 := user.GenerateJWT()
+	if err2 != nil {
+		return api.ErrorBadRequest("error while generating jwt")
+	}
+
+	emailUsername := os.Getenv(common.EMAIL_USERNAME_ENV_KEY)
+	emailPassword := os.Getenv(common.EMAIL_PASSWORD_ENV_KEY)
+	emailFull := os.Getenv(common.EMAIL_FULL_ENV_KEY)
+
+	m := gomail.NewMessage()
+	m.SetHeader("From", emailFull)
+	m.SetHeader("To", user.Email)
+	m.SetHeader("Subject", "Hello!") //todo: write email body
+	m.SetBody("text/plain", "This is the email body, use this token to login and change your password: "+*jwt)
+
+	d := gomail.NewDialer("smtp.gmail.com", 587, emailUsername, emailPassword)
+
+	if err3 := d.DialAndSend(m); err3 != nil {
+		return api.ErrorInternalServerError(err3.Error())
+	}
+	return api.Success("Check your emails to change your password")
+}
+
+func (us *UserService) ChangePassword(req domains.ChangePasswordRequest) api.IResponse {
+	//todo: implement me
+	return nil
 }
