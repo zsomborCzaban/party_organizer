@@ -5,6 +5,7 @@ import (
 	"github.com/zsomborCzaban/party_organizer/services/users/registration/domains"
 	domains2 "github.com/zsomborCzaban/party_organizer/services/users/user/domains"
 	"github.com/zsomborCzaban/party_organizer/utils/api"
+	"github.com/zsomborCzaban/party_organizer/utils/random"
 	"github.com/zsomborCzaban/party_organizer/utils/repo"
 	"gopkg.in/gomail.v2"
 	"net/http"
@@ -54,10 +55,10 @@ func (rs *RegistrationService) Register(registrationRequest domains.Registration
 		return api.ErrorInternalServerError(err3.Error())
 	}
 
+	registrationRequest.ConfirmHash = random.GenerateRandomString(64)
 	if err4 := rs.RegistrationRepository.Create(&registrationRequest); err4 != nil {
 		return api.ErrorInternalServerError(err4.Error())
 	}
-	//todo: create confirm hash
 
 	resp := rs.SendConfirmEmail(registrationRequest)
 	if resp.GetCode() != http.StatusOK {
@@ -85,6 +86,32 @@ func (rs *RegistrationService) SendConfirmEmail(registerRequest domains.Registra
 	return api.Success("Registration success. To finish, confirm your email")
 }
 
-func (rs *RegistrationService) ConfirmEmail() api.IResponse {
-	return nil
+func (rs *RegistrationService) ConfirmEmail(username, confirmHash string) api.IResponse {
+	_, err := rs.UserRepository.FindByUsername(username)
+	if err == nil {
+		return api.ErrorBadRequest("Email already confirmed. try logging in!")
+	}
+	if err.Error() != domains.UserNotFound+username {
+		return api.ErrorInternalServerError(err.Error())
+	}
+
+	reg, err2 := rs.RegistrationRepository.FindByUsername(username)
+	if err2 != nil {
+		return api.ErrorBadRequest(err2.Error())
+	}
+	if reg.ConfirmHash != confirmHash {
+		return api.ErrorBadRequest("Invalid confirm hash")
+	}
+
+	user, err3 := reg.TransformToUser()
+	if err3 != nil {
+		return api.ErrorInternalServerError(err3.Error())
+	}
+
+	err4 := rs.UserRepository.CreateUser(user)
+	if err4 != nil {
+		return api.ErrorInternalServerError(err4.Error())
+	}
+
+	return api.Success("Email confirmed")
 }
