@@ -47,3 +47,12 @@ func (u *User) GenerateJWT() (*string, error) {
 		"profilePictureUrl": u.ProfilePictureUrl,
 	})
 }
+
+func (u *User) GenerateJWTForPasswordChange() (*string, error) {
+	idString := strconv.FormatUint(uint64(u.ID), 10)
+
+	return jwt.WithClaims(idString, map[string]string{
+		"id":                idString,
+		"canChangePassword": "allowed",
+	})
+}

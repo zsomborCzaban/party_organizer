@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	GetIdFromJWTFunc = getIdFromJWT // Default to real implementation
+	GetIdFromJWTFunc = GetIdFromJWT // Default to real implementation
 )
 
 const ONE_DAY_IN_SECONDS = 86400
@@ -69,7 +69,7 @@ func WithClaims(subject string, additionalClaims map[string]string) (*string, er
 }
 
 // It's assumed that this is called after the jwt has been validated successfully
-func getIdFromJWT(bearer string) (uint, error) {
+func GetIdFromJWT(bearer string) (uint, error) {
 	tokenString := strings.Split(bearer, " ")
 
 	token, err := jwt.Parse(tokenString[1], ParseToken)
@@ -88,4 +88,29 @@ func getIdFromJWT(bearer string) (uint, error) {
 	}
 
 	return uint(idUint64), nil
+}
+
+func GetCanChangePasswordFromJWT(bearer string) (bool, error) {
+	tokenString := strings.Split(bearer, " ")
+
+	token, err := jwt.Parse(tokenString[1], ParseToken)
+	if err != nil || !token.Valid {
+		return false, errors.New("Error while parsing jwt")
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return false, errors.New("Error while parsing the claims of jwt")
+	}
+
+	canChangeString, ok := claims["canChangePassword"].(string)
+	if !ok {
+		return false, nil
+	}
+
+	if canChangeString != "allowed" {
+		return false, nil
+	}
+
+	return true, nil
 }

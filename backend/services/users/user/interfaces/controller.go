@@ -140,7 +140,29 @@ func (uc *UserController) ChangePassword(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	resp := uc.UserService.ChangePassword(resetReq)
+	userId, err := jwt.GetIdFromJWTFunc(r.Header.Get("Authorization"))
+	if err != nil {
+		br := api.ErrorBadRequest(err.Error())
+
+		br.Send(w)
+		return
+	}
+
+	isAuthorized, err := jwt.GetCanChangePasswordFromJWT(r.Header.Get("Authorization"))
+	if err != nil {
+		br := api.ErrorBadRequest(err.Error())
+
+		br.Send(w)
+		return
+	}
+	if !isAuthorized {
+		br := api.ErrorUnauthorized("Not authorized to change password. Follow the link in you emails")
+
+		br.Send(w)
+		return
+	}
+
+	resp := uc.UserService.ChangePassword(resetReq, userId)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		return

@@ -170,7 +170,7 @@ func (us *UserService) ForgotPassword(username string) api.IResponse {
 		return api.ErrorBadRequest(err.Error())
 	}
 
-	jwt, err2 := user.GenerateJWT()
+	jwt, err2 := user.GenerateJWTForPasswordChange()
 	if err2 != nil {
 		return api.ErrorBadRequest("error while generating jwt")
 	}
@@ -193,7 +193,23 @@ func (us *UserService) ForgotPassword(username string) api.IResponse {
 	return api.Success("Check your emails to change your password")
 }
 
-func (us *UserService) ChangePassword(req domains.ChangePasswordRequest) api.IResponse {
-	//todo: implement me
-	return nil
+func (us *UserService) ChangePassword(req domains.ChangePasswordRequest, userId uint) api.IResponse {
+	err := us.Validator.Validate(req)
+	if err != nil {
+		return api.ErrorValidation(err.Errors)
+	}
+
+	user, err2 := us.UserRepository.FindById(userId)
+	if err2 != nil {
+		return api.ErrorBadRequest(err2.Error())
+	}
+
+	user.Password = req.Password
+	err3 := us.UserRepository.UpdateUser(user)
+	if err3 != nil {
+		return api.ErrorInternalServerError(err3.Error())
+	}
+
+	return api.Success("Password changed")
+
 }

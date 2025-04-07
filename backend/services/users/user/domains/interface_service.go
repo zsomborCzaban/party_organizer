@@ -12,5 +12,5 @@ type IUserService interface {
 	UploadProfilePicture(uint, multipart.File, *multipart.FileHeader) api.IResponse
 
 	ForgotPassword(username string) api.IResponse
-	ChangePassword(ChangePasswordRequest) api.IResponse
+	ChangePassword(ChangePasswordRequest, uint) api.IResponse
 }
