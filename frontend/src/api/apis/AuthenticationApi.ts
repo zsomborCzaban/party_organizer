@@ -43,7 +43,7 @@ export class AuthApi {
 
   async postLogin(username: string, password: string): Promise<LoginPostResponse | undefined> {
     try {
-      const response = await this.axiosInstance.post<LoginPostResponse>(`${getApiUrl()}/user/login`, { username, password });
+      const response = await this.axiosInstance.post<LoginPostResponse>(`${getApiUrl()}/login`, { username, password });
       return handleApiResponse(response);
     } catch (error) {
       handleApiError(error);
@@ -53,7 +53,7 @@ export class AuthApi {
 
   async postRegister(props: RegisterPostRequestProps): Promise<void> {
     try {
-      await this.axiosInstance.post<void>(`${getApiUrl()}/user/register`, props);
+      await this.axiosInstance.post<void>(`${getApiUrl()}/register`, props);
     } catch (error) {
       handleApiError(error);
     }
@@ -64,7 +64,7 @@ export class AuthApi {
 // Deprecated from here!!!!!!!
 
 const LOGIN_PATH = `${getApiUrl()}/user/login`;
-const REGISTER_PATH = `${getApiUrl()}/user/register`;
+const REGISTER_PATH = `${getApiUrl()}/register`;
 
 export interface LoginRequestDataInterface {
   username: string;
