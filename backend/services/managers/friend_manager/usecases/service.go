@@ -3,14 +3,14 @@ package usecases
 import (
 	"fmt"
 	"github.com/zsomborCzaban/party_organizer/services/managers/friend_manager/domains"
-	userDomain "github.com/zsomborCzaban/party_organizer/services/user/domains"
+	domains2 "github.com/zsomborCzaban/party_organizer/services/users/user/domains"
 	"github.com/zsomborCzaban/party_organizer/utils/api"
 	"github.com/zsomborCzaban/party_organizer/utils/repo"
 )
 
 type FriendInviteService struct {
 	FriendInviteRepository domains.IFriendInviteRepository
-	UserRepository         userDomain.IUserRepository
+	UserRepository         domains2.IUserRepository
 }
 
 func NewFriendInviteService(repoCollector *repo.RepoCollector) domains.IFriendInviteService {
@@ -213,7 +213,7 @@ func (fs FriendInviteService) RemoveFriend(userId, friendId uint) api.IResponse 
 	return api.ErrorInternalServerError("error while removing friend")
 }
 
-func (fs FriendInviteService) RemoveFriendAndInvite(user, friend *userDomain.User, invite *domains.FriendInvite) api.IResponse {
+func (fs FriendInviteService) RemoveFriendAndInvite(user, friend *domains2.User, invite *domains.FriendInvite) api.IResponse {
 	if err := fs.UserRepository.RemoveFriend(user, friend); err != nil {
 		return api.ErrorInternalServerError(err.Error())
 	}

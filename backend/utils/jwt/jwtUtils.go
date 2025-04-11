@@ -4,13 +4,14 @@ import (
 	"errors"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/zsomborCzaban/party_organizer/utils/env"
+	"os"
 	"strconv"
 	"strings"
 	"time"
 )
 
 var (
-	GetIdFromJWTFunc = getIdFromJWT // Default to real implementation
+	GetIdFromJWTFunc = GetIdFromJWT // Default to real implementation
 )
 
 const ONE_DAY_IN_SECONDS = 86400
@@ -18,7 +19,7 @@ const JWT_EXPIRATION_TIMEOUT_ENV_VAR_KEY = "JWT_EXPIRATION_TIMEOUT_KEY"
 const JWT_SIGNING_KEY_ENV_VAR_KEY = "JWT_SIGNING_KEY"
 
 const JWT_ISSUER_ENV_VAR_KEY = "JWT_ISSUER_KEY"
-const JWT_ISSUER_DEFAULT_VALUE = "ask peti about this"
+const JWT_ISSUER_DEFAULT_VALUE = "no_one"
 
 func WithClaims(subject string, additionalClaims map[string]string) (*string, error) {
 	expirationTimeout := env.GetEnvInt64(JWT_EXPIRATION_TIMEOUT_ENV_VAR_KEY, ONE_DAY_IN_SECONDS)
@@ -57,7 +58,8 @@ func WithClaims(subject string, additionalClaims map[string]string) (*string, er
 	//	panic("lol")
 	//}
 
-	tokenString, err := token.SignedString([]byte("secret123"))
+	secret := os.Getenv(JWT_SIGNING_KEY_ENV_VAR_KEY)
+	tokenString, err := token.SignedString([]byte(secret))
 
 	if err != nil {
 		return nil, errors.New("token singing(lalala) failed: " + err.Error())
@@ -67,7 +69,7 @@ func WithClaims(subject string, additionalClaims map[string]string) (*string, er
 }
 
 // It's assumed that this is called after the jwt has been validated successfully
-func getIdFromJWT(bearer string) (uint, error) {
+func GetIdFromJWT(bearer string) (uint, error) {
 	tokenString := strings.Split(bearer, " ")
 
 	token, err := jwt.Parse(tokenString[1], ParseToken)
@@ -86,4 +88,29 @@ func getIdFromJWT(bearer string) (uint, error) {
 	}
 
 	return uint(idUint64), nil
+}
+
+func GetCanChangePasswordFromJWT(bearer string) (bool, error) {
+	tokenString := strings.Split(bearer, " ")
+
+	token, err := jwt.Parse(tokenString[1], ParseToken)
+	if err != nil || !token.Valid {
+		return false, errors.New("Error while parsing jwt")
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return false, errors.New("Error while parsing the claims of jwt")
+	}
+
+	canChangeString, ok := claims["canChangePassword"].(string)
+	if !ok {
+		return false, nil
+	}
+
+	if canChangeString != "allowed" {
+		return false, nil
+	}
+
+	return true, nil
 }

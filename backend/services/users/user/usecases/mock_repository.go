@@ -2,7 +2,7 @@ package usecases
 
 import (
 	"github.com/stretchr/testify/mock"
-	"github.com/zsomborCzaban/party_organizer/services/user/domains"
+	"github.com/zsomborCzaban/party_organizer/services/users/user/domains"
 )
 
 type MockRepository struct {

@@ -4,7 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"github.com/zsomborCzaban/party_organizer/services/user/usecases"
+	domains2 "github.com/zsomborCzaban/party_organizer/services/users/user/domains"
+	"github.com/zsomborCzaban/party_organizer/services/users/user/usecases"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
@@ -13,12 +14,11 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"github.com/zsomborCzaban/party_organizer/services/user/domains"
 	"github.com/zsomborCzaban/party_organizer/utils/api"
 	"github.com/zsomborCzaban/party_organizer/utils/jwt"
 )
 
-func setupUserController() (domains.IUserController, *usecases.MockService, *httptest.ResponseRecorder) {
+func setupUserController() (domains2.IUserController, *usecases.MockService, *httptest.ResponseRecorder) {
 	service := new(usecases.MockService)
 	controller := NewUserController(service)
 	rr := httptest.NewRecorder()
@@ -31,7 +31,7 @@ func TestUserController_Login_Success(t *testing.T) {
 
 	username := "testuser"
 	password := "password123"
-	loginReq := domains.LoginRequest{
+	loginReq := domains2.LoginRequest{
 		Username: &username,
 		Password: &password,
 	}
@@ -57,7 +57,7 @@ func TestUserController_Register_Success(t *testing.T) {
 	controller, service, rr := setupUserController()
 	service.On("Register", mock.AnythingOfType("domains.RegisterRequest")).Return(api.Success(nil))
 
-	registerReq := domains.RegisterRequest{
+	registerReq := domains2.RegisterRequest{
 		Username: "newuser",
 		Password: "password123",
 		Email:    "test@example.com",

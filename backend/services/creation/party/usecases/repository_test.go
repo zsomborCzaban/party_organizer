@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"errors"
+	userDomain "github.com/zsomborCzaban/party_organizer/services/users/user/domains"
 	"gorm.io/gorm"
 	"testing"
 
@@ -9,7 +10,6 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/zsomborCzaban/party_organizer/db"
 	"github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
-	userDomain "github.com/zsomborCzaban/party_organizer/services/user/domains"
 )
 
 func setupPartyRepository() (Repository, *db.MockDatabaseAccess) {
