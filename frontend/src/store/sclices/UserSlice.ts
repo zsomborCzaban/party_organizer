@@ -5,11 +5,13 @@ import { Api } from '../../api/Api';
 
 export interface UserState {
   isLoading: boolean;
+  loginError: boolean;
   jwt?: string;
 }
 
 const initialState: UserState = {
   isLoading: false,
+  loginError: false,
   jwt: getJwtAuthToken() ?? undefined,
 };
 
@@ -40,30 +42,36 @@ export const userSlice = createSlice({
       clearJwtAuthToken();
       state.jwt = undefined;
     },
+    deleteLoginError: (state) => {
+      state.loginError = false;
+    },
   },
   extraReducers: (builder) => {
     builder
-     // Login states
+      // Login states
       .addCase(userLogin.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(userLogin.fulfilled, (state, action) => {
         state.isLoading = false;
-        console.log('jwt,', action.payload);
-        if (action.payload?.data.jwt) {
+        if (action.payload === 'error') {
+          state.loginError = true;
+        } else {
           setJwtAuthToken(action.payload.data.jwt);
           state.jwt = action.payload.data.jwt;
+          state.loginError = false;
         }
       })
       .addCase(userLogin.rejected, (state) => {
         state.isLoading = false;
-      })
-     /*  .addCase() */
-      //TODO: Register states    
+      });
+    /*  .addCase() */
+    //TODO: Register states
   },
 });
 
-export const { setUserJwt, deleteUserJwt } = userSlice.actions;
+export const { setUserJwt, deleteUserJwt, deleteLoginError } = userSlice.actions;
 
 export const getUserJwt = (state: RootState) => state.userStore.jwt;
 export const isUserLoggedIn = (state: RootState): boolean => !!state.userStore.jwt && state.userStore.isLoading === false;
+export const isErrorWhileLoggingIn = (state: RootState): boolean => state.userStore.loginError && state.userStore.isLoading === false;

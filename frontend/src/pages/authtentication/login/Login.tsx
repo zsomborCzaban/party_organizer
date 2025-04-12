@@ -1,33 +1,38 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import classes from './Login.module.scss';
 import { useApi } from '../../../context/ApiContext';
-import { useAppDispatch } from '../../../store/store-helper';
-import { userLogin } from '../../../store/sclices/UserSlice';
-
-type InvalidCred = {
-  err: string;
-  field: string;
-  value: string;
-};
+import { useAppDispatch, useAppSelector } from '../../../store/store-helper';
+import { deleteLoginError, userLogin } from '../../../store/sclices/UserSlice';
 
 export const Login = () => {
-  const navigate = useNavigate();
+  const [loginDetails, setLoginDetails] = useState<{ username: string; password: string }>({ username: '', password: '' });
+  const [loginDetailsMissing, setLoginDetailsMissing] = useState(false);
   const dispatch = useAppDispatch();
+  const api = useApi();
+  const { loginError: errorWhileLoginPost, isLoading, jwt } = useAppSelector((state) => state.userStore);
+  const navigate = useNavigate();
 
-  // TODO: Remove these
-  const [username, setUsername] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [error, setError] = useState<string | null>(null);
-  const handleError = (data: InvalidCred[]) => {
-    setError(data[0].err);
+  const handleLoginClicked = async () => {
+    dispatch(deleteLoginError());
+    if (loginDetails.password.trim() === '' || loginDetails.username.trim() === '') {
+      setLoginDetailsMissing(true);
+      return;
+    }
+    setLoginDetailsMissing(false);
+    await dispatch(userLogin({ api, password: loginDetails.password, username: loginDetails.username }));
   };
 
-  const api = useApi();
-
+  // Route to home if user is logged in
+  useEffect(() => {
+    if (!isLoading && !errorWhileLoginPost && jwt) {
+      navigate('/');
+    }
+  }, [isLoading, errorWhileLoginPost, jwt, navigate]);
 
   return (
     <div className={classes.container}>
+      {isLoading && <div className={classes.overlay}>Loading (TODO: get a loading icon here)</div>}
       <h2 className={classes.title}>Welcome Back</h2>
       <div className={classes.inputGroup}>
         <label
@@ -39,8 +44,8 @@ export const Login = () => {
         <input
           type='text'
           id='username'
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          value={loginDetails.username}
+          onChange={(e) => setLoginDetails((prev) => ({ ...prev, username: e.target.value }))}
           className={classes.input}
         />
       </div>
@@ -54,7 +59,8 @@ export const Login = () => {
             Password
           </label>
           <a
-            href='/forgot-password'
+            href=''
+            onClick={() => navigate('/forgot-password')}
             className={classes.link}
           >
             Forgot Password?
@@ -63,26 +69,27 @@ export const Login = () => {
         <input
           type='password'
           id='password'
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={loginDetails.password}
+          onChange={(e) => setLoginDetails((prev) => ({ ...prev, password: e.target.value }))}
           required
           className={classes.input}
         />
       </div>
-
+      {loginDetailsMissing && <p className={classes.error}>Both fields are required to log in</p>}
+      {errorWhileLoginPost && <p className={classes.error}>Username or password is incorrect</p>}
       <button
-        onClick={() => dispatch(userLogin({api, password, username}))}
+        onClick={handleLoginClicked}
         className={classes.loginButton}
+        disabled={isLoading}
       >
         Sign In
       </button>
 
-      {error && <p className={classes.error}>{error}</p>}
-      
       <div className={classes.signUpContainer}>
         <p>New to the platform?</p>
         <a
-          href='/register'
+          href=''
+          onClick={() => navigate('/register')}
           className={classes.link}
         >
           Create an account

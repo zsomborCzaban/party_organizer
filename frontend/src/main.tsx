@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { ApiContext } from './context/ApiContext.ts';
 import { Api } from './api/Api.ts';
+import { Toaster } from '../tailwindcss/components/ui/sonner.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -21,5 +22,6 @@ createRoot(document.getElementById('root')!).render(
         </PersistGate>
       </Provider>
     </ApiContext.Provider>
+    <Toaster richColors />
   </StrictMode>,
 );
