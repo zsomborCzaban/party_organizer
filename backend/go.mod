@@ -12,7 +12,7 @@ require (
 	github.com/gorilla/mux v1.8.1
 	github.com/joho/godotenv v1.5.1
 	github.com/rs/cors v1.11.1
-	github.com/rs/zerolog v1.33.0
+	github.com/rs/zerolog v1.34.0
 	github.com/stretchr/testify v1.8.4
 	golang.org/x/crypto v0.19.0
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df

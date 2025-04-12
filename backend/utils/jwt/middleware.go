@@ -5,14 +5,17 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/zsomborCzaban/party_organizer/utils/api"
 	"net/http"
+	"os"
 	"strings"
 )
 
 func ParseToken(token *jwt.Token) (interface{}, error) {
+	secret := os.Getenv(JWT_SIGNING_KEY_ENV_VAR_KEY)
+
 	if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 		return nil, errors.New("jwt was signed with invalid method")
 	}
-	return []byte("secret123"), nil
+	return []byte(secret), nil
 }
 
 func ValidateJWTMiddleware(next http.Handler) http.Handler {
