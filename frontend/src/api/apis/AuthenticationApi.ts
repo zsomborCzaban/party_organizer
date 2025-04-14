@@ -1,7 +1,6 @@
 import { getApiUrl } from '../../api/ApiHelper';
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
-import { authService } from '../../auth/AuthService';
-import { post } from '../Api';
+import { toast } from 'sonner';
 
 const handleApiResponse = <T>(response: AxiosResponse<T>): T => {
   return response.data;
@@ -27,12 +26,12 @@ export type LoginPostResponse = {
   };
 };
 
-export interface RegisterPostRequestProps {
+export type RegisterPostRequestProps = {
   username: string;
   email: string;
   password: string;
-  confirmPassword: string;
-}
+  confirm_password: string;
+};
 
 export class AuthApi {
   private axiosInstance: AxiosInstance;
@@ -41,68 +40,24 @@ export class AuthApi {
     this.axiosInstance = axiosInstance;
   }
 
-  async postLogin(username: string, password: string): Promise<LoginPostResponse | undefined> {
+  async postLogin(username: string, password: string): Promise<LoginPostResponse | 'error'> {
     try {
       const response = await this.axiosInstance.post<LoginPostResponse>(`${getApiUrl()}/login`, { username, password });
+      toast.success('You logged in yaay');
       return handleApiResponse(response);
     } catch (error) {
       handleApiError(error);
+      return 'error';
     }
-    return undefined;
   }
 
-  async postRegister(props: RegisterPostRequestProps): Promise<void> {
+  async postRegister(props: RegisterPostRequestProps): Promise<void | 'error'> {
     try {
       await this.axiosInstance.post<void>(`${getApiUrl()}/register`, props);
+      toast.success('Successfully registered');
     } catch (error) {
       handleApiError(error);
+      return 'error';
     }
-    return undefined;
   }
 }
-
-// Deprecated from here!!!!!!!
-
-const LOGIN_PATH = `${getApiUrl()}/user/login`;
-const REGISTER_PATH = `${getApiUrl()}/register`;
-
-export interface LoginRequestDataInterface {
-  username: string;
-  password: string;
-}
-
-export interface LoginResponseDataInterface {
-  jwt: string;
-}
-
-export const login = async (username: string, password: string) => {
-  const loginRequest: LoginRequestDataInterface = {
-    username,
-    password,
-  };
-
-  try {
-    return await post<LoginResponseDataInterface>(LOGIN_PATH, loginRequest)
-      .then((response) => {
-        authService.userLoggedIn(response.jwt);
-        return '';
-      })
-      .catch((err) => err.response.data.errors);
-  } catch (err) {
-    return 'An error occurred while logging in. Please try again.';
-  }
-};
-
-export interface RegisterRequestBody {
-  username: string;
-  email: string;
-  password: string;
-  confirm_password: string;
-}
-
-export const register = async (requestBody: RegisterRequestBody): Promise<void> =>
-  new Promise<void>((resolve, reject) => {
-    post<void>(REGISTER_PATH, requestBody)
-      .then(() => resolve())
-      .catch((error) => reject(error));
-  });

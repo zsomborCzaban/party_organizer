@@ -1,59 +1,50 @@
-import React, { useState, useEffect } from 'react';
-import { AxiosError } from 'axios';
-import { ApiError, ApiResponse } from '../../../data/types/ApiResponseTypes';
-import { register, RegisterRequestBody } from '../../../api/apis/AuthenticationApi';
+import React, { useEffect, useState } from 'react';
+import { RegisterPostRequestProps } from '../../../api/apis/AuthenticationApi';
 import classes from './Register.module.scss';
+import { useApi } from '../../../context/ApiContext';
+import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 
-interface Feedbacks {
-  username?: string;
-  password?: string;
-  email?: string;
-  confirmPassword?: string;
-  buttonError?: string;
-  buttonSuccess?: string;
-}
-
-const Register: React.FC = () => {
-  const [username, setUsername] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [email, setEmail] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState<string>('');
-  const [feedbacks, setFeedbacks] = useState<Feedbacks>({});
+const Register = () => {
+  const [formInput, setFormInput] = useState<RegisterPostRequestProps>({ username: '', email: '', password: '', confirm_password: '' });
+  const api = useApi();
+  const navigate = useNavigate();
+  const [feedbacks, setFeedbacks] = useState<Partial<RegisterPostRequestProps>>({});
   const [passwordsMatch, setPasswordsMatch] = useState<boolean | null>(null);
 
   useEffect(() => {
-    if (password && confirmPassword) {
-      setPasswordsMatch(password === confirmPassword);
+    if (formInput.password && formInput.confirm_password) {
+      setPasswordsMatch(formInput.password === formInput.confirm_password);
     } else {
       setPasswordsMatch(null);
     }
-  }, [password, confirmPassword]);
+  }, [formInput]);
 
   // Validation logic
   const validate = (): boolean => {
     let valid = true;
-    const newFeedbacks: Feedbacks = {};
+    const newFeedbacks: Partial<RegisterPostRequestProps> = {};
 
-    if (!username) {
+    if (!formInput.username) {
       newFeedbacks.username = 'Username is required.';
       valid = false;
     }
 
-    if (!password) {
+    if (!formInput.password) {
       newFeedbacks.password = 'Password is required.';
       valid = false;
     }
 
-    if (!email) {
+    if (!formInput.email) {
       newFeedbacks.email = 'Email is required.';
       valid = false;
     }
 
-    if (!confirmPassword) {
-      newFeedbacks.confirmPassword = "'Passwords do not match.";
+    if (!formInput.confirm_password) {
+      newFeedbacks.confirm_password = 'Passwords do not match.';
       valid = false;
-    } else if (password !== confirmPassword) {
-      newFeedbacks.confirmPassword = 'Passwords do not match.';
+    } else if (formInput.password !== formInput.confirm_password) {
+      newFeedbacks.confirm_password = 'Passwords do not match.';
       valid = false;
     }
 
@@ -61,45 +52,22 @@ const Register: React.FC = () => {
     return valid;
   };
 
-  const handleErrors = (errs: ApiError[]) => {
-    let newFeedbacks: Feedbacks = {};
-    const keysOfFeedbacks = ['username', 'password', 'confirmpassword', 'email'];
-
-    errs.forEach((err: ApiError) => {
-      const key: keyof Feedbacks = err.field.toLowerCase();
-      if (keysOfFeedbacks.includes(key)) {
-        newFeedbacks[key] = err.err;
-      } else {
-        const unexpectedErr: Feedbacks = {};
-        unexpectedErr.buttonError = 'unexpected error while registering';
-        newFeedbacks = unexpectedErr;
-      }
-    });
-    setFeedbacks(newFeedbacks);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (validate()) {
-      const registerBody: RegisterRequestBody = {
-        username,
-        email,
-        password,
-        confirm_password: confirmPassword,
-      };
-      register(registerBody)
-        .then(() => {
-          setFeedbacks({ buttonSuccess: 'registered successfully' });
-        })
-        .catch((err: AxiosError<ApiResponse<void>>) => {
-          if (err.response) {
-            handleErrors(err.response.data.errors);
-          } else {
-            setFeedbacks({ buttonError: 'unexpected error while registering' });
-          }
-        });
+    const validationResult = validate();
+    if (!validationResult) {
+      return;
     }
+
+    const registerPostResult = await api.authApi.postRegister(formInput);
+
+    if (registerPostResult === 'error') {
+      toast.error('Error while creating an account');
+      setFeedbacks({});
+      return;
+    }
+
+    navigate('/login');
   };
 
   return (
@@ -117,8 +85,8 @@ const Register: React.FC = () => {
             type='text'
             id='username'
             className={classes.input}
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={formInput.username}
+            onChange={(e) => setFormInput((prev) => ({ ...prev, username: e.target.value }))}
           />
           {feedbacks.username && <p className={classes.error}>{feedbacks.username}</p>}
         </div>
@@ -134,8 +102,8 @@ const Register: React.FC = () => {
             type='email'
             id='email'
             className={classes.input}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={formInput.email}
+            onChange={(e) => setFormInput((prev) => ({ ...prev, email: e.target.value }))}
           />
           {feedbacks.email && <p className={classes.error}>{feedbacks.email}</p>}
         </div>
@@ -151,8 +119,8 @@ const Register: React.FC = () => {
             type='password'
             id='password'
             className={classes.input}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={formInput.password}
+            onChange={(e) => setFormInput((prev) => ({ ...prev, password: e.target.value }))}
           />
           {feedbacks.password && <p className={classes.error}>{feedbacks.password}</p>}
         </div>
@@ -168,15 +136,15 @@ const Register: React.FC = () => {
             type='password'
             id='confirmPassword'
             className={classes.input}
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            value={formInput.confirm_password}
+            onChange={(e) => setFormInput((prev) => ({ ...prev, confirm_password: e.target.value }))}
           />
           {passwordsMatch !== null && (
             <div className={`${classes.passwordMatch} ${passwordsMatch ? classes.match : classes.mismatch}`}>
               {passwordsMatch ? 'Passwords match ✓' : 'Passwords do not match ✗'}
             </div>
           )}
-          {feedbacks.confirmPassword && <p className={classes.error}>{feedbacks.confirmPassword}</p>}
+          {feedbacks.confirm_password && <p className={classes.error}>{feedbacks.confirm_password}</p>}
         </div>
 
         <button
@@ -186,9 +154,6 @@ const Register: React.FC = () => {
         >
           Create Account
         </button>
-
-        {feedbacks.buttonError && <p className={classes.error}>{feedbacks.buttonError}</p>}
-        {feedbacks.buttonSuccess && <p className={classes.success}>{feedbacks.buttonSuccess}</p>}
 
         <div className={classes.signInContainer}>
           <div className={classes.divider}>
