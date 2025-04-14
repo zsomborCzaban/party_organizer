@@ -55,3 +55,7 @@ tovabbi fejlesztések:
 - refresh tokenek oauth bejelntkezéshez.
 - 3rd party user providerrel integrálódni
 - misc contributions ahol nicns requirement
+- endpointok atirasa querry parameterekre
+- ci/cl setup githubon
+- hostolásnál monitorozas kiepitese
+- egyed kapcsolat diagram javitasa a dokumentacioban (kiegeszitese a regisztracios requesttel)
