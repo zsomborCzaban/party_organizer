@@ -3,7 +3,7 @@ package usecases
 import (
 	"errors"
 	"github.com/zsomborCzaban/party_organizer/db"
-	"github.com/zsomborCzaban/party_organizer/services/user/domains"
+	"github.com/zsomborCzaban/party_organizer/services/users/user/domains"
 )
 
 type UserEntityProvider struct {

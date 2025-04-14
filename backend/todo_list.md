@@ -1,7 +1,8 @@
 -endpointokat (party, friendManager, partyAttendanceManager), atirni hogy ne-automatikusan szedjuk ki az id-t hanem parameterben kelljen megadni
--(party manager kicknel is)test friendManager on bruno. on Removefriend we get: no such column: users.user_id
 -loginnal ha rossz a jelszo akkor valami felre megy a backenden. (internal server errort kapunk amikor nem kene)
 -create partynal az accesscode elejere az id 0 lesz uj partnal
+- hashelve tarolni a jelszot a registration requestben, és kivenni a confirm jelszot
+
 
 -publikus endpoint lehet a adiscover és a party home page
 
@@ -10,6 +11,7 @@
 # Todos
  - validalni az a request adatokat (pl user email)
  - user registraciot kiboviteni megerosito emaillel es elfelejtett jelszoval
+ - paginizáció
 
 
 dto-k removolasa a useren kivul
@@ -44,3 +46,16 @@ concurrent mapwrite errort fixelni backendben
 groupchat
 
 when inviting nonexistong user give back normal error message
+
+
+
+
+
+tovabbi fejlesztések:
+- refresh tokenek oauth bejelntkezéshez.
+- 3rd party user providerrel integrálódni
+- misc contributions ahol nicns requirement
+- endpointok atirasa querry parameterekre
+- ci/cl setup githubon
+- hostolásnál monitorozas kiepitese
+- egyed kapcsolat diagram javitasa a dokumentacioban (kiegeszitese a regisztracios requesttel)

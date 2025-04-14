@@ -4,7 +4,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
 	"github.com/zsomborCzaban/party_organizer/db"
-	"github.com/zsomborCzaban/party_organizer/services/user/usecases"
+	usecases2 "github.com/zsomborCzaban/party_organizer/services/users/user/usecases"
 	"github.com/zsomborCzaban/party_organizer/utils/api"
 	repoUtils "github.com/zsomborCzaban/party_organizer/utils/repo"
 	"testing"
@@ -26,12 +26,12 @@ func Test_NewUserAuthRouter(t *testing.T) {
 	dbAccess := db.CreateGormDatabaseAccessManager(":memory:", nil)
 	vali := api.NewValidator(validator.New())
 
-	userRepo := usecases.NewUserRepository(dbAccess)
+	userRepo := usecases2.NewUserRepository(dbAccess)
 	repoCollector := repoUtils.RepoCollector{
 		UserRepo: userRepo,
 	}
 
-	service := usecases.NewUserService(&repoCollector, vali, nil)
+	service := usecases2.NewUserService(&repoCollector, vali, nil)
 	controller := NewUserController(service)
 	NewUserAuthRouter(router, controller)
 
@@ -76,14 +76,14 @@ func Test_NewUserRouter(t *testing.T) {
 	dbAccess := db.CreateGormDatabaseAccessManager(":memory:", nil)
 	vali := api.NewValidator(validator.New())
 
-	userRepo := usecases.NewUserRepository(dbAccess)
+	userRepo := usecases2.NewUserRepository(dbAccess)
 	repoCollector := repoUtils.RepoCollector{
 		UserRepo: userRepo,
 	}
 
-	service := usecases.NewUserService(&repoCollector, vali, nil)
+	service := usecases2.NewUserService(&repoCollector, vali, nil)
 	controller := NewUserController(service)
-	NewUserPublicRouter(router, controller)
+	NewUserPrivateRouter(router, controller)
 
 	router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
 		path, err := route.GetPathTemplate()

@@ -3,7 +3,7 @@ package domains
 import (
 	foodReqDomain "github.com/zsomborCzaban/party_organizer/services/creation/food_requirement/domains"
 	partyDomains "github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
-	userDomain "github.com/zsomborCzaban/party_organizer/services/user/domains"
+	userDomain "github.com/zsomborCzaban/party_organizer/services/users/user/domains"
 	"gorm.io/gorm"
 )
 

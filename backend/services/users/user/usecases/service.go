@@ -6,10 +6,12 @@ import (
 	"fmt"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
-	"github.com/zsomborCzaban/party_organizer/services/user/domains"
+	"github.com/zsomborCzaban/party_organizer/common"
+	"github.com/zsomborCzaban/party_organizer/services/users/user/domains"
 	"github.com/zsomborCzaban/party_organizer/utils/api"
 	"github.com/zsomborCzaban/party_organizer/utils/repo"
 	s3Wrapper "github.com/zsomborCzaban/party_organizer/utils/s3"
+	"gopkg.in/gomail.v2"
 	"mime/multipart"
 	"net/http"
 	"os"
@@ -44,9 +46,7 @@ func (us *UserService) Login(loginRequest domains.LoginRequest) api.IResponse {
 		return api.ErrorInvalidCredentials()
 	}
 
-	userDTO := user.TransformToUserDTO()
-
-	jwt, err3 := userDTO.GenerateJWT()
+	jwt, err3 := user.GenerateJWT()
 	if err3 != nil {
 		return api.ErrorBadRequest("error while generating jwt")
 	}
@@ -162,4 +162,54 @@ func (us *UserService) UploadProfilePicture(userId uint, file multipart.File, fi
 	}
 
 	return api.Success(user.TransformToUserDTO())
+}
+
+func (us *UserService) ForgotPassword(username string) api.IResponse {
+	user, err := us.UserRepository.FindByUsername(username)
+	if err != nil {
+		return api.ErrorBadRequest(err.Error())
+	}
+
+	jwt, err2 := user.GenerateJWTForPasswordChange()
+	if err2 != nil {
+		return api.ErrorBadRequest("error while generating jwt")
+	}
+
+	emailUsername := os.Getenv(common.EMAIL_USERNAME_ENV_KEY)
+	emailPassword := os.Getenv(common.EMAIL_PASSWORD_ENV_KEY)
+	emailFull := os.Getenv(common.EMAIL_FULL_ENV_KEY)
+
+	m := gomail.NewMessage()
+	m.SetHeader("From", emailFull)
+	m.SetHeader("To", user.Email)
+	m.SetHeader("Subject", "Hello!") //todo: write email body
+	m.SetBody("text/plain", "This is the email body, use this token to login and change your password: "+*jwt)
+
+	d := gomail.NewDialer("smtp.gmail.com", 587, emailUsername, emailPassword)
+
+	if err3 := d.DialAndSend(m); err3 != nil {
+		return api.ErrorInternalServerError(err3.Error())
+	}
+	return api.Success("Check your emails to change your password")
+}
+
+func (us *UserService) ChangePassword(req domains.ChangePasswordRequest, userId uint) api.IResponse {
+	err := us.Validator.Validate(req)
+	if err != nil {
+		return api.ErrorValidation(err.Errors)
+	}
+
+	user, err2 := us.UserRepository.FindById(userId)
+	if err2 != nil {
+		return api.ErrorBadRequest(err2.Error())
+	}
+
+	user.Password = req.Password
+	err3 := us.UserRepository.UpdateUser(user)
+	if err3 != nil {
+		return api.ErrorInternalServerError(err3.Error())
+	}
+
+	return api.Success("Password changed")
+
 }

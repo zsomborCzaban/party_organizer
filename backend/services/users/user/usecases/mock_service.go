@@ -2,7 +2,7 @@ package usecases
 
 import (
 	"github.com/stretchr/testify/mock"
-	"github.com/zsomborCzaban/party_organizer/services/user/domains"
+	domains2 "github.com/zsomborCzaban/party_organizer/services/users/user/domains"
 	"github.com/zsomborCzaban/party_organizer/utils/api"
 	"mime/multipart"
 )
@@ -11,12 +11,12 @@ type MockService struct {
 	mock.Mock
 }
 
-func (m *MockService) Login(req domains.LoginRequest) api.IResponse {
+func (m *MockService) Login(req domains2.LoginRequest) api.IResponse {
 	args := m.Called(req)
 	return args.Get(0).(api.IResponse)
 }
 
-func (m *MockService) Register(req domains.RegisterRequest) api.IResponse {
+func (m *MockService) Register(req domains2.RegisterRequest) api.IResponse {
 	args := m.Called(req)
 	return args.Get(0).(api.IResponse)
 }

@@ -1,7 +1,7 @@
 package domains
 
 import (
-	"github.com/zsomborCzaban/party_organizer/services/user/domains"
+	"github.com/zsomborCzaban/party_organizer/services/users/user/domains"
 	"github.com/zsomborCzaban/party_organizer/utils/adminUser"
 	"gorm.io/gorm"
 	"time"

@@ -7,8 +7,10 @@ import (
 
 type IUserService interface {
 	Login(LoginRequest) api.IResponse
-	Register(RegisterRequest) api.IResponse
 	AddFriend(uint, uint) api.IResponse
 	GetFriends(uint) api.IResponse
 	UploadProfilePicture(uint, multipart.File, *multipart.FileHeader) api.IResponse
+
+	ForgotPassword(username string) api.IResponse
+	ChangePassword(ChangePasswordRequest, uint) api.IResponse
 }
