@@ -16,11 +16,6 @@ func (m *MockService) Login(req domains2.LoginRequest) api.IResponse {
 	return args.Get(0).(api.IResponse)
 }
 
-func (m *MockService) Register(req domains2.RegisterRequest) api.IResponse {
-	args := m.Called(req)
-	return args.Get(0).(api.IResponse)
-}
-
 func (m *MockService) AddFriend(friendId, userId uint) api.IResponse {
 	args := m.Called(friendId, userId)
 	return args.Get(0).(api.IResponse)

@@ -5,7 +5,6 @@
 
 
 # Todos
- - validalni az a request adatokat (pl user email)
  - paginizáció
 
 
