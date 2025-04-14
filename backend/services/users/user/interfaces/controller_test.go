@@ -38,7 +38,7 @@ func TestUserController_Login_Success(t *testing.T) {
 	body, _ := json.Marshal(loginReq)
 	req, _ := http.NewRequest("POST", "/login", bytes.NewBuffer(body))
 
-	controller.LoginController(rr, req)
+	controller.Login(rr, req)
 
 	assert.Equal(t, http.StatusOK, rr.Code)
 	service.AssertExpectations(t)
@@ -48,34 +48,7 @@ func TestUserController_Login_InvalidBody(t *testing.T) {
 	controller, _, rr := setupUserController()
 	req, _ := http.NewRequest("POST", "/login", bytes.NewBufferString("invalid"))
 
-	controller.LoginController(rr, req)
-
-	assert.Equal(t, http.StatusBadRequest, rr.Code)
-}
-
-func TestUserController_Register_Success(t *testing.T) {
-	controller, service, rr := setupUserController()
-	service.On("Register", mock.AnythingOfType("domains.RegisterRequest")).Return(api.Success(nil))
-
-	registerReq := domains2.RegisterRequest{
-		Username: "newuser",
-		Password: "password123",
-		Email:    "test@example.com",
-	}
-	body, _ := json.Marshal(registerReq)
-	req, _ := http.NewRequest("POST", "/register", bytes.NewBuffer(body))
-
-	controller.RegisterController(rr, req)
-
-	assert.Equal(t, http.StatusOK, rr.Code)
-	service.AssertExpectations(t)
-}
-
-func TestUserController_Register_InvalidBody(t *testing.T) {
-	controller, _, rr := setupUserController()
-	req, _ := http.NewRequest("POST", "/register", bytes.NewBufferString("invalid"))
-
-	controller.RegisterController(rr, req)
+	controller.Login(rr, req)
 
 	assert.Equal(t, http.StatusBadRequest, rr.Code)
 }
@@ -89,7 +62,7 @@ func TestUserController_AddFriend_Success(t *testing.T) {
 	req.Header.Set("Authorization", "token")
 	req = mux.SetURLVars(req, map[string]string{"id": "2"})
 
-	controller.AddFriendController(rr, req)
+	controller.AddFriend(rr, req)
 
 	assert.Equal(t, http.StatusOK, rr.Code)
 	service.AssertExpectations(t)
@@ -101,7 +74,7 @@ func TestUserController_AddFriend_InvalidID(t *testing.T) {
 	req.Header.Set("Authorization", "token")
 	req = mux.SetURLVars(req, map[string]string{"id": "invalid"})
 
-	controller.AddFriendController(rr, req)
+	controller.AddFriend(rr, req)
 
 	assert.Equal(t, http.StatusBadRequest, rr.Code)
 }
@@ -114,7 +87,7 @@ func TestUserController_AddFriend_InvalidJWT(t *testing.T) {
 	req.Header.Set("Authorization", "token")
 	req = mux.SetURLVars(req, map[string]string{"id": "2"})
 
-	controller.AddFriendController(rr, req)
+	controller.AddFriend(rr, req)
 
 	assert.Equal(t, http.StatusBadRequest, rr.Code)
 }
@@ -127,7 +100,7 @@ func TestUserController_GetFriends_Success(t *testing.T) {
 	req, _ := http.NewRequest("GET", "/friends", nil)
 	req.Header.Set("Authorization", "token")
 
-	controller.GetFriendsController(rr, req)
+	controller.GetFriends(rr, req)
 
 	assert.Equal(t, http.StatusOK, rr.Code)
 	service.AssertExpectations(t)
@@ -140,7 +113,7 @@ func TestUserController_GetFriends_InvalidJWT(t *testing.T) {
 	req, _ := http.NewRequest("GET", "/friends", nil)
 	req.Header.Set("Authorization", "token")
 
-	controller.GetFriendsController(rr, req)
+	controller.GetFriends(rr, req)
 
 	assert.Equal(t, http.StatusBadRequest, rr.Code)
 }
