@@ -11,6 +11,7 @@ import {
     PartyTableRow
 } from "../../../data/constants/TableColumns.ts";
 import {useNavigate} from "react-router-dom";
+import classes from './Parties.module.scss';
 
 export const Parties = () => {
 
@@ -125,49 +126,53 @@ export const Parties = () => {
         }
     ];
 
+    return (
+        <div className={classes.container}>
+            <div className={classes.header}>
+                <h1>My Parties</h1>
+                <p className={classes.description}>
+                    Manage your party invitations and view your attended and organized parties
+                </p>
+            </div>
 
-    return (<div>
-        Parties page
-        Show:
-        <ul>
-            <li>Party Invites</li>
-            <li>Attended parties</li>
-            <li>Organized parties</li>
-        </ul>
+            <div className={classes.section}>
+                <h2>Party Invites</h2>
+                <div className={classes.tableWrapper}>
+                    <SortableTable
+                        columns={partyInviteTableColumns}
+                        data={convertInvitesToTableDatasource(pendingInvites)}
+                        rowsPerPageOptions={[3,5,10,15]}
+                        defaultRowsPerPage={5}
+                        actionButtons={partyInviteActionButtons}
+                    />
+                </div>
+            </div>
 
-        <div>
-            <h1>Party Invites </h1>
-            <SortableTable
-                columns={partyInviteTableColumns}
-                data={convertInvitesToTableDatasource(pendingInvites)}
-                rowsPerPageOptions={[3,5,10,15]}
-                defaultRowsPerPage={5}
-                actionButtons={partyInviteActionButtons}
-                // defaultSortField="name"
-            />
-        </div>
-        <div>
-            <h1>Attended parties</h1>
-            <SortableTable
-                columns={partyTableColumns}
-                data={convertPartiesToTableDatasource(attendedParties)}
-                rowsPerPageOptions={[3,5,10,15]}
-                defaultRowsPerPage={5}
-                actionButtons={partyActionButtons}
-                // defaultSortField="name"
-            />
-        </div>
-        <div>
-            <h1>Organized parties</h1>
-            <SortableTable
-                columns={partyTableColumns}
-                data={convertPartiesToTableDatasource(organizedParties)}
-                rowsPerPageOptions={[3,5,10,15]}
-                defaultRowsPerPage={5}
-                actionButtons={partyActionButtons}
-                // defaultSortField="name"
-            />
-        </div>
+            <div className={classes.section}>
+                <h2>Attended Parties</h2>
+                <div className={classes.tableWrapper}>
+                    <SortableTable
+                        columns={partyTableColumns}
+                        data={convertPartiesToTableDatasource(attendedParties)}
+                        rowsPerPageOptions={[3,5,10,15]}
+                        defaultRowsPerPage={5}
+                        actionButtons={partyActionButtons}
+                    />
+                </div>
+            </div>
 
-    </div>)
+            <div className={classes.section}>
+                <h2>Organized Parties</h2>
+                <div className={classes.tableWrapper}>
+                    <SortableTable
+                        columns={partyTableColumns}
+                        data={convertPartiesToTableDatasource(organizedParties)}
+                        rowsPerPageOptions={[3,5,10,15]}
+                        defaultRowsPerPage={5}
+                        actionButtons={partyActionButtons}
+                    />
+                </div>
+            </div>
+        </div>
+    );
 };
