@@ -3,15 +3,13 @@ import {useEffect, useState} from "react";
 import {PartyInvite} from "../../../data/types/PartyInvite.ts";
 import {toast} from "sonner";
 import {PartyPopulated} from "../../../data/types/Party.ts";
+import {SortableTable} from "../../../components/table/SortableTable.tsx";
 import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table"
+    PartyInviteTableRow,
+    partyInviteTableColumns,
+    partyTableColumns,
+    PartyTableRow
+} from "../../../data/constants/TableColumns.ts";
 
 export const Parties = () => {
 
@@ -65,6 +63,18 @@ export const Parties = () => {
         })
     }, []);
 
+    const convertInvitesToTableDatasource = (invites: PartyInvite[]) : PartyInviteTableRow[] => {
+        return invites.map(invite => ({
+            id: invite.ID, invitedBy: invite.invitor.username, partyName: invite.party.name, partyPlace: invite.party.place, partyTime: invite.party.start_time
+        }))
+    }
+
+    const convertPartiesToTableDatasource = (parties: PartyPopulated[]): PartyTableRow[] => {
+        return parties.map(party => ({
+            id: party.ID, name: party.name, organizerName: party.organizer.username, place: party.place, time: party.start_time
+        }))
+    }
+
 
     return (<div>
         Parties page
@@ -76,59 +86,35 @@ export const Parties = () => {
         </ul>
 
         <div>
-            <h1>Pending Invites</h1>
-            <Table>
-                <TableCaption>A list of your recent invoices.</TableCaption>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead className="w-[100px]">Invoice</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Method</TableHead>
-                        <TableHead className="text-right">Amount</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    <TableRow>
-                        <TableCell className="font-medium">INV001</TableCell>
-                        <TableCell>Paid</TableCell>
-                        <TableCell>Credit Card</TableCell>
-                        <TableCell className="text-right">$250.00</TableCell>
-                    </TableRow>
-                </TableBody>
-            </Table>
+            <h1>Party Invites </h1>
+            <SortableTable
+                columns={partyInviteTableColumns}
+                data={convertInvitesToTableDatasource(pendingInvites)}
+                rowsPerPageOptions={[3,5,10,15]}
+                defaultRowsPerPage={5}
+                // defaultSortField="name"
+            />
         </div>
-
-        {/*<div className={classes.tableContainer}>*/}
-        {/*    <Table*/}
-        {/*        // dataSource={pendingInvites.map(inv => ({...inv, key: inv.ID}))}*/}
-        {/*        dataSource={[]}*/}
-        {/*        columns={partyInviteTableColumns}*/}
-        {/*        pagination={false} // Disable pagination*/}
-        {/*        scroll={{ y: 200 }}*/}
-        {/*    />*/}
-        {/*</div>*/}
-
-
-        {/*<div>*/}
-        {/*    <Table*/}
-        {/*        // dataSource={organizedParties.map(party => ({...party, key: party.ID}))}*/}
-        {/*        dataSource={[]}*/}
-        {/*        columns={partyTableColumns}*/}
-        {/*        pagination={false} // Disable pagination*/}
-        {/*        scroll={{ y: 200 }}*/}
-        {/*    />*/}
-        {/*</div>*/}
-
-
-        {/*<div>*/}
-        {/*    <Table*/}
-        {/*        // dataSource={attendedParties.map(party => ({...party, key: party.ID}))}*/}
-        {/*        dataSource={[]}*/}
-        {/*        columns={partyTableColumns}*/}
-        {/*        pagination={false} // Disable pagination*/}
-        {/*        scroll={{ y: 200 }}*/}
-        {/*    />*/}
-        {/*</div>*/}
+        <div>
+            <h1>Attended parties</h1>
+            <SortableTable
+                columns={partyTableColumns}
+                data={convertPartiesToTableDatasource(attendedParties)}
+                rowsPerPageOptions={[3,5,10,15]}
+                defaultRowsPerPage={5}
+                // defaultSortField="name"
+            />
+        </div>
+        <div>
+            <h1>Organized parties</h1>
+            <SortableTable
+                columns={partyTableColumns}
+                data={convertPartiesToTableDatasource(organizedParties)}
+                rowsPerPageOptions={[3,5,10,15]}
+                defaultRowsPerPage={5}
+                // defaultSortField="name"
+            />
+        </div>
 
     </div>)
 };

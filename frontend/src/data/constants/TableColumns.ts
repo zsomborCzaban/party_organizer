@@ -1,4 +1,60 @@
-export const partyTableColumns = [
+import {Column} from "../../components/table/SortableTable.tsx";
+
+export const partyInviteTableColumns: Column<PartyInviteTableRow>[] = [
+    {
+        headerName: 'Invited by',
+        field: 'invitedBy',
+    },
+    {
+        headerName: 'To party',
+        field: 'partyName',
+    },
+    {
+        headerName: 'Place',
+        field: 'partyPlace',
+    },
+    {
+        headerName: 'Time',
+        field: 'partyTime',
+    },
+];
+
+export interface PartyInviteTableRow {
+    id: number;
+    invitedBy: string;
+    partyName: string;
+    partyPlace: string;
+    partyTime: Date;
+}
+
+export const partyTableColumns: Column<PartyTableRow>[] = [
+    {
+        headerName: 'Name',
+        field: 'name',
+    },
+    {
+        headerName: 'Place',
+        field: 'place',
+    },
+    {
+        headerName: 'Time',
+        field: 'time',
+    },
+    {
+        headerName: 'Organizer',
+        field: 'organizerName',
+    },
+];
+
+export interface PartyTableRow {
+    id: number;
+    name: string;
+    place: string;
+    time: string;
+    organizerName: string;
+}
+
+export const partyTableColumnsLegacy = [
     {
         title: 'Name',
         dataIndex: 'name',
@@ -28,7 +84,7 @@ export const partyTableColumns = [
     },
 ];
 
-export const partyInviteTableColumns = [
+export const partyInviteTableColumnsLegacy = [
     {
         title: 'Invited by',
         dataIndex: ['invitor', 'username'],
@@ -58,14 +114,14 @@ export const partyInviteTableColumns = [
     },
 ];
 
-export const invitedByTableColumns =[
+export const invitedByTableColumnsLegacy =[
     {
         title: 'Invited by',
         dataIndex: ['invitor', 'username'],
         key: 'username',
     },
 ];
-export const invitedTableColumns =[
+export const invitedTableColumnsLegacy =[
     {
         title: 'Invited',
         dataIndex: ['invited', 'username'],
@@ -78,7 +134,7 @@ export const invitedTableColumns =[
     },
 ];
 
-export const userTableColumns = [
+export const userTableColumnsLegacy = [
     {
         title: 'Username',
         dataIndex: 'username',
@@ -91,7 +147,7 @@ export const userTableColumns = [
     },
 ];
 
-export const requirementTableColumns = [
+export const requirementTableColumnsLegacy = [
     {
         title: 'Type',
         dataIndex: 'type',

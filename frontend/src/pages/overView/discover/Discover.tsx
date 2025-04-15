@@ -8,7 +8,7 @@ import { User } from '../../../data/types/User';
 import { getUser } from '../../../auth/AuthUserUtil';
 import { authService } from '../../../auth/AuthService';
 import { Party } from '../../../data/types/Party';
-import { partyTableColumns } from '../../../data/constants/TableColumns';
+import { partyTableColumnsLegacy } from '../../../data/constants/TableColumns';
 import OverViewNavBar from '../../../components/navigation-bar/OverViewNavBar';
 import OverViewProfile from '../../../components/drawer/OverViewProfile';
 import { joinPublicParty } from '../../../api/apis/PartyAttendanceManagerApi';
@@ -153,7 +153,7 @@ const Discover = () => {
   };
 
   const columns = [
-    ...partyTableColumns,
+    ...partyTableColumnsLegacy,
     {
       title: '',
       key: 'ID',

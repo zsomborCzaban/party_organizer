@@ -8,7 +8,7 @@ import { getUser } from '../../../auth/AuthUserUtil';
 import { authService } from '../../../auth/AuthService';
 import { Party } from '../../../data/types/Party';
 import { PartyInvite } from '../../../data/types/PartyInvite';
-import { partyInviteTableColumns, partyTableColumns } from '../../../data/constants/TableColumns';
+import { partyInviteTableColumnsLegacy, partyTableColumnsLegacy } from '../../../data/constants/TableColumns';
 import OverViewNavBar from '../../../components/navigation-bar/OverViewNavBar';
 import OverViewProfile from '../../../components/drawer/OverViewProfile';
 import { acceptInvite, declineInvite } from '../../../api/apis/PartyAttendanceManagerApi';
@@ -141,7 +141,7 @@ const PartiesPage = () => {
   };
 
   const partyColumns = [
-    ...partyTableColumns,
+    ...partyTableColumnsLegacy,
     {
       title: '',
       key: 'ID',
@@ -157,7 +157,7 @@ const PartiesPage = () => {
   ];
 
   const inviteColumns = [
-    ...partyInviteTableColumns,
+    ...partyInviteTableColumnsLegacy,
     {
       title: '',
       key: 'action 1',

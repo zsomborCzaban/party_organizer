@@ -7,7 +7,7 @@ import { getUser } from '../../../auth/AuthUserUtil';
 import { authService } from '../../../auth/AuthService';
 import { setForTime } from '../../../data/utils/timeoutSetterUtils';
 import { FriendInvite } from '../../../data/types/FriendInvite';
-import { invitedByTableColumns, userTableColumns } from '../../../data/constants/TableColumns';
+import { invitedByTableColumnsLegacy, userTableColumnsLegacy } from '../../../data/constants/TableColumns';
 import OverViewNavBar from '../../../components/navigation-bar/OverViewNavBar';
 import OverViewProfile from '../../../components/drawer/OverViewProfile';
 import { acceptInvite, declineInvite, inviteFriend, removeFriend } from '../../../api/apis/FriendInviteManagerApi';
@@ -179,7 +179,7 @@ export const FriendsOld: React.FC = () => {
   };
 
   const inviteColumns = [
-    ...invitedByTableColumns,
+    ...invitedByTableColumnsLegacy,
     {
       title: '',
       key: 'accept',
@@ -207,7 +207,7 @@ export const FriendsOld: React.FC = () => {
   ];
 
   const friendColumns = [
-    ...userTableColumns,
+    ...userTableColumnsLegacy,
     {
       title: 'Username',
       dataIndex: 'username',

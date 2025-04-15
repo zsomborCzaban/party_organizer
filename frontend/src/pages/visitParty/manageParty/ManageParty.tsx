@@ -10,7 +10,7 @@ import { getUser } from '../../../auth/AuthUserUtil';
 import { authService } from '../../../auth/AuthService';
 import { setForTime } from '../../../data/utils/timeoutSetterUtils';
 import { Requirement } from '../../../data/types/Requirement';
-import { invitedTableColumns, requirementTableColumns, userTableColumns } from '../../../data/constants/TableColumns';
+import { invitedTableColumnsLegacy, requirementTableColumnsLegacy, userTableColumnsLegacy } from '../../../data/constants/TableColumns';
 import VisitPartyNavBar from '../../../components/navigation-bar/VisitPartyNavBar';
 import VisitPartyProfile from '../../../components/drawer/VisitPartyProfile';
 import { inviteToParty, kickFromParty } from '../../../api/apis/PartyAttendanceManagerApi';
@@ -223,7 +223,7 @@ const ManageParty = () => {
   };
 
   const participantColumns = [
-    ...userTableColumns,
+    ...userTableColumnsLegacy,
     {
       title: '',
       key: 'action 1',
@@ -239,7 +239,7 @@ const ManageParty = () => {
   ];
 
   const drinkRequirementColumns = [
-    ...requirementTableColumns,
+    ...requirementTableColumnsLegacy,
     {
       title: '',
       key: 'action 1',
@@ -255,7 +255,7 @@ const ManageParty = () => {
   ];
 
   const foodRequirementColumns = [
-    ...requirementTableColumns,
+    ...requirementTableColumnsLegacy,
     {
       title: '',
       key: 'action 1',
@@ -305,7 +305,7 @@ const ManageParty = () => {
     return (
       <Table
         dataSource={pendingInvites.map((invite) => ({ ...invite, key: invite.ID }))}
-        columns={invitedTableColumns}
+        columns={invitedTableColumnsLegacy}
         pagination={false}
         scroll={{ y: 200 }}
       />
