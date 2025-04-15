@@ -10,18 +10,29 @@ import {
     Paper,
     TableFooter,
     TablePagination,
+    IconButton,
+    Button,
+    Box
 } from '@mui/material';
 
-interface Column<T> {
+export interface Column<T> {
     field: keyof T;
     headerName: string;
     width?: number;
     render?: (row: T) => React.ReactNode;
 }
 
+export interface ActionButton<T> {
+    label?: string;
+    icon?: React.ReactNode;
+    color?: 'inherit' | 'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning';
+    onClick: (row: T) => void;
+}
+
 interface SortableTableProps<T> {
     columns: Column<T>[];
     data: T[];
+    actionButtons?: ActionButton<T>[];
     defaultSortField?: keyof T;
     rowsPerPageOptions?: number[];
     defaultRowsPerPage?: number;
@@ -30,7 +41,8 @@ interface SortableTableProps<T> {
 export function SortableTable<T extends { id: string | number }>({
                                                                      columns,
                                                                      data,
-                                                                     defaultSortField = columns[0].field,
+                                                                     actionButtons = [],
+                                                                     defaultSortField = columns[0]?.field,
                                                                      rowsPerPageOptions = [5, 10, 25],
                                                                      defaultRowsPerPage = 5,
                                                                  }: SortableTableProps<T>) {
@@ -82,6 +94,11 @@ export function SortableTable<T extends { id: string | number }>({
                                 </TableSortLabel>
                             </TableCell>
                         ))}
+                        {actionButtons.length > 0 && (
+                            <TableCell align="right" width={actionButtons.length * 50}>
+                                Actions
+                            </TableCell>
+                        )}
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -92,6 +109,33 @@ export function SortableTable<T extends { id: string | number }>({
                                     {column.render ? column.render(row) : String(row[column.field])}
                                 </TableCell>
                             ))}
+                            {actionButtons.length > 0 && (
+                                <TableCell align="right">
+                                    <Box display="flex" gap={1} justifyContent="flex-end">
+                                        {actionButtons.map((button, index) => (
+                                            button.icon ? (
+                                                <IconButton
+                                                    key={index}
+                                                    color={button.color || 'primary'}
+                                                    onClick={() => button.onClick(row)}
+                                                >
+                                                    {button.icon}
+                                                </IconButton>
+                                            ) : (
+                                                <Button
+                                                    key={index}
+                                                    variant="outlined"
+                                                    color={button.color || 'primary'}
+                                                    onClick={() => button.onClick(row)}
+                                                    size="small"
+                                                >
+                                                    {button.label}
+                                                </Button>
+                                            )
+                                        ))}
+                                    </Box>
+                                </TableCell>
+                            )}
                         </TableRow>
                     ))}
                 </TableBody>
@@ -104,6 +148,7 @@ export function SortableTable<T extends { id: string | number }>({
                             page={page}
                             onPageChange={handleChangePage}
                             onRowsPerPageChange={handleChangeRowsPerPage}
+                            colSpan={columns.length + (actionButtons.length > 0 ? 1 : 0)}
                         />
                     </TableRow>
                 </TableFooter>

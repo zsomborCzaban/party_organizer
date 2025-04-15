@@ -3,17 +3,20 @@ import {useEffect, useState} from "react";
 import {PartyInvite} from "../../../data/types/PartyInvite.ts";
 import {toast} from "sonner";
 import {PartyPopulated} from "../../../data/types/Party.ts";
-import {SortableTable} from "../../../components/table/SortableTable.tsx";
+import {ActionButton, SortableTable} from "../../../components/table/SortableTable.tsx";
 import {
     PartyInviteTableRow,
     partyInviteTableColumns,
     partyTableColumns,
     PartyTableRow
 } from "../../../data/constants/TableColumns.ts";
+import {useNavigate} from "react-router-dom";
+import {log} from "node:util";
 
 export const Parties = () => {
 
     const api = useApi();
+    const navigate = useNavigate()
     const [pendingInvites, setPendingInvites] = useState<PartyInvite[]>([])
     const [organizedParties, setOrganizedParties] = useState<PartyPopulated[]>([])
     const [attendedParties, setAttendedParties] = useState<PartyPopulated[]>([])
@@ -75,6 +78,27 @@ export const Parties = () => {
         }))
     }
 
+    const partyInviteActionButtons: ActionButton<PartyInviteTableRow>[] = [
+        {
+            label: 'Accept',
+            color: 'success',
+            onClick: (invite: PartyInviteTableRow) => console.log("hehe") //todo: navigate to party page
+        },
+        {
+            label: 'Decline',
+            color: 'error',
+            onClick: (invite: PartyInviteTableRow) => console.log("hehe") //todo: navigate to party page
+        }
+    ];
+
+    const partyActionButtons: ActionButton<PartyTableRow>[] = [
+        {
+            label: 'Visit',
+            color: 'info',
+            onClick: (party: PartyTableRow) => navigate(`/partyHome?id=${party.id}`) //todo: navigate to party page
+        }
+    ];
+
 
     return (<div>
         Parties page
@@ -92,6 +116,7 @@ export const Parties = () => {
                 data={convertInvitesToTableDatasource(pendingInvites)}
                 rowsPerPageOptions={[3,5,10,15]}
                 defaultRowsPerPage={5}
+                actionButtons={partyInviteActionButtons}
                 // defaultSortField="name"
             />
         </div>
@@ -102,6 +127,7 @@ export const Parties = () => {
                 data={convertPartiesToTableDatasource(attendedParties)}
                 rowsPerPageOptions={[3,5,10,15]}
                 defaultRowsPerPage={5}
+                actionButtons={partyActionButtons}
                 // defaultSortField="name"
             />
         </div>
@@ -112,6 +138,7 @@ export const Parties = () => {
                 data={convertPartiesToTableDatasource(organizedParties)}
                 rowsPerPageOptions={[3,5,10,15]}
                 defaultRowsPerPage={5}
+                actionButtons={partyActionButtons}
                 // defaultSortField="name"
             />
         </div>
