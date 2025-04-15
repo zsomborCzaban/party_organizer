@@ -1,4 +1,71 @@
-export const Parties = ()=>{
+import {useApi} from "../../../context/ApiContext.ts";
+import {useEffect, useState} from "react";
+import {PartyInvite} from "../../../data/types/PartyInvite.ts";
+import {toast} from "sonner";
+import {PartyPopulated} from "../../../data/types/Party.ts";
+import {
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table"
+
+export const Parties = () => {
+
+    const api = useApi();
+    const [pendingInvites, setPendingInvites] = useState<PartyInvite[]>([])
+    const [organizedParties, setOrganizedParties] = useState<PartyPopulated[]>([])
+    const [attendedParties, setAttendedParties] = useState<PartyPopulated[]>([])
+
+    useEffect(() => {
+        api.partyAttendanceApi.getPendingInvites().then(result => {
+            if(result === 'error'){
+                toast.error('Error while loading invites');
+                setPendingInvites([]);
+                return;
+            }
+            setPendingInvites(result.data)
+        }).catch(() => {
+            toast.error('Error while loading invites');
+            setPendingInvites([]);
+            return;
+        })
+    }, []);
+
+    useEffect(() => {
+        api.partyApi.getOrganizedParties().then(result => {
+            if(result === 'error'){
+                toast.error('Error while loading organized parties');
+                setOrganizedParties([]);
+                return;
+            }
+            setOrganizedParties(result.data)
+        }).catch(() => {
+            toast.error('Error while loading organized parties');
+            setOrganizedParties([]);
+            return;
+        })
+    }, []);
+
+    useEffect(() => {
+        api.partyApi.getAttendedParties().then(result => {
+            if(result === 'error'){
+                toast.error('Error while loading attending parties');
+                setAttendedParties([]);
+                return;
+            }
+            setAttendedParties(result.data)
+        }).catch(() => {
+            toast.error('Error while loading attending parties');
+            setAttendedParties([]);
+            return;
+        })
+    }, []);
+
+
     return (<div>
         Parties page
         Show:
@@ -7,5 +74,61 @@ export const Parties = ()=>{
             <li>Attended parties</li>
             <li>Organized parties</li>
         </ul>
+
+        <div>
+            <h1>Pending Invites</h1>
+            <Table>
+                <TableCaption>A list of your recent invoices.</TableCaption>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead className="w-[100px]">Invoice</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Method</TableHead>
+                        <TableHead className="text-right">Amount</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    <TableRow>
+                        <TableCell className="font-medium">INV001</TableCell>
+                        <TableCell>Paid</TableCell>
+                        <TableCell>Credit Card</TableCell>
+                        <TableCell className="text-right">$250.00</TableCell>
+                    </TableRow>
+                </TableBody>
+            </Table>
+        </div>
+
+        {/*<div className={classes.tableContainer}>*/}
+        {/*    <Table*/}
+        {/*        // dataSource={pendingInvites.map(inv => ({...inv, key: inv.ID}))}*/}
+        {/*        dataSource={[]}*/}
+        {/*        columns={partyInviteTableColumns}*/}
+        {/*        pagination={false} // Disable pagination*/}
+        {/*        scroll={{ y: 200 }}*/}
+        {/*    />*/}
+        {/*</div>*/}
+
+
+        {/*<div>*/}
+        {/*    <Table*/}
+        {/*        // dataSource={organizedParties.map(party => ({...party, key: party.ID}))}*/}
+        {/*        dataSource={[]}*/}
+        {/*        columns={partyTableColumns}*/}
+        {/*        pagination={false} // Disable pagination*/}
+        {/*        scroll={{ y: 200 }}*/}
+        {/*    />*/}
+        {/*</div>*/}
+
+
+        {/*<div>*/}
+        {/*    <Table*/}
+        {/*        // dataSource={attendedParties.map(party => ({...party, key: party.ID}))}*/}
+        {/*        dataSource={[]}*/}
+        {/*        columns={partyTableColumns}*/}
+        {/*        pagination={false} // Disable pagination*/}
+        {/*        scroll={{ y: 200 }}*/}
+        {/*    />*/}
+        {/*</div>*/}
+
     </div>)
 };
