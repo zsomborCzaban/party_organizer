@@ -13,6 +13,7 @@ const styles: { [key: string]: CSSProperties } = {
     outerContainer: {
         height: '100vh',
         display: 'flex',
+        width: '100vw',
         flexDirection: 'column',
         backgroundColor: 'rgba(0, 0, 0, 0.3)',
     },
@@ -137,8 +138,8 @@ const PartyHome: React.FC = () => {
         />
         {/* </div> */}
 
-        <VisitPartyNavBar onProfileClick={() => setProfileOpen(true)} />
-        <VisitPartyProfile isOpen={profileOpen} onClose={() => setProfileOpen(false)} currentParty={selectedParty} user={user} onLeaveParty={() => console.log('leaveparty')} />
+        {/*<VisitPartyNavBar onProfileClick={() => setProfileOpen(true)} />*/}
+        {/*<VisitPartyProfile isOpen={profileOpen} onClose={() => setProfileOpen(false)} currentParty={selectedParty} user={user} onLeaveParty={() => console.log('leaveparty')} />*/}
         <div style={styles.container}>
           {/* Middle Section */}
           <div style={styles.middleSection}>
