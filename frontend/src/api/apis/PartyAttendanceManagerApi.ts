@@ -22,7 +22,7 @@ const handleApiError = (error: unknown) => {
     }
 };
 
-export type GetPendingInvitesResponse = {
+export type PartyInviteInvitesResponse = {
     data: {
         ID: number,
         invitor: User,
@@ -39,10 +39,10 @@ export class PartyAttendanceManagerApi {
         this.axiosInstance = axiosInstance;
     }
 
-    async getPendingInvites(): Promise< GetPendingInvitesResponse | 'error'> {
+    async getPendingInvites(): Promise<PartyInviteInvitesResponse | 'error'> {
         try {
-            const response = await this.axiosInstance.get<GetPendingInvitesResponse>(`${PARTY_ATTENDANCE_MANAGER_PATH}/getPendingInvites`)
-            toast.success('Pending invites received')
+            const response = await this.axiosInstance.get<PartyInviteInvitesResponse>(`${PARTY_ATTENDANCE_MANAGER_PATH}/getPendingInvites`)
+            // toast.success('Pending invites received')
             return handleApiResponse(response)
         } catch (error) {
             handleApiError(error)
@@ -50,9 +50,31 @@ export class PartyAttendanceManagerApi {
         }
     }
 
+    async acceptInvite(partyId: number): Promise<PartyInviteInvitesResponse | 'error'> {
+        try {
+            const response = await this.axiosInstance.get<PartyInviteInvitesResponse>(`${PARTY_ATTENDANCE_MANAGER_PATH}/accept/${partyId.toString()}`)
+            toast.success('Invite accepted')
+            return handleApiResponse(response)
+        } catch (error){
+            handleApiError(error)
+            return 'error'
+        }
+    }
+
+    async declineInvite(partyId: number): Promise<PartyInviteInvitesResponse | 'error'> {
+        try {
+            const response = await this.axiosInstance.get<PartyInviteInvitesResponse>(`${PARTY_ATTENDANCE_MANAGER_PATH}/decline/${partyId.toString()}`)
+            toast.success('Invite declined')
+            return handleApiResponse(response)
+        } catch (error){
+            handleApiError(error)
+            return 'error'
+        }
+    }
+
 }
 
-    export const getPartyPendingInvites = async (partyId: number): Promise<PartyInvite[]> =>
+export const getPartyPendingInvites = async (partyId: number): Promise<PartyInvite[]> =>
   new Promise<PartyInvite[]>((resolve, reject) => {
     get<PartyInvite[]>(`${PARTY_ATTENDANCE_MANAGER_PATH}/getPartyPendingInvites/${partyId.toString()}`)
       .then((invites: PartyInvite[]) => resolve(invites))

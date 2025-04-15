@@ -11,7 +11,6 @@ import {
     PartyTableRow
 } from "../../../data/constants/TableColumns.ts";
 import {useNavigate} from "react-router-dom";
-import {log} from "node:util";
 
 export const Parties = () => {
 
@@ -20,6 +19,8 @@ export const Parties = () => {
     const [pendingInvites, setPendingInvites] = useState<PartyInvite[]>([])
     const [organizedParties, setOrganizedParties] = useState<PartyPopulated[]>([])
     const [attendedParties, setAttendedParties] = useState<PartyPopulated[]>([])
+    const [reloadInvites, setReloadInvites] = useState(0)
+    const [reloadAttendiedParties, setReloadAttendedParties] = useState(0)
 
     useEffect(() => {
         api.partyAttendanceApi.getPendingInvites().then(result => {
@@ -34,7 +35,7 @@ export const Parties = () => {
             setPendingInvites([]);
             return;
         })
-    }, []);
+    }, [api.partyAttendanceApi, reloadInvites]);
 
     useEffect(() => {
         api.partyApi.getOrganizedParties().then(result => {
@@ -49,7 +50,7 @@ export const Parties = () => {
             setOrganizedParties([]);
             return;
         })
-    }, []);
+    }, [api.partyApi]);
 
     useEffect(() => {
         api.partyApi.getAttendedParties().then(result => {
@@ -64,11 +65,11 @@ export const Parties = () => {
             setAttendedParties([]);
             return;
         })
-    }, []);
+    }, [api.partyApi, reloadAttendiedParties]);
 
     const convertInvitesToTableDatasource = (invites: PartyInvite[]) : PartyInviteTableRow[] => {
         return invites.map(invite => ({
-            id: invite.ID, invitedBy: invite.invitor.username, partyName: invite.party.name, partyPlace: invite.party.place, partyTime: invite.party.start_time
+            id: invite.party.ID, invitedBy: invite.invitor.username, partyName: invite.party.name, partyPlace: invite.party.place, partyTime: invite.party.start_time
         }))
     }
 
@@ -82,12 +83,37 @@ export const Parties = () => {
         {
             label: 'Accept',
             color: 'success',
-            onClick: (invite: PartyInviteTableRow) => console.log("hehe") //todo: navigate to party page
+            onClick: (invite: PartyInviteTableRow) => {
+                api.partyAttendanceApi.acceptInvite(invite.id)
+                    .then((response) => {
+                        if(response === 'error'){
+                            toast.error('Could not accept invite, try again later')
+                            return
+                        }
+                    setReloadInvites((reloadInvites+1)%2)
+                    setReloadAttendedParties((reloadAttendiedParties+1)%2)
+                })
+                    .catch(() => {
+                        toast.error('Could not accept invite, try again later')
+                    })
+            }
         },
         {
             label: 'Decline',
             color: 'error',
-            onClick: (invite: PartyInviteTableRow) => console.log("hehe") //todo: navigate to party page
+            onClick: (invite: PartyInviteTableRow) => {
+                api.partyAttendanceApi.declineInvite(invite.id)
+                    .then((response) => {
+                        if(response === 'error'){
+                            toast.error('Could not decline invite, try again later')
+                            return
+                        }
+                        setReloadInvites((reloadInvites+1)%2)
+                    })
+                    .catch(() => {
+                        toast.error('Could not decline invite, try again later')
+                    })
+            }
         }
     ];
 

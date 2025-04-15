@@ -2,7 +2,6 @@ import { get, post, put } from '../../api/Api';
 import { getApiUrl } from '../../api/ApiHelper';
 import {Party, PartyPopulated} from '../../data/types/Party';
 import { User } from '../../data/types/User';
-import {toast} from "sonner";
 import axios, {AxiosInstance, AxiosResponse} from "axios";
 
 const PARTY_PATH = `${getApiUrl()}/party`;
@@ -34,7 +33,7 @@ export class PartyApi {
     async getPublicParties(): Promise< PublicPartiesResponse | 'error'> {
         try {
             const response = await this.axiosInstance.get<PublicPartiesResponse>(`${getApiUrl()}/publicParties`)
-            toast.success('Public parties received')
+            // toast.success('Public parties received')
             return handleApiResponse(response)
         } catch (error) {
             handleApiError(error)
@@ -45,7 +44,7 @@ export class PartyApi {
     async getAttendedParties(): Promise< PublicPartiesResponse | 'error'> {
         try {
             const response = await this.axiosInstance.get<PublicPartiesResponse>(`${PARTY_PATH}/getPartiesByParticipantId`)
-            toast.success('Public parties received')
+            // toast.success('Public parties received')
             return handleApiResponse(response)
         } catch (error) {
             handleApiError(error)
@@ -56,7 +55,7 @@ export class PartyApi {
     async getOrganizedParties(): Promise< PublicPartiesResponse | 'error'> {
         try {
             const response = await this.axiosInstance.get<PublicPartiesResponse>(`${PARTY_PATH}/getPartiesByOrganizerId`)
-            toast.success('Public parties received')
+            // toast.success('Public parties received')
             return handleApiResponse(response)
         } catch (error) {
             handleApiError(error)
