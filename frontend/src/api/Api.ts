@@ -3,6 +3,8 @@ import { getApiConfig, getImageUploaderApiConfig } from './ApiConfig';
 import { authService } from '../auth/AuthService';
 import { ApiResponse } from '../data/types/ApiResponseTypes';
 import { AuthApi } from './apis/AuthenticationApi';
+import {PartyApi} from "./apis/PartyApi.ts";
+import {PartyAttendanceManagerApi} from "./apis/PartyAttendanceManagerApi.ts";
 
 export const apiClient = axios.create(getApiConfig());
 const imageUploaderApiClient = axios.create(getImageUploaderApiConfig());
@@ -34,17 +36,17 @@ imageUploaderApiClient.interceptors.response.use((res) => res, interceptErrorRep
 export const parseResponse = <T>(response: AxiosResponse<ApiResponse<T>>) =>
   new Promise<T>((resolve, reject) => {
     if (response.status !== 200) {
-      // eslint-disable-next-line prefer-promise-reject-errors,no-promise-executor-return
+       
       return reject(`invalid HTTP response status: ${response.status}`);
     }
 
     const apiResponse: ApiResponse<T> = response.data;
 
     if (apiResponse.isError || apiResponse.code !== 200) {
-      // eslint-disable-next-line no-promise-executor-return,prefer-promise-reject-errors
+       
       return reject(`invalid response status: ${apiResponse.code}; is error: ${apiResponse.errors}`);
     }
-    // eslint-disable-next-line no-promise-executor-return
+     
     return resolve(apiResponse.data);
   });
 
@@ -111,9 +113,14 @@ export const DELETE = <T>(url: string) =>
 export class Api {
   private axiosInstance: AxiosInstance;
   public authApi: AuthApi;
+  public partyApi: PartyApi;
+  public partyAttendanceApi: PartyAttendanceManagerApi;
 
   constructor() {
     this.axiosInstance = axios.create(getApiConfig());
     this.authApi = new AuthApi(this.axiosInstance);
+    this.partyApi = new PartyApi(this.axiosInstance);
+    this.partyAttendanceApi = new PartyAttendanceManagerApi(this.axiosInstance)
+    this.axiosInstance.interceptors.request.use(addAuthHeaderToRequest)
   }
 }

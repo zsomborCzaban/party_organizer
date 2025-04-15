@@ -1,9 +1,70 @@
 import { get, post, put } from '../../api/Api';
 import { getApiUrl } from '../../api/ApiHelper';
-import { Party } from '../../data/types/Party';
+import {Party, PartyPopulated} from '../../data/types/Party';
 import { User } from '../../data/types/User';
+import {toast} from "sonner";
+import axios, {AxiosInstance, AxiosResponse} from "axios";
 
 const PARTY_PATH = `${getApiUrl()}/party`;
+
+const handleApiResponse = <T>(response: AxiosResponse<T>): T => {
+    return response.data;
+};
+
+const handleApiError = (error: unknown) => {
+    // TODO: handle errors as needed
+    if (axios.isAxiosError(error)) {
+        console.error(`Axios error: ${error.message}`);
+    } else {
+        console.error(`Unexpected error: ${error}`);
+    }
+};
+
+export type PublicPartiesResponse = {
+    data: PartyPopulated[]
+}
+
+export class PartyApi {
+    private axiosInstance: AxiosInstance;
+
+    constructor(axiosInstance: AxiosInstance) {
+        this.axiosInstance = axiosInstance;
+    }
+
+    async getPublicParties(): Promise< PublicPartiesResponse | 'error'> {
+        try {
+            const response = await this.axiosInstance.get<PublicPartiesResponse>(`${getApiUrl()}/publicParties`)
+            toast.success('Public parties received')
+            return handleApiResponse(response)
+        } catch (error) {
+            handleApiError(error)
+            return 'error'
+        }
+    }
+
+    async getAttendedParties(): Promise< PublicPartiesResponse | 'error'> {
+        try {
+            const response = await this.axiosInstance.get<PublicPartiesResponse>(`${PARTY_PATH}/getPartiesByParticipantId`)
+            toast.success('Public parties received')
+            return handleApiResponse(response)
+        } catch (error) {
+            handleApiError(error)
+            return 'error'
+        }
+    }
+
+    async getOrganizedParties(): Promise< PublicPartiesResponse | 'error'> {
+        try {
+            const response = await this.axiosInstance.get<PublicPartiesResponse>(`${PARTY_PATH}/getPartiesByOrganizerId`)
+            toast.success('Public parties received')
+            return handleApiResponse(response)
+        } catch (error) {
+            handleApiError(error)
+            return 'error'
+        }
+    }
+
+}
 
 export const createParty = async (requestBody: Party): Promise<Party> =>
   new Promise<Party>((resolve, reject) => {

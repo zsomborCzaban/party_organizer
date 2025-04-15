@@ -3,10 +3,56 @@ import { get } from '../../api/Api';
 import { getApiUrl } from '../../api/ApiHelper';
 import { Party } from '../../data/types/Party';
 import { PartyInvite } from '../../data/types/PartyInvite';
+import axios, {AxiosInstance, AxiosResponse} from "axios";
+import {User} from "../../data/types/User.ts";
+import {toast} from "sonner";
 
 const PARTY_ATTENDANCE_MANAGER_PATH = `${getApiUrl()}/partyAttendanceManager`;
 
-export const getPartyPendingInvites = async (partyId: number): Promise<PartyInvite[]> =>
+const handleApiResponse = <T>(response: AxiosResponse<T>): T => {
+    return response.data;
+};
+
+const handleApiError = (error: unknown) => {
+    // TODO: handle errors as needed
+    if (axios.isAxiosError(error)) {
+        console.error(`Axios error: ${error.message}`);
+    } else {
+        console.error(`Unexpected error: ${error}`);
+    }
+};
+
+export type GetPendingInvitesResponse = {
+    data: {
+        ID: number,
+        invitor: User,
+        invited: User,
+        party: Party,
+        state: string,
+    }[]
+}
+
+export class PartyAttendanceManagerApi {
+    private axiosInstance: AxiosInstance;
+
+    constructor(axiosInstance: AxiosInstance) {
+        this.axiosInstance = axiosInstance;
+    }
+
+    async getPendingInvites(): Promise< GetPendingInvitesResponse | 'error'> {
+        try {
+            const response = await this.axiosInstance.get<GetPendingInvitesResponse>(`${PARTY_ATTENDANCE_MANAGER_PATH}/getPendingInvites`)
+            toast.success('Pending invites received')
+            return handleApiResponse(response)
+        } catch (error) {
+            handleApiError(error)
+            return 'error'
+        }
+    }
+
+}
+
+    export const getPartyPendingInvites = async (partyId: number): Promise<PartyInvite[]> =>
   new Promise<PartyInvite[]>((resolve, reject) => {
     get<PartyInvite[]>(`${PARTY_ATTENDANCE_MANAGER_PATH}/getPartyPendingInvites/${partyId.toString()}`)
       .then((invites: PartyInvite[]) => resolve(invites))
