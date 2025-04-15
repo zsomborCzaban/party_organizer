@@ -2,8 +2,44 @@ import { get, postImage } from '../../api/Api';
 import { getApiUrl } from '../../api/ApiHelper';
 import { User } from '../../data/types/User';
 import { LoginResponseDataInterface } from './AuthenticationApi';
+import axios, {AxiosInstance, AxiosResponse} from "axios";
 
 const USER_PATH = `${getApiUrl()}/user`;
+
+const handleApiResponse = <T>(response: AxiosResponse<T>): T => {
+    return response.data;
+};
+
+const handleApiError = (error: unknown) => {
+    // TODO: handle errors as needed
+    if (axios.isAxiosError(error)) {
+        console.error(`Axios error: ${error.message}`);
+    } else {
+        console.error(`Unexpected error: ${error}`);
+    }
+};
+
+export type GetFriendsResponse = {
+    data: User[]
+}
+
+export class UserApi {
+    private axiosInstance: AxiosInstance;
+
+    constructor(axiosInstance: AxiosInstance) {
+        this.axiosInstance = axiosInstance;
+    }
+
+    async getFriends(): Promise<GetFriendsResponse | 'error'> {
+        try {
+            const response = await this.axiosInstance.get<GetFriendsResponse>(`${USER_PATH}/getFriends`)
+            return handleApiResponse(response)
+        } catch (error) {
+            handleApiError(error)
+            return 'error'
+        }
+    }
+}
 
 export const getFriends = async (): Promise<User[]> =>
   new Promise<User[]>((resolve, reject) => {

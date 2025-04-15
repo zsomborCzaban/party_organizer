@@ -54,6 +54,18 @@ export interface PartyTableRow {
     organizerName: string;
 }
 
+export interface FriendTableRow {
+    id: number;
+    username: string;
+    email: string;
+}
+
+export interface FriendInviteTableRow {
+    id: number;
+    invitedBy: string;
+}
+
+
 export const partyTableColumnsLegacy = [
     {
         title: 'Name',

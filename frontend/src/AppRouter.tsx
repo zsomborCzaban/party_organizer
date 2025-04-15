@@ -44,19 +44,11 @@ export const AppRouter = () => (
               element={<Discover />}
             />
             <Route
-              path='/overview/parties'
-              element={<PartiesPage />}
-            />
-            <Route
-              path='/overview/friends'
-              element={<Friends />}
-            />
-            <Route
               path='/createParty'
               element={<CreateParty />}
             />
             <Route
-              path='/visitParty/partyHome'
+              path='/partyHome'
               element={<PartyHome />}
             />
             <Route
@@ -84,7 +76,7 @@ export const AppRouter = () => (
               path='/friends'
               element={
                 <>
-                  <Friends /> <FriendsOld />
+                  <Friends />
                 </>
               }
             />

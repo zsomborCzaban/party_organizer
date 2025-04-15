@@ -5,6 +5,8 @@ import { ApiResponse } from '../data/types/ApiResponseTypes';
 import { AuthApi } from './apis/AuthenticationApi';
 import {PartyApi} from "./apis/PartyApi.ts";
 import {PartyAttendanceManagerApi} from "./apis/PartyAttendanceManagerApi.ts";
+import {FriendInviteManagerApi} from "./apis/FriendInviteManagerApi.ts";
+import {UserApi} from "./apis/UserApi.ts";
 
 export const apiClient = axios.create(getApiConfig());
 const imageUploaderApiClient = axios.create(getImageUploaderApiConfig());
@@ -115,12 +117,16 @@ export class Api {
   public authApi: AuthApi;
   public partyApi: PartyApi;
   public partyAttendanceApi: PartyAttendanceManagerApi;
+  public friendManagerApi: FriendInviteManagerApi;
+  public userApi: UserApi;
 
   constructor() {
     this.axiosInstance = axios.create(getApiConfig());
     this.authApi = new AuthApi(this.axiosInstance);
     this.partyApi = new PartyApi(this.axiosInstance);
-    this.partyAttendanceApi = new PartyAttendanceManagerApi(this.axiosInstance)
-    this.axiosInstance.interceptors.request.use(addAuthHeaderToRequest)
+    this.partyAttendanceApi = new PartyAttendanceManagerApi(this.axiosInstance);
+    this.friendManagerApi = new FriendInviteManagerApi(this.axiosInstance);
+    this.userApi = new UserApi(this.axiosInstance);
+    this.axiosInstance.interceptors.request.use(addAuthHeaderToRequest);
   }
 }
