@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { Input, Button, DatePicker, Checkbox } from 'antd';
+import { Input, DatePicker, Checkbox, ConfigProvider, theme } from 'antd';
 import dayjs from 'dayjs';
 import 'antd/dist/reset.css';
 import { Party } from '../../data/types/Party';
 import { useNavigate } from 'react-router-dom';
 import { ApiError } from '../../data/types/ApiResponseTypes';
 import { createParty } from '../../api/apis/PartyApi';
-import {toast} from "sonner";
+import { toast } from "sonner";
+import classes from './CreateParty.module.scss';
 
 // Inline CSS styles
 const styles: { [key: string]: React.CSSProperties } = {
@@ -188,130 +189,146 @@ const CreateParty: React.FC = () => {
   };
 
   return (
-    <div style={styles.outerOuterContainer}>
-      <div style={styles.outerContainer}>
-        {/* <LocationPicker/> todo */}
-
-        <div style={styles.formContainer}>
-          <h2 style={styles.formTitle}>Create Party</h2>
-          {/* Party Name */}
-          <label style={styles.label}>Party Name</label>
-          <Input
-            placeholder='Enter Party Name'
-            value={partyName}
-            onChange={(e) => setPartyName(e.target.value)}
-            style={styles.input}
-          />
-          {feedbacks.Name && <p style={styles.error}>{feedbacks.Name}</p>}
-
-          {/* Displayed Place */}
-          <label style={styles.label}>Displayed Place</label>
-          <Input
-            placeholder='Enter Displayed Place'
-            value={displayedPlace}
-            onChange={(e) => setDisplayedPlace(e.target.value)}
-            style={styles.input}
-          />
-          {feedbacks.Place && <p style={styles.error}>{feedbacks.Place}</p>}
-
-          {/* Actual Location */}
-          <label style={styles.label}>Actual Location</label>
-          <Input
-            placeholder='Enter googlemaps plus code'
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            style={styles.input}
-          />
-          {feedbacks.GoogleMapsLink && <p style={styles.error}>{feedbacks.GoogleMapsLink}</p>}
-
-          {/* Time Picker */}
-          <label style={styles.label}>Time</label>
-          <DatePicker
-            showTime
-            style={styles.input}
-            onChange={(date) => setStartTime(date)}
-          />
-          {feedbacks.StartTime && <p style={styles.error}>{feedbacks.StartTime}</p>}
-
-          {/* Facebook Link */}
-          <label style={styles.label}>Facebook Link</label>
-          <Input
-            placeholder='Enter Facebook Link'
-            value={facebookLink}
-            onChange={(e) => setFacebookLink(e.target.value)}
-            style={styles.input}
-          />
-          {feedbacks.FacebookLink && <p style={styles.error}>{feedbacks.FacebookLink}</p>}
-
-          {/* WhatsApp Link */}
-          <label style={styles.label}>WhatsApp Link</label>
-          <Input
-            placeholder='Enter WhatsApp Link'
-            value={whatsAppLink}
-            onChange={(e) => setWhatsAppLink(e.target.value)}
-            style={styles.input}
-          />
-          {feedbacks.WhatsappLink && <p style={styles.error}>{feedbacks.WhatsappLink}</p>}
-
-          {/* Private Slider */}
-          <div style={styles.checkboxContainer}>
-            <div style={styles.checkbox}>
-              <label style={styles.label}>Private</label>
-              <Checkbox
-                checked={isPrivate}
-                onChange={(e) => setIsPrivate(e.target.checked)}
-                style={styles.slider}
-              />
-              {feedbacks.IsPrivate && <p style={styles.error}>{feedbacks.IsPrivate}</p>}
-            </div>
-
-            <div style={styles.checkbox}>
-              {/* Access Code Enable Slider */}
-              <label style={styles.label}>Access Code Enabled</label>
-              <Checkbox
-                checked={isAccessCodeEnabled}
-                onChange={(e) => setIsAccessCodeEnabled(e.target.checked)}
-                style={styles.slider}
-              />
-              {feedbacks.AccessCodeEnabled && <p style={styles.error}>{feedbacks.AccessCodeEnabled}</p>}
-            </div>
-          </div>
-
-          {/* Access Code */}
-          {isAccessCodeEnabled && (
-            <>
-              <label style={styles.label}>Access Code</label>
+    <ConfigProvider
+      theme={{
+        algorithm: theme.darkAlgorithm,
+        token: {
+          colorBgContainer: '#3a3a3a',
+          colorBorder: '#444',
+          borderRadius: 5,
+        },
+        components: {
+          Input: {
+            colorBgContainer: '#3a3a3a',
+            hoverBorderColor: '#007bff',
+            hoverBg: '#000000',
+            activeBorderColor: '#007bff',
+          },
+          DatePicker: {
+            colorBgContainer: '#3a3a3a',
+            hoverBorderColor: '#007bff',
+            activeBorderColor: '#007bff',
+          },
+        },
+      }}
+    >
+      <div className={classes.pageContainer}>
+        <div className={classes.formWrapper}>
+          <div className={classes.formContainer}>
+            <h2 className={classes.formTitle}>Create Party</h2>
+            
+            <div className={classes.inputGroup}>
+              <label className={classes.label}>Party Name</label>
               <Input
-                placeholder='Enter Access Code'
-                value={accessCode}
-                onChange={(e) => setAccessCode(e.target.value)}
-                style={styles.input}
+                placeholder='Enter Party Name'
+                value={partyName}
+                onChange={(e) => setPartyName(e.target.value)}
               />
-              {feedbacks.AccessCode && <p style={styles.error}>{feedbacks.AccessCode}</p>}
-            </>
-          )}
+              {feedbacks.Name && <p className={classes.error}>{feedbacks.Name}</p>}
+            </div>
 
-          {/* Create Button */}
-          <div style={styles.buttonsContainer}>
-            <Button
-              type='primary'
-              style={styles.createButton}
-              onClick={handleCreate}
-            >
-              Create
-            </Button>
-            <Button
-              type='primary'
-              style={styles.cancelButton}
-              onClick={handleCancel}
-            >
-              Cancel
-            </Button>
+            <div className={classes.inputGroup}>
+              <label className={classes.label}>Displayed Place</label>
+              <Input
+                placeholder='Enter Displayed Place'
+                value={displayedPlace}
+                onChange={(e) => setDisplayedPlace(e.target.value)}
+              />
+              {feedbacks.Place && <p className={classes.error}>{feedbacks.Place}</p>}
+            </div>
+
+            <div className={classes.inputGroup}>
+              <label className={classes.label}>Actual Location</label>
+              <Input
+                placeholder='Enter googlemaps plus code'
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+              />
+              {feedbacks.GoogleMapsLink && (
+                <p className={classes.error}>{feedbacks.GoogleMapsLink}</p>
+              )}
+            </div>
+
+            <div className={classes.inputGroup}>
+              <label className={classes.label}>Time</label>
+              <DatePicker
+                showTime
+                onChange={(date) => setStartTime(date)}
+              />
+              {feedbacks.StartTime && (
+                <p className={classes.error}>{feedbacks.StartTime}</p>
+              )}
+            </div>
+
+            <div className={classes.inputGroup}>
+              <label className={classes.label}>Facebook Link</label>
+              <Input
+                placeholder='Enter Facebook Link'
+                value={facebookLink}
+                onChange={(e) => setFacebookLink(e.target.value)}
+              />
+              {feedbacks.FacebookLink && (
+                <p className={classes.error}>{feedbacks.FacebookLink}</p>
+              )}
+            </div>
+
+            <div className={classes.inputGroup}>
+              <label className={classes.label}>WhatsApp Link</label>
+              <Input
+                placeholder='Enter WhatsApp Link'
+                value={whatsAppLink}
+                onChange={(e) => setWhatsAppLink(e.target.value)}
+              />
+              {feedbacks.WhatsappLink && (
+                <p className={classes.error}>{feedbacks.WhatsappLink}</p>
+              )}
+            </div>
+
+            <div className={classes.checkboxContainer}>
+              <div className={classes.checkboxGroup}>
+                <Checkbox
+                  checked={isPrivate}
+                  onChange={(e) => setIsPrivate(e.target.checked)}
+                >
+                  Private Party
+                </Checkbox>
+              </div>
+              <div className={classes.checkboxGroup}>
+                <Checkbox
+                  checked={isAccessCodeEnabled}
+                  onChange={(e) => setIsAccessCodeEnabled(e.target.checked)}
+                >
+                  Enable Access Code
+                </Checkbox>
+              </div>
+            </div>
+
+            {isAccessCodeEnabled && (
+              <div className={classes.inputGroup}>
+                <label className={classes.label}>Access Code</label>
+                <Input
+                  placeholder='Enter Access Code'
+                  value={accessCode}
+                  onChange={(e) => setAccessCode(e.target.value)}
+                />
+                {feedbacks.AccessCode && (
+                  <p className={classes.error}>{feedbacks.AccessCode}</p>
+                )}
+              </div>
+            )}
+
+            <div className={classes.buttonsContainer}>
+              <button onClick={handleCreate} className={classes.createButton}>
+                Create Party
+              </button>
+              <button onClick={handleCancel} className={classes.cancelButton}>
+                Cancel
+              </button>
+            </div>
           </div>
-          {feedbacks.buttonError && <p style={styles.error}>{feedbacks.buttonError}</p>}
         </div>
       </div>
-    </div>
+    </ConfigProvider>
   );
 };
 
