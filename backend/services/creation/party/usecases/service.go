@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"fmt"
+	"github.com/google/uuid"
 	drinkReqDomain "github.com/zsomborCzaban/party_organizer/services/creation/drink_requirement/domains"
 	foodReqDomain "github.com/zsomborCzaban/party_organizer/services/creation/food_requirement/domains"
 	"github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
@@ -45,11 +46,12 @@ func (ps PartyService) Create(partyDTO domains.PartyDTO, userId uint) api.IRespo
 
 	party := partyDTO.TransformToParty()
 	party.OrganizerID = userId
+	accessCode := party.AccessCode
 	if party.AccessCodeEnabled {
-		party.AccessCode = fmt.Sprintf("%d_%s", party.ID, party.AccessCode)
+		party.AccessCode = uuid.New().String()
 	}
 
-	organizer, err := ps.UserRepository.FindById(userId)
+	_, err := ps.UserRepository.FindById(userId)
 	if err != nil {
 		return api.ErrorInternalServerError(domains.DeletedUser)
 	}
@@ -59,7 +61,11 @@ func (ps PartyService) Create(partyDTO domains.PartyDTO, userId uint) api.IRespo
 		return api.ErrorInternalServerError(err2.Error())
 	}
 
-	party.Organizer = *organizer
+	if party.AccessCodeEnabled {
+		party.AccessCode = fmt.Sprintf("%d_%s", party.ID, accessCode)
+		ps.PartyRepository.Update(party) //todo: give different response on different uuid
+	}
+
 	return api.Success(party)
 }
 

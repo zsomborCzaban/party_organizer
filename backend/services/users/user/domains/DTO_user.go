@@ -6,8 +6,8 @@ import (
 
 type UserDTO struct {
 	ID                uint   `json:"id"`
-	Username          string `json:"username" validate:"required,min=3"`
-	Email             string `json:"email" validate:"required"`
+	Username          string `json:"username"`
+	Email             string `json:"email"`
 	ProfilePictureUrl string `json:"profile_picture_url"`
 	Friends           []User `json:"-"`
 	//OrganizedParties []domains.Party `json:"organized_parties"`

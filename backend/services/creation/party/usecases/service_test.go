@@ -61,6 +61,7 @@ func Test_PartyService_Create_Success(t *testing.T) {
 	validator.On("Validate", partyDTO).Return(nil)
 	userRepo.On("FindById", userId, mock.Anything).Return(organizer, nil)
 	partyRepo.On("Create", mock.Anything).Return(nil)
+	partyRepo.On("Update", mock.Anything).Return(nil)
 
 	response := service.Create(partyDTO, userId)
 

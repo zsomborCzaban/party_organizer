@@ -9,7 +9,11 @@ type Validator struct {
 	v *validator.Validate
 }
 
-func NewValidator(v *validator.Validate) *Validator { return &Validator{v: v} }
+func NewValidator(v *validator.Validate) *Validator {
+	registerCustomValidations(v)
+	return &Validator{v: v}
+
+}
 
 func (val *Validator) Validate(data interface{}) *ValidationErrors {
 	ret := NewValidationErrors()
@@ -41,7 +45,53 @@ func (val *Validator) CustomErrorMessage(err validator.FieldError) string {
 		return fmt.Sprintf("%s must be greater than %s", err.Field(), err.Param())
 	case "email":
 		return fmt.Sprintf("%s must be a valid email", err.Field())
+	case "http_url":
+		return fmt.Sprintf("%s must be a valid http url", err.Field())
+	case "bool_allowed_by_bool":
+		return fmt.Sprintf("cannot %s cannot be true if %s is false", err.Field(), err.Param())
+	case "string_allowed_by_bool_and_min_3":
+		return fmt.Sprintf("%s has to be longer than 2 characters, if %s is true", err.Field(), err.Param())
+	case "string_allowed_by_bool":
+		return fmt.Sprintf("then %s has to be empty, if %s is false", err.Field(), err.Param())
 	default:
 		return fmt.Sprintf("%s is not valid", err.Field())
 	}
+}
+
+func registerCustomValidations(v *validator.Validate) {
+	v.RegisterValidation("bool_allowed_by_bool", func(fl validator.FieldLevel) bool {
+		field := fl.Field()
+		param := fl.Param()
+		otherField := fl.Parent().FieldByName(param)
+
+		if !otherField.Bool() && field.Bool() {
+			return false
+		}
+
+		return true
+	})
+
+	v.RegisterValidation("string_allowed_by_bool", func(fl validator.FieldLevel) bool {
+		field := fl.Field()
+		param := fl.Param()
+		otherField := fl.Parent().FieldByName(param)
+
+		if !otherField.Bool() && field.String() != "" {
+			return false
+		}
+
+		return true
+	})
+
+	v.RegisterValidation("string_allowed_by_bool_and_min_3", func(fl validator.FieldLevel) bool {
+		field := fl.Field()
+		param := fl.Param()
+		otherField := fl.Parent().FieldByName(param)
+
+		if otherField.Bool() {
+			return len(field.String()) >= 3
+		}
+
+		return true
+	})
 }

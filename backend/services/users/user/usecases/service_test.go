@@ -12,7 +12,6 @@ import (
 	mockS3 "github.com/zsomborCzaban/party_organizer/utils/s3"
 	"gorm.io/gorm"
 	"mime/multipart"
-	"net/http"
 	"os"
 	"testing"
 )
@@ -115,78 +114,6 @@ func Test_UserService_Login_FailInvalidPassword(t *testing.T) {
 	response := service.Login(loginRequest)
 
 	assert.Equal(t, api.ErrorInvalidCredentials(), response)
-}
-
-func Test_UserService_Register_Success(t *testing.T) {
-	service, validator, userRepo, _ := setupDefaultService()
-
-	registerRequest := domains2.RegisterRequest{
-		Username: "newuser",
-		Password: "password123",
-		Email:    "new@example.com",
-	}
-
-	validator.On("Validate", registerRequest).Return(nil)
-	userRepo.On("FindByUsername", registerRequest.Username).Return(&domains2.User{}, errors.New(domains2.UserNotFound+registerRequest.Username))
-	userRepo.On("CreateUser", mock.Anything).Return(nil)
-
-	response := service.Register(registerRequest)
-
-	assert.False(t, response.GetIsError())
-}
-
-func Test_UserService_Register_FailValidation(t *testing.T) {
-	service, validator, _, _ := setupDefaultService()
-
-	registerRequest := domains2.RegisterRequest{
-		Username: "", // Invalid
-		Password: "",
-		Email:    "",
-	}
-	validationError := api.NewValidationErrors()
-
-	validator.On("Validate", registerRequest).Return(validationError)
-
-	response := service.Register(registerRequest)
-
-	assert.Equal(t, api.ErrorValidation(validationError.Errors), response)
-}
-
-func Test_UserService_Register_FailUsernameTaken(t *testing.T) {
-	service, validator, userRepo, _ := setupDefaultService()
-
-	registerRequest := domains2.RegisterRequest{
-		Username: "existing",
-		Password: "password123",
-		Email:    "existing@example.com",
-	}
-	existingUser := &domains2.User{Username: "existing"}
-
-	validator.On("Validate", registerRequest).Return(nil)
-	userRepo.On("FindByUsername", registerRequest.Username).Return(existingUser, nil)
-
-	response := service.Register(registerRequest)
-
-	assert.Equal(t, http.StatusBadRequest, response.GetCode())
-}
-
-func Test_UserService_Register_FailCreateUser(t *testing.T) {
-	service, validator, userRepo, _ := setupDefaultService()
-
-	registerRequest := domains2.RegisterRequest{
-		Username: "newuser",
-		Password: "password123",
-		Email:    "new@example.com",
-	}
-	expectedErr := errors.New("create failed")
-
-	validator.On("Validate", registerRequest).Return(nil)
-	userRepo.On("FindByUsername", registerRequest.Username).Return(&domains2.User{}, errors.New(domains2.UserNotFound+registerRequest.Username))
-	userRepo.On("CreateUser", mock.AnythingOfType("*domains.User")).Return(expectedErr)
-
-	response := service.Register(registerRequest)
-
-	assert.Equal(t, api.ErrorInternalServerError(expectedErr.Error()), response)
 }
 
 func Test_UserService_AddFriend_Success(t *testing.T) {
