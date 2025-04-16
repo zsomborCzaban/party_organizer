@@ -119,7 +119,7 @@ export const FriendsOld: React.FC = () => {
     const currentUser = getUser();
 
     if (!currentUser) {
-      authService.handleUnauthorized();
+      authService.userLoggedOut();
       return;
     }
 

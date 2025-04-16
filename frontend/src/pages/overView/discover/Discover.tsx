@@ -121,7 +121,7 @@ const Discover = () => {
     const currentUser = getUser();
 
     if (!currentUser) {
-      authService.handleUnauthorized();
+      authService.userLoggedOut();
       return;
     }
 

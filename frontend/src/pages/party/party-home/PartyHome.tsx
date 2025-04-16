@@ -37,6 +37,11 @@ export const PartyHome = ()=>{
                         toast.error('Unable to load party')
                         return
                     }
+                    if(result === 'private party'){
+                        toast.error('Cannot access that party')
+                        navigate('/')
+                        return
+                    }
                     setParty(result.data)
                 })
                 .catch(() => {
@@ -47,6 +52,11 @@ export const PartyHome = ()=>{
                 .then(result => {
                     if(result === 'error'){
                         toast.error('Unable to load party')
+                        return
+                    }
+                    if(result === 'private party'){
+                        toast.error('Cannot access that party')
+                        navigate('/')
                         return
                     }
                     setParty(result.data)

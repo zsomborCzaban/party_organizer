@@ -1,4 +1,4 @@
-import axios, { InternalAxiosRequestConfig, AxiosResponse, AxiosInstance } from 'axios';
+import axios, {InternalAxiosRequestConfig, AxiosResponse, AxiosInstance, AxiosError} from 'axios';
 import { getApiConfig, getImageUploaderApiConfig } from './ApiConfig';
 import { authService } from '../auth/AuthService';
 import { ApiResponse } from '../data/types/ApiResponseTypes';
@@ -19,11 +19,20 @@ const addAuthHeaderToRequest = (request: InternalAxiosRequestConfig) => {
   return request;
 };
 
+const checkIsJWTValid = (response: AxiosError) => {
+    if (response.response?.data?.errors === 'Authorization missing from header' ||
+        response.response?.data?.errors === 'invalid jwt'
+    ) {
+        authService.userLoggedOut()
+    }
+    return response;
+};
+
 const interceptErrorReponse = (error: { response: { status: number } }) => {
   console.error(`error recieved in API: ${error}`, error); // TODO: remove console error when error handling is done more sophisiticated
 
   if (error.response && error.response.status === 401) {
-    authService.handleUnauthorized();
+    authService.userLoggedOut();
   }
 
   return Promise.reject(error);
@@ -128,5 +137,6 @@ export class Api {
     this.friendManagerApi = new FriendInviteManagerApi(this.axiosInstance);
     this.userApi = new UserApi(this.axiosInstance);
     this.axiosInstance.interceptors.request.use(addAuthHeaderToRequest);
+    this.axiosInstance.interceptors.response.use(null, checkIsJWTValid)
   }
 }

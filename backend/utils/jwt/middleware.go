@@ -25,7 +25,7 @@ func ValidateJWTMiddleware(next http.Handler) http.Handler {
 
 		tokenString := strings.Split(bearer, " ")
 		if len(tokenString) < 2 {
-			resp := api.ErrorBadRequest("Authorization missing from header")
+			resp := api.ErrorUnauthorized("Authorization missing from header")
 			resp.Send(w)
 			return
 		}

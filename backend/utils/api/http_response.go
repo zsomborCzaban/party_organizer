@@ -68,17 +68,11 @@ func ErrorInternalServerError(errors interface{}) IResponse {
 }
 
 func ErrorBadRequest(error string) IResponse {
-	ve := NewValidationErrors()
-	ve.CollectValidationError("", error, nil)
-
-	return Error(http.StatusBadRequest, ve.Errors)
+	return Error(http.StatusBadRequest, error)
 }
 
-func ErrorNotFound(field, entity string) IResponse {
-	ve := NewValidationErrors()
-	ve.CollectValidationError(field, entity+" was not found", entity)
-
-	return Error(http.StatusNotFound, ve.Errors)
+func ErrorNotFound(entity string) IResponse {
+	return Error(http.StatusNotFound, entity+", was not found")
 }
 
 func ErrorInvalidCredentials() IResponse {
@@ -89,8 +83,5 @@ func ErrorInvalidCredentials() IResponse {
 }
 
 func ErrorUnauthorized(message string) IResponse {
-	ve := NewValidationErrors()
-	ve.CollectValidationError("", message, nil)
-
-	return Error(http.StatusUnauthorized, ve.Errors)
+	return Error(http.StatusUnauthorized, message)
 }

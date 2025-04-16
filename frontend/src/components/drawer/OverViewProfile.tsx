@@ -161,7 +161,7 @@ const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, user }) => {
               <div style={styles.userData}>{user.email}</div>
             </div>
 
-            <Button type='primary' onClick={authService.handleUnauthorized} style={styles.logoutButton}>
+            <Button type='primary' onClick={authService.userLoggedOut} style={styles.logoutButton}>
               Logout
             </Button>
           </div>

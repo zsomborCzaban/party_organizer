@@ -182,7 +182,7 @@ const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, user, currentParty }) 
             </div>
 
             <div style={styles.buttonContainer}>
-              <Button type='primary' onClick={authService.handleUnauthorized} style={styles.logoutButton}>
+              <Button type='primary' onClick={authService.userLoggedOut} style={styles.logoutButton}>
                 Logout
               </Button>
               { user.ID === currentParty.ID &&

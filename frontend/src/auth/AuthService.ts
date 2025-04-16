@@ -3,10 +3,12 @@ import {
     getJwtAuthToken,
     clearJwtAuthToken,
 } from './AuthStorageUtils';
+import {store} from "../store/store.ts";
+import {deleteUserJwt} from "../store/sclices/UserSlice.ts";
 
 export interface AuthService {
     userLoggedIn: (jwt: string) => void
-    handleUnauthorized: () => void
+    userLoggedOut: () => void
     getJwtToken: () => string | null
     isAuthenticated: () => boolean
 }
@@ -16,9 +18,9 @@ export const authService: AuthService = {
         setJwtAuthToken(jwt);
     },
 
-    handleUnauthorized: () => {
+    userLoggedOut: () => {
+        store.dispatch(deleteUserJwt());
         clearJwtAuthToken();
-        window.location.href = '/login';
     },
 
     getJwtToken: () => getJwtAuthToken(),

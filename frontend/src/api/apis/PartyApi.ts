@@ -10,6 +10,13 @@ const handleApiResponse = <T>(response: AxiosResponse<T>): T => {
     return response.data;
 };
 
+const handleApiResponseError = <T>(response: AxiosResponse<T>): 'error' | 'private party' => {
+    if(response.response?.data?.errors === 'you cannot access this party' || response.response?.data?.errors === 'this party is private'){
+        return 'private party'
+    }
+    return 'error'
+};
+
 const handleApiError = (error: unknown) => {
     // TODO: handle errors as needed
     if (axios.isAxiosError(error)) {
@@ -67,20 +74,28 @@ export class PartyApi {
         }
     }
 
-    async getPartyUnauthenticated(partyId: number): Promise<PartyResponse | 'error'> {
+    async getPartyUnauthenticated(partyId: number): Promise<PartyResponse | 'error' | 'private party'> {
         try {
             const response = await this.axiosInstance.get<PartyResponse>(`${getApiUrl()}/publicParties/${partyId.toString()}`)
-            return handleApiResponse(response)
+            if(response.status === 200){
+                return handleApiResponse(response)
+            } else {
+                return handleApiResponseError(response)
+            }
         } catch (error) {
             handleApiError(error)
             return 'error'
         }
     }
 
-    async getParty(partyId: number): Promise<PartyResponse | 'error'> {
+    async getParty(partyId: number): Promise<PartyResponse | 'error' | 'private party'> {
         try {
             const response = await this.axiosInstance.get<PartyResponse>(`${PARTY_PATH}/${partyId.toString()}`)
-            return handleApiResponse(response)
+            if(response.status === 200){
+                return handleApiResponse(response)
+            } else {
+              return handleApiResponseError(response)
+            }
         } catch (error) {
             handleApiError(error)
             return 'error'
