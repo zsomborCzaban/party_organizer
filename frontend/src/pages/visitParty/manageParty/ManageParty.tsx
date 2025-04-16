@@ -34,6 +34,10 @@ const ManageParty = () => {
   const [foodReqs, setFoodReqs] = useState<RequirementPopulated[]>([])
   const [participants, setParticipants] = useState<User[]>([])
   const [pendingInvites, setPendingInvites] = useState<PartyInvite[]>([])
+  const [reloadDrinkReqs, setReloadDrinkReqs] = useState(0)
+  const [reloadFoodReqs, setReloadFoodReqs] = useState(0)
+  const [reloadParticipants, setReloadParticipants] = useState(0)
+  const [reloadPendingInvites, setReloadPendingInvites] = useState(0)
 
   // const { selectedParty } = useSelector((state: RootState) => state.selectedPartyStore);
   // const { requirements: dRequirements, loading: dReqLoading, error: dReqError } = useSelector((state: RootState) => state.drinkRequirementStore);
@@ -72,7 +76,7 @@ const ManageParty = () => {
         .catch(() => {
           toast.error('Unexpected error')
         })
-  }, [api.requirementApi, partyId]);
+  }, [api.requirementApi, partyId, reloadDrinkReqs]);
 
   useEffect(() => {
     api.requirementApi.getFoodRequirementsByPartyId(partyId)
@@ -86,7 +90,7 @@ const ManageParty = () => {
         .catch(() => {
           toast.error('Unexpected error')
         })
-  }, [api.requirementApi, partyId]);
+  }, [api.requirementApi, partyId, reloadFoodReqs]);
 
   useEffect(() => {
     api.partyApi.getPartyParticipants(partyId)
@@ -101,7 +105,7 @@ const ManageParty = () => {
           toast.error('Unexpected error')
         })
     
-  }, [api.partyApi, partyId]);
+  }, [api.partyApi, partyId, reloadParticipants]);
 
   useEffect(() => {
     api.partyAttendanceApi.getPartyPendingInvites(partyId)
@@ -115,13 +119,13 @@ const ManageParty = () => {
         .catch(() => {
           toast.error('Unexpected error')
         })
-  }, [api.partyAttendanceApi, partyId]);
+  }, [api.partyAttendanceApi, partyId, reloadPendingInvites]);
 
 
   const handleInviteToParty = (username: string) => {
     inviteToParty(party.ID, username)
       .then(() => {
-        //todo: reload pending invites
+        setReloadPendingInvites((reloadPendingInvites+1)%2)
         setForTime<string>(setInviteFeedbackSuccess, 'Invite sent!', '', 3000);
       })
       .catch((err) => {
@@ -153,7 +157,7 @@ const ManageParty = () => {
   const handleKickParticipant = (kickedUser: User) => {
     kickFromParty(party.ID, kickedUser.ID)
       .then(() => {
-        //todo: reload party participants
+        setReloadParticipants((reloadParticipants+1)%2)
       })
       .catch((err) => {
         console.log(err);
@@ -265,12 +269,20 @@ const ManageParty = () => {
           {/*/>*/}
           <CreateRequirementModal
             visible={requirementModalVisible}
-            onClose={() => setRequirementModalVisible(false)}
+            onClose={() => {
+              setRequirementModalVisible(false)
+              setReloadDrinkReqs((reloadDrinkReqs+1)%2) //todo: find a better solution instead of refreshing on every modal close
+              setReloadFoodReqs((reloadFoodReqs+1)%2)
+            }}
             mode={requirementModalMode}
           />
           <DeleteRequirementModal
             visible={deleteModalVisible}
-            onClose={() => setDeleteModalVisible(false)}
+            onClose={() => {
+              setDeleteModalVisible(false)
+              setReloadDrinkReqs((reloadDrinkReqs+1)%2) //todo: find a better solution instead of refreshing on every modal close
+              setReloadFoodReqs((reloadFoodReqs+1)%2)
+            }}
             mode={deleteModalMode}
             requirementId={requirementToDelete}
           />

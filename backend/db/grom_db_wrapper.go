@@ -32,8 +32,8 @@ func (dbWrapper *GormDBWrapper) First(dest interface{}, associations []string, c
 	for _, association := range associations {
 		dbWrapper.DB = dbWrapper.DB.Preload(association)
 	}
-	dbWrapper.DB.Error = nil //todo: find out why the error from previous request is persistent (why we use the same entity)
-	return dbWrapper.DB.First(dest, conds).Error
+	dbWrapper.DB.Error = nil                     //todo: find out why the error from previous request is persistent (why we use the same entity)
+	return dbWrapper.DB.First(dest, conds).Error //causes concurrent map writes once
 }
 
 func (dbWrapper *GormDBWrapper) Find(dest interface{}, associations []string, conds ...interface{}) error {
