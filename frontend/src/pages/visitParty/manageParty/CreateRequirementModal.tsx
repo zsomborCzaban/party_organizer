@@ -8,67 +8,8 @@ import { setForTime } from '../../../data/utils/timeoutSetterUtils';
 import { createDrinkRequirement, createFoodRequirement } from '../../../api/apis/RequirementApi';
 import { loadDrinkRequirements } from '../../../store/sclices/DrinkRequirementSlice';
 import { loadFoodRequirements } from '../../../store/sclices/FoodRequirementSlice';
-
-const styles: { [key: string]: React.CSSProperties } = {
-  modalContent: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-  },
-  label: {
-    marginBottom: '8px',
-    fontSize: '16px',
-    fontWeight: 'bold',
-  },
-  inputField: {
-    marginBottom: '16px',
-    padding: '8px',
-    width: '100%',
-    border: '1px solid #ccc',
-    borderRadius: '4px',
-  },
-  feedback: {
-    marginBottom: '16px',
-    fontSize: '14px',
-    color: '#555',
-  },
-  buttonContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    gap: '20px',
-    width: '100%',
-  },
-  submitButton: {
-    backgroundColor: '#007bff',
-    color: '#fff',
-    border: 'none',
-    padding: '10px 20px',
-    borderRadius: '4px',
-    cursor: 'pointer',
-  },
-  cancelButton: {
-    backgroundColor: 'red',
-    color: '#fff',
-    border: 'none',
-    padding: '10px 20px',
-    borderRadius: '4px',
-    cursor: 'pointer',
-  },
-  error: {
-    color: 'red',
-    fontSize: '0.875em',
-  },
-  success: {
-    color: 'green',
-    fontSize: '0.875em',
-  },
-};
-
-interface ContributeModalProps {
-  visible: boolean;
-  onClose: () => void;
-  mode: string;
-}
+import classes from './CreateRequirementModal.module.scss';
+import {ContributeModalProps} from "../contribution/ContributeModal.tsx";
 
 interface Feedbacks {
   type?: string;
@@ -77,6 +18,7 @@ interface Feedbacks {
   buttonError?: string;
   buttonSuccess?: string;
 }
+
 
 const CreateRequirementModal: React.FC<ContributeModalProps> = ({ mode, visible, onClose }) => {
   const [type, setType] = useState('');
@@ -194,52 +136,52 @@ const CreateRequirementModal: React.FC<ContributeModalProps> = ({ mode, visible,
       onCancel={onClose}
       footer={null}
     >
-      <div style={styles.modalContent}>
-        <label style={styles.label}>Type:</label>
+      <div className={classes.modalContent}>
+        <label className={classes.label}>Type:</label>
         <Input
           placeholder='(eg: "whisky", "beer", "chips"))'
           value={type}
           onChange={(e) => setType(e.target.value)}
-          style={styles.inputField}
+          className={classes.inputField}
         />
-        {feedbacks.type && <p style={styles.error}>{feedbacks.type}</p>}
+        {feedbacks.type && <p className={classes.error}>{feedbacks.type}</p>}
 
-        <div style={styles.quantityContainer}>
-          <label style={styles.label}>Target Quantity:</label>
+        <div className={classes.quantityContainer}>
+          <label className={classes.label}>Target Quantity:</label>
           <Input
             placeholder='Enter desired target'
             value={targetQuantity}
             onChange={(e) => setTargetQuantity(e.target.value)}
-            style={styles.inputField}
+            className={classes.inputField}
           />
-          {feedbacks.targetQuantity && <p style={styles.error}>{feedbacks.targetQuantity}</p>}
+          {feedbacks.targetQuantity && <p className={classes.error}>{feedbacks.targetQuantity}</p>}
 
-          <label style={styles.label}>Quantity Mark:</label>
+          <label className={classes.label}>Quantity Mark:</label>
           <Input
             placeholder='Enter quantity mark (eg: "l", "kg", "lbs")'
             value={quantityMark}
             onChange={(e) => setQuantityMark(e.target.value)}
-            style={styles.inputField}
+            className={classes.inputField}
           />
-          {feedbacks.quantityMark && <p style={styles.error}>{feedbacks.quantityMark}</p>}
+          {feedbacks.quantityMark && <p className={classes.error}>{feedbacks.quantityMark}</p>}
         </div>
 
-        <div style={styles.buttonContainer}>
+        <div className={classes.buttonContainer}>
           <button
             onClick={handleCreateRequirement}
-            style={styles.submitButton}
+            className={classes.submitButton}
           >
             Submit
           </button>
           <button
             onClick={onClose}
-            style={styles.cancelButton}
+            className={classes.cancelButton}
           >
             Cancel
           </button>
         </div>
-        {feedbacks.buttonError && <p style={styles.error}>{feedbacks.buttonError}</p>}
-        {feedbacks.buttonSuccess && <p style={styles.success}>{feedbacks.buttonSuccess}</p>}
+        {feedbacks.buttonError && <p className={classes.error}>{feedbacks.buttonError}</p>}
+        {feedbacks.buttonSuccess && <p className={classes.success}>{feedbacks.buttonSuccess}</p>}
       </div>
     </Modal>
   );

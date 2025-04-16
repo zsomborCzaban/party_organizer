@@ -64,7 +64,7 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
 };
 
-interface ContributeModalProps {
+export interface ContributeModalProps {
   visible: boolean;
   onClose: () => void;
   options: { value: number; label: string }[];

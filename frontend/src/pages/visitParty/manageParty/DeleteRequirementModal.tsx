@@ -6,63 +6,10 @@ import { ApiError } from '../../../data/types/ApiResponseTypes';
 import { deleteDrinkRequirement, deleteFoodRequirement } from '../../../api/apis/RequirementApi';
 import { loadDrinkRequirements } from '../../../store/sclices/DrinkRequirementSlice';
 import { loadFoodRequirements } from '../../../store/sclices/FoodRequirementSlice';
-
-const styles: { [key: string]: React.CSSProperties } = {
-  modalContent: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-  },
-  label: {
-    marginBottom: '8px',
-    fontSize: '16px',
-    fontWeight: 'bold',
-  },
-  inputField: {
-    marginBottom: '16px',
-    padding: '8px',
-    width: '100%',
-    border: '1px solid #ccc',
-    borderRadius: '4px',
-  },
-  feedback: {
-    marginBottom: '16px',
-    fontSize: '14px',
-    color: '#555',
-  },
-  buttonContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    gap: '20px',
-    width: '100%',
-  },
-  submitButton: {
-    backgroundColor: '#007bff',
-    color: '#fff',
-    border: 'none',
-    padding: '10px 20px',
-    borderRadius: '4px',
-    cursor: 'pointer',
-  },
-  cancelButton: {
-    backgroundColor: 'red',
-    color: '#fff',
-    border: 'none',
-    padding: '10px 20px',
-    borderRadius: '4px',
-    cursor: 'pointer',
-  },
-  error: {
-    color: 'red',
-    fontSize: '0.875em',
-  },
-  success: {
-    color: 'green',
-    fontSize: '0.875em',
-  },
-};
+import classes from './DeleteRequirementModal.module.scss'
 
 // todo: instead of creating a delete modal for each delete craete a confirmAction modal, that gets the function to call if confirmed
+
 
 interface DeleteContributeModalProps {
   visible: boolean;
@@ -175,25 +122,25 @@ const DeleteContributeModal: React.FC<DeleteContributeModalProps> = ({ mode, req
       onCancel={onClose}
       footer={null}
     >
-      <div style={styles.modalContent}>
-        <label style={styles.label}>Are you sure you want to delete this requirement? All of its contributions will be deleted too!</label>
+      <div className={classes.modalContent}>
+        <label className={classes.label}>Are you sure you want to delete this requirement? All of its contributions will be deleted too!</label>
 
-        <div style={styles.buttonContainer}>
+        <div className={classes.buttonContainer}>
           <Button
             onClick={handleDelete}
-            style={styles.submitButton}
+            className={classes.submitButton}
           >
             Submit
           </Button>
           <Button
             onClick={onClose}
-            style={styles.cancelButton}
+            className={classes.cancelButton}
           >
             Cancel
           </Button>
         </div>
-        {feedbacks.buttonError && <p style={styles.error}>{feedbacks.buttonError}</p>}
-        {feedbacks.buttonSuccess && <p style={styles.success}>{feedbacks.buttonSuccess}</p>}
+        {feedbacks.buttonError && <p className={classes.error}>{feedbacks.buttonError}</p>}
+        {feedbacks.buttonSuccess && <p className={classes.success}>{feedbacks.buttonSuccess}</p>}
         {countdown !== 0 && <p>The modal will close in {countdown}...</p>}
       </div>
     </Modal>

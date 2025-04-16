@@ -1,5 +1,5 @@
 import { Button, ConfigProvider, Table, theme } from 'antd';
-import { CSSProperties, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CreateRequirementModal from './CreateRequirementModal';
 import DeleteRequirementModal from './DeleteRequirementModal';
@@ -12,107 +12,8 @@ import {EMPTY_PARTY_POPULATED, PartyPopulated} from "../../../data/types/Party.t
 import {PartyInvite} from "../../../data/types/PartyInvite.ts";
 import {useApi} from "../../../context/ApiContext.ts";
 import {toast} from "sonner";
+import classes from './ManageParty.module.scss';
 
-const styles: { [key: string]: CSSProperties } = {
-  background: {
-    backgroundImage: `url(${'backgroundImage'})`,
-    position: 'fixed',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    display: 'flex',
-  },
-  outerContainer: {
-    overflowY: 'auto',
-    height: '100vh',
-    width: '100vw',
-    display: 'flex',
-    flexDirection: 'column',
-    color: '#ffffff',
-  },
-  container: {
-    width: 'min(80%, 1000px)',
-    margin: '20px auto',
-    padding: '20px',
-    display: 'flex',
-    flexDirection: 'column',
-    // backgroundColor: "#2c2c2c", // Darker gray background for content box
-    backgroundColor: 'rgba(33, 33, 33, 0.95)',
-    borderRadius: '8px',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.4)', // Slightly stronger shadow for depth
-    color: '#007bff', // Ensure text is white for readability
-  },
-  h2: {
-    color: '#d3d3d3', // Light gray for headings
-    fontSize: '1.8rem',
-    fontWeight: 'bold',
-    textAlign: 'left',
-  },
-  inputContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    marginBottom: '20px',
-    gap: '10px',
-  },
-  input: {
-    padding: '8px 12px',
-    fontSize: '1rem',
-    borderRadius: '5px',
-    border: '1px solid #444', // Darker border to blend with dark mode
-    backgroundColor: '#3a3a3a', // Dark input background
-    color: '#ffffff', // Light input text
-    width: '60%',
-  },
-  button: {
-    width: 'auto',
-    minWidth: '120px',
-    padding: '10px 20px',
-    borderRadius: '5px',
-    marginBottom: '20px',
-    fontWeight: 'bold',
-    color: '#ffffff',
-    backgroundColor: '#007bff', // Accent color to match link color in header
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-  },
-  errorButton: {
-    backgroundColor: '#b30000', // Dark red for delete buttons in dark mode
-    textAlign: 'center',
-    borderRadius: '10px',
-    cursor: 'pointer',
-    color: '#ffffff',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
-  },
-  success: {
-    color: '#66ff66', // Light green for success messages
-    fontSize: '1rem',
-    marginTop: '5px',
-  },
-  error: {
-    color: '#ff6666', // Light red for error messages
-    fontSize: '1rem',
-    marginTop: '5px',
-  },
-  requirementContainer: {
-    marginTop: '10px',
-  },
-  requirementTable: {
-    border: '1px solid #444',
-    borderRadius: '8px',
-    padding: '10px',
-    backgroundColor: '#3a3a3a',
-    marginBottom: '30px',
-  },
-  loading: {
-    textAlign: 'center',
-    fontSize: '1rem',
-    color: '#d3d3d3',
-  },
-  errorMessage: {
-    textAlign: 'center',
-    fontSize: '1rem',
-    color: '#ff6666',
-  },
-};
 
 const ManageParty = () => {
   const navigate = useNavigate();
@@ -267,7 +168,7 @@ const ManageParty = () => {
       key: 'action 1',
       render: (record: User) => (
         <Button
-          style={styles.errorButton}
+          className={classes.errorButton}
           onClick={() => handleKickParticipant(record)}
         >
           Kick
@@ -283,7 +184,7 @@ const ManageParty = () => {
       key: 'action 1',
       render: (record: Requirement) => (
         <Button
-          style={styles.errorButton}
+          className={classes.errorButton}
           onClick={() => handleDeleteRequirement(record, 'drink')}
         >
           Delete
@@ -299,7 +200,7 @@ const ManageParty = () => {
       key: 'action 1',
       render: (record: Requirement) => (
         <Button
-          style={styles.errorButton}
+          className={classes.errorButton}
           onClick={() => handleDeleteRequirement(record, 'food')}
         >
           Delete
@@ -351,8 +252,8 @@ const ManageParty = () => {
   };
 
   return (
-    <div style={styles.background}>
-      <div style={styles.outerContainer}>
+    <div className={classes.background}>
+      <div className={classes.outerContainer}>
         <ConfigProvider theme={{ algorithm: theme.darkAlgorithm }}>
           {/*<VisitPartyNavBar onProfileClick={() => setProfileOpen(true)} />*/}
           {/*<VisitPartyProfile*/}
@@ -373,69 +274,69 @@ const ManageParty = () => {
             mode={deleteModalMode}
             requirementId={requirementToDelete}
           />
-          <div style={styles.container}>
+          <div className={classes.container}>
             <h2>Invite</h2>
-            <div style={styles.inputContainer}>
+            <div className={classes.inputContainer}>
               <input
                 type='text'
                 id='username'
                 value={usernameInput}
                 placeholder='Enter username'
                 onChange={(e) => setUsernameInput(e.target.value)}
-                style={styles.input}
+                className={classes.input}
               />
               <Button
                 type='primary'
-                style={styles.button}
+                className={classes.button}
                 onClick={() => handleInviteToParty(usernameInput)}
               >
                 Invite
               </Button>
-              {inviteFeedbackSuccess && <p style={styles.success}>{inviteFeedbackSuccess}</p>}
-              {inviteFeedbackError && <p style={styles.error}>{inviteFeedbackError}</p>}
+              {inviteFeedbackSuccess && <p className={classes.success}>{inviteFeedbackSuccess}</p>}
+              {inviteFeedbackError && <p className={classes.error}>{inviteFeedbackError}</p>}
             </div>
 
             <h2>Drink Requirements</h2>
-            <div style={styles.requirementContainer}>
+            <div className={classes.requirementContainer}>
               <Button
                 type='primary'
-                style={styles.button}
+                className={classes.button}
                 onClick={() => handleAddRequirement('drink')}
               >
                 Add
               </Button>
-              <div style={styles.requirementTable}>
+              <div className={classes.requirementTable}>
                 {!drinkReqs && <div>Loading...</div>}
                 {drinkReqs && renderReqs(drinkReqs, 'drink')}
               </div>
             </div>
 
             <h2>Food Requirements</h2>
-            <div style={styles.requirementContainer}>
+            <div className={classes.requirementContainer}>
               <Button
                 type='primary'
-                style={styles.button}
+                className={classes.button}
                 onClick={() => handleAddRequirement('food')}
               >
                 Add
               </Button>
-              <div style={styles.requirementTable}>
+              <div className={classes.requirementTable}>
                 {!foodReqs && <div>Loading...</div>}
                 {foodReqs && renderReqs(foodReqs, 'food')}
               </div>
             </div>
 
             <h2>Participants</h2>
-            <div style={styles.requirementContainer}>
-              <div style={styles.requirementTable}>
+            <div className={classes.requirementContainer}>
+              <div className={classes.requirementTable}>
                 {!participants && <div>Loading...</div>}
                 {participants && renderParticipants()}
               </div>
             </div>
 
             <h2>Pending Invites</h2>
-            <div style={styles.requirementContainer}>
-              <div style={styles.requirementTable}>
+            <div className={classes.requirementContainer}>
+              <div className={classes.requirementTable}>
                 {!pendingInvites && <div>Loading...</div>}
                 {pendingInvites && renderPendingInvites()}
               </div>
