@@ -12,7 +12,7 @@ type PartyDTO struct {
 	StartTime         time.Time      `json:"start_time,omitempty" validate:"required"`
 	Name              string         `json:"name,omitempty" validate:"required"`
 	GoogleMapsLink    string         `json:"google_maps_link" validate:"http_url"`
-	FacebookLink      string         `json:"facebook_link" validate:"required,http_url"`
+	FacebookLink      string         `json:"facebook_link" validate:"http_url"`
 	WhatsappLink      string         `json:"whatsapp_link" validate:"http_url"`
 	Private           bool           `json:"is_private"`
 	AccessCodeEnabled bool           `json:"access_code_enabled" validate:"bool_allowed_by_bool=Private"`

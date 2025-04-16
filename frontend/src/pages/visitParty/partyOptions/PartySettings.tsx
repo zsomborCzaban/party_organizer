@@ -302,7 +302,7 @@ const PartySettings = () => {
           <h2 style={styles.h2}>Party Settings</h2>
 
           <div style={styles.inputDiv}>
-            <label style={styles.label}>Party Name</label>
+            <label style={styles.label}>Party Name *</label>
             <Input
               placeholder='Enter Party Name'
               value={partyName}
@@ -313,7 +313,7 @@ const PartySettings = () => {
           </div>
 
           <div style={styles.inputDiv}>
-            <label style={styles.label}>Displayed Place</label>
+            <label style={styles.label}>Displayed Place *</label>
             <Input
               placeholder='Enter Displayed Place'
               value={place}
@@ -335,7 +335,7 @@ const PartySettings = () => {
           </div>
 
           <div style={styles.inputDiv}>
-            <label style={styles.label}>Time</label>
+            <label style={styles.label}>Time *</label>
             <DatePicker
               showTime
               value={startTime}
