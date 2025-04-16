@@ -4,11 +4,9 @@ import dayjs from 'dayjs';
 import 'antd/dist/reset.css';
 import { Party } from '../../data/types/Party';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../store/store';
 import { ApiError } from '../../data/types/ApiResponseTypes';
 import { createParty } from '../../api/apis/PartyApi';
-import { setSelectedParty } from '../../store/sclices/PartySlice';
+import {toast} from "sonner";
 
 // Inline CSS styles
 const styles: { [key: string]: React.CSSProperties } = {
@@ -103,19 +101,23 @@ const styles: { [key: string]: React.CSSProperties } = {
 };
 
 interface Feedbacks {
-  partyName?: string;
-  displayedPlace?: string;
-  location?: string;
-  startTime?: string;
-  facebookLink?: string;
-  whatsAppLink?: string;
-  isPrivate?: string;
-  isAccessCodeEnabled?: string;
-  accessCode?: string;
-  button?: string;
+  Name?: string;
+  Place?: string;
+  GoogleMapsLink?: string;
+  StartTime?: string;
+  FacebookLink?: string;
+  WhatsappLink?: string;
+  IsPrivate?: string;
+  AccessCodeEnabled?: string;
+  AccessCode?: string;
+  buttonError?: string;
+
+  [key: string]: string | undefined;
 }
 
 const CreateParty: React.FC = () => {
+  const navigate = useNavigate();
+
   const [partyName, setPartyName] = useState('');
   const [displayedPlace, setDisplayedPlace] = useState('');
   const [location, setLocation] = useState('');
@@ -127,66 +129,38 @@ const CreateParty: React.FC = () => {
   const [accessCode, setAccessCode] = useState('');
   const [feedbacks, setFeedbacks] = useState<Feedbacks>({});
 
-  const dispatch = useDispatch<AppDispatch>();
-
-  const navigate = useNavigate();
-
-  const validate = (): boolean => {
-    let valid = true;
-    const newFeedbacks: Feedbacks = {};
-
-    if (!partyName) {
-      newFeedbacks.partyName = 'party name is required.';
-      valid = false;
-    }
-    if (!displayedPlace) {
-      newFeedbacks.displayedPlace = 'display name is required.';
-      valid = false;
-    }
-    if (!location) {
-      newFeedbacks.location = 'location is required.';
-      valid = false;
-    }
-    if (!startTime) {
-      newFeedbacks.startTime = 'party time is required.';
-      valid = false;
-    }
-    if (!startTime?.toDate()) {
-      newFeedbacks.startTime = 'invalid time format';
-      valid = false;
-    }
-    if (!isAccessCodeEnabled && accessCode) {
-      newFeedbacks.isAccessCodeEnabled = 'to use access code, you should enable it';
-      valid = false;
-    }
-    if (isAccessCodeEnabled && !accessCode) {
-      newFeedbacks.accessCode = 'access code is required if you enable it';
-      valid = false;
-    }
-    if (accessCode && accessCode.length < 6) {
-      newFeedbacks.accessCode = 'access code must be at least 6 characters long';
-      valid = false;
-    }
-
-    setFeedbacks(newFeedbacks);
-    return valid;
-  };
-
   const handleErrors = (errs: ApiError[]) => {
-    console.log(errs);
-    // todo: implement me!!!
+    const newFeedbacks: Feedbacks = {
+      Name: '',
+      Place: '',
+      GoogleMapsLink: '',
+      StartTime: '',
+      FacebookLink: '',
+      WhatsappLink: '',
+      IsPrivate: '',
+      AccessCodeEnabled: '',
+      AccessCode: '',
+    };
+
+    Array.from(errs).forEach((err) => {
+      if (newFeedbacks[err.field] !== undefined) {
+        newFeedbacks[err.field] = err.err;
+      }
+    });
+
+    console.log(newFeedbacks)
+    setFeedbacks(newFeedbacks);
   };
 
   const handleCreate = () => {
-    if (!validate()) return;
-
+    const fixStartTime = startTime || dayjs()
     const party: Party = {
       name: partyName,
       place: displayedPlace,
       google_maps_link: location,
       facebook_link: facebookLink,
       whatsapp_link: whatsAppLink,
-      start_time: startTime!.toDate()!,
+      start_time: fixStartTime.toDate(),
       is_private: isPrivate,
       access_code_enabled: isAccessCodeEnabled,
       access_code: accessCode,
@@ -194,24 +168,23 @@ const CreateParty: React.FC = () => {
 
     createParty(party)
       .then((returnedParty) => {
-        console.log(returnedParty);
-        dispatch(setSelectedParty(returnedParty));
-        navigate('/visitParty/manageParty');
+        localStorage.setItem('partyName', returnedParty.name)
+        localStorage.setItem('partyId', returnedParty.ID.toString())
+        localStorage.setItem('partyOrganizerName', returnedParty.organizer.username)
+        navigate('/partyHome');
+        toast.success('Party created')
       })
       .catch((err) => {
-        if (err.response) {
-          const { errors } = err.response.data;
-          handleErrors(errors);
+        if (err.response?.data?.errors?.Errors) {
+          handleErrors(err.response.data.errors.Errors);
         } else {
-          const newFeedbacks: Feedbacks = {};
-          newFeedbacks.button = 'Something unexpected happened. Try again later!';
-          setFeedbacks(newFeedbacks);
+          toast.error('Unexpected error')
         }
       });
   };
 
   const handleCancel = () => {
-    navigate('/overview/discover');
+    navigate('/');
   };
 
   return (
@@ -229,7 +202,7 @@ const CreateParty: React.FC = () => {
             onChange={(e) => setPartyName(e.target.value)}
             style={styles.input}
           />
-          {feedbacks.partyName && <p style={styles.error}>{feedbacks.partyName}</p>}
+          {feedbacks.Name && <p style={styles.error}>{feedbacks.Name}</p>}
 
           {/* Displayed Place */}
           <label style={styles.label}>Displayed Place</label>
@@ -239,7 +212,7 @@ const CreateParty: React.FC = () => {
             onChange={(e) => setDisplayedPlace(e.target.value)}
             style={styles.input}
           />
-          {feedbacks.displayedPlace && <p style={styles.error}>{feedbacks.displayedPlace}</p>}
+          {feedbacks.Place && <p style={styles.error}>{feedbacks.Place}</p>}
 
           {/* Actual Location */}
           <label style={styles.label}>Actual Location</label>
@@ -249,7 +222,7 @@ const CreateParty: React.FC = () => {
             onChange={(e) => setLocation(e.target.value)}
             style={styles.input}
           />
-          {feedbacks.location && <p style={styles.error}>{feedbacks.location}</p>}
+          {feedbacks.GoogleMapsLink && <p style={styles.error}>{feedbacks.GoogleMapsLink}</p>}
 
           {/* Time Picker */}
           <label style={styles.label}>Time</label>
@@ -258,7 +231,7 @@ const CreateParty: React.FC = () => {
             style={styles.input}
             onChange={(date) => setStartTime(date)}
           />
-          {feedbacks.startTime && <p style={styles.error}>{feedbacks.startTime}</p>}
+          {feedbacks.StartTime && <p style={styles.error}>{feedbacks.StartTime}</p>}
 
           {/* Facebook Link */}
           <label style={styles.label}>Facebook Link</label>
@@ -268,7 +241,7 @@ const CreateParty: React.FC = () => {
             onChange={(e) => setFacebookLink(e.target.value)}
             style={styles.input}
           />
-          {feedbacks.facebookLink && <p style={styles.error}>{feedbacks.facebookLink}</p>}
+          {feedbacks.FacebookLink && <p style={styles.error}>{feedbacks.FacebookLink}</p>}
 
           {/* WhatsApp Link */}
           <label style={styles.label}>WhatsApp Link</label>
@@ -278,7 +251,7 @@ const CreateParty: React.FC = () => {
             onChange={(e) => setWhatsAppLink(e.target.value)}
             style={styles.input}
           />
-          {feedbacks.whatsAppLink && <p style={styles.error}>{feedbacks.whatsAppLink}</p>}
+          {feedbacks.WhatsappLink && <p style={styles.error}>{feedbacks.WhatsappLink}</p>}
 
           {/* Private Slider */}
           <div style={styles.checkboxContainer}>
@@ -289,7 +262,7 @@ const CreateParty: React.FC = () => {
                 onChange={(e) => setIsPrivate(e.target.checked)}
                 style={styles.slider}
               />
-              {feedbacks.isPrivate && <p style={styles.error}>{feedbacks.isPrivate}</p>}
+              {feedbacks.IsPrivate && <p style={styles.error}>{feedbacks.IsPrivate}</p>}
             </div>
 
             <div style={styles.checkbox}>
@@ -300,7 +273,7 @@ const CreateParty: React.FC = () => {
                 onChange={(e) => setIsAccessCodeEnabled(e.target.checked)}
                 style={styles.slider}
               />
-              {feedbacks.isAccessCodeEnabled && <p style={styles.error}>{feedbacks.isAccessCodeEnabled}</p>}
+              {feedbacks.AccessCodeEnabled && <p style={styles.error}>{feedbacks.AccessCodeEnabled}</p>}
             </div>
           </div>
 
@@ -314,7 +287,7 @@ const CreateParty: React.FC = () => {
                 onChange={(e) => setAccessCode(e.target.value)}
                 style={styles.input}
               />
-              {feedbacks.accessCode && <p style={styles.error}>{feedbacks.accessCode}</p>}
+              {feedbacks.AccessCode && <p style={styles.error}>{feedbacks.AccessCode}</p>}
             </>
           )}
 
@@ -325,7 +298,7 @@ const CreateParty: React.FC = () => {
               style={styles.createButton}
               onClick={handleCreate}
             >
-              Continue
+              Create
             </Button>
             <Button
               type='primary'
@@ -335,7 +308,7 @@ const CreateParty: React.FC = () => {
               Cancel
             </Button>
           </div>
-          {feedbacks.button && <p style={styles.error}>{feedbacks.button}</p>}
+          {feedbacks.buttonError && <p style={styles.error}>{feedbacks.buttonError}</p>}
         </div>
       </div>
     </div>

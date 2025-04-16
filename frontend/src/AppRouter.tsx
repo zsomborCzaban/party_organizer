@@ -10,7 +10,7 @@ import Register from './pages/authtentication/register/Register';
 import { Homepage } from './pages/HomePage';
 import { RequireAuthForRoute } from './auth/RequireAuthForRoute';
 import { Parties } from './pages/party/parties/Parties';
-import { CreateParty } from './pages/party/create-party/CreateParty';
+import CreateParty from './pages/createParty/CreateParty';
 import { Friends } from './pages/friends/Friends';
 import {MainLayout, PartyLayout} from "./layouts/Layouts.tsx";
 
@@ -32,7 +32,9 @@ export const AppRouter = () => (
         </Route>
       </Route>
 
-      <Route path="/party/create" element={<CreateParty />} />
+      <Route element={<RequireAuthForRoute />}>
+        <Route path="/createParty" element={<CreateParty />} />
+      </Route>
 
       <Route element={<MainLayout />}>
         <Route path="/" element={<Homepage />} />

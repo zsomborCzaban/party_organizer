@@ -51,7 +51,7 @@ func (ps PartyService) Create(partyDTO domains.PartyDTO, userId uint) api.IRespo
 		party.AccessCode = uuid.New().String()
 	}
 
-	_, err := ps.UserRepository.FindById(userId)
+	user, err := ps.UserRepository.FindById(userId)
 	if err != nil {
 		return api.ErrorInternalServerError(domains.DeletedUser)
 	}
@@ -65,6 +65,7 @@ func (ps PartyService) Create(partyDTO domains.PartyDTO, userId uint) api.IRespo
 		party.AccessCode = fmt.Sprintf("%d_%s", party.ID, accessCode)
 		ps.PartyRepository.Update(party) //todo: give different response on different uuid
 	}
+	party.Organizer = *user
 
 	return api.Success(party)
 }

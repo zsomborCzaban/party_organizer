@@ -124,9 +124,9 @@ export class PartyApi {
     }
 }
 
-export const createParty = async (requestBody: Party): Promise<Party> =>
-  new Promise<Party>((resolve, reject) => {
-    post<Party>(PARTY_PATH, requestBody)
+export const createParty = async (requestBody: Party): Promise<PartyPopulated> =>
+  new Promise<PartyPopulated>((resolve, reject) => {
+    post<PartyPopulated>(PARTY_PATH, requestBody)
       .then((party) => resolve(party))
       .catch((error) => reject(error));
   });

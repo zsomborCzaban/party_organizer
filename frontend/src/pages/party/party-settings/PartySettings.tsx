@@ -11,7 +11,7 @@ import {toast} from "sonner";
 import classes from './PartySettings.module.scss';
 
 interface Feedbacks {
-  PartyName?: string;
+  Name?: string;
   Place?: string;
   GoogleMapsLink?: string;
   StartTime?: string;
@@ -120,7 +120,7 @@ const PartySettings = () => {
 
   const handleErrors = (errs: ApiError[]) => {
     const newFeedbacks: Feedbacks = {
-      PartyName: '',
+      Name: '',
       Place: '',
       GoogleMapsLink: '',
       StartTime: '',
@@ -199,7 +199,7 @@ const PartySettings = () => {
               onChange={(e) => setPartyName(e.target.value)}
               className={classes.input}
             />
-            {feedbacks.PartyName && <p className={classes.error}>{feedbacks.PartyName}</p>}
+            {feedbacks.Name && <p className={classes.error}>{feedbacks.Name}</p>}
           </div>
 
           <div className={classes.inputDiv}>
