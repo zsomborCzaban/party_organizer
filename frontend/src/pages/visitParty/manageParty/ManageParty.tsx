@@ -1,22 +1,17 @@
 import { Button, ConfigProvider, Table, theme } from 'antd';
-import { CSSProperties, useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { CSSProperties, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CreateRequirementModal from './CreateRequirementModal';
 import DeleteRequirementModal from './DeleteRequirementModal';
-import { AppDispatch, RootState } from '../../../store/store';
 import { User } from '../../../data/types/User';
-import { getUser } from '../../../auth/AuthUserUtil';
-import { authService } from '../../../auth/AuthService';
 import { setForTime } from '../../../data/utils/timeoutSetterUtils';
-import { Requirement } from '../../../data/types/Requirement';
+import {Requirement, RequirementPopulated} from '../../../data/types/Requirement';
 import { invitedTableColumnsLegacy, requirementTableColumnsLegacy, userTableColumnsLegacy } from '../../../data/constants/TableColumns';
-import VisitPartyProfile from '../../../components/drawer/VisitPartyProfile';
 import { inviteToParty, kickFromParty } from '../../../api/apis/PartyAttendanceManagerApi';
-import { loadDrinkRequirements } from '../../../store/sclices/DrinkRequirementSlice';
-import { loadFoodRequirements } from '../../../store/sclices/FoodRequirementSlice';
-import { loadPartyParticipants } from '../../../store/sclices/PartyParticipantSlice';
-import { loadPartyPendingInvites } from '../../../store/sclices/PendingInvitesForPartySlice';
+import {EMPTY_PARTY_POPULATED, PartyPopulated} from "../../../data/types/Party.ts";
+import {PartyInvite} from "../../../data/types/PartyInvite.ts";
+import {useApi} from "../../../context/ApiContext.ts";
+import {toast} from "sonner";
 
 const styles: { [key: string]: CSSProperties } = {
   background: {
@@ -121,10 +116,9 @@ const styles: { [key: string]: CSSProperties } = {
 
 const ManageParty = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
+  const api = useApi()
+  const partyId = Number(localStorage.getItem('partyId') || '-1')
 
-  const [user, setUser] = useState<User>();
-  const [profileOpen, setProfileOpen] = useState(false);
   const [usernameInput, setUsernameInput] = useState('');
   const [inviteFeedbackSuccess, setInviteFeedbackSuccess] = useState('');
   const [inviteFeedbackError, setInviteFeedbackError] = useState('');
@@ -134,52 +128,99 @@ const ManageParty = () => {
   const [deleteModalMode, setDeleteModalMode] = useState('');
   const [requirementToDelete, setRequirementToDelete] = useState(-1);
 
-  const initialFetchDone = useRef(false);
+  const [party, setParty] = useState<PartyPopulated>(EMPTY_PARTY_POPULATED)
+  const [drinkReqs, setDrinkReqs] = useState<RequirementPopulated[]>([])
+  const [foodReqs, setFoodReqs] = useState<RequirementPopulated[]>([])
+  const [participants, setParticipants] = useState<User[]>([])
+  const [pendingInvites, setPendingInvites] = useState<PartyInvite[]>([])
 
-  const { selectedParty } = useSelector((state: RootState) => state.selectedPartyStore);
-  const { requirements: dRequirements, loading: dReqLoading, error: dReqError } = useSelector((state: RootState) => state.drinkRequirementStore);
-  const { requirements: fRequirements, loading: fReqLoading, error: fReqError } = useSelector((state: RootState) => state.foodRequirementStore);
-  const { participants, loading: participantLoading, error: participantError } = useSelector((state: RootState) => state.partyParticipantStore);
-  const { pendingInvites, loading: pendingInvitesLoading, error: pendingInvitesError } = useSelector((state: RootState) => state.partyPendingInviteStore);
+  // const { selectedParty } = useSelector((state: RootState) => state.selectedPartyStore);
+  // const { requirements: dRequirements, loading: dReqLoading, error: dReqError } = useSelector((state: RootState) => state.drinkRequirementStore);
+  // const { requirements: fRequirements, loading: fReqLoading, error: fReqError } = useSelector((state: RootState) => state.foodRequirementStore);
+  // const { participants, loading: participantLoading, error: participantError } = useSelector((state: RootState) => state.partyParticipantStore);
+  // const { pendingInvites, loading: pendingInvitesLoading, error: pendingInvitesError } = useSelector((state: RootState) => state.partyPendingInviteStore);
 
   useEffect(() => {
-    if (initialFetchDone.current) return;
-    initialFetchDone.current = true;
+    api.partyApi.getParty(partyId)
+        .then(result => {
+          if(result === 'error'){
+            toast.error('Unable to load party')
+            return
+          }
+          if(result === 'private party'){
+            toast.error('Navigation error')
+            navigate('/partyHome')
+            return
+          }
+          setParty(result.data)
+        })
+        .catch(() => {
+          toast.error('Unexpected error')
+        })
+  }, [api.partyApi, navigate, partyId]);
 
-    const currentUser = getUser();
-    if (!currentUser) {
-      authService.userLoggedOut();
-      return;
-    }
+  useEffect(() => {
+    api.requirementApi.getDrinkRequirementsByPartyId(partyId)
+        .then(result => {
+          if(result === 'error'){
+            toast.error('Unable to load drink requirements')
+            return
+          }
+          setDrinkReqs(result.data)
+        })
+        .catch(() => {
+          toast.error('Unexpected error')
+        })
+  }, [api.requirementApi, partyId]);
 
-    // todo: reload these when needed
-    if (!selectedParty || !selectedParty.ID) return;
-    dispatch(loadDrinkRequirements(selectedParty.ID));
-    dispatch(loadFoodRequirements(selectedParty.ID));
-    dispatch(loadPartyParticipants(selectedParty.ID));
-    dispatch(loadPartyPendingInvites(selectedParty.ID));
+  useEffect(() => {
+    api.requirementApi.getFoodRequirementsByPartyId(partyId)
+        .then(result => {
+          if(result === 'error'){
+            toast.error('Unable to load food requirements')
+            return
+          }
+          setFoodReqs(result.data)
+        })
+        .catch(() => {
+          toast.error('Unexpected error')
+        })
+  }, [api.requirementApi, partyId]);
 
-    setUser(currentUser);
-  }, [dispatch, selectedParty]);
+  useEffect(() => {
+    api.partyApi.getPartyParticipants(partyId)
+        .then(result => {
+          if(result === 'error'){
+            toast.error('Unable to load party participants')
+            return
+          }
+          setParticipants(result.data)
+        })
+        .catch(() => {
+          toast.error('Unexpected error')
+        })
+    
+  }, [api.partyApi, partyId]);
 
-  if (!selectedParty || !selectedParty.ID) {
-    console.log('error, selected party was null');
-    navigate('/overview/discover');
-    return <div>Error selected party was null</div>;
-  }
+  useEffect(() => {
+    api.partyAttendanceApi.getPartyPendingInvites(partyId)
+        .then(result => {
+          if(result === 'error'){
+            toast.error('Unable to load party invites')
+            return
+          }
+          setPendingInvites(result.data)
+        })
+        .catch(() => {
+          toast.error('Unexpected error')
+        })
+  }, [api.partyAttendanceApi, partyId]);
 
-  if (!user) {
-    console.log('user was null');
-    return <div>Loading...</div>;
-  }
 
   const handleInviteToParty = (username: string) => {
-    if (!selectedParty || !selectedParty.ID) return;
-    inviteToParty(selectedParty.ID, username)
+    inviteToParty(party.ID, username)
       .then(() => {
-        if (!selectedParty || !selectedParty.ID) return;
-        dispatch(loadPartyPendingInvites(selectedParty.ID));
-
+        //todo: reload pending invites
         setForTime<string>(setInviteFeedbackSuccess, 'Invite sent!', '', 3000);
       })
       .catch((err) => {
@@ -209,11 +250,9 @@ const ManageParty = () => {
   };
 
   const handleKickParticipant = (kickedUser: User) => {
-    if (!selectedParty || !selectedParty.ID) return;
-    kickFromParty(selectedParty.ID, kickedUser.ID)
+    kickFromParty(party.ID, kickedUser.ID)
       .then(() => {
-        if (!selectedParty || !selectedParty.ID) return;
-        dispatch(loadPartyParticipants(selectedParty.ID));
+        //todo: reload party participants
       })
       .catch((err) => {
         console.log(err);
@@ -316,13 +355,13 @@ const ManageParty = () => {
       <div style={styles.outerContainer}>
         <ConfigProvider theme={{ algorithm: theme.darkAlgorithm }}>
           {/*<VisitPartyNavBar onProfileClick={() => setProfileOpen(true)} />*/}
-          <VisitPartyProfile
-            isOpen={profileOpen}
-            onClose={() => setProfileOpen(false)}
-            currentParty={selectedParty}
-            user={user}
-            onLeaveParty={() => console.log('leaveparty')}
-          />
+          {/*<VisitPartyProfile*/}
+          {/*  isOpen={profileOpen}*/}
+          {/*  onClose={() => setProfileOpen(false)}*/}
+          {/*  currentParty={party}*/}
+          {/*  user={user}*/}
+          {/*  onLeaveParty={() => console.log('leaveparty')}*/}
+          {/*/>*/}
           <CreateRequirementModal
             visible={requirementModalVisible}
             onClose={() => setRequirementModalVisible(false)}
@@ -366,9 +405,8 @@ const ManageParty = () => {
                 Add
               </Button>
               <div style={styles.requirementTable}>
-                {dReqLoading && <div>Loading...</div>}
-                {dReqError && <div>Error: Some unexpected error happened</div>}
-                {!dReqLoading && !dReqError && renderReqs(dRequirements, 'drink')}
+                {!drinkReqs && <div>Loading...</div>}
+                {drinkReqs && renderReqs(drinkReqs, 'drink')}
               </div>
             </div>
 
@@ -382,27 +420,24 @@ const ManageParty = () => {
                 Add
               </Button>
               <div style={styles.requirementTable}>
-                {fReqLoading && <div>Loading...</div>}
-                {fReqError && <div>Error: Some unexpected error happened</div>}
-                {!fReqLoading && !fReqError && renderReqs(fRequirements, 'food')}
+                {!foodReqs && <div>Loading...</div>}
+                {foodReqs && renderReqs(foodReqs, 'food')}
               </div>
             </div>
 
             <h2>Participants</h2>
             <div style={styles.requirementContainer}>
               <div style={styles.requirementTable}>
-                {participantLoading && <div>Loading...</div>}
-                {participantError && <div>Error: Some unexpected error happened</div>}
-                {!participantLoading && !participantError && renderParticipants()}
+                {!participants && <div>Loading...</div>}
+                {participants && renderParticipants()}
               </div>
             </div>
 
             <h2>Pending Invites</h2>
             <div style={styles.requirementContainer}>
               <div style={styles.requirementTable}>
-                {pendingInvitesLoading && <div>Loading...</div>}
-                {pendingInvitesError && <div>Error: Some unexpected error happened</div>}
-                {!pendingInvitesLoading && !pendingInvitesError && renderPendingInvites()}
+                {!pendingInvites && <div>Loading...</div>}
+                {pendingInvites && renderPendingInvites()}
               </div>
             </div>
           </div>

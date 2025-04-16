@@ -72,6 +72,16 @@ export class PartyAttendanceManagerApi {
         }
     }
 
+    async getPartyPendingInvites(partyId: number): Promise<PartyInviteInvitesResponse | 'error'> {
+        try {
+            const response = await this.axiosInstance.get<PartyInviteInvitesResponse>(`${PARTY_ATTENDANCE_MANAGER_PATH}/getPartyPendingInvites/${partyId}`)
+            return handleApiResponse(response)
+        } catch (error) {
+            handleApiError(error)
+            return 'error'
+        }
+    }
+
 }
 
 export const getPartyPendingInvites = async (partyId: number): Promise<PartyInvite[]> =>
