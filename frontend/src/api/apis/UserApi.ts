@@ -1,5 +1,5 @@
-import { get, postImage } from '../../api/Api';
-import { getApiUrl } from '../../api/ApiHelper';
+import { get, postImage } from '../Api.ts';
+import { getApiUrl } from '../ApiHelper.ts';
 import { User } from '../../data/types/User';
 import { LoginResponseDataInterface } from './AuthenticationApi';
 import axios, {AxiosInstance, AxiosResponse} from "axios";

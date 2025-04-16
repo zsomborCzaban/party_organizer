@@ -1,6 +1,6 @@
-import { get } from '../../api/Api';
+import { get } from '../Api.ts';
 
-import { getApiUrl } from '../../api/ApiHelper';
+import { getApiUrl } from '../ApiHelper.ts';
 import { Party } from '../../data/types/Party';
 import { PartyInvite } from '../../data/types/PartyInvite';
 import axios, {AxiosInstance, AxiosResponse} from "axios";
