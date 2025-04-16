@@ -1,6 +1,6 @@
-import { Button, Checkbox, ConfigProvider, DatePicker, Input, theme } from 'antd';
+import { Checkbox, ConfigProvider, DatePicker, Input, theme } from 'antd';
 import dayjs from 'dayjs';
-import { CSSProperties, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ApiError } from '../../../data/types/ApiResponseTypes';
 import {EMPTY_PARTY_POPULATED, Party, PartyPopulated} from '../../../data/types/Party';
@@ -8,117 +8,7 @@ import { setForTime } from '../../../data/utils/timeoutSetterUtils';
 import { updateParty } from '../../../api/apis/PartyApi';
 import {useApi} from "../../../context/ApiContext.ts";
 import {toast} from "sonner";
-
-const styles: { [key: string]: CSSProperties } = {
-  outerContainer: {
-    backgroundImage: `url(${'backgroundImage'})`,
-    position: 'fixed',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    overflowY: 'auto',
-    height: '100vh',
-    width: '100vw',
-    display: 'flex',
-    flexDirection: 'column',
-    color: '#ffffff',
-  },
-  container: {
-    width: 'min(80%, 1000px)',
-    margin: '20px auto',
-    padding: '20px',
-    display: 'flex',
-    flexDirection: 'column',
-    // backgroundColor: "#2c2c2c", // Darker gray background for content box
-    backgroundColor: 'rgba(33, 33, 33, 0.95)',
-    borderRadius: '8px',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.4)', // Slightly stronger shadow for depth
-    color: '#007bff', // Ensure text is white for readability
-  },
-  h2: {
-    color: '#d3d3d3', // Light gray for headings
-    fontSize: '2.5rem',
-    fontWeight: 'bold',
-    textAlign: 'left',
-    marginBottom: '20px',
-  },
-  inputDiv: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    marginBottom: '20px',
-  },
-  label: {
-    marginBottom: '5px',
-  },
-  input: {
-    padding: '8px 12px',
-    fontSize: '1rem',
-    borderRadius: '5px',
-    border: '1px solid #444', // Darker border to blend with dark mode
-    backgroundColor: '#3a3a3a', // Dark input background
-    color: '#ffffff', // Light input text
-    width: '60%',
-  },
-  checkboxContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    gap: '20px',
-    width: '60%',
-  },
-  checkbox: {
-    display: 'flex',
-    flexDirection: 'row',
-    gap: '5px',
-  },
-  buttonsContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    gap: '20px',
-  },
-  button: {
-    width: 'auto',
-    minWidth: '120px',
-    padding: '10px 20px',
-    borderRadius: '5px',
-    marginBottom: '20px',
-    fontWeight: 'bold',
-    color: '#ffffff',
-    backgroundColor: '#007bff', // Accent color to match link color in header
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-  },
-  resetButton: {
-    width: 'auto',
-    minWidth: '120px',
-    padding: '10px 20px',
-    borderRadius: '5px',
-    marginBottom: '20px',
-    fontWeight: 'bold',
-    color: '#ffffff',
-    backgroundColor: '#007bff',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-  },
-  success: {
-    color: '#66ff66', // Light green for success messages
-    fontSize: '1rem',
-    marginTop: '5px',
-  },
-  error: {
-    color: '#ff6666', // Light red for error messages
-    fontSize: '1rem',
-    marginTop: '5px',
-    marginBottom: '0px',
-  },
-  loading: {
-    textAlign: 'center',
-    fontSize: '1rem',
-    color: '#d3d3d3',
-  },
-  errorMessage: {
-    textAlign: 'center',
-    fontSize: '1rem',
-    color: '#ff6666',
-  },
-};
+import classes from './PartySettings.module.scss';
 
 interface Feedbacks {
   PartyName?: string;
@@ -287,7 +177,7 @@ const PartySettings = () => {
   };
 
   return (
-    <div style={styles.outerContainer}>
+    <div className={classes.outerContainer}>
       <ConfigProvider theme={{ algorithm: theme.darkAlgorithm }}>
         {/*<VisitPartyNavBar onProfileClick={() => setProfileOpen(true)} />*/}
         {/*<VisitPartyProfile*/}
@@ -298,81 +188,81 @@ const PartySettings = () => {
         {/*  onLeaveParty={() => console.log('leaveparty')}*/}
         {/*/>*/}
 
-        <div style={styles.container}>
-          <h2 style={styles.h2}>Party Settings</h2>
+        <div className={classes.container}>
+          <h2 className={classes.h2}>Party Settings</h2>
 
-          <div style={styles.inputDiv}>
-            <label style={styles.label}>Party Name *</label>
+          <div className={classes.inputDiv}>
+            <label className={classes.label}>Party Name *</label>
             <Input
               placeholder='Enter Party Name'
               value={partyName}
               onChange={(e) => setPartyName(e.target.value)}
-              style={styles.input}
+              className={classes.input}
             />
-            {feedbacks.PartyName && <p style={styles.error}>{feedbacks.PartyName}</p>}
+            {feedbacks.PartyName && <p className={classes.error}>{feedbacks.PartyName}</p>}
           </div>
 
-          <div style={styles.inputDiv}>
-            <label style={styles.label}>Displayed Place *</label>
+          <div className={classes.inputDiv}>
+            <label className={classes.label}>Displayed Place *</label>
             <Input
               placeholder='Enter Displayed Place'
               value={place}
               onChange={(e) => setPlace(e.target.value)}
-              style={styles.input}
+              className={classes.input}
             />
-            {feedbacks.Place && <p style={styles.error}>{feedbacks.Place}</p>}
+            {feedbacks.Place && <p className={classes.error}>{feedbacks.Place}</p>}
           </div>
 
-          <div style={styles.inputDiv}>
-            <label style={styles.label}>Actual Location</label>
+          <div className={classes.inputDiv}>
+            <label className={classes.label}>Actual Location</label>
             <Input
               placeholder='Enter googlemaps plus code'
               value={googlemapsLink}
               onChange={(e) => setGoogleMapsLink(e.target.value)}
-              style={styles.input}
+              className={classes.input}
             />
-            {feedbacks.GoogleMapsLink && <p style={styles.error}>{feedbacks.GoogleMapsLink}</p>}
+            {feedbacks.GoogleMapsLink && <p className={classes.error}>{feedbacks.GoogleMapsLink}</p>}
           </div>
 
-          <div style={styles.inputDiv}>
-            <label style={styles.label}>Time *</label>
+          <div className={classes.inputDiv}>
+            <label className={classes.label}>Time *</label>
             <DatePicker
               showTime
               value={startTime}
-              style={styles.input}
+              className={classes.input}
               onChange={(date) => setStartTime(date)}
             />
-            {feedbacks.StartTime && <p style={styles.error}>{feedbacks.StartTime}</p>}
+            {feedbacks.StartTime && <p className={classes.error}>{feedbacks.StartTime}</p>}
           </div>
 
-          <div style={styles.inputDiv}>
-            <label style={styles.label}>Facebook Link</label>
+          <div className={classes.inputDiv}>
+            <label className={classes.label}>Facebook Link</label>
             <Input
               placeholder='Enter Facebook Link'
               value={facebookLink}
               onChange={(e) => setFacebookLink(e.target.value)}
-              style={styles.input}
+              className={classes.input}
             />
-            {feedbacks.FacebookLink && <p style={styles.error}>{feedbacks.FacebookLink}</p>}
+            {feedbacks.FacebookLink && <p className={classes.error}>{feedbacks.FacebookLink}</p>}
           </div>
 
-          <div style={styles.inputDiv}>
-            <label style={styles.label}>WhatsApp Link</label>
+          <div className={classes.inputDiv}>
+            <label className={classes.label}>WhatsApp Link</label>
             <Input
               placeholder='Enter WhatsApp Link'
               value={whatsAppLink}
               onChange={(e) => setWhatsappLink(e.target.value)}
-              style={styles.input}
+              className={classes.input}
             />
-            {feedbacks.WhatsappLink && <p style={styles.error}>{feedbacks.WhatsappLink}</p>}
+            {feedbacks.WhatsappLink && <p className={classes.error}>{feedbacks.WhatsappLink}</p>}
           </div>
 
-          <div style={styles.inputDiv}>
-            <div style={styles.checkboxContainer}>
-              <div style={styles.checkbox}>
+          <div className={classes.inputDiv}>
+            <div className={classes.checkboxContainer}>
+              <div className={classes.checkbox}>
                 <label
                   htmlFor='isPrivate'
-                  style={styles.label}
+                  className={classes.label}
                 >
                   Private
                 </label>
@@ -383,10 +273,10 @@ const PartySettings = () => {
                 />
               </div>
 
-              <div style={styles.checkbox}>
+              <div className={classes.checkbox}>
                 <label
                   htmlFor='isAccessCodeEnabled'
-                  style={styles.label}
+                  className={classes.label}
                 >
                   Access Code Enabled
                 </label>
@@ -397,42 +287,43 @@ const PartySettings = () => {
                 />
               </div>
             </div>
-            {feedbacks.AccessCodeEnabled && <p style={styles.error}>{feedbacks.AccessCodeEnabled}</p>}
+            {feedbacks.AccessCodeEnabled && <p className={classes.error}>{feedbacks.AccessCodeEnabled}</p>}
           </div>
 
-          <div style={styles.inputDiv}>
+          <div className={classes.inputDiv}>
             {isAccessCodeEnabled && (
               <>
-                <label style={styles.label}>Access Code</label>
+                <label className={classes.label}>Access Code</label>
                 <Input
                   placeholder='Enter Access Code'
                   value={accessCode}
                   onChange={(e) => setAccessCode(e.target.value)}
-                  style={styles.input}
+                  className={classes.input}
                 />
-                {feedbacks.AccessCode && <p style={styles.error}>{feedbacks.AccessCode}</p>}
+                {feedbacks.AccessCode && <p className={classes.error}>{feedbacks.AccessCode}</p>}
               </>
             )}
           </div>
 
           {/* Buttons */}
-          <div style={styles.buttonsContainer}>
-            <Button
+          <div className={classes.buttonsContainer}>
+            <button
               type='primary'
-              style={styles.button}
+              className={classes.button}
               onClick={handleCreate}
             >
               Save
-            </Button>
-            <Button
+            </button>
+            <button
               type='primary'
-              style={styles.resetButton}
+              className={classes.resetButton}
               onClick={handleReset}
             >
               Reset
-            </Button>
+            </button>
           </div>
-          {feedbacks.buttonError && <p style={styles.error}>{feedbacks.buttonError}</p>}
+          {feedbacks.buttonError && <p className={classes.error}>{feedbacks.buttonError}</p>}
+          {feedbacks.buttonSuccess && <p className={classes.success}>{feedbacks.buttonSuccess}</p>}
         </div>
       </ConfigProvider>
     </div>

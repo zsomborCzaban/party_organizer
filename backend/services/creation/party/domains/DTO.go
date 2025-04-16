@@ -9,7 +9,7 @@ import (
 type PartyDTO struct {
 	ID                uint           `json:"ID,omitempty"`
 	Place             string         `json:"place,omitempty" validate:"required,min=3"`
-	StartTime         time.Time      `json:"start_time,omitempty" validate:"required"`
+	StartTime         time.Time      `json:"start_time,omitempty" validate:"required,after_24_hours"`
 	Name              string         `json:"name,omitempty" validate:"required"`
 	GoogleMapsLink    string         `json:"google_maps_link" validate:"http_url"`
 	FacebookLink      string         `json:"facebook_link" validate:"http_url"`
