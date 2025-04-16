@@ -3,6 +3,7 @@ import { getApiUrl } from '../ApiHelper.ts';
 import {Party, PartyPopulated} from '../../data/types/Party';
 import { User } from '../../data/types/User';
 import axios, {AxiosInstance, AxiosResponse} from "axios";
+import {UsersResponse} from "./UserApi.ts";
 
 const PARTY_PATH = `${getApiUrl()}/party`;
 
@@ -102,6 +103,15 @@ export class PartyApi {
         }
     }
 
+    async getPartyParticipants(partyId: number): Promise<UsersResponse | 'error'> {
+        try {
+            const response = await this.axiosInstance.get<UsersResponse>(`${PARTY_PATH}/getParticipants/${partyId.toString()}`)
+            return handleApiResponse(response)
+        } catch (error) {
+            handleApiError(error)
+            return 'error'
+        }
+    }
 }
 
 export const createParty = async (requestBody: Party): Promise<Party> =>

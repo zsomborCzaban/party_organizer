@@ -19,7 +19,7 @@ const handleApiError = (error: unknown) => {
     }
 };
 
-export type GetFriendsResponse = {
+export type UsersResponse = {
     data: User[]
 }
 
@@ -30,9 +30,9 @@ export class UserApi {
         this.axiosInstance = axiosInstance;
     }
 
-    async getFriends(): Promise<GetFriendsResponse | 'error'> {
+    async getFriends(): Promise<UsersResponse | 'error'> {
         try {
-            const response = await this.axiosInstance.get<GetFriendsResponse>(`${USER_PATH}/getFriends`)
+            const response = await this.axiosInstance.get<UsersResponse>(`${USER_PATH}/getFriends`)
             return handleApiResponse(response)
         } catch (error) {
             handleApiError(error)
