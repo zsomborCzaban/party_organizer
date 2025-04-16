@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import classes from './NavigationBar.module.scss';
+import classes from './PartyNavigationBar.module.scss';
 import { NavigationButton } from './navigation-button/NavigationButton';
 
 export const PartyNavigationBar = () => {
@@ -12,9 +12,15 @@ export const PartyNavigationBar = () => {
             <div className={classes.leftSection}>
         <span
             className={classes.pageTitle}
-            onClick={() => navigate('/partyHome')}
+            onClick={() => navigate('/')}
         >
-          ${partyName}
+          Party organizer
+        </span>
+                <span
+                    className={classes.pageTitle}
+                    onClick={() => navigate('/partyHome')}
+                >
+          {partyName}
         </span>
             </div>
 

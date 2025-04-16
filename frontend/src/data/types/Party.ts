@@ -1,4 +1,4 @@
-import {User} from './User';
+import {EMPTY_USER, User} from './User';
 
 export interface Party {
     ID?: number;
@@ -26,4 +26,18 @@ export interface PartyPopulated {
     access_code_enabled: boolean;
     access_code: string;
     organizer: User;
+}
+
+export const EMPTY_PARTY_POPULATED: PartyPopulated = {
+    ID: 0,
+    place: '',
+    name: '',
+    google_maps_link: '',
+    facebook_link: '',
+    whatsapp_link: '',
+    start_time: new Date(),
+    is_private: false,
+    access_code_enabled: false,
+    access_code: '',
+    organizer: EMPTY_USER,
 }

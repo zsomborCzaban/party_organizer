@@ -19,8 +19,12 @@ const handleApiError = (error: unknown) => {
     }
 };
 
-export type PublicPartiesResponse = {
+export type PartiesResponse = {
     data: PartyPopulated[]
+}
+
+export type PartyResponse = {
+    data: PartyPopulated
 }
 
 export class PartyApi {
@@ -30,9 +34,9 @@ export class PartyApi {
         this.axiosInstance = axiosInstance;
     }
 
-    async getPublicParties(): Promise< PublicPartiesResponse | 'error'> {
+    async getPublicParties(): Promise< PartiesResponse | 'error'> {
         try {
-            const response = await this.axiosInstance.get<PublicPartiesResponse>(`${getApiUrl()}/publicParties`)
+            const response = await this.axiosInstance.get<PartiesResponse>(`${getApiUrl()}/publicParties`)
             // toast.success('Public parties received')
             return handleApiResponse(response)
         } catch (error) {
@@ -41,9 +45,9 @@ export class PartyApi {
         }
     }
 
-    async getAttendedParties(): Promise< PublicPartiesResponse | 'error'> {
+    async getAttendedParties(): Promise< PartiesResponse | 'error'> {
         try {
-            const response = await this.axiosInstance.get<PublicPartiesResponse>(`${PARTY_PATH}/getPartiesByParticipantId`)
+            const response = await this.axiosInstance.get<PartiesResponse>(`${PARTY_PATH}/getPartiesByParticipantId`)
             // toast.success('Public parties received')
             return handleApiResponse(response)
         } catch (error) {
@@ -52,10 +56,30 @@ export class PartyApi {
         }
     }
 
-    async getOrganizedParties(): Promise< PublicPartiesResponse | 'error'> {
+    async getOrganizedParties(): Promise< PartiesResponse | 'error'> {
         try {
-            const response = await this.axiosInstance.get<PublicPartiesResponse>(`${PARTY_PATH}/getPartiesByOrganizerId`)
+            const response = await this.axiosInstance.get<PartiesResponse>(`${PARTY_PATH}/getPartiesByOrganizerId`)
             // toast.success('Public parties received')
+            return handleApiResponse(response)
+        } catch (error) {
+            handleApiError(error)
+            return 'error'
+        }
+    }
+
+    async getPartyUnauthenticated(partyId: number): Promise<PartyResponse | 'error'> {
+        try {
+            const response = await this.axiosInstance.get<PartyResponse>(`${getApiUrl()}/publicParties/${partyId.toString()}`)
+            return handleApiResponse(response)
+        } catch (error) {
+            handleApiError(error)
+            return 'error'
+        }
+    }
+
+    async getParty(partyId: number): Promise<PartyResponse | 'error'> {
+        try {
+            const response = await this.axiosInstance.get<PartyResponse>(`${PARTY_PATH}/${partyId.toString()}`)
             return handleApiResponse(response)
         } catch (error) {
             handleApiError(error)

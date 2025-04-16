@@ -6,6 +6,9 @@
 
 -publikus endpoint lehet a adiscover és a party home page
 
+-ha lejar a jwt token frontenden akkor jelentkeztessuk ki a usert
+-error kezelesek kipofozasa (ha loginnal nincs backend akkor ne azt adjuk vissza, hogy invalid username or password)
+
 
 
 # Todos

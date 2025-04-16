@@ -4,3 +4,10 @@ export interface User {
     email: string;
     profile_picture_url?: string;
 }
+
+export const EMPTY_USER: User = {
+    ID: 0,
+    username: '',
+    email: '',
+    profile_picture_url: '',
+}

@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Discover from './pages/overView/discover/Discover';
-import PartyHome from './pages/visitParty/partyHome/PartyHome';
+import { PartyHome } from './pages/party/party-home/PartyHome';
 import Contributions from './pages/visitParty/contribution/Contributions';
 import HallOfFame from './pages/visitParty/hallOfFame/HallOfFame';
 import ManageParty from './pages/visitParty/manageParty/ManageParty';
@@ -95,8 +95,8 @@ export const AppRouter = () => (
       </Route>
 
       <Route element={<PartyLayout />}>
+        <Route path="/partyHome" element={<PartyHome />} />
         <Route element={<RequireAuthForRoute />}>
-          <Route path="/partyHome" element={<PartyHome />} />
           <Route path="/visitParty/contributions" element={<Contributions />} />
           <Route path="/visitParty/manageParty" element={<ManageParty />} />
           <Route path="/visitParty/partySettings" element={<PartySettings />} />

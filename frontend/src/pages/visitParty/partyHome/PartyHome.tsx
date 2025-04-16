@@ -4,8 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { User } from '../../../data/types/User';
 import { getUser } from '../../../auth/AuthUserUtil';
 import { authService } from '../../../auth/AuthService';
-import VisitPartyNavBar from '../../../components/navigation-bar/VisitPartyNavBar';
-import VisitPartyProfile from '../../../components/drawer/VisitPartyProfile';
 import { RootState } from './../../../store/store';
 
 
@@ -129,7 +127,7 @@ const PartyHome: React.FC = () => {
 
         {/* <div style={{ position: 'relative', width: '100%', height: '100vh', overflow: 'hidden' }}> */}
         <video
-          /* src={videoBackground} */
+          // src={videoBackground}
           autoPlay
           loop
           muted

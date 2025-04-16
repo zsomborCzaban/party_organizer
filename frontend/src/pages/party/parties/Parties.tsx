@@ -122,7 +122,11 @@ export const Parties = () => {
         {
             label: 'Visit',
             color: 'info',
-            onClick: (party: PartyTableRow) => navigate(`/partyHome?id=${party.id}`) //todo: navigate to party page
+            onClick: (party: PartyTableRow) => {
+                localStorage.setItem('partyName', party.name)
+                localStorage.setItem('partyId', party.id.toString())
+                navigate(`/partyHome`)
+            }
         }
     ];
 
