@@ -11,13 +11,14 @@ import (
 )
 
 var AuthRoutes = map[string][]string{
-	"/login":    {"POST"},
-	"/register": {"POST"},
+	"/login":                    {"POST"},
+	"/resetPassword/{username}": {"GET"},
 }
 
 var UserRoutes = map[string][]string{
 	"/user/getFriends":           {"GET"},
 	"/user/uploadProfilePicture": {"POST"},
+	"/resetPassword":             {"POST"},
 }
 
 func Test_NewUserAuthRouter(t *testing.T) {

@@ -13,7 +13,6 @@ import (
 	s3Wrapper "github.com/zsomborCzaban/party_organizer/utils/s3"
 	"gopkg.in/gomail.v2"
 	"mime/multipart"
-	"net/http"
 	"os"
 	"time"
 )
@@ -54,33 +53,6 @@ func (us *UserService) Login(loginRequest domains.LoginRequest) api.IResponse {
 	return api.Success(
 		domains.JWTData{Jwt: *jwt},
 	)
-}
-
-func (us *UserService) Register(registerRequest domains.RegisterRequest) api.IResponse {
-	if err1 := us.Validator.Validate(registerRequest); err1 != nil {
-		return api.ErrorValidation(err1.Errors)
-	}
-
-	_, err2 := us.UserRepository.FindByUsername(registerRequest.Username)
-	if err2 == nil {
-		errorUserAlreadyExists := api.NewValidationErrors()
-		errorUserAlreadyExists.CollectValidationError("username", "username already taken", registerRequest.Username)
-		return api.Error(http.StatusBadRequest, errorUserAlreadyExists.Errors)
-	}
-	if err2.Error() != domains.UserNotFound+registerRequest.Username {
-		return api.ErrorInternalServerError(err2.Error())
-	}
-
-	user, err3 := registerRequest.TransformToUser()
-	if err3 != nil {
-		return api.ErrorInternalServerError(err3.Error())
-	}
-
-	if err4 := us.UserRepository.CreateUser(user); err4 != nil {
-		return api.ErrorInternalServerError(err4.Error())
-	}
-
-	return api.Success("register_success")
 }
 
 func (us *UserService) AddFriend(friendId, userId uint) api.IResponse {
