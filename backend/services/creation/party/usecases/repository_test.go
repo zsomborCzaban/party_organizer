@@ -25,7 +25,7 @@ func TestPartyRepository_AddUserToParty_Success(t *testing.T) {
 	party := &domains.Party{}
 	user := &userDomain.User{Model: gorm.Model{ID: 1}}
 
-	mockDb.On("Update", party).Return(nil)
+	mockDb.On("Update", party, party.ID).Return(nil)
 
 	err := repo.AddUserToParty(party, user)
 
@@ -173,9 +173,9 @@ func TestPartyRepository_FindById_TypeAssertionError(t *testing.T) {
 
 func TestPartyRepository_UpdateParty_Success(t *testing.T) {
 	repo, mockDb := setupPartyRepository()
-	party := &domains.Party{}
+	party := &domains.Party{Model: gorm.Model{ID: 1}}
 
-	mockDb.On("Update", party).Return(nil)
+	mockDb.On("Update", mock.Anything, party.ID).Return(nil)
 
 	err := repo.Update(party)
 

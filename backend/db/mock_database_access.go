@@ -21,8 +21,8 @@ func (m *MockDatabaseAccess) FindAll(associations ...string) (interface{}, error
 	return args.Get(0), args.Error(1)
 }
 
-func (m *MockDatabaseAccess) Update(entity interface{}) error {
-	args := m.Called(entity)
+func (m *MockDatabaseAccess) Update(entity interface{}, id uint) error {
+	args := m.Called(entity, id)
 	return args.Error(0)
 }
 
