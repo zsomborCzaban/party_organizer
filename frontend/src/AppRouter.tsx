@@ -15,78 +15,6 @@ import { Friends } from './pages/friends/Friends';
 import {MainLayout, PartyLayout} from "./layouts/Layouts.tsx";
 
 export const AppRouter = () => (
-  // <BrowserRouter>
-  //   <div className={classes.app}>
-  //     <NavigationBar />
-  //     <div className={classes.appContent}>
-  //       <Routes>
-  //         {/* Public routes */}
-  //         <Route
-  //           path='/'
-  //           element={<Homepage />}
-  //         />
-  //         <Route
-  //           path='/login'
-  //           element={<Login />}
-  //         />
-  //         <Route
-  //           path='/register'
-  //           element={<Register />}
-  //         />
-  //         {/* Private routes */}
-  //         <Route element={<RequireAuthForRoute />}>
-  //           <Route
-  //             path='/overview/discover'
-  //             element={<Discover />}
-  //           />
-  //           <Route
-  //             path='/createParty'
-  //             element={<CreateParty />}
-  //           />
-  //           <Route
-  //             path='/partyHome'
-  //             element={<PartyHome />}
-  //           />
-  //           <Route
-  //             path='/visitParty/contributions'
-  //             element={<Contributions />}
-  //           />
-  //
-  //           <Route
-  //             path='/visitParty/manageParty'
-  //             element={<ManageParty />}
-  //           />
-  //           <Route
-  //             path='/visitParty/partySettings'
-  //             element={<PartySettings />}
-  //           />
-  //           <Route
-  //             path='/visitParty/hallOfFame'
-  //             element={<HallOfFame />}
-  //           />
-  //           <Route
-  //             path='/parties'
-  //             element={<Parties />}
-  //           />
-  //           <Route
-  //             path='/friends'
-  //             element={
-  //               <>
-  //                 <Friends />
-  //               </>
-  //             }
-  //           />
-  //           <Route
-  //             path='/party/create'
-  //             element={<CreateParty />}
-  //           />
-  //         </Route>
-  //       </Routes>
-  //     </div>
-  //     <Footer />
-  //   </div>
-  // </BrowserRouter>
-
   <BrowserRouter>
     <Routes>
       <Route element={<MainLayout />}>
@@ -97,10 +25,10 @@ export const AppRouter = () => (
       <Route element={<PartyLayout />}>
         <Route path="/partyHome" element={<PartyHome />} />
         <Route element={<RequireAuthForRoute />}>
-          <Route path="/visitParty/contributions" element={<Contributions />} />
-          <Route path="/visitParty/manageParty" element={<ManageParty />} />
-          <Route path="/visitParty/partySettings" element={<PartySettings />} />
-          <Route path="/visitParty/hallOfFame" element={<HallOfFame />} />
+          <Route path="/contributions" element={<Contributions />} />
+          <Route path="/manageParty" element={<ManageParty />} />
+          <Route path="/partySettings" element={<PartySettings />} />
+          <Route path="/hallOfFame" element={<HallOfFame />} />
         </Route>
       </Route>
 
