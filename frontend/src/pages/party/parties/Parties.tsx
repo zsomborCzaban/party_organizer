@@ -125,6 +125,7 @@ export const Parties = () => {
             onClick: (party: PartyTableRow) => {
                 localStorage.setItem('partyName', party.name)
                 localStorage.setItem('partyId', party.id.toString())
+                localStorage.setItem('partyOrganizerName', party.organizerName)
                 navigate(`/partyHome`)
             }
         }

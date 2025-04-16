@@ -3,12 +3,16 @@ import classes from './NavigationBarDarkTheme.module.scss';
 import { NavigationButton } from './navigation-button/NavigationButton';
 import { useAppSelector } from '../../store/store-helper';
 import { isUserLoggedIn } from '../../store/sclices/UserSlice';
+import { getUserName } from "../../auth/AuthUserUtil.ts";
 
 export const PartyNavigationBar = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const userLoggedIn = useAppSelector(isUserLoggedIn);
     const partyName = localStorage.getItem('partyName') || 'Unexpected error';
+    const organizerName = localStorage.getItem('partyOrganizerName'); //cannot do || 'Unexpected error' because if a user would choose the name unexpected error, he could see the buttons ^^.
+    const userName = getUserName()
+    const isUserOrganizer = userName && organizerName && userName === organizerName
 
     return (
         <nav className={classes.navBar}>
@@ -28,6 +32,20 @@ export const PartyNavigationBar = () => {
             </div>
 
             <div className={classes.centerSection}>
+                {userLoggedIn && isUserOrganizer && (
+                        <>
+                            <NavigationButton
+                                buttonText='Manage Party'
+                                navigateToLink='/manageParty'
+                                isActive={location.pathname === '/manageParty'}
+                            />
+                            <NavigationButton
+                                buttonText='Party Settings'
+                                navigateToLink='/partySettings'
+                                isActive={location.pathname === '/partySettings'}
+                            />
+                        </>
+                    )}
                 <NavigationButton
                     buttonText='Home'
                     navigateToLink='/partyHome'

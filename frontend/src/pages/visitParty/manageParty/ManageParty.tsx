@@ -11,7 +11,6 @@ import { authService } from '../../../auth/AuthService';
 import { setForTime } from '../../../data/utils/timeoutSetterUtils';
 import { Requirement } from '../../../data/types/Requirement';
 import { invitedTableColumnsLegacy, requirementTableColumnsLegacy, userTableColumnsLegacy } from '../../../data/constants/TableColumns';
-// import VisitPartyNavBar from '../../../components/navigation-bar/VisitPartyNavBar';
 import VisitPartyProfile from '../../../components/drawer/VisitPartyProfile';
 import { inviteToParty, kickFromParty } from '../../../api/apis/PartyAttendanceManagerApi';
 import { loadDrinkRequirements } from '../../../store/sclices/DrinkRequirementSlice';

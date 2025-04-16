@@ -40,11 +40,11 @@ func (dbWrapper *GormDBWrapper) Find(dest interface{}, associations []string, co
 	for _, association := range associations {
 		dbWrapper.DB = dbWrapper.DB.Preload(association)
 	}
-	return dbWrapper.DB.Find(dest, conds).Error
+	return dbWrapper.DB.Find(dest, conds).Error //causes concurrent map writes once
 }
 
 func (dbWrapper *GormDBWrapper) Update(entity interface{}) error {
-	return dbWrapper.DB.Model(entity).Omit(COLUMNS_TO_OMIT_DURING_UPDATE...).Updates(entity).Error
+	return dbWrapper.DB.Model(entity).Omit(COLUMNS_TO_OMIT_DURING_UPDATE...).Updates(entity).Error //caused concurent mapp writes once
 }
 
 func (dbWrapper *GormDBWrapper) Delete(entity interface{}) error {
@@ -89,7 +89,7 @@ func (dbWrapper *GormDBWrapper) Many2ManyQueryId(dest interface{}, associations 
 		for _, preloadColumn := range associations {
 			dbWrapper.DB = dbWrapper.DB.Preload(preloadColumn)
 		}
-		return dbWrapper.DB.Raw(query, cond.M2MConditionColumnValue).Find(dest).Error
+		return dbWrapper.DB.Raw(query, cond.M2MConditionColumnValue).Find(dest).Error //caused concurent mapwrited once
 
 	} else {
 		query := fmt.Sprintf(

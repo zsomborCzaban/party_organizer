@@ -37,6 +37,21 @@ export const getUserEmail = () => {
   }
 };
 
+export const getUserName = () => {
+  const authToken = getJwtAuthToken();
+  if (!authToken) {
+    return null;
+  }
+
+  try {
+    const decoded: UserJwtPayload = jwtDecode(authToken);
+    return decoded.username;
+  } catch (e) {
+    return null;
+  }
+};
+
+
 export const getUserProfilePicture = () => {
   const authToken = getJwtAuthToken();
   if (!authToken) {
