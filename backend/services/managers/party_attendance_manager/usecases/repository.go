@@ -27,7 +27,7 @@ func (pr PartyInviteRepository) Create(invitation *domains.PartyInvite) error {
 }
 
 func (pr PartyInviteRepository) Update(invitation *domains.PartyInvite) error {
-	if err := pr.DbAccess.Update(invitation); err != nil {
+	if err := pr.DbAccess.Update(invitation, invitation.ID); err != nil {
 		return err
 	}
 	return nil

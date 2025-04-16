@@ -27,7 +27,7 @@ func (pr Repository) AddUserToParty(party *domains.Party, user *userDomain.User)
 	//}
 
 	party.Participants = append(party.Participants, *user)
-	return pr.DbAccess.Update(party)
+	return pr.DbAccess.Update(party, party.ID)
 }
 
 func (pr Repository) RemoveUserFromParty(party *domains.Party, user *userDomain.User) error {
@@ -157,7 +157,18 @@ func (pr Repository) FindById(id uint, associations ...string) (*domains.Party, 
 }
 
 func (pr Repository) Update(party *domains.Party) error {
-	err := pr.DbAccess.Update(party)
+	fullUpdate := map[string]interface{}{ //gorm doesnt update empty fields by default when provideing a struct
+		"Place":             party.Place,
+		"StartTime":         party.StartTime,
+		"Name":              party.Name,
+		"GoogleMapsLink":    party.GoogleMapsLink,
+		"FacebookLink":      party.FacebookLink,
+		"WhatsappLink":      party.WhatsappLink,
+		"Private":           party.Private,
+		"AccessCodeEnabled": party.AccessCodeEnabled,
+		"AccessCode":        party.AccessCode,
+	}
+	err := pr.DbAccess.Update(fullUpdate, party.ID)
 	if err != nil {
 		return err
 	}

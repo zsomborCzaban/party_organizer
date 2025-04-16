@@ -39,12 +39,6 @@ const ManageParty = () => {
   const [reloadParticipants, setReloadParticipants] = useState(0)
   const [reloadPendingInvites, setReloadPendingInvites] = useState(0)
 
-  // const { selectedParty } = useSelector((state: RootState) => state.selectedPartyStore);
-  // const { requirements: dRequirements, loading: dReqLoading, error: dReqError } = useSelector((state: RootState) => state.drinkRequirementStore);
-  // const { requirements: fRequirements, loading: fReqLoading, error: fReqError } = useSelector((state: RootState) => state.foodRequirementStore);
-  // const { participants, loading: participantLoading, error: participantError } = useSelector((state: RootState) => state.partyParticipantStore);
-  // const { pendingInvites, loading: pendingInvitesLoading, error: pendingInvitesError } = useSelector((state: RootState) => state.partyPendingInviteStore);
-
   useEffect(() => {
     api.partyApi.getParty(partyId)
         .then(result => {

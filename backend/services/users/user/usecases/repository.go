@@ -81,12 +81,12 @@ func (ur UserRepository) AddFriend(user, friend *domains.User) error {
 	//}
 	//not nice workaround
 	user.Friends = append(user.Friends, *friend)
-	if err := ur.DbAccess.Update(user); err != nil {
+	if err := ur.DbAccess.Update(user, user.ID); err != nil {
 		return err
 	}
 
 	friend.Friends = append(friend.Friends, *user)
-	if err2 := ur.DbAccess.Update(friend); err2 != nil {
+	if err2 := ur.DbAccess.Update(friend, friend.ID); err2 != nil {
 		return err2
 	}
 
@@ -147,7 +147,7 @@ func (ur UserRepository) RemoveFriend(user, friend *domains.User) error {
 }
 
 func (ur UserRepository) UpdateUser(user *domains.User) error {
-	err := ur.DbAccess.Update(user)
+	err := ur.DbAccess.Update(user, user.ID)
 	if err != nil {
 		return err
 	}

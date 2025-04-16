@@ -43,8 +43,8 @@ func (dbWrapper *GormDBWrapper) Find(dest interface{}, associations []string, co
 	return dbWrapper.DB.Find(dest, conds).Error //causes concurrent map writes once
 }
 
-func (dbWrapper *GormDBWrapper) Update(entity interface{}) error {
-	return dbWrapper.DB.Model(entity).Omit(COLUMNS_TO_OMIT_DURING_UPDATE...).Updates(entity).Error //caused concurent mapp writes once
+func (dbWrapper *GormDBWrapper) Update(entity interface{}, model interface{}, id uint) error {
+	return dbWrapper.DB.Model(model).Where("id = ?", id).Omit(COLUMNS_TO_OMIT_DURING_UPDATE...).Updates(entity).Error //caused concurent mapp writes once
 }
 
 func (dbWrapper *GormDBWrapper) Delete(entity interface{}) error {

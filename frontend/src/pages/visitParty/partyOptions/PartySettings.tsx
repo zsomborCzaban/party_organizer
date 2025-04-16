@@ -1,19 +1,13 @@
 import { Button, Checkbox, ConfigProvider, DatePicker, Input, theme } from 'antd';
 import dayjs from 'dayjs';
 import { CSSProperties, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { AppDispatch, RootState } from '../../../store/store';
-import { User } from '../../../data/types/User';
-import { getUser } from '../../../auth/AuthUserUtil';
-import { authService } from '../../../auth/AuthService';
 import { ApiError } from '../../../data/types/ApiResponseTypes';
-import { Party } from '../../../data/types/Party';
+import {EMPTY_PARTY_POPULATED, Party, PartyPopulated} from '../../../data/types/Party';
 import { setForTime } from '../../../data/utils/timeoutSetterUtils';
-// import VisitPartyNavBar from '../../../components/navigation-bar/VisitPartyNavBar';
-import VisitPartyProfile from '../../../components/drawer/VisitPartyProfile';
 import { updateParty } from '../../../api/apis/PartyApi';
-import { setSelectedParty } from '../../../store/sclices/PartySlice';
+import {useApi} from "../../../context/ApiContext.ts";
+import {toast} from "sonner";
 
 const styles: { [key: string]: CSSProperties } = {
   outerContainer: {
@@ -129,12 +123,12 @@ const styles: { [key: string]: CSSProperties } = {
 interface Feedbacks {
   PartyName?: string;
   Place?: string;
-  GooglemapsLink?: string;
+  GoogleMapsLink?: string;
   StartTime?: string;
   FacebookLink?: string;
-  WhatsAppLink?: string;
+  WhatsappLink?: string;
   IsPrivate?: string;
-  IsAccessCodeEnabled?: string;
+  AccessCodeEnabled?: string;
   AccessCode?: string;
   buttonError?: string;
   buttonSuccess?: string;
@@ -143,59 +137,59 @@ interface Feedbacks {
 }
 
 const PartySettings = () => {
+  const api = useApi()
   const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
+  const partyId = Number(localStorage.getItem('partyId') || '-1')
 
-  const { selectedParty } = useSelector((state: RootState) => state.selectedPartyStore);
 
-  const [profileOpen, setProfileOpen] = useState(false);
-  const [user, setUser] = useState<User>();
-  const [partyName, setPartyName] = useState(selectedParty ? selectedParty.name : '');
-  const [place, setPlace] = useState(selectedParty ? selectedParty.place : '');
-  const [googlemapsLink, setGoogleMapsLink] = useState(selectedParty ? selectedParty.google_maps_link : '');
-  const [startTime, setStartTime] = useState<dayjs.Dayjs>(dayjs(selectedParty ? selectedParty.start_time : ''));
-  const [facebookLink, setFacebookLink] = useState(selectedParty ? selectedParty.facebook_link : '');
-  const [whatsAppLink, setWhatsAppLink] = useState(selectedParty ? selectedParty.whatsapp_link : '');
-  const [isPrivate, setIsPrivate] = useState(selectedParty ? selectedParty.is_private : false);
-  const [isAccessCodeEnabled, setIsAccessCodeEnabled] = useState(selectedParty ? selectedParty.access_code_enabled : false);
-  const [accessCode, setAccessCode] = useState(selectedParty ? selectedParty.access_code : '');
+  const [party, setParty] = useState<PartyPopulated>(EMPTY_PARTY_POPULATED)
+  const [partyName, setPartyName] = useState('');
+  const [place, setPlace] = useState('');
+  const [googlemapsLink, setGoogleMapsLink] = useState('');
+  const [startTime, setStartTime] = useState<dayjs.Dayjs>(dayjs(''));
+  const [facebookLink, setFacebookLink] = useState('');
+  const [whatsAppLink, setWhatsappLink] = useState('');
+  const [isPrivate, setIsPrivate] = useState( false);
+  const [isAccessCodeEnabled, setAccessCodeEnabled] = useState(false);
+  const [accessCode, setAccessCode] = useState('');
   const [feedbacks, setFeedbacks] = useState<Feedbacks>({});
 
   useEffect(() => {
-    const currentUser = getUser();
-
-    if (!currentUser) {
-      authService.userLoggedOut();
-      return;
-    }
-
-    setUser(currentUser);
-  }, []);
-
-  if (!selectedParty) {
-    console.log('error, no selected party');
-    navigate('/overview/discover');
-    return <div>error, selected party was null</div>;
-  }
-
-  if (!user) {
-    console.log('user was null');
-    return <div>Loading...</div>;
-  }
+    api.partyApi.getParty(partyId)
+        .then(result => {
+          if(result === 'error'){
+            toast.error('Unable to load party')
+            return
+          }
+          if(result === 'private party'){ //could also be because of the user is not logged in
+            toast.error('Navigation error')
+            navigate('/partyHome')
+            return
+          }
+          setParty(result.data)
+        })
+        .catch(() => {
+          toast.error('Unexpected error')
+        })
+  }, [api.partyApi, navigate, partyId]);
 
   const handleReset = () => {
-    setPartyName(selectedParty.name);
-    setPlace(selectedParty.place);
-    setGoogleMapsLink(selectedParty.google_maps_link);
-    setStartTime(dayjs(selectedParty.start_time));
-    setFacebookLink(selectedParty.facebook_link);
-    setWhatsAppLink(selectedParty.whatsapp_link);
-    setIsPrivate(selectedParty.is_private);
-    setIsAccessCodeEnabled(selectedParty.access_code_enabled);
-    setAccessCode(selectedParty.access_code);
+    setPartyName(party.name);
+    setPlace(party.place);
+    setGoogleMapsLink(party.google_maps_link);
+    setStartTime(dayjs(party.start_time));
+    setFacebookLink(party.facebook_link);
+    setWhatsappLink(party.whatsapp_link);
+    setIsPrivate(party.is_private);
+    setAccessCodeEnabled(party.access_code_enabled);
+    setAccessCode(party.access_code);
 
     setFeedbacks({});
   };
+
+  useEffect(() => {
+    handleReset()
+  }, [party]);
 
   const validate = (): boolean => {
     let valid = true;
@@ -210,7 +204,7 @@ const PartySettings = () => {
       valid = false;
     }
     if (!googlemapsLink) {
-      newFeedbacks.GooglemapsLink = 'googlemapsLink is required.';
+      newFeedbacks.GoogleMapsLink = 'googlemapsLink is required.';
       valid = false;
     }
     if (!startTime) {
@@ -221,15 +215,11 @@ const PartySettings = () => {
       newFeedbacks.StartTime = 'invalid time format';
       valid = false;
     }
-    if (!isAccessCodeEnabled && accessCode) {
-      newFeedbacks.IsAccessCodeEnabled = 'to use access code, you should enable it';
-      valid = false;
-    }
     if (isAccessCodeEnabled && !accessCode) {
       newFeedbacks.AccessCode = 'access code is required if you enable it';
       valid = false;
     }
-    if (accessCode && accessCode.length < 6) {
+    if (isAccessCodeEnabled && accessCode && accessCode.length < 6) {
       newFeedbacks.AccessCode = 'access code must be at least 6 characters long';
       valid = false;
     }
@@ -242,15 +232,14 @@ const PartySettings = () => {
     const newFeedbacks: Feedbacks = {
       PartyName: '',
       Place: '',
-      GooglemapsLink: '',
+      GoogleMapsLink: '',
       StartTime: '',
       FacebookLink: '',
-      WhatsAppLink: '',
+      WhatsappLink: '',
       IsPrivate: '',
-      IsAccessCodeEnabled: '',
+      AccessCodeEnabled: '',
       AccessCode: '',
       buttonError: '',
-      buttonSuccess: '',
     };
 
     Array.from(errs).forEach((err) => {
@@ -266,8 +255,8 @@ const PartySettings = () => {
   const handleCreate = () => {
     if (!validate()) return;
 
-    const party: Party = {
-      ID: selectedParty.ID,
+    const partyToUpdate: Party = {
+      ID: party.ID,
       name: partyName,
       place,
       google_maps_link: googlemapsLink,
@@ -276,19 +265,17 @@ const PartySettings = () => {
       start_time: startTime.toDate()!,
       is_private: isPrivate,
       access_code_enabled: isAccessCodeEnabled,
-      access_code: accessCode,
+      access_code: isAccessCodeEnabled ?  accessCode: '',
     };
 
-    updateParty(party)
+    updateParty(partyToUpdate)
       .then((returnedParty) => {
-        dispatch(setSelectedParty(returnedParty));
-
-        const newFeedbacks: Feedbacks = {};
-        newFeedbacks.buttonSuccess = 'saved successfully';
-        setForTime(setFeedbacks, newFeedbacks, {}, 3000);
+        setParty(returnedParty)
+        localStorage.setItem("partyName", returnedParty.name)
+        toast.success('Party saved')
       })
       .catch((err) => {
-        if (err.response) {
+        if (err.response?.data?.errors?.Errors) {
           const errors: ApiError[] = err.response.data.errors.Errors;
           handleErrors(errors);
         } else {
@@ -303,13 +290,13 @@ const PartySettings = () => {
     <div style={styles.outerContainer}>
       <ConfigProvider theme={{ algorithm: theme.darkAlgorithm }}>
         {/*<VisitPartyNavBar onProfileClick={() => setProfileOpen(true)} />*/}
-        <VisitPartyProfile
-          isOpen={profileOpen}
-          onClose={() => setProfileOpen(false)}
-          currentParty={selectedParty}
-          user={user}
-          onLeaveParty={() => console.log('leaveparty')}
-        />
+        {/*<VisitPartyProfile*/}
+        {/*  isOpen={profileOpen}*/}
+        {/*  onClose={() => setProfileOpen(false)}*/}
+        {/*  currentParty={selectedParty}*/}
+        {/*  user={user}*/}
+        {/*  onLeaveParty={() => console.log('leaveparty')}*/}
+        {/*/>*/}
 
         <div style={styles.container}>
           <h2 style={styles.h2}>Party Settings</h2>
@@ -344,7 +331,7 @@ const PartySettings = () => {
               onChange={(e) => setGoogleMapsLink(e.target.value)}
               style={styles.input}
             />
-            {feedbacks.GooglemapsLink && <p style={styles.error}>{feedbacks.GooglemapsLink}</p>}
+            {feedbacks.GoogleMapsLink && <p style={styles.error}>{feedbacks.GoogleMapsLink}</p>}
           </div>
 
           <div style={styles.inputDiv}>
@@ -374,10 +361,10 @@ const PartySettings = () => {
             <Input
               placeholder='Enter WhatsApp Link'
               value={whatsAppLink}
-              onChange={(e) => setWhatsAppLink(e.target.value)}
+              onChange={(e) => setWhatsappLink(e.target.value)}
               style={styles.input}
             />
-            {feedbacks.WhatsAppLink && <p style={styles.error}>{feedbacks.WhatsAppLink}</p>}
+            {feedbacks.WhatsappLink && <p style={styles.error}>{feedbacks.WhatsappLink}</p>}
           </div>
 
           <div style={styles.inputDiv}>
@@ -406,10 +393,11 @@ const PartySettings = () => {
                 <Checkbox
                   id='isAccessCodeEnabled'
                   checked={isAccessCodeEnabled}
-                  onChange={(e) => setIsAccessCodeEnabled(e.target.checked)}
+                  onChange={(e) => setAccessCodeEnabled(e.target.checked)}
                 />
               </div>
             </div>
+            {feedbacks.AccessCodeEnabled && <p style={styles.error}>{feedbacks.AccessCodeEnabled}</p>}
           </div>
 
           <div style={styles.inputDiv}>
@@ -445,7 +433,6 @@ const PartySettings = () => {
             </Button>
           </div>
           {feedbacks.buttonError && <p style={styles.error}>{feedbacks.buttonError}</p>}
-          {feedbacks.buttonSuccess && <p style={styles.success}>{feedbacks.buttonSuccess}</p>}
         </div>
       </ConfigProvider>
     </div>

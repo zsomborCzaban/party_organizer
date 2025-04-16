@@ -48,7 +48,7 @@ func (val *Validator) CustomErrorMessage(err validator.FieldError) string {
 	case "http_url":
 		return fmt.Sprintf("%s must be a valid http url", err.Field())
 	case "bool_allowed_by_bool":
-		return fmt.Sprintf("cannot %s cannot be true if %s is false", err.Field(), err.Param())
+		return fmt.Sprintf("%s cannot be true if %s is false", err.Field(), err.Param())
 	case "string_allowed_by_bool_and_min_3":
 		return fmt.Sprintf("%s has to be longer than 2 characters, if %s is true", err.Field(), err.Param())
 	case "string_allowed_by_bool":

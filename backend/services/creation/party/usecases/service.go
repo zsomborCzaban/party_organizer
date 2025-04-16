@@ -116,7 +116,6 @@ func (ps PartyService) Update(partyDTO domains.PartyDTO, userId uint) api.IRespo
 		return api.ErrorUnauthorized("cannot update other people's party")
 	}
 	party := partyDTO.TransformToParty()
-	party.OrganizerID = originalParty.OrganizerID
 	if party.AccessCodeEnabled {
 		party.AccessCode = fmt.Sprintf("%d_%s", party.ID, party.AccessCode)
 	}

@@ -112,6 +112,16 @@ export class PartyApi {
             return 'error'
         }
     }
+
+    async updateParty(requestBody: Party): Promise<PartyResponse | 'error'> {
+        try {
+            const response = await this.axiosInstance.put<PartyResponse>(`${PARTY_PATH}`, requestBody)
+            return handleApiResponse(response)
+        } catch (error) {
+            handleApiError(error)
+            return 'error'
+        }
+    }
 }
 
 export const createParty = async (requestBody: Party): Promise<Party> =>
@@ -121,9 +131,9 @@ export const createParty = async (requestBody: Party): Promise<Party> =>
       .catch((error) => reject(error));
   });
 
-export const updateParty = async (requestBody: Party): Promise<Party> =>
-  new Promise<Party>((resolve, reject) => {
-    put<Party>(PARTY_PATH, requestBody)
+export const updateParty = async (requestBody: Party): Promise<PartyPopulated> =>
+  new Promise<PartyPopulated>((resolve, reject) => {
+    put<PartyPopulated>(PARTY_PATH, requestBody)
       .then((party) => resolve(party))
       .catch((error) => reject(error));
   });
