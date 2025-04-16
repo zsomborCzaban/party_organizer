@@ -81,42 +81,42 @@ const PartySettings = () => {
     handleReset()
   }, [party]);
 
-  const validate = (): boolean => {
-    let valid = true;
-    const newFeedbacks: Feedbacks = {};
-
-    if (!partyName) {
-      newFeedbacks.PartyName = 'party name is required.';
-      valid = false;
-    }
-    if (!place) {
-      newFeedbacks.Place = 'display name is required.';
-      valid = false;
-    }
-    if (!googlemapsLink) {
-      newFeedbacks.GoogleMapsLink = 'googlemapsLink is required.';
-      valid = false;
-    }
-    if (!startTime) {
-      newFeedbacks.StartTime = 'party time is required.';
-      valid = false;
-    }
-    if (!startTime?.toDate()) {
-      newFeedbacks.StartTime = 'invalid time format';
-      valid = false;
-    }
-    if (isAccessCodeEnabled && !accessCode) {
-      newFeedbacks.AccessCode = 'access code is required if you enable it';
-      valid = false;
-    }
-    if (isAccessCodeEnabled && accessCode && accessCode.length < 6) {
-      newFeedbacks.AccessCode = 'access code must be at least 6 characters long';
-      valid = false;
-    }
-
-    setFeedbacks(newFeedbacks);
-    return valid;
-  };
+  // const validate = (): boolean => {
+  //   let valid = true;
+  //   const newFeedbacks: Feedbacks = {};
+  //
+  //   if (!partyName) {
+  //     newFeedbacks.PartyName = 'party name is required.';
+  //     valid = false;
+  //   }
+  //   if (!place) {
+  //     newFeedbacks.Place = 'display name is required.';
+  //     valid = false;
+  //   }
+  //   if (!googlemapsLink) {
+  //     newFeedbacks.GoogleMapsLink = 'googlemapsLink is required.';
+  //     valid = false;
+  //   }
+  //   if (!startTime) {
+  //     newFeedbacks.StartTime = 'party time is required.';
+  //     valid = false;
+  //   }
+  //   if (!startTime?.toDate()) {
+  //     newFeedbacks.StartTime = 'invalid time format';
+  //     valid = false;
+  //   }
+  //   if (isAccessCodeEnabled && !accessCode) {
+  //     newFeedbacks.AccessCode = 'access code is required if you enable it';
+  //     valid = false;
+  //   }
+  //   if (isAccessCodeEnabled && accessCode && accessCode.length < 6) {
+  //     newFeedbacks.AccessCode = 'access code must be at least 6 characters long';
+  //     valid = false;
+  //   }
+  //
+  //   setFeedbacks(newFeedbacks);
+  //   return valid;
+  // };
 
   const handleErrors = (errs: ApiError[]) => {
     const newFeedbacks: Feedbacks = {
@@ -143,12 +143,12 @@ const PartySettings = () => {
   };
 
   const handleCreate = () => {
-    if (!validate()) return;
+    // if (!validate()) return;
 
     const partyToUpdate: Party = {
       ID: party.ID,
       name: partyName,
-      place,
+      place: place,
       google_maps_link: googlemapsLink,
       facebook_link: facebookLink,
       whatsapp_link: whatsAppLink,
@@ -308,14 +308,12 @@ const PartySettings = () => {
           {/* Buttons */}
           <div className={classes.buttonsContainer}>
             <button
-              type='primary'
               className={classes.button}
               onClick={handleCreate}
             >
               Save
             </button>
             <button
-              type='primary'
               className={classes.resetButton}
               onClick={handleReset}
             >
