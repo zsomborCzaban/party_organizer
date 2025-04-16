@@ -107,7 +107,7 @@
     justify-content: space-around;
     align-items: center;
     padding: 2rem;
-    background: rgba(17, 24, 39, 0.4); // Matching nav background
+    background: rgba(17, 24, 39, 0.4);
     backdrop-filter: blur(10px);
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -121,17 +121,44 @@
         font-size: 1.1rem;
         margin: 0;
         font-weight: 500;
-        color: rgba(255, 255, 255, 0.7); // Dimmed text like nav
+        color: rgba(255, 255, 255, 0.7);
+    }
+}
 
-        a {
-            color: #4299e1; // Blue accent color
-            text-decoration: none;
-            transition: color 0.2s ease;
+.locationContainer {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: center;
 
-            &:hover {
-                color: #63b3ed; // Lighter blue on hover
-            }
-        }
+    h5 {
+        margin: 0;
+    }
+}
+
+.socialLinks {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.iconLink {
+    color: #4299e1;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    
+    svg {
+        font-size: 1.5rem;
+    }
+
+    &:hover {
+        color: #63b3ed;
+        transform: translateY(-2px);
+    }
+
+    &:active {
+        transform: translateY(0);
     }
 }
 
@@ -150,5 +177,14 @@
 
     .progressBarContainer {
         width: 90%;
+    }
+
+    .socialLinks {
+        margin-top: 0.5rem;
+    }
+
+    .locationContainer {
+        flex-direction: column;
+        gap: 0.5rem;
     }
 } 

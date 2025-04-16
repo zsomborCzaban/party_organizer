@@ -9,7 +9,7 @@ import { getUser } from '../../../auth/AuthUserUtil';
 import { authService } from '../../../auth/AuthService';
 import { Contribution } from '../../../data/types/Contribution';
 import { Requirement } from '../../../data/types/Requirement';
-import VisitPartyNavBar from '../../../components/navigation-bar/VisitPartyNavBar';
+// import VisitPartyNavBar from '../../../components/navigation-bar/VisitPartyNavBar';
 import VisitPartyProfile from '../../../components/drawer/VisitPartyProfile';
 import Collapsible from 'react-collapsible';
 import { loadDrinkRequirements } from '../../../store/sclices/DrinkRequirementSlice';
@@ -124,7 +124,7 @@ const Contributions = () => {
   useEffect(() => {
     if (!participants) return;
     const newMap = participants.reduce((pMap: Record<number, User>, participant) => {
-      // eslint-disable-next-line no-param-reassign
+       
       pMap[participant.ID] = participant;
       return pMap;
     }, {});
@@ -276,7 +276,7 @@ const Contributions = () => {
   return (
     <div style={styles.background}>
       <div style={styles.outerContainer}>
-        <VisitPartyNavBar onProfileClick={() => setProfileOpen(true)} />
+        {/*<VisitPartyNavBar onProfileClick={() => setProfileOpen(true)} />*/}
         <VisitPartyProfile
           isOpen={profileOpen}
           onClose={() => setProfileOpen(false)}

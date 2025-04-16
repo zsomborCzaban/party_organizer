@@ -9,7 +9,7 @@ import { getUser } from '../../../auth/AuthUserUtil';
 import { authService } from '../../../auth/AuthService';
 import { Party } from '../../../data/types/Party';
 import { partyTableColumnsLegacy } from '../../../data/constants/TableColumns';
-import OverViewNavBar from '../../../components/navigation-bar/OverViewNavBar';
+// import OverViewNavBar from '../../../components/navigation-bar/OverViewNavBar';
 import OverViewProfile from '../../../components/drawer/OverViewProfile';
 import { joinPublicParty } from '../../../api/apis/PartyAttendanceManagerApi';
 import { loadPublicParties } from '../../../store/sclices/PublicPartySlice';
@@ -190,7 +190,7 @@ const Discover = () => {
 
   return (
     <div style={styles.outerContainer}>
-      <OverViewNavBar onProfileClick={() => setProfileOpen(true)} />
+      {/*<OverViewNavBar onProfileClick={() => setProfileOpen(true)} />*/}
       <OverViewProfile
         isOpen={profileOpen}
         onClose={() => setProfileOpen(false)}

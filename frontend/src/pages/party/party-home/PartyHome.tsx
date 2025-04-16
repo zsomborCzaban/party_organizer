@@ -7,6 +7,9 @@ import {useAppSelector} from "../../../store/store-helper.ts";
 import {isUserLoggedIn} from "../../../store/sclices/UserSlice.ts";
 import partyVideo from '../../../data/resources/videos/party_video.mp4';
 import classes from "./PartyHome.module.scss"
+import Map from '@mui/icons-material/Map';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 
 export const PartyHome = ()=>{
 
@@ -57,22 +60,13 @@ export const PartyHome = ()=>{
 
 
     const handleContributeClick = () => {
-        navigate('/visitParty/Contributions');
+        navigate('/contributions');
     };
 
     const formatDate = (date: Date) => {
         const d = new Date(date);
-        const nth = (d: number) => {
-            if (d > 3 && d < 21) return 'th';
-            switch (d % 10) {
-                case 1: return "st";
-                case 2: return "nd";
-                case 3: return "rd";
-                default: return "th";
-            }
-        };
 
-        return `${d.getDate()}${nth(d.getDate())} ${d.toLocaleString('default', { month: 'long' })}, ${d.toLocaleTimeString('default', { hour: '2-digit', minute: '2-digit' })}`;
+        return `${d.toLocaleString('default', { month: 'long' })} ${d.getDate()}, ${d.toLocaleTimeString('default', { hour: '2-digit', minute: '2-digit' })}`;
     };
 
     return (
@@ -112,13 +106,44 @@ export const PartyHome = ()=>{
                     </div>
 
                     <div className={classes.infoItem}>
-                        <h5>{party.place}</h5>
+                        <div className={classes.locationContainer}>
+                            <h5>{party.place}</h5>
+                            {party.google_maps_link && (
+                                <a 
+                                    href={party.google_maps_link} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className={classes.iconLink}
+                                >
+                                    <Map />
+                                </a>
+                            )}
+                        </div>
                     </div>
 
                     <div className={classes.infoItem}>
-                        <h5>
-                            <a href="#">Join Group Chat</a>
-                        </h5>
+                        <div className={classes.socialLinks}>
+                            {party.facebook_link && (
+                                <a 
+                                    href={party.facebook_link} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className={classes.iconLink}
+                                >
+                                    <FacebookIcon />
+                                </a>
+                            )}
+                            {party.whatsapp_link && (
+                                <a 
+                                    href={party.whatsapp_link} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className={classes.iconLink}
+                                >
+                                    <WhatsAppIcon />
+                                </a>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>

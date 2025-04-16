@@ -10,7 +10,7 @@ import { authService } from '../../../auth/AuthService';
 import { ApiError } from '../../../data/types/ApiResponseTypes';
 import { Party } from '../../../data/types/Party';
 import { setForTime } from '../../../data/utils/timeoutSetterUtils';
-import VisitPartyNavBar from '../../../components/navigation-bar/VisitPartyNavBar';
+// import VisitPartyNavBar from '../../../components/navigation-bar/VisitPartyNavBar';
 import VisitPartyProfile from '../../../components/drawer/VisitPartyProfile';
 import { updateParty } from '../../../api/apis/PartyApi';
 import { setSelectedParty } from '../../../store/sclices/PartySlice';
@@ -302,7 +302,7 @@ const PartySettings = () => {
   return (
     <div style={styles.outerContainer}>
       <ConfigProvider theme={{ algorithm: theme.darkAlgorithm }}>
-        <VisitPartyNavBar onProfileClick={() => setProfileOpen(true)} />
+        {/*<VisitPartyNavBar onProfileClick={() => setProfileOpen(true)} />*/}
         <VisitPartyProfile
           isOpen={profileOpen}
           onClose={() => setProfileOpen(false)}

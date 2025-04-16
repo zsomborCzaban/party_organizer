@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import classes from './PartyNavigationBar.module.scss';
+import classes from './NavigationBarDarkTheme.module.scss';
 import { NavigationButton } from './navigation-button/NavigationButton';
 
 export const PartyNavigationBar = () => {
