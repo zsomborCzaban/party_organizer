@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Input, Modal } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../../store/store';
-import { ApiError } from '../../../data/types/ApiResponseTypes';
-import { Requirement } from '../../../data/types/Requirement';
-import { setForTime } from '../../../data/utils/timeoutSetterUtils';
-import { createDrinkRequirement, createFoodRequirement } from '../../../api/apis/RequirementApi';
-import { loadDrinkRequirements } from '../../../store/sclices/DrinkRequirementSlice';
-import { loadFoodRequirements } from '../../../store/sclices/FoodRequirementSlice';
+import { AppDispatch, RootState } from '../../../store/store.ts';
+import { ApiError } from '../../../data/types/ApiResponseTypes.ts';
+import { Requirement } from '../../../data/types/Requirement.ts';
+import { setForTime } from '../../../data/utils/timeoutSetterUtils.ts';
+import { createDrinkRequirement, createFoodRequirement } from '../../../api/apis/RequirementApi.ts';
+import { loadDrinkRequirements } from '../../../store/sclices/DrinkRequirementSlice.ts';
+import { loadFoodRequirements } from '../../../store/sclices/FoodRequirementSlice.ts';
 import classes from './CreateRequirementModal.module.scss';
-import {ContributeModalProps} from "../contribution/ContributeModal.tsx";
+import {ContributeModalProps} from "../../visitParty/contribution/ContributeModal.tsx";
 
 interface Feedbacks {
   type?: string;

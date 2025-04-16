@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Modal } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../../store/store';
-import { ApiError } from '../../../data/types/ApiResponseTypes';
-import { deleteDrinkRequirement, deleteFoodRequirement } from '../../../api/apis/RequirementApi';
-import { loadDrinkRequirements } from '../../../store/sclices/DrinkRequirementSlice';
-import { loadFoodRequirements } from '../../../store/sclices/FoodRequirementSlice';
+import { AppDispatch, RootState } from '../../../store/store.ts';
+import { ApiError } from '../../../data/types/ApiResponseTypes.ts';
+import { deleteDrinkRequirement, deleteFoodRequirement } from '../../../api/apis/RequirementApi.ts';
+import { loadDrinkRequirements } from '../../../store/sclices/DrinkRequirementSlice.ts';
+import { loadFoodRequirements } from '../../../store/sclices/FoodRequirementSlice.ts';
 import classes from './DeleteRequirementModal.module.scss'
 
 // todo: instead of creating a delete modal for each delete craete a confirmAction modal, that gets the function to call if confirmed
