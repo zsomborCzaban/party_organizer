@@ -104,6 +104,9 @@ const CreateParty: React.FC = () => {
           colorBgContainer: '#3a3a3a',
           colorBorder: '#444',
           borderRadius: 5,
+          fontSize: 15,
+          controlHeight: 40,
+          paddingContentHorizontal: 14,
         },
         components: {
           Input: {
@@ -111,11 +114,15 @@ const CreateParty: React.FC = () => {
             hoverBorderColor: '#007bff',
             hoverBg: '#000000',
             activeBorderColor: '#007bff',
+            paddingBlock: 10,
+            paddingInline: 14,
           },
           DatePicker: {
             colorBgContainer: '#3a3a3a',
             hoverBorderColor: '#007bff',
             activeBorderColor: '#007bff',
+            paddingBlock: 10,
+            paddingInline: 14,
           },
         },
       }}
