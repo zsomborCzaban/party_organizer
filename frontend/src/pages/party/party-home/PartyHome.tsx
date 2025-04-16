@@ -13,7 +13,7 @@ export const PartyHome = ()=>{
     const api = useApi()
     const navigate = useNavigate()
     const userLoggedIn = useAppSelector(isUserLoggedIn);
-    const [partyId, setPartyId] = useState(0)
+    // const [partyId, setPartyId] = useState(0)
     const [party, setParty] = useState<PartyPopulated>(EMPTY_PARTY_POPULATED)
 
     useEffect(() => {
@@ -25,7 +25,7 @@ export const PartyHome = ()=>{
         }
 
         const receivedPartyId = Number(getPartyId)
-        setPartyId(receivedPartyId)
+        // setPartyId(receivedPartyId)
         
         if(userLoggedIn){
             api.partyApi.getParty(receivedPartyId)
