@@ -4,7 +4,7 @@ import { PartyHome } from './pages/party/party-home/PartyHome';
 import Contributions from './pages/visitParty/contribution/Contributions';
 import HallOfFame from './pages/visitParty/hallOfFame/HallOfFame';
 import ManageParty from './pages/party/manage-party/ManageParty.tsx';
-import PartySettings from './pages/visitParty/partyOptions/PartySettings';
+import PartySettings from './pages/party/party-settings/PartySettings.tsx';
 import { Login } from './pages/authtentication/login/Login';
 import Register from './pages/authtentication/register/Register';
 import { Homepage } from './pages/HomePage';
