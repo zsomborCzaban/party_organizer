@@ -9,7 +9,7 @@ import { createDrinkRequirement, createFoodRequirement } from '../../../api/apis
 import { loadDrinkRequirements } from '../../../store/sclices/DrinkRequirementSlice.ts';
 import { loadFoodRequirements } from '../../../store/sclices/FoodRequirementSlice.ts';
 import classes from './CreateRequirementModal.module.scss';
-import {ContributeModalProps} from "../../visitParty/contribution/ContributeModal.tsx";
+import {ContributeModalProps} from "../../contributions/ContributeModal.tsx";
 
 interface Feedbacks {
   type?: string;

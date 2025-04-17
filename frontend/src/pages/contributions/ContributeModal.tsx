@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Input, Modal } from 'antd';
-import { AppDispatch, RootState } from '../../../store/store';
+import { AppDispatch, RootState } from '../../store/store.ts';
 import { useDispatch, useSelector } from 'react-redux';
-import { ApiError } from '../../../data/types/ApiResponseTypes';
-import { Contribution } from '../../../data/types/Contribution';
-import { setForTime } from '../../../data/utils/timeoutSetterUtils';
-import { createDrinkContribution, createFoodContribution } from '../../../api/apis/ContributionApi';
-import { loadDrinkContributions } from '../../../store/sclices/DrinkContributionSlice';
-import { loadFoodContributions } from '../../../store/sclices/FoodContributionSlice';
+import { ApiError } from '../../data/types/ApiResponseTypes.ts';
+import { Contribution } from '../../data/types/Contribution.ts';
+import { setForTime } from '../../data/utils/timeoutSetterUtils.ts';
+import { createDrinkContribution, createFoodContribution } from '../../api/apis/ContributionApi.ts';
+import { loadDrinkContributions } from '../../store/sclices/DrinkContributionSlice.ts';
+import { loadFoodContributions } from '../../store/sclices/FoodContributionSlice.ts';
 
 const styles: { [key: string]: React.CSSProperties } = {
   modalContent: {
