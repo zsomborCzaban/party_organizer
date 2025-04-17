@@ -177,155 +177,157 @@ const PartySettings = () => {
   };
 
   return (
-    <div className={classes.outerContainer}>
-      <ConfigProvider theme={{ algorithm: theme.darkAlgorithm }}>
-        {/*<VisitPartyNavBar onProfileClick={() => setProfileOpen(true)} />*/}
-        {/*<VisitPartyProfile*/}
-        {/*  isOpen={profileOpen}*/}
-        {/*  onClose={() => setProfileOpen(false)}*/}
-        {/*  currentParty={selectedParty}*/}
-        {/*  user={user}*/}
-        {/*  onLeaveParty={() => console.log('leaveparty')}*/}
-        {/*/>*/}
+      <div className={classes.background}>
+        <div className={classes.outerContainer}>
+          <ConfigProvider theme={{algorithm: theme.darkAlgorithm}}>
+            {/*<VisitPartyNavBar onProfileClick={() => setProfileOpen(true)} />*/}
+            {/*<VisitPartyProfile*/}
+            {/*  isOpen={profileOpen}*/}
+            {/*  onClose={() => setProfileOpen(false)}*/}
+            {/*  currentParty={selectedParty}*/}
+            {/*  user={user}*/}
+            {/*  onLeaveParty={() => console.log('leaveparty')}*/}
+            {/*/>*/}
 
-        <div className={classes.container}>
-          <h2 className={classes.h2}>Party Settings</h2>
+            <div className={classes.container}>
+              <h2 className={classes.h2}>Party Settings</h2>
 
-          <div className={classes.inputDiv}>
-            <label className={classes.label}>Party Name *</label>
-            <Input
-              placeholder='Enter Party Name'
-              value={partyName}
-              onChange={(e) => setPartyName(e.target.value)}
-              className={classes.input}
-            />
-            {feedbacks.Name && <p className={classes.error}>{feedbacks.Name}</p>}
-          </div>
-
-          <div className={classes.inputDiv}>
-            <label className={classes.label}>Displayed Place *</label>
-            <Input
-              placeholder='Enter Displayed Place'
-              value={place}
-              onChange={(e) => setPlace(e.target.value)}
-              className={classes.input}
-            />
-            {feedbacks.Place && <p className={classes.error}>{feedbacks.Place}</p>}
-          </div>
-
-          <div className={classes.inputDiv}>
-            <label className={classes.label}>Actual Location</label>
-            <Input
-              placeholder='Enter googlemaps plus code'
-              value={googlemapsLink}
-              onChange={(e) => setGoogleMapsLink(e.target.value)}
-              className={classes.input}
-            />
-            {feedbacks.GoogleMapsLink && <p className={classes.error}>{feedbacks.GoogleMapsLink}</p>}
-          </div>
-
-          <div className={classes.inputDiv}>
-            <label className={classes.label}>Time *</label>
-            <DatePicker
-              showTime
-              value={startTime}
-              className={classes.input}
-              onChange={(date) => setStartTime(date)}
-            />
-            {feedbacks.StartTime && <p className={classes.error}>{feedbacks.StartTime}</p>}
-          </div>
-
-          <div className={classes.inputDiv}>
-            <label className={classes.label}>Facebook Link</label>
-            <Input
-              placeholder='Enter Facebook Link'
-              value={facebookLink}
-              onChange={(e) => setFacebookLink(e.target.value)}
-              className={classes.input}
-            />
-            {feedbacks.FacebookLink && <p className={classes.error}>{feedbacks.FacebookLink}</p>}
-          </div>
-
-          <div className={classes.inputDiv}>
-            <label className={classes.label}>WhatsApp Link</label>
-            <Input
-              placeholder='Enter WhatsApp Link'
-              value={whatsAppLink}
-              onChange={(e) => setWhatsappLink(e.target.value)}
-              className={classes.input}
-            />
-            {feedbacks.WhatsappLink && <p className={classes.error}>{feedbacks.WhatsappLink}</p>}
-          </div>
-
-          <div className={classes.inputDiv}>
-            <div className={classes.checkboxContainer}>
-              <div className={classes.checkbox}>
-                <label
-                  htmlFor='isPrivate'
-                  className={classes.label}
-                >
-                  Private
-                </label>
-                <Checkbox
-                  id='isPrivate'
-                  checked={isPrivate}
-                  onChange={(e) => setIsPrivate(e.target.checked)}
-                />
-              </div>
-
-              <div className={classes.checkbox}>
-                <label
-                  htmlFor='isAccessCodeEnabled'
-                  className={classes.label}
-                >
-                  Access Code Enabled
-                </label>
-                <Checkbox
-                  id='isAccessCodeEnabled'
-                  checked={isAccessCodeEnabled}
-                  onChange={(e) => setAccessCodeEnabled(e.target.checked)}
-                />
-              </div>
-            </div>
-            {feedbacks.AccessCodeEnabled && <p className={classes.error}>{feedbacks.AccessCodeEnabled}</p>}
-          </div>
-
-          <div className={classes.inputDiv}>
-            {isAccessCodeEnabled && (
-              <>
-                <label className={classes.label}>Access Code</label>
+              <div className={classes.inputDiv}>
+                <label className={classes.label}>Party Name *</label>
                 <Input
-                  placeholder='Enter Access Code'
-                  value={accessCode}
-                  onChange={(e) => setAccessCode(e.target.value)}
-                  className={classes.input}
+                    placeholder='Enter Party Name'
+                    value={partyName}
+                    onChange={(e) => setPartyName(e.target.value)}
+                    className={classes.input}
                 />
-                {feedbacks.AccessCode && <p className={classes.error}>{feedbacks.AccessCode}</p>}
-              </>
-            )}
-          </div>
+                {feedbacks.Name && <p className={classes.error}>{feedbacks.Name}</p>}
+              </div>
 
-          {/* Buttons */}
-          <div className={classes.buttonsContainer}>
-            <button
-              className={classes.button}
-              onClick={handleCreate}
-            >
-              Save
-            </button>
-            <button
-              className={classes.resetButton}
-              onClick={handleReset}
-            >
-              Reset
-            </button>
-          </div>
-          {feedbacks.buttonError && <p className={classes.error}>{feedbacks.buttonError}</p>}
-          {feedbacks.buttonSuccess && <p className={classes.success}>{feedbacks.buttonSuccess}</p>}
+              <div className={classes.inputDiv}>
+                <label className={classes.label}>Displayed Place *</label>
+                <Input
+                    placeholder='Enter Displayed Place'
+                    value={place}
+                    onChange={(e) => setPlace(e.target.value)}
+                    className={classes.input}
+                />
+                {feedbacks.Place && <p className={classes.error}>{feedbacks.Place}</p>}
+              </div>
+
+              <div className={classes.inputDiv}>
+                <label className={classes.label}>Actual Location</label>
+                <Input
+                    placeholder='Enter googlemaps plus code'
+                    value={googlemapsLink}
+                    onChange={(e) => setGoogleMapsLink(e.target.value)}
+                    className={classes.input}
+                />
+                {feedbacks.GoogleMapsLink && <p className={classes.error}>{feedbacks.GoogleMapsLink}</p>}
+              </div>
+
+              <div className={classes.inputDiv}>
+                <label className={classes.label}>Time *</label>
+                <DatePicker
+                    showTime
+                    value={startTime}
+                    className={classes.input}
+                    onChange={(date) => setStartTime(date)}
+                />
+                {feedbacks.StartTime && <p className={classes.error}>{feedbacks.StartTime}</p>}
+              </div>
+
+              <div className={classes.inputDiv}>
+                <label className={classes.label}>Facebook Link</label>
+                <Input
+                    placeholder='Enter Facebook Link'
+                    value={facebookLink}
+                    onChange={(e) => setFacebookLink(e.target.value)}
+                    className={classes.input}
+                />
+                {feedbacks.FacebookLink && <p className={classes.error}>{feedbacks.FacebookLink}</p>}
+              </div>
+
+              <div className={classes.inputDiv}>
+                <label className={classes.label}>WhatsApp Link</label>
+                <Input
+                    placeholder='Enter WhatsApp Link'
+                    value={whatsAppLink}
+                    onChange={(e) => setWhatsappLink(e.target.value)}
+                    className={classes.input}
+                />
+                {feedbacks.WhatsappLink && <p className={classes.error}>{feedbacks.WhatsappLink}</p>}
+              </div>
+
+              <div className={classes.inputDiv}>
+                <div className={classes.checkboxContainer}>
+                  <div className={classes.checkbox}>
+                    <label
+                        htmlFor='isPrivate'
+                        className={classes.label}
+                    >
+                      Private
+                    </label>
+                    <Checkbox
+                        id='isPrivate'
+                        checked={isPrivate}
+                        onChange={(e) => setIsPrivate(e.target.checked)}
+                    />
+                  </div>
+
+                  <div className={classes.checkbox}>
+                    <label
+                        htmlFor='isAccessCodeEnabled'
+                        className={classes.label}
+                    >
+                      Access Code Enabled
+                    </label>
+                    <Checkbox
+                        id='isAccessCodeEnabled'
+                        checked={isAccessCodeEnabled}
+                        onChange={(e) => setAccessCodeEnabled(e.target.checked)}
+                    />
+                  </div>
+                </div>
+                {feedbacks.AccessCodeEnabled && <p className={classes.error}>{feedbacks.AccessCodeEnabled}</p>}
+              </div>
+
+              <div className={classes.inputDiv}>
+                {isAccessCodeEnabled && (
+                    <>
+                      <label className={classes.label}>Access Code</label>
+                      <Input
+                          placeholder='Enter Access Code'
+                          value={accessCode}
+                          onChange={(e) => setAccessCode(e.target.value)}
+                          className={classes.input}
+                      />
+                      {feedbacks.AccessCode && <p className={classes.error}>{feedbacks.AccessCode}</p>}
+                    </>
+                )}
+              </div>
+
+              {/* Buttons */}
+              <div className={classes.buttonsContainer}>
+                <button
+                    className={classes.button}
+                    onClick={handleCreate}
+                >
+                  Save
+                </button>
+                <button
+                    className={classes.resetButton}
+                    onClick={handleReset}
+                >
+                  Reset
+                </button>
+              </div>
+              {feedbacks.buttonError && <p className={classes.error}>{feedbacks.buttonError}</p>}
+              {feedbacks.buttonSuccess && <p className={classes.success}>{feedbacks.buttonSuccess}</p>}
+            </div>
+          </ConfigProvider>
         </div>
-      </ConfigProvider>
-    </div>
-  );
-};
+      </div>
+        );
+        };
 
-export default PartySettings;
+        export default PartySettings;
