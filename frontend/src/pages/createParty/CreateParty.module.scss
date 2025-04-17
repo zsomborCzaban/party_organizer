@@ -1,12 +1,29 @@
 .pageContainer {
-  background-image: url('../../data/resources/images/blackhole.png');
+  background-image: url('../../data/resources/images/artlist_image.jpg');
   background-size: cover;
   background-position: center;
   min-height: 100vh;
   width: 100vw;
   display: flex;
+  flex-direction: column;
   padding: 20px;
   overflow-y: auto;
+  position: relative;
+}
+
+.videoBackground {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: 1;
+  transform: scale(1.01);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
 
 .formWrapper {

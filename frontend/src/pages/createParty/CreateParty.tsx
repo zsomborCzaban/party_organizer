@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Input, DatePicker, Checkbox, ConfigProvider, theme } from 'antd';
 import dayjs from 'dayjs';
 import 'antd/dist/reset.css';
@@ -8,6 +8,7 @@ import { ApiError } from '../../data/types/ApiResponseTypes';
 import { createParty } from '../../api/apis/PartyApi';
 import { toast } from "sonner";
 import classes from './CreateParty.module.scss';
+import artlistVideo from '../../data/resources/videos/artlist_video.mp4';
 
 interface Feedbacks {
   Name?: string;
@@ -26,6 +27,8 @@ interface Feedbacks {
 
 const CreateParty: React.FC = () => {
   const navigate = useNavigate();
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [showVideo, setShowVideo] = useState(false);
 
   const [partyName, setPartyName] = useState('');
   const [displayedPlace, setDisplayedPlace] = useState('');
@@ -80,8 +83,12 @@ const CreateParty: React.FC = () => {
         localStorage.setItem('partyName', returnedParty.name)
         localStorage.setItem('partyId', returnedParty.ID.toString())
         localStorage.setItem('partyOrganizerName', returnedParty.organizer.username)
-        navigate('/partyHome');
         toast.success('Party created')
+        
+        setShowVideo(true);
+        if (videoRef.current) {
+          videoRef.current.play();
+        }
       })
       .catch((err) => {
         if (err.response?.data?.errors?.Errors) {
@@ -90,6 +97,10 @@ const CreateParty: React.FC = () => {
           toast.error('Unexpected error')
         }
       });
+  };
+
+  const handleVideoEnded = () => {
+    navigate('/partyHome');
   };
 
   const handleCancel = () => {
@@ -128,6 +139,28 @@ const CreateParty: React.FC = () => {
       }}
     >
       <div className={classes.pageContainer}>
+        {showVideo && (
+          <video
+            ref={videoRef}
+            className={classes.videoBackground}
+            onEnded={handleVideoEnded}
+            autoPlay
+            muted
+            playsInline
+            preload="auto"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              transform: 'scale(1.01)',
+              backfaceVisibility: 'hidden',
+              WebkitBackfaceVisibility: 'hidden',
+              imageRendering: 'crisp-edges'
+            }}
+          >
+            <source src={artlistVideo} type="video/mp4" />
+          </video>
+        )}
         <div className={classes.formWrapper}>
           <div className={classes.formContainer}>
             <h2 className={classes.formTitle}>Create Party</h2>
