@@ -134,12 +134,11 @@ export const ContributeModal: React.FC<ContributeModalProps> = ({ mode, options,
   return (
       <ConfigProvider theme={{ algorithm: theme.darkAlgorithm }}>
         <Modal
-        title='Contribute'
+        title={mode === 'drink' ? 'Contribute drink' : 'Contribute Food'}
         open={visible}
         onCancel={onClose}
         footer={null}
         className={classes.modal}
-        bodyStyle={{ backgroundColor: 'rgba(33, 33, 33, 0.95)' }}
       >
         <div className={classes.modalContent}>
           <label className={classes.label}>Select Option:</label>
