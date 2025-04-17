@@ -201,18 +201,29 @@ export const HallOfFame = () => {
                             return (
                                 <div key={contribution.ID} className={classes.contribution}>
                                     <div className={classes.contributionDetails}>
-                                        <div className={classes.requirementName}>
-                                            {requirement.type}
-                                        </div>
-                                        <div className={classes.contributionQuantity}>
-                                            {contribution.quantity} {requirement.quantity_mark}
-                                        </div>
+                                        {contribution.description && (
+                                            <div className={classes.contributionDetails}>
+                                                <div className={classes.requirementName}>
+                                                    {requirement.type}
+                                                </div>
+                                            <div className={classes.contributionInfo}>
+                                                <div className={classes.contributionQuantity}>
+                                                    {contribution.quantity} {requirement.quantity_mark}
+                                                </div>
+                                                <div className={classes.contributionDescription}>
+                                                    {contribution.description}
+                                                </div>
+                                            </div>
+                                            </div>
+                                        )}
+                                        {!contribution.description && (
+                                            <div className={classes.contributionDetails}>
+                                                <div className={classes.requirementName}>
+                                                    {requirement.type}, {contribution.quantity} {requirement.quantity_mark}
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
-                                    {contribution.description && (
-                                        <div className={classes.contributionDescription}>
-                                            {contribution.description}
-                                        </div>
-                                    )}
                                     {(contribution.contributor.username === userName || userName === organizerName) && (
                                         <button
                                             className={classes.deleteButton}
