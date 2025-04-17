@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Input, Modal } from 'antd';
+import {ConfigProvider, Input, Modal, theme} from 'antd';
 import { AppDispatch, RootState } from '../../store/store.ts';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiError } from '../../data/types/ApiResponseTypes.ts';
@@ -8,61 +8,7 @@ import { setForTime } from '../../data/utils/timeoutSetterUtils.ts';
 import { createDrinkContribution, createFoodContribution } from '../../api/apis/ContributionApi.ts';
 import { loadDrinkContributions } from '../../store/sclices/DrinkContributionSlice.ts';
 import { loadFoodContributions } from '../../store/sclices/FoodContributionSlice.ts';
-
-const styles: { [key: string]: React.CSSProperties } = {
-  modalContent: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-  },
-  label: {
-    marginBottom: '8px',
-    fontSize: '16px',
-    fontWeight: 'bold',
-  },
-  inputField: {
-    marginBottom: '16px',
-    padding: '8px',
-    width: '100%',
-    border: '1px solid #ccc',
-    borderRadius: '4px',
-  },
-  feedback: {
-    marginBottom: '16px',
-    fontSize: '14px',
-    color: '#555',
-  },
-  buttonContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    gap: '20px',
-    width: '100%',
-  },
-  submitButton: {
-    backgroundColor: '#007bff',
-    color: '#fff',
-    border: 'none',
-    padding: '10px 20px',
-    borderRadius: '4px',
-    cursor: 'pointer',
-  },
-  cancelButton: {
-    backgroundColor: 'red',
-    color: '#fff',
-    border: 'none',
-    padding: '10px 20px',
-    borderRadius: '4px',
-    cursor: 'pointer',
-  },
-  error: {
-    color: 'red',
-    fontSize: '0.875em',
-  },
-  success: {
-    color: 'green',
-    fontSize: '0.875em',
-  },
-};
+import classes from './ContributeModal.module.scss';
 
 export interface ContributeModalProps {
   visible: boolean;
@@ -86,7 +32,6 @@ export const ContributeModal: React.FC<ContributeModalProps> = ({ mode, options,
   const [feedbacks, setFeedbacks] = useState<Feedbacks>({});
 
   const dispatch = useDispatch<AppDispatch>();
-
   const { selectedParty } = useSelector((state: RootState) => state.selectedPartyStore);
 
   useEffect(() => {
@@ -187,66 +132,70 @@ export const ContributeModal: React.FC<ContributeModalProps> = ({ mode, options,
   };
 
   return (
-    <Modal
-      title='Contribute'
-      open={visible}
-      onCancel={onClose}
-      footer={null}
-    >
-      <div style={styles.modalContent}>
-        <label style={styles.label}>Select Option:</label>
-        <select
-          value={requirementId}
-          onChange={(e) => setRequirementId(Number(e.target.value) ? Number(e.target.value) : 0)}
-          style={styles.selectField}
-        >
-          <option value='0'>-- Please select --</option>
-          {options.map((option) => (
-            <option
-              key={option.value}
-              value={option.value}
+      <ConfigProvider theme={{ algorithm: theme.darkAlgorithm }}>
+        <Modal
+        title='Contribute'
+        open={visible}
+        onCancel={onClose}
+        footer={null}
+        className={classes.modal}
+        bodyStyle={{ backgroundColor: 'rgba(33, 33, 33, 0.95)' }}
+      >
+        <div className={classes.modalContent}>
+          <label className={classes.label}>Select Option:</label>
+          <select
+            value={requirementId}
+            onChange={(e) => setRequirementId(Number(e.target.value) ? Number(e.target.value) : 0)}
+            className={classes.selectField}
+          >
+            <option value='0'>-- Please select --</option>
+            {options.map((option) => (
+              <option
+                key={option.value}
+                value={option.value}
+              >
+                {option.label}
+              </option>
+            ))}
+          </select>
+          {feedbacks.requirementId && <p className={classes.error}>{feedbacks.requirementId}</p>}
+
+          <label className={classes.label}>Quantity:</label>
+          <Input
+            placeholder='Enter the contributed quantity'
+            value={quantity}
+            onChange={(e) => setQuantity(e.target.value)}
+            className={classes.inputField}
+          />
+          {feedbacks.quantity && <p className={classes.error}>{feedbacks.quantity}</p>}
+
+          <label className={classes.label}>Description:</label>
+          <Input
+            placeholder='brands or types'
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className={classes.inputField}
+          />
+          {feedbacks.description && <p className={classes.error}>{feedbacks.description}</p>}
+
+          <div className={classes.buttonContainer}>
+            <button
+              onClick={handleContribute}
+              className={classes.submitButton}
             >
-              {option.label}
-            </option>
-          ))}
-        </select>
-        {feedbacks.requirementId && <p style={styles.error}>{feedbacks.requirementId}</p>}
-
-        <label style={styles.label}>Quantity:</label>
-        <Input
-          placeholder='Enter the contributed quantity'
-          value={quantity} // Ensure controlled input
-          onChange={(e) => setQuantity(e.target.value)}
-          style={styles.inputField}
-        />
-        {feedbacks.quantity && <p style={styles.error}>{feedbacks.quantity}</p>}
-
-        <label style={styles.label}>Description:</label>
-        <Input
-          placeholder='brands or types'
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          style={styles.inputField}
-        />
-        {feedbacks.description && <p style={styles.error}>{feedbacks.description}</p>}
-
-        <div style={styles.buttonContainer}>
-          <button
-            onClick={handleContribute}
-            style={styles.submitButton}
-          >
-            Submit
-          </button>
-          <button
-            onClick={onClose}
-            style={styles.cancelButton}
-          >
-            Cancel
-          </button>
+              Submit
+            </button>
+            <button
+              onClick={onClose}
+              className={classes.cancelButton}
+            >
+              Cancel
+            </button>
+          </div>
+          {feedbacks.buttonError && <p className={classes.error}>{feedbacks.buttonError}</p>}
+          {feedbacks.buttonSuccess && <p className={classes.success}>{feedbacks.buttonSuccess}</p>}
         </div>
-        {feedbacks.buttonError && <p style={styles.error}>{feedbacks.buttonError}</p>}
-        {feedbacks.buttonSuccess && <p style={styles.success}>{feedbacks.buttonSuccess}</p>}
-      </div>
-    </Modal>
+      </Modal>
+    </ConfigProvider>
   );
 };
