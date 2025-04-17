@@ -40,6 +40,8 @@ func (dbWrapper *GormDBWrapper) Find(dest interface{}, associations []string, co
 	for _, association := range associations {
 		dbWrapper.DB = dbWrapper.DB.Preload(association)
 	}
+
+	dbWrapper.DB.Error = nil
 	return dbWrapper.DB.Find(dest, conds).Error //causes concurrent map writes once
 }
 
