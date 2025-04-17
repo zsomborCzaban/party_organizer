@@ -5,7 +5,7 @@ import {RequirementPopulated} from "../../data/types/Requirement.ts";
 import {getUserName} from "../../auth/AuthUserUtil.ts";
 import {useNavigate} from "react-router-dom";
 import {toast} from "sonner";
-import { DownOutlined } from '@ant-design/icons';
+import { DownOutlined, DeleteOutlined } from '@ant-design/icons';
 import classes from './Contributions.module.scss';
 
 export const Contributions = () => {
@@ -166,6 +166,17 @@ export const Contributions = () => {
                                         </div>
                                     )}
                                 </div>
+                                {(contribution.contributor.username === userName || userName === organizerName) && (
+                                    <button 
+                                        className={classes.deleteButton}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            // Delete functionality will be implemented later
+                                        }}
+                                    >
+                                        <DeleteOutlined />
+                                    </button>
+                                )}
                             </div>
                         ))}
                     </div>
