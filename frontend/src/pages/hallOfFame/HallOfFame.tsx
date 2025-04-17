@@ -223,7 +223,7 @@ export const HallOfFame = () => {
             <div className={classes.pageContainer}>
                 <h1 className={classes.title}>Hall of Fame</h1>
                 <p className={classes.description}>
-                    See who contributed the most to the party! Click on a participant to view their contributions.
+                    Give the top contributor some praise when the party starts :) . He/She deserves it!
                 </p>
 
                 <div className={classes.usersList}>
