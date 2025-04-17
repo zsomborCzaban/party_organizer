@@ -1,66 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Modal } from 'antd';
+import { ConfigProvider, Modal, theme } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store/store.ts';
 import { ApiError } from '../../../data/types/ApiResponseTypes.ts';
 import { deleteDrinkContribution, deleteFoodContribution } from '../../../api/apis/ContributionApi.ts';
 import { loadDrinkContributions } from '../../../store/sclices/DrinkContributionSlice.ts';
 import { loadFoodContributions } from '../../../store/sclices/FoodContributionSlice.ts';
-
-const styles: { [key: string]: React.CSSProperties } = {
-  modalContent: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-  },
-  label: {
-    marginBottom: '8px',
-    fontSize: '16px',
-    fontWeight: 'bold',
-  },
-  inputField: {
-    marginBottom: '16px',
-    padding: '8px',
-    width: '100%',
-    border: '1px solid #ccc',
-    borderRadius: '4px',
-  },
-  feedback: {
-    marginBottom: '16px',
-    fontSize: '14px',
-    color: '#555',
-  },
-  buttonContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    gap: '20px',
-    width: '100%',
-  },
-  submitButton: {
-    backgroundColor: '#007bff',
-    color: '#fff',
-    border: 'none',
-    padding: '10px 20px',
-    borderRadius: '4px',
-    cursor: 'pointer',
-  },
-  cancelButton: {
-    backgroundColor: 'red',
-    color: '#fff',
-    border: 'none',
-    padding: '10px 20px',
-    borderRadius: '4px',
-    cursor: 'pointer',
-  },
-  error: {
-    color: 'red',
-    fontSize: '0.875em',
-  },
-  success: {
-    color: 'green',
-    fontSize: '0.875em',
-  },
-};
+import classes from './DeleteContributionModal.module.scss';
 
 interface DeleteContributeModalProps {
   visible: boolean;
@@ -79,7 +25,6 @@ const DeleteContributeModal: React.FC<DeleteContributeModalProps> = ({ mode, con
   const [countdown, setCountdown] = useState(0);
 
   const dispatch = useDispatch<AppDispatch>();
-
   const { selectedParty } = useSelector((state: RootState) => state.selectedPartyStore);
 
   useEffect(() => {
@@ -90,21 +35,19 @@ const DeleteContributeModal: React.FC<DeleteContributeModalProps> = ({ mode, con
   }, [visible]);
 
   const startCloseTimer = () => {
-    let count = 5; // Start from 5 seconds
+    let count = 5;
 
     const countdownTimer = () => {
       if (count >= 1) {
-        setCountdown(count); // Update the countdown state
-        count -= 1; // Decrement the countdown
-
-        setTimeout(countdownTimer, 1000); // Call the function again after 1 second
+        setCountdown(count);
+        count -= 1;
+        setTimeout(countdownTimer, 1000);
       } else {
-        // Close the modal after countdown finishes
-        onClose(); // Or set visible to false
+        onClose();
       }
     };
 
-    countdownTimer(); // Start the countdown
+    countdownTimer();
   };
 
   const handleErrors = (errs: ApiError[]) => {
@@ -167,34 +110,38 @@ const DeleteContributeModal: React.FC<DeleteContributeModalProps> = ({ mode, con
   };
 
   return (
-    <Modal
-      title='Contribute'
-      open={visible}
-      onCancel={onClose}
-      footer={null}
-    >
-      <div style={styles.modalContent}>
-        <label style={styles.label}>Are you sure you want to delete this contribution?</label>
+    <ConfigProvider theme={{ algorithm: theme.darkAlgorithm }}>
+      <Modal
+        title='Delete Contribution'
+        open={visible}
+        onCancel={onClose}
+        footer={null}
+        className={classes.modal}
+        bodyStyle={{ backgroundColor: 'rgba(33, 33, 33, 0.95)' }}
+      >
+        <div className={classes.modalContent}>
+          <label className={classes.label}>Are you sure you want to delete this contribution?</label>
 
-        <div style={styles.buttonContainer}>
-          <button
-            onClick={handleDelete}
-            style={styles.submitButton}
-          >
-            Submit
-          </button>
-          <button
-            onClick={onClose}
-            style={styles.cancelButton}
-          >
-            Cancel
-          </button>
+          <div className={classes.buttonContainer}>
+            <button
+              onClick={handleDelete}
+              className={classes.submitButton}
+            >
+              Delete
+            </button>
+            <button
+              onClick={onClose}
+              className={classes.cancelButton}
+            >
+              Cancel
+            </button>
+          </div>
+          {feedbacks.buttonError && <p className={classes.error}>{feedbacks.buttonError}</p>}
+          {feedbacks.buttonSuccess && <p className={classes.success}>{feedbacks.buttonSuccess}</p>}
+          {countdown !== 0 && <p className={classes.countdown}>The modal will close in {countdown}...</p>}
         </div>
-        {feedbacks.buttonError && <p style={styles.error}>{feedbacks.buttonError}</p>}
-        {feedbacks.buttonSuccess && <p style={styles.success}>{feedbacks.buttonSuccess}</p>}
-        {countdown !== 0 && <p>The modal will close in {countdown}...</p>}
-      </div>
-    </Modal>
+      </Modal>
+    </ConfigProvider>
   );
 };
 

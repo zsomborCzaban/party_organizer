@@ -8,6 +8,7 @@ import {toast} from "sonner";
 import { DownOutlined, DeleteOutlined } from '@ant-design/icons';
 import classes from './Contributions.module.scss';
 import { ContributeModal } from '../../components/modal/createContribution/ContributeModal.tsx';
+import DeleteContributeModal from '../../components/modal/deleteContribution/DeleteContributionModal.tsx';
 
 export const Contributions = () => {
     const api = useApi()
@@ -25,6 +26,10 @@ export const Contributions = () => {
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [modalMode, setModalMode] = useState<'drink' | 'food'>('drink');
+    
+    const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+    const [deleteModalMode, setDeleteModalMode] = useState<'drink' | 'food'>('drink');
+    const [contributionIdToDelete, setContributionIdToDelete] = useState<number>(0);
 
     useEffect(() => {
         if(userName === '' || organizerName === '' || partyId === -1){
@@ -123,6 +128,25 @@ export const Contributions = () => {
             .reduce((sum, contribution) => sum + contribution.quantity, 0)
     }
 
+    const handleDeleteClick = (contributionId: number, mode: 'drink' | 'food') => {
+        setContributionIdToDelete(contributionId);
+        setDeleteModalMode(mode);
+        setIsDeleteModalVisible(true);
+    };
+
+    const handleContributeClick = (mode: 'drink' | 'food') => {
+        setModalMode(mode);
+        setIsModalVisible(true);
+    };
+
+    const getModalOptions = (mode: 'drink' | 'food') => {
+        const requirements = mode === 'drink' ? drinkRequirements : foodRequirements;
+        return requirements.map(req => ({
+            value: req.ID,
+            label: `${req.type} (${req.target_quantity} ${req.quantity_mark})`
+        }));
+    };
+
     const renderRequirement = (requirement: RequirementPopulated, contributions: ContributionPopulated[], isDrink: boolean) => {
         const isExpanded = isDrink 
             ? expandedDrinkRequirements.has(requirement.ID)
@@ -175,7 +199,7 @@ export const Contributions = () => {
                                         className={classes.deleteButton}
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            // Delete functionality will be implemented later
+                                            handleDeleteClick(contribution.ID, isDrink ? 'drink' : 'food');
                                         }}
                                     >
                                         <DeleteOutlined />
@@ -188,19 +212,6 @@ export const Contributions = () => {
             </div>
         )
     }
-
-    const handleContributeClick = (mode: 'drink' | 'food') => {
-        setModalMode(mode);
-        setIsModalVisible(true);
-    };
-
-    const getModalOptions = (mode: 'drink' | 'food') => {
-        const requirements = mode === 'drink' ? drinkRequirements : foodRequirements;
-        return requirements.map(req => ({
-            value: req.ID,
-            label: `${req.type} (${req.target_quantity} ${req.quantity_mark})`
-        }));
-    };
 
     return (
         <div className={classes.outerContainer}>
@@ -245,6 +256,13 @@ export const Contributions = () => {
                 onClose={() => setIsModalVisible(false)}
                 options={getModalOptions(modalMode)}
                 mode={modalMode}
+            />
+
+            <DeleteContributeModal
+                visible={isDeleteModalVisible}
+                onClose={() => setIsDeleteModalVisible(false)}
+                mode={deleteModalMode}
+                contributionId={contributionIdToDelete}
             />
         </div>
     )
