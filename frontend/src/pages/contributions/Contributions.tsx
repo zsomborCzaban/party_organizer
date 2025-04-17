@@ -7,6 +7,7 @@ import {useNavigate} from "react-router-dom";
 import {toast} from "sonner";
 import { DownOutlined, DeleteOutlined } from '@ant-design/icons';
 import classes from './Contributions.module.scss';
+import { ContributeModal } from './ContributeModal';
 
 export const Contributions = () => {
     const api = useApi()
@@ -21,6 +22,9 @@ export const Contributions = () => {
     const [foodRequirements, setFoodRequirements] = useState<RequirementPopulated[]>([])
     const [expandedDrinkRequirements, setExpandedDrinkRequirements] = useState<Set<number>>(new Set())
     const [expandedFoodRequirements, setExpandedFoodRequirements] = useState<Set<number>>(new Set())
+
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [modalMode, setModalMode] = useState<'drink' | 'food'>('drink');
 
     useEffect(() => {
         if(userName === '' || organizerName === '' || partyId === -1){
@@ -185,19 +189,34 @@ export const Contributions = () => {
         )
     }
 
+    const handleContributeClick = (mode: 'drink' | 'food') => {
+        setModalMode(mode);
+        setIsModalVisible(true);
+    };
+
+    const getModalOptions = (mode: 'drink' | 'food') => {
+        const requirements = mode === 'drink' ? drinkRequirements : foodRequirements;
+        return requirements.map(req => ({
+            value: req.ID,
+            label: `${req.type} (${req.target_quantity} ${req.quantity_mark})`
+        }));
+    };
+
     return (
         <div className={classes.outerContainer}>
             <div className={classes.pageContainer}>
                 <h1 className={classes.title}>Contributions</h1>
-                {/*<p className={classes.description}>*/}
-                {/*    .*/}
-                {/*</p>*/}
 
                 <div className={classes.contributionsSection}>
                     <div className={classes.section}>
                         <h2 className={classes.sectionTitle}>Drink Contributions</h2>
                         <div className={classes.buttonContainer}>
-                            <button className={classes.addButton}>Contribute</button>
+                            <button 
+                                className={classes.addButton}
+                                onClick={() => handleContributeClick('drink')}
+                            >
+                                Contribute
+                            </button>
                         </div>
                         {drinkRequirements.map(requirement =>
                             renderRequirement(requirement, drinkContributions, true)
@@ -207,14 +226,26 @@ export const Contributions = () => {
                     <div className={classes.section}>
                         <h2 className={classes.sectionTitle}>Food Contributions</h2>
                         <div className={classes.buttonContainer}>
-                            <button className={classes.addButton}>Contribute</button>
+                            <button 
+                                className={classes.addButton}
+                                onClick={() => handleContributeClick('food')}
+                            >
+                                Contribute
+                            </button>
                         </div>
                         {foodRequirements.map(requirement =>
                             renderRequirement(requirement, foodContributions, false)
                         )}
-                        </div>
                     </div>
                 </div>
             </div>
-            )
-            }
+
+            <ContributeModal
+                visible={isModalVisible}
+                onClose={() => setIsModalVisible(false)}
+                options={getModalOptions(modalMode)}
+                mode={modalMode}
+            />
+        </div>
+    )
+}

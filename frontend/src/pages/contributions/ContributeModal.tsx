@@ -79,7 +79,7 @@ interface Feedbacks {
   buttonSuccess?: string;
 }
 
-const ContributeModal: React.FC<ContributeModalProps> = ({ mode, options, visible, onClose }) => {
+export const ContributeModal: React.FC<ContributeModalProps> = ({ mode, options, visible, onClose }) => {
   const [quantity, setQuantity] = useState('');
   const [description, setDescription] = useState('');
   const [requirementId, setRequirementId] = useState(0);
@@ -250,5 +250,3 @@ const ContributeModal: React.FC<ContributeModalProps> = ({ mode, options, visibl
     </Modal>
   );
 };
-
-export default ContributeModal;
