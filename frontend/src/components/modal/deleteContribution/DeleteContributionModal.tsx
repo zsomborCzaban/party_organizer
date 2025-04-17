@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Modal } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../store/store.ts';
-import { ApiError } from '../../data/types/ApiResponseTypes.ts';
-import { deleteDrinkContribution, deleteFoodContribution } from '../../api/apis/ContributionApi.ts';
-import { loadDrinkContributions } from '../../store/sclices/DrinkContributionSlice.ts';
-import { loadFoodContributions } from '../../store/sclices/FoodContributionSlice.ts';
+import { AppDispatch, RootState } from '../../../store/store.ts';
+import { ApiError } from '../../../data/types/ApiResponseTypes.ts';
+import { deleteDrinkContribution, deleteFoodContribution } from '../../../api/apis/ContributionApi.ts';
+import { loadDrinkContributions } from '../../../store/sclices/DrinkContributionSlice.ts';
+import { loadFoodContributions } from '../../../store/sclices/FoodContributionSlice.ts';
 
 const styles: { [key: string]: React.CSSProperties } = {
   modalContent: {

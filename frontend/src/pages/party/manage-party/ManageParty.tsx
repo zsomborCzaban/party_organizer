@@ -1,8 +1,8 @@
 import { Button, ConfigProvider, Table, theme } from 'antd';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import CreateRequirementModal from './CreateRequirementModal.tsx';
-import DeleteRequirementModal from './DeleteRequirementModal.tsx';
+import CreateRequirementModal from '../../../components/modal/createRequirement/CreateRequirementModal.tsx';
+import DeleteRequirementModal from '../../../components/modal/deleteRequirement/DeleteRequirementModal.tsx';
 import { User } from '../../../data/types/User.ts';
 import { setForTime } from '../../../data/utils/timeoutSetterUtils.ts';
 import {Requirement, RequirementPopulated} from '../../../data/types/Requirement.ts';

@@ -7,7 +7,7 @@ import {useNavigate} from "react-router-dom";
 import {toast} from "sonner";
 import { DownOutlined, DeleteOutlined } from '@ant-design/icons';
 import classes from './Contributions.module.scss';
-import { ContributeModal } from './ContributeModal';
+import { ContributeModal } from '../../components/modal/createContribution/ContributeModal.tsx';
 
 export const Contributions = () => {
     const api = useApi()
