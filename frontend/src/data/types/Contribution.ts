@@ -10,3 +10,13 @@ export interface Contribution {
   quantity: number;
   description?: string;
 }
+
+export interface ContributionPopulated {
+  ID: number;
+  contributor: User;
+  contributor_id: number;
+  requirement: Requirement;
+  requirement_id: number;
+  quantity: number;
+  description?: string;
+}

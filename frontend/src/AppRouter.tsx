@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Discover from './pages/overView/discover/Discover';
 import { PartyHome } from './pages/party/party-home/PartyHome';
-import Contributions from './pages/visitParty/contribution/Contributions';
+import { Contributions } from './pages/contributions/Contributions.tsx';
 import HallOfFame from './pages/visitParty/hallOfFame/HallOfFame';
 import ManageParty from './pages/party/manage-party/ManageParty.tsx';
 import PartySettings from './pages/party/party-settings/PartySettings.tsx';
@@ -10,7 +10,7 @@ import Register from './pages/authtentication/register/Register';
 import { Homepage } from './pages/HomePage';
 import { RequireAuthForRoute } from './auth/RequireAuthForRoute';
 import { Parties } from './pages/party/parties/Parties';
-import CreateParty from './pages/createParty/CreateParty';
+import CreateParty from './pages/party/create-party/CreateParty.tsx';
 import { Friends } from './pages/friends/Friends';
 import {MainLayout, PartyLayout} from "./layouts/Layouts.tsx";
 

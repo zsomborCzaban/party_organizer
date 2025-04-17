@@ -8,6 +8,7 @@ import {PartyAttendanceManagerApi} from "./apis/PartyAttendanceManagerApi.ts";
 import {FriendInviteManagerApi} from "./apis/FriendInviteManagerApi.ts";
 import {UserApi} from "./apis/UserApi.ts";
 import {RequirementApi} from "./apis/RequirementApi.ts";
+import {ContributionApi} from "./apis/ContributionApi.ts";
 
 export const apiClient = axios.create(getApiConfig());
 const imageUploaderApiClient = axios.create(getImageUploaderApiConfig());
@@ -130,6 +131,7 @@ export class Api {
   public friendManagerApi: FriendInviteManagerApi;
   public userApi: UserApi;
   public requirementApi: RequirementApi;
+  public contributionApi: ContributionApi;
 
   constructor() {
     this.axiosInstance = axios.create(getApiConfig());
@@ -138,8 +140,9 @@ export class Api {
     this.partyAttendanceApi = new PartyAttendanceManagerApi(this.axiosInstance);
     this.friendManagerApi = new FriendInviteManagerApi(this.axiosInstance);
     this.userApi = new UserApi(this.axiosInstance);
-    this.requirementApi = new RequirementApi(this.axiosInstance)
+    this.requirementApi = new RequirementApi(this.axiosInstance);
+    this.contributionApi = new ContributionApi(this.axiosInstance);
     this.axiosInstance.interceptors.request.use(addAuthHeaderToRequest);
-    this.axiosInstance.interceptors.response.use(null, checkIsJWTValid)
+    this.axiosInstance.interceptors.response.use(null, checkIsJWTValid);
   }
 }

@@ -1,9 +1,60 @@
 import { DELETE, get, post } from '../../api/Api';
 import { getApiUrl } from '../../api/ApiHelper';
-import { Contribution } from '../../data/types/Contribution';
+import {Contribution, ContributionPopulated} from '../../data/types/Contribution';
+import axios, {AxiosInstance, AxiosResponse} from "axios";
 
 const DRINK_CONTRIBUTION_PATH = `${getApiUrl()}/drinkContribution`;
 const FOOD_CONTRIBUTION_PATH = `${getApiUrl()}/foodContribution`;
+
+
+const handleApiResponse = <T>(response: AxiosResponse<T>): T => {
+    return response.data;
+};
+
+const handleApiError = (error: unknown) => {
+    // TODO: handle errors as needed
+    if (axios.isAxiosError(error)) {
+        console.error(`Axios error: ${error.message}`);
+    } else {
+        console.error(`Unexpected error: ${error}`);
+    }
+};
+
+export type ContributionsResponse = {
+    data: ContributionPopulated[]
+}
+
+export type ContributionResponse = {
+    data: ContributionPopulated
+}
+
+export class ContributionApi {
+    private axiosInstance: AxiosInstance;
+
+    constructor(axiosInstance: AxiosInstance) {
+        this.axiosInstance = axiosInstance;
+    }
+
+    async getDrinkContributionsByParty(partyId: number): Promise<ContributionsResponse | 'error'> {
+        try {
+            const response = await this.axiosInstance.get<ContributionsResponse>(`${DRINK_CONTRIBUTION_PATH}/getByParty/${partyId.toString()}`)
+            return handleApiResponse(response)
+        } catch (error) {
+            handleApiError(error)
+            return 'error'
+        }
+    }
+
+    async getFoodContributionsByParty(partyId: number): Promise<ContributionsResponse | 'error'> {
+        try {
+            const response = await this.axiosInstance.get<ContributionsResponse>(`${FOOD_CONTRIBUTION_PATH}/getByParty/${partyId.toString()}`)
+            return handleApiResponse(response)
+        } catch (error) {
+            handleApiError(error)
+            return 'error'
+        }
+    }
+}
 
 export const getDrinkContributions = async (partyId: number): Promise<Contribution[]> =>
   new Promise<Contribution[]>((resolve, reject) => {
