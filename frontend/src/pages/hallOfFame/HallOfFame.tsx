@@ -6,7 +6,7 @@ import {ContributionPopulated} from "../../data/types/Contribution.ts";
 import {RequirementPopulated} from "../../data/types/Requirement.ts";
 import {User} from "../../data/types/User.ts";
 import {toast} from "sonner";
-import { DownOutlined } from '@ant-design/icons';
+import { DownOutlined, DeleteOutlined } from '@ant-design/icons';
 import classes from './HallOfFame.module.scss';
 
 export const HallOfFame = () => {
@@ -172,6 +172,17 @@ export const HallOfFame = () => {
                                         <div className={classes.contributionDescription}>
                                             {contribution.description}
                                         </div>
+                                    )}
+                                    {(contribution.contributor.username === userName || userName === organizerName) && (
+                                        <button 
+                                            className={classes.deleteButton}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                // Delete functionality will be implemented later
+                                            }}
+                                        >
+                                            <DeleteOutlined />
+                                        </button>
                                     )}
                                 </div>
                             )
