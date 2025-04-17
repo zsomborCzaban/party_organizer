@@ -164,9 +164,10 @@ export const HallOfFame = () => {
                                         <div className={classes.requirementName}>
                                             {requirement?.type}
                                         </div>
-                                        <div className={classes.contributionQuantity}>
-                                            {contribution.quantity} {requirement?.quantity_mark}
-                                        </div>
+                                    </div>
+
+                                    <div className={classes.contributionQuantity}>
+                                        {contribution.quantity} {requirement?.quantity_mark}
                                     </div>
                                     {contribution.description && (
                                         <div className={classes.contributionDescription}>
@@ -174,14 +175,14 @@ export const HallOfFame = () => {
                                         </div>
                                     )}
                                     {(contribution.contributor.username === userName || userName === organizerName) && (
-                                        <button 
+                                        <button
                                             className={classes.deleteButton}
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 // Delete functionality will be implemented later
                                             }}
                                         >
-                                            <DeleteOutlined />
+                                            <DeleteOutlined/>
                                         </button>
                                     )}
                                 </div>
@@ -202,7 +203,13 @@ export const HallOfFame = () => {
                 </p>
 
                 <div className={classes.usersList}>
-                    {participants.map(user => renderUser(user))}
+                    {[...participants]
+                        .sort((a, b) => {
+                            const aContributions = getTotalContributionsForUser(a.ID);
+                            const bContributions = getTotalContributionsForUser(b.ID);
+                            return bContributions - aContributions; // Sort in descending order
+                        })
+                        .map(user => renderUser(user))}
                 </div>
             </div>
         </div>
