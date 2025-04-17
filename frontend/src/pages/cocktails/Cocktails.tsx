@@ -117,7 +117,7 @@ const cocktails: Cocktail[] = [
     }
 ];
 
-const Cocktails: React.FC = () => {
+export const Cocktails: React.FC = () => {
     return (
         <div className={classes.cocktailsPage}>
             <div className={classes.header}>
@@ -150,5 +150,3 @@ const Cocktails: React.FC = () => {
         </div>
     );
 };
-
-export default Cocktails;

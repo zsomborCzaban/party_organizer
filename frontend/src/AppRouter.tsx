@@ -13,7 +13,7 @@ import { Parties } from './pages/party/parties/Parties';
 import CreateParty from './pages/party/create-party/CreateParty.tsx';
 import { Friends } from './pages/friends/Friends';
 import { MainLayout, PartyLayout } from "./layouts/Layouts.tsx";
-import {Cocktails} from "./pages/cocktails/Cocktails.tsx";
+import { Cocktails } from "./pages/cocktails/Cocktails.tsx";
 
 export const AppRouter = () => (
   <BrowserRouter>
