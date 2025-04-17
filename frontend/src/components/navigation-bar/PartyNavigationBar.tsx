@@ -7,7 +7,7 @@ import { getUserName } from "../../auth/AuthUserUtil.ts";
 import {NavigationDrawerButton} from "./navigation-button/NavigationDrawerButton.tsx";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../store/store.ts";
-import {toggleDrawer} from "../../store/slices/profileDrawerSlice.ts";
+import {togglePartyProfileDrawer} from "../../store/slices/partyProfileDrawerSlice.ts";
 
 export const PartyNavigationBar = () => {
     const dispatch = useDispatch<AppDispatch>()
@@ -82,7 +82,7 @@ export const PartyNavigationBar = () => {
                 {userLoggedIn ? (
                     <NavigationDrawerButton
                         buttonText='Profile'
-                        onClick={() => dispatch(toggleDrawer())}
+                        onClick={() => dispatch(togglePartyProfileDrawer())}
                         isActive={isProfileDrawerOpen}
                     />
                 ) : (

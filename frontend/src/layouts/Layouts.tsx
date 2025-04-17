@@ -3,7 +3,7 @@ import { Footer } from '../components/footer/Footer';
 import { Outlet } from 'react-router-dom';
 import classes from './Layouts.module.scss';
 import {PartyNavigationBar} from "../components/navigation-bar/PartyNavigationBar.tsx";
-import {ProfileDrawer} from "../components/drawer/ProfileDrawer.tsx";
+import {PartyProfileDrawer} from "../components/drawer/PartyProfileDrawer.tsx";
 
 export const MainLayout = () => {
     return (
@@ -21,7 +21,7 @@ export const PartyLayout = () => {
     return (
         <div>
             <PartyNavigationBar />
-            <ProfileDrawer />
+            <PartyProfileDrawer />
             <main className={classes.appContent}>
                 <Outlet />
             </main>
