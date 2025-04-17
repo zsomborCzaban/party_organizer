@@ -155,7 +155,6 @@ const CreateParty: React.FC = () => {
               transform: 'scale(1.01)',
               backfaceVisibility: 'hidden',
               WebkitBackfaceVisibility: 'hidden',
-              imageRendering: 'crisp-edges'
             }}
           >
             <source src={artlistVideo} type="video/mp4" />
