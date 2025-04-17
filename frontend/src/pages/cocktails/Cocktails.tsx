@@ -15,9 +15,9 @@ const cocktails: Cocktail[] = [
         name: "Mojito",
         description: "A refreshing Cuban highball that traditionally consists of five ingredients: white rum, sugar, lime juice, soda water, and mint.",
         ingredients: [
-            "2 oz White Rum",
-            "1 oz Fresh Lime Juice",
-            "2 tsp Sugar",
+            "60 ml White Rum",
+            "30 ml Fresh Lime Juice",
+            "10 g Sugar",
             "6-8 Fresh Mint Leaves",
             "Soda Water",
             "Ice"
@@ -29,7 +29,7 @@ const cocktails: Cocktail[] = [
         name: "Old Fashioned",
         description: "A cocktail made by muddling sugar with bitters and water, adding whiskey or bourbon, and garnishing with orange slice or zest and a cocktail cherry.",
         ingredients: [
-            "2 oz Bourbon or Rye Whiskey",
+            "60 ml Bourbon or Rye Whiskey",
             "1 Sugar Cube",
             "2-3 dashes Angostura Bitters",
             "Orange Peel",
@@ -42,9 +42,9 @@ const cocktails: Cocktail[] = [
         name: "Margarita",
         description: "A cocktail consisting of tequila, orange liqueur, and lime juice often served with salt on the rim of the glass.",
         ingredients: [
-            "2 oz Tequila",
-            "1 oz Cointreau or Triple Sec",
-            "1 oz Fresh Lime Juice",
+            "60 ml Tequila",
+            "30 ml Cointreau or Triple Sec",
+            "30 ml Fresh Lime Juice",
             "Salt for rim",
             "Ice"
         ],
@@ -55,10 +55,10 @@ const cocktails: Cocktail[] = [
         name: "Espresso Martini",
         description: "A cold, coffee-flavored cocktail made with vodka, espresso coffee, and coffee liqueur.",
         ingredients: [
-            "2 oz Vodka",
-            "1 oz Fresh Espresso",
-            "1 oz Coffee Liqueur",
-            "1/2 oz Simple Syrup",
+            "60 ml Vodka",
+            "30 ml Fresh Espresso",
+            "30 ml Coffee Liqueur",
+            "15 ml Simple Syrup",
             "Ice"
         ],
         image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
@@ -68,9 +68,9 @@ const cocktails: Cocktail[] = [
         name: "Negroni",
         description: "A classic Italian cocktail that is considered an aperitif, made with gin, vermouth rosso, and Campari.",
         ingredients: [
-            "1 oz Gin",
-            "1 oz Campari",
-            "1 oz Sweet Vermouth",
+            "30 ml Gin",
+            "30 ml Campari",
+            "30 ml Sweet Vermouth",
             "Orange Peel",
             "Ice"
         ],
@@ -81,9 +81,9 @@ const cocktails: Cocktail[] = [
         name: "Pina Colada",
         description: "A sweet cocktail made with rum, coconut cream, and pineapple juice, usually served either blended or shaken with ice.",
         ingredients: [
-            "2 oz White Rum",
-            "2 oz Coconut Cream",
-            "3 oz Pineapple Juice",
+            "60 ml White Rum",
+            "60 ml Coconut Cream",
+            "90 ml Pineapple Juice",
             "Pineapple Wedge",
             "Ice"
         ],
@@ -94,9 +94,9 @@ const cocktails: Cocktail[] = [
         name: "Moscow Mule",
         description: "A cocktail made with vodka, spicy ginger beer, and lime juice, garnished with a slice or wedge of lime.",
         ingredients: [
-            "2 oz Vodka",
-            "4 oz Ginger Beer",
-            "1/2 oz Lime Juice",
+            "60 ml Vodka",
+            "120 ml Ginger Beer",
+            "15 ml Lime Juice",
             "Lime Wedge",
             "Ice"
         ],
@@ -107,10 +107,10 @@ const cocktails: Cocktail[] = [
         name: "Whiskey Sour",
         description: "A mixed drink containing whiskey, lemon juice, sugar, and optionally, a dash of egg white.",
         ingredients: [
-            "2 oz Bourbon",
-            "3/4 oz Fresh Lemon Juice",
-            "3/4 oz Simple Syrup",
-            "1/2 oz Egg White (optional)",
+            "60 ml Bourbon",
+            "22 ml Fresh Lemon Juice",
+            "22 ml Simple Syrup",
+            "15 ml Egg White (optional)",
             "Ice"
         ],
         image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
