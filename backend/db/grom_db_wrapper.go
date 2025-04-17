@@ -30,7 +30,7 @@ func (dbWrapper *GormDBWrapper) Create(entity interface{}) error {
 func (dbWrapper *GormDBWrapper) First(dest interface{}, associations []string, conds ...interface{}) error {
 	dbWrapper.DB = dbWrapper.DB.Session(&gorm.Session{NewDB: true})
 	for _, association := range associations {
-		dbWrapper.DB = dbWrapper.DB.Preload(association)
+		dbWrapper.DB = dbWrapper.DB.Preload(association) //causes concurrent map writes once
 	}
 	dbWrapper.DB.Error = nil                     //todo: find out why the error from previous request is persistent (why we use the same entity)
 	return dbWrapper.DB.First(dest, conds).Error //causes concurrent map writes once
