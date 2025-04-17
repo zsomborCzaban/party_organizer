@@ -12,10 +12,10 @@ import { partyInviteTableColumnsLegacy, partyTableColumnsLegacy } from '../../..
 import OverViewNavBar from '../../../components/navigation-bar/OverViewNavBar';
 import OverViewProfile from '../../../components/drawer/OverViewProfile';
 import { acceptInvite, declineInvite } from '../../../api/apis/PartyAttendanceManagerApi';
-import { loadOrganizedParties } from '../../../store/sclices/OrganizedPartySlice';
-import { loadAttendedParties } from '../../../store/sclices/AttendedPartySlice';
-import { loadPartyInvites } from '../../../store/sclices/PartyInviteSlice';
-import { setSelectedParty } from '../../../store/sclices/PartySlice';
+import { loadOrganizedParties } from '../../../store/slices/OrganizedPartySlice';
+import { loadAttendedParties } from '../../../store/slices/AttendedPartySlice';
+import { loadPartyInvites } from '../../../store/slices/PartyInviteSlice';
+import { setSelectedParty } from '../../../store/slices/PartySlice';
 
 const styles: { [key: string]: CSSProperties } = {
   outerContainer: {

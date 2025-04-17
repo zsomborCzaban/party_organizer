@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import {EMPTY_PARTY_POPULATED, PartyPopulated} from "../../../data/types/Party.ts";
 import {toast} from "sonner";
 import {useAppSelector} from "../../../store/store-helper.ts";
-import {isUserLoggedIn} from "../../../store/sclices/UserSlice.ts";
+import {isUserLoggedIn} from "../../../store/slices/UserSlice.ts";
 import partyVideo from '../../../data/resources/videos/party_video.mp4';
 import classes from "./PartyHome.module.scss"
 import Map from '@mui/icons-material/Map';

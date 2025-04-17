@@ -1,4 +1,4 @@
-import { isUserLoggedIn } from '../store/sclices/UserSlice';
+import { isUserLoggedIn } from '../store/slices/UserSlice';
 import { useAppSelector } from '../store/store-helper';
 import { Navigate, Outlet } from 'react-router-dom';
 import {toast} from "sonner";

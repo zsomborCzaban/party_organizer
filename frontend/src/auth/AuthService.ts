@@ -4,7 +4,7 @@ import {
     clearJwtAuthToken,
 } from './AuthStorageUtils';
 import {store} from "../store/store.ts";
-import {deleteUserJwt} from "../store/sclices/UserSlice.ts";
+import {deleteUserJwt} from "../store/slices/UserSlice.ts";
 
 export interface AuthService {
     userLoggedIn: (jwt: string) => void

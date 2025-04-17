@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import classes from './NavigationBar.module.scss';
 import { NavigationButton } from './navigation-button/NavigationButton';
 import { useAppSelector } from '../../store/store-helper';
-import { isUserLoggedIn } from '../../store/sclices/UserSlice';
+import { isUserLoggedIn } from '../../store/slices/UserSlice';
 
 export const NavigationBar = () => {
   const navigate = useNavigate();

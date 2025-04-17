@@ -11,8 +11,8 @@ import { invitedByTableColumnsLegacy, userTableColumnsLegacy } from '../../../da
 import OverViewNavBar from '../../../components/navigation-bar/OverViewNavBar';
 import OverViewProfile from '../../../components/drawer/OverViewProfile';
 import { acceptInvite, declineInvite, inviteFriend, removeFriend } from '../../../api/apis/FriendInviteManagerApi';
-import { loadFriendInvites } from '../../../store/sclices/FriendInviteSlice';
-import { loadFriends } from '../../../store/sclices/FriendSlice';
+import { loadFriendInvites } from '../../../store/slices/FriendInviteSlice';
+import { loadFriends } from '../../../store/slices/FriendSlice';
 
 const styles: { [key: string]: CSSProperties } = {
   container: {

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { setForTime } from '../../../data/utils/timeoutSetterUtils';
 import { Party } from '../../../data/types/Party';
 import { joinPrivateParty } from '../../../api/apis/PartyAttendanceManagerApi';
-import { setSelectedParty } from '../../../store/sclices/PartySlice';
+import { setSelectedParty } from '../../../store/slices/PartySlice';
 
 const styles: { [key: string]: React.CSSProperties } = {
   modalContent: {

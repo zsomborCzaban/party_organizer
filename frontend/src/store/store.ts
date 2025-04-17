@@ -1,19 +1,20 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { publicPartySlice } from './sclices/PublicPartySlice';
-import { organizedPartySlice } from './sclices/OrganizedPartySlice';
-import { attendedPartySlice } from './sclices/AttendedPartySlice';
-import { partyInviteSlice } from './sclices/PartyInviteSlice';
-import { friendInviteSlice } from './sclices/FriendInviteSlice';
-import { friendSlice } from './sclices/FriendSlice';
-import { persistedSelectedPartyReducer } from './sclices/PartySlice';
+import { publicPartySlice } from './slices/PublicPartySlice';
+import { organizedPartySlice } from './slices/OrganizedPartySlice';
+import { attendedPartySlice } from './slices/AttendedPartySlice';
+import { partyInviteSlice } from './slices/PartyInviteSlice';
+import { friendInviteSlice } from './slices/FriendInviteSlice';
+import { friendSlice } from './slices/FriendSlice';
+import { persistedSelectedPartyReducer } from './slices/PartySlice';
 import { persistStore } from 'redux-persist';
-import { drinkRequirementSlice } from './sclices/DrinkRequirementSlice';
-import { foodRequirementSlice } from './sclices/FoodRequirementSlice';
-import { drinkContributionSlice } from './sclices/DrinkContributionSlice';
-import { foodContributionSlice } from './sclices/FoodContributionSlice';
-import { partyParticipantsSlice } from './sclices/PartyParticipantSlice';
-import { partyPendingInviteSlice } from './sclices/PendingInvitesForPartySlice';
-import { userSlice } from './sclices/UserSlice';
+import { drinkRequirementSlice } from './slices/DrinkRequirementSlice';
+import { foodRequirementSlice } from './slices/FoodRequirementSlice';
+import { drinkContributionSlice } from './slices/DrinkContributionSlice';
+import { foodContributionSlice } from './slices/FoodContributionSlice';
+import { partyParticipantsSlice } from './slices/PartyParticipantSlice';
+import { partyPendingInviteSlice } from './slices/PendingInvitesForPartySlice';
+import { userSlice } from './slices/UserSlice';
+import { profileDrawerSlice } from "./slices/profileDrawerSlice.ts";
 
 export const store = configureStore({
   reducer: {
@@ -31,6 +32,7 @@ export const store = configureStore({
     partyParticipantStore: partyParticipantsSlice.reducer,
     partyPendingInviteStore: partyPendingInviteSlice.reducer,
     userStore: userSlice.reducer,
+    profileDrawer: profileDrawerSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

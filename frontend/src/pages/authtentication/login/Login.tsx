@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import classes from './Login.module.scss';
 import { useApi } from '../../../context/ApiContext';
 import { useAppDispatch, useAppSelector } from '../../../store/store-helper';
-import { deleteLoginError, userLogin } from '../../../store/sclices/UserSlice';
+import { deleteLoginError, userLogin } from '../../../store/slices/UserSlice';
 
 export const Login = () => {
   const [loginDetails, setLoginDetails] = useState<{ username: string; password: string }>({ username: '', password: '' });

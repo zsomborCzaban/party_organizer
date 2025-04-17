@@ -2,10 +2,15 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import classes from './NavigationBarDarkTheme.module.scss';
 import { NavigationButton } from './navigation-button/NavigationButton';
 import { useAppSelector } from '../../store/store-helper';
-import { isUserLoggedIn } from '../../store/sclices/UserSlice';
+import { isUserLoggedIn } from '../../store/slices/UserSlice';
 import { getUserName } from "../../auth/AuthUserUtil.ts";
+import {NavigationDrawerButton} from "./navigation-button/NavigationDrawerButton.tsx";
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch, RootState} from "../../store/store.ts";
+import {toggleDrawer} from "../../store/slices/profileDrawerSlice.ts";
 
 export const PartyNavigationBar = () => {
+    const dispatch = useDispatch<AppDispatch>()
     const navigate = useNavigate();
     const location = useLocation();
     const userLoggedIn = useAppSelector(isUserLoggedIn);
@@ -13,6 +18,7 @@ export const PartyNavigationBar = () => {
     const organizerName = localStorage.getItem('partyOrganizerName'); //cannot do || 'Unexpected error' because if a user would choose the name unexpected error, he could see the buttons ^^.
     const userName = getUserName()
     const isUserOrganizer = userName && organizerName && userName === organizerName
+    const isProfileDrawerOpen = useSelector((state: RootState) => state.profileDrawer.isOpen);
 
     return (
         <nav className={classes.navBar}>
@@ -74,10 +80,10 @@ export const PartyNavigationBar = () => {
 
             <div className={classes.rightSection}>
                 {userLoggedIn ? (
-                    <NavigationButton
+                    <NavigationDrawerButton
                         buttonText='Profile'
-                        navigateToLink='/profile'
-                        isActive={location.pathname === '/profile'}
+                        onClick={() => dispatch(toggleDrawer())}
+                        isActive={isProfileDrawerOpen}
                     />
                 ) : (
                     <button

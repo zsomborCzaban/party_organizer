@@ -12,8 +12,8 @@ import { partyTableColumnsLegacy } from '../../../data/constants/TableColumns';
 // import OverViewNavBar from '../../../components/navigation-bar/OverViewNavBar';
 import OverViewProfile from '../../../components/drawer/OverViewProfile';
 import { joinPublicParty } from '../../../api/apis/PartyAttendanceManagerApi';
-import { loadPublicParties } from '../../../store/sclices/PublicPartySlice';
-import { setSelectedParty } from '../../../store/sclices/PartySlice';
+import { loadPublicParties } from '../../../store/slices/PublicPartySlice';
+import { setSelectedParty } from '../../../store/slices/PartySlice';
 
 const styles: { [key: string]: CSSProperties } = {
   outerContainer: {

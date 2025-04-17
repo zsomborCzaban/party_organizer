@@ -6,8 +6,8 @@ import { ApiError } from '../../../data/types/ApiResponseTypes.ts';
 import { Requirement } from '../../../data/types/Requirement.ts';
 import { setForTime } from '../../../data/utils/timeoutSetterUtils.ts';
 import { createDrinkRequirement, createFoodRequirement } from '../../../api/apis/RequirementApi.ts';
-import { loadDrinkRequirements } from '../../../store/sclices/DrinkRequirementSlice.ts';
-import { loadFoodRequirements } from '../../../store/sclices/FoodRequirementSlice.ts';
+import { loadDrinkRequirements } from '../../../store/slices/DrinkRequirementSlice.ts';
+import { loadFoodRequirements } from '../../../store/slices/FoodRequirementSlice.ts';
 import classes from './CreateRequirementModal.module.scss';
 import {ContributeModalProps} from "../createContribution/ContributeModal.tsx";
 

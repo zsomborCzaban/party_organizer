@@ -6,8 +6,8 @@ import { ApiError } from '../../../data/types/ApiResponseTypes.ts';
 import { Contribution } from '../../../data/types/Contribution.ts';
 import { setForTime } from '../../../data/utils/timeoutSetterUtils.ts';
 import { createDrinkContribution, createFoodContribution } from '../../../api/apis/ContributionApi.ts';
-import { loadDrinkContributions } from '../../../store/sclices/DrinkContributionSlice.ts';
-import { loadFoodContributions } from '../../../store/sclices/FoodContributionSlice.ts';
+import { loadDrinkContributions } from '../../../store/slices/DrinkContributionSlice.ts';
+import { loadFoodContributions } from '../../../store/slices/FoodContributionSlice.ts';
 import classes from './ContributeModal.module.scss';
 
 export interface ContributeModalProps {
