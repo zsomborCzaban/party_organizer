@@ -60,6 +60,11 @@
   margin-bottom: 20px;
 }
 
+.buttonContainer {
+  display: flex;
+  align-items: flex-start;
+}
+
 .addButton {
   background-color: #007bff;
   color: white;

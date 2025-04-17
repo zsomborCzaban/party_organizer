@@ -177,29 +177,33 @@ export const Contributions = () => {
     return (
         <div className={classes.outerContainer}>
             <div className={classes.pageContainer}>
-                <h1 className={classes.title}>Manage Contributions</h1>
-                <p className={classes.description}>
-                    View and manage all contributions for the party. You can see what has been contributed and what is still needed.
-                </p>
+                <h1 className={classes.title}>Contributions</h1>
+                {/*<p className={classes.description}>*/}
+                {/*    .*/}
+                {/*</p>*/}
 
                 <div className={classes.contributionsSection}>
                     <div className={classes.section}>
                         <h2 className={classes.sectionTitle}>Drink Contributions</h2>
-                        <button className={classes.addButton}>Add Drink Contribution</button>
-                        {drinkRequirements.map(requirement => 
+                        <div className={classes.buttonContainer}>
+                            <button className={classes.addButton}>Contribute</button>
+                        </div>
+                        {drinkRequirements.map(requirement =>
                             renderRequirement(requirement, drinkContributions, true)
                         )}
                     </div>
 
                     <div className={classes.section}>
                         <h2 className={classes.sectionTitle}>Food Contributions</h2>
-                        <button className={classes.addButton}>Add Food Contribution</button>
-                        {foodRequirements.map(requirement => 
+                        <div className={classes.buttonContainer}>
+                            <button className={classes.addButton}>Contribute</button>
+                        </div>
+                        {foodRequirements.map(requirement =>
                             renderRequirement(requirement, foodContributions, false)
                         )}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    )
-}
+            )
+            }
