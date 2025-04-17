@@ -2,17 +2,17 @@ import {useApi} from "../../context/ApiContext.ts";
 import {useNavigate} from "react-router-dom";
 import {getUserName} from "../../auth/AuthUserUtil.ts";
 import {useEffect, useState} from "react";
-import {ContributionPopulated} from "../../data/types/Contribution.ts";
-import {RequirementPopulated} from "../../data/types/Requirement.ts";
+import {ContributionPopulated, EMPTY_CONTRIBUTION_POPULATED} from "../../data/types/Contribution.ts";
+import {EMPTY_REQUIREMENT_POPULATED, RequirementPopulated} from "../../data/types/Requirement.ts";
 import {User} from "../../data/types/User.ts";
 import {toast} from "sonner";
 import { DownOutlined, DeleteOutlined } from '@ant-design/icons';
 import classes from './HallOfFame.module.scss';
+import DeleteContributeModal from '../../components/modal/deleteContribution/DeleteContributionModal.tsx';
 
 interface ContributionWithRequirement {
     contribution: ContributionPopulated;
-    requirementType: string;
-    requirementMark: string;
+    requirement: RequirementPopulated
 }
 
 interface UserContributionData {
@@ -34,6 +34,11 @@ export const HallOfFame = () => {
     const [drinkRequirements, setDrinkRequirements] = useState<RequirementPopulated[]>([])
     const [foodRequirements, setFoodRequirements] = useState<RequirementPopulated[]>([])
     const [expandedUsers, setExpandedUsers] = useState<Set<number>>(new Set())
+
+    const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+    const [deleteModalMode, setDeleteModalMode] = useState<'drink' | 'food'>('drink');
+    const [selectedContribution, setSelectedContribution] = useState<ContributionPopulated>(EMPTY_CONTRIBUTION_POPULATED);
+    const [selectedRequirement, setSelectedRequirement] = useState<RequirementPopulated>(EMPTY_REQUIREMENT_POPULATED);
 
     const [userContributionData, setUserContributionData] = useState<UserContributionData[]>([])
 
@@ -119,18 +124,17 @@ export const HallOfFame = () => {
         const allContributions = [...drinkContributions, ...foodContributions];
 
         const requirementsMap = new Map(
-            allRequirements.map(req => [req.ID, { type: req.type, mark: req.quantity_mark }])
+            allRequirements.map(req => [req.ID,  req ])
         );
 
         const userData = participants.map(user => {
             const userContributions = allContributions
                 .filter(c => c.contributor.ID === user.ID)
                 .map(contribution => {
-                    const requirement = requirementsMap.get(contribution.requirement_id);
+                    const requirement = requirementsMap.get(contribution.requirement_id) || EMPTY_REQUIREMENT_POPULATED;
                     return {
                         contribution,
-                        requirementType: requirement?.type || '',
-                        requirementMark: requirement?.mark || ''
+                        requirement,
                     };
                 });
 
@@ -155,6 +159,13 @@ export const HallOfFame = () => {
             return newSet
         })
     }
+
+    const handleDeleteClick = (contribution: ContributionPopulated, requirement: RequirementPopulated, mode: 'drink' | 'food') => {
+        setSelectedContribution(contribution);
+        setSelectedRequirement(requirement);
+        setDeleteModalMode(mode);
+        setIsDeleteModalVisible(true);
+    };
 
     const renderUser = (userData: UserContributionData) => {
         const isExpanded = expandedUsers.has(userData.user.ID)
@@ -184,34 +195,42 @@ export const HallOfFame = () => {
                 </div>
                 {isExpanded && (
                     <div className={classes.contributionsList}>
-                        {userData.contributions.map(({contribution, requirementType, requirementMark}) => (
-                            <div key={contribution.ID} className={classes.contribution}>
-                                <div className={classes.contributionDetails}>
-                                    <div className={classes.requirementName}>
-                                        {requirementType}
+                        {userData.contributions.map(({contribution, requirement}) => {
+                            return (
+                                <div key={contribution.ID} className={classes.contribution}>
+                                    <div className={classes.contributionDetails}>
+                                        <div className={classes.requirementName}>
+                                            {requirement.type}
+                                        </div>
+                                        <div className={classes.contributionQuantity}>
+                                            {contribution.quantity} {requirement.quantity_mark}
+                                        </div>
                                     </div>
-                                    <div className={classes.contributionQuantity}>
-                                        {contribution.quantity} {requirementMark}
-                                    </div>
+                                    {contribution.description && (
+                                        <div className={classes.contributionDescription}>
+                                            {contribution.description}
+                                        </div>
+                                    )}
+                                    {(contribution.contributor.username === userName || userName === organizerName) && (
+                                        <button
+                                            className={classes.deleteButton}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                if (requirement) {
+                                                    handleDeleteClick(
+                                                        contribution,
+                                                        requirement,
+                                                        drinkRequirements.some(req => req.ID === requirement.ID && req.type === requirement.type && req.target_quantity === requirement.target_quantity && req.quantity_mark === requirement.quantity_mark) ? 'drink' : 'food'
+                                                    );
+                                                }
+                                            }}
+                                        >
+                                            <DeleteOutlined/>
+                                        </button>
+                                    )}
                                 </div>
-                                {contribution.description && (
-                                    <div className={classes.contributionDescription}>
-                                        {contribution.description}
-                                    </div>
-                                )}
-                                {(contribution.contributor.username === userName || userName === organizerName) && (
-                                    <button 
-                                        className={classes.deleteButton}
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            // Delete functionality will be implemented later
-                                        }}
-                                    >
-                                        <DeleteOutlined/>
-                                    </button>
-                                )}
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 )}
             </div>
@@ -232,6 +251,15 @@ export const HallOfFame = () => {
                         .map(userData => renderUser(userData))}
                 </div>
             </div>
+
+            <DeleteContributeModal
+                visible={isDeleteModalVisible}
+                onClose={() => setIsDeleteModalVisible(false)}
+                mode={deleteModalMode}
+                contributionId={selectedContribution.ID}
+                contribution={selectedContribution}
+                requirement={selectedRequirement}
+            />
         </div>
     )
 }
