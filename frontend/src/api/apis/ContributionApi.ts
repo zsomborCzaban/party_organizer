@@ -1,5 +1,5 @@
-import { DELETE, get, post } from '../../api/Api';
-import { getApiUrl } from '../../api/ApiHelper';
+import { DELETE, get, post } from '../Api.ts';
+import { getApiUrl } from '../ApiHelper.ts';
 import {Contribution, ContributionPopulated} from '../../data/types/Contribution';
 import axios, {AxiosInstance, AxiosResponse} from "axios";
 
