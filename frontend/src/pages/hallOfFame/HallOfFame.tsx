@@ -9,6 +9,18 @@ import {toast} from "sonner";
 import { DownOutlined, DeleteOutlined } from '@ant-design/icons';
 import classes from './HallOfFame.module.scss';
 
+interface ContributionWithRequirement {
+    contribution: ContributionPopulated;
+    requirementType: string;
+    requirementMark: string;
+}
+
+interface UserContributionData {
+    user: User;
+    totalContributions: number;
+    contributions: ContributionWithRequirement[];
+}
+
 export const HallOfFame = () => {
     const api = useApi()
     const navigate = useNavigate()
@@ -22,6 +34,8 @@ export const HallOfFame = () => {
     const [drinkRequirements, setDrinkRequirements] = useState<RequirementPopulated[]>([])
     const [foodRequirements, setFoodRequirements] = useState<RequirementPopulated[]>([])
     const [expandedUsers, setExpandedUsers] = useState<Set<number>>(new Set())
+
+    const [userContributionData, setUserContributionData] = useState<UserContributionData[]>([])
 
     useEffect(() => {
         if(userName === '' || organizerName === '' || partyId === -1){
@@ -100,6 +114,36 @@ export const HallOfFame = () => {
             })
     }, [api.contributionApi, partyId]);
 
+    useEffect(() => {
+        const allRequirements = [...drinkRequirements, ...foodRequirements];
+        const allContributions = [...drinkContributions, ...foodContributions];
+
+        const requirementsMap = new Map(
+            allRequirements.map(req => [req.ID, { type: req.type, mark: req.quantity_mark }])
+        );
+
+        const userData = participants.map(user => {
+            const userContributions = allContributions
+                .filter(c => c.contributor.ID === user.ID)
+                .map(contribution => {
+                    const requirement = requirementsMap.get(contribution.requirement_id);
+                    return {
+                        contribution,
+                        requirementType: requirement?.type || '',
+                        requirementMark: requirement?.mark || ''
+                    };
+                });
+
+            return {
+                user,
+                totalContributions: userContributions.length,
+                contributions: userContributions
+            };
+        });
+
+        setUserContributionData(userData);
+    }, [participants, drinkContributions, foodContributions, drinkRequirements, foodRequirements]);
+
     const toggleUser = (userId: number) => {
         setExpandedUsers(prev => {
             const newSet = new Set(prev)
@@ -112,41 +156,25 @@ export const HallOfFame = () => {
         })
     }
 
-    const getContributionsForUser = (userId: number) => {
-        const allContributions = [...drinkContributions, ...foodContributions]
-        return allContributions.filter(contribution => contribution.contributor.ID === userId)
-    }
-
-    const getTotalContributionsForUser = (userId: number) => {
-        return getContributionsForUser(userId).length
-    }
-
-    const getRequirementById = (requirementId: number) => {
-        const allRequirements = [...drinkRequirements, ...foodRequirements]
-        return allRequirements.find(req => req.ID === requirementId)
-    }
-
-    const renderUser = (user: User) => {
-        const isExpanded = expandedUsers.has(user.ID)
-        const userContributions = getContributionsForUser(user.ID)
-        const totalContributions = getTotalContributionsForUser(user.ID)
+    const renderUser = (userData: UserContributionData) => {
+        const isExpanded = expandedUsers.has(userData.user.ID)
 
         return (
-            <div key={user.ID} className={classes.userCard}>
+            <div key={userData.user.ID} className={classes.userCard}>
                 <div 
                     className={classes.userHeader}
-                    onClick={() => toggleUser(user.ID)}
+                    onClick={() => toggleUser(userData.user.ID)}
                 >
                     <div className={classes.userInfo}>
                         <img 
-                            src={user.profile_picture_url}
-                            alt={user.username}
+                            src={userData.user.profile_picture_url}
+                            alt={userData.user.username}
                             className={classes.profilePicture}
                         />
                         <div className={classes.userDetails}>
-                            <div className={classes.userName}>{user.username}</div>
+                            <div className={classes.userName}>{userData.user.username}</div>
                             <div className={classes.contributionCount}>
-                                Total Contributions: {totalContributions}
+                                Total Contributions: {userData.totalContributions}
                             </div>
                         </div>
                     </div>
@@ -156,38 +184,34 @@ export const HallOfFame = () => {
                 </div>
                 {isExpanded && (
                     <div className={classes.contributionsList}>
-                        {userContributions.map(contribution => {
-                            const requirement = getRequirementById(contribution.requirement_id)
-                            return (
-                                <div key={contribution.ID} className={classes.contribution}>
-                                    <div className={classes.contributionDetails}>
-                                        <div className={classes.requirementName}>
-                                            {requirement?.type}
-                                        </div>
+                        {userData.contributions.map(({contribution, requirementType, requirementMark}) => (
+                            <div key={contribution.ID} className={classes.contribution}>
+                                <div className={classes.contributionDetails}>
+                                    <div className={classes.requirementName}>
+                                        {requirementType}
                                     </div>
-
                                     <div className={classes.contributionQuantity}>
-                                        {contribution.quantity} {requirement?.quantity_mark}
+                                        {contribution.quantity} {requirementMark}
                                     </div>
-                                    {contribution.description && (
-                                        <div className={classes.contributionDescription}>
-                                            {contribution.description}
-                                        </div>
-                                    )}
-                                    {(contribution.contributor.username === userName || userName === organizerName) && (
-                                        <button
-                                            className={classes.deleteButton}
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                // Delete functionality will be implemented later
-                                            }}
-                                        >
-                                            <DeleteOutlined/>
-                                        </button>
-                                    )}
                                 </div>
-                            )
-                        })}
+                                {contribution.description && (
+                                    <div className={classes.contributionDescription}>
+                                        {contribution.description}
+                                    </div>
+                                )}
+                                {(contribution.contributor.username === userName || userName === organizerName) && (
+                                    <button 
+                                        className={classes.deleteButton}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            // Delete functionality will be implemented later
+                                        }}
+                                    >
+                                        <DeleteOutlined/>
+                                    </button>
+                                )}
+                            </div>
+                        ))}
                     </div>
                 )}
             </div>
@@ -203,13 +227,9 @@ export const HallOfFame = () => {
                 </p>
 
                 <div className={classes.usersList}>
-                    {[...participants]
-                        .sort((a, b) => {
-                            const aContributions = getTotalContributionsForUser(a.ID);
-                            const bContributions = getTotalContributionsForUser(b.ID);
-                            return bContributions - aContributions; // Sort in descending order
-                        })
-                        .map(user => renderUser(user))}
+                    {userContributionData
+                        .sort((a, b) => b.totalContributions - a.totalContributions)
+                        .map(userData => renderUser(userData))}
                 </div>
             </div>
         </div>
