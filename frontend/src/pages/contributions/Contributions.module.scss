@@ -1,0 +1,146 @@
+.pageContainer {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.description {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.contributionsSection {
+  display: flex;
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.section {
+  flex: 1;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.addButton {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 500;
+  margin-bottom: 20px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+}
+
+.requirement {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  overflow: hidden;
+}
+
+.requirementHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  cursor: pointer;
+  background-color: #f8f9fa;
+}
+
+.requirementInfo {
+  flex: 1;
+}
+
+.requirementName {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.requirementQuantity {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.expandIcon {
+  transition: transform 0.3s ease;
+  
+  &.expanded {
+    transform: rotate(180deg);
+  }
+}
+
+.requirementContent {
+  padding: 15px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.contribution {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #f0f0f0;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.contributorInfo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.profilePicture {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.contributorName {
+  font-weight: 500;
+  color: #333;
+}
+
+.contributionDetails {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.contributionQuantity {
+  font-weight: 600;
+  color: #333;
+}
+
+.contributionDescription {
+  color: #666;
+  font-size: 0.9rem;
+  margin-top: 5px;
+} 

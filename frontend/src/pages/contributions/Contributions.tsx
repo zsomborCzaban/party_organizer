@@ -19,7 +19,8 @@ export const Contributions = () => {
     const [foodContributions, setFoodContributions] = useState<ContributionPopulated[]>([])
     const [drinkRequirements, setDrinkRequirements] = useState<RequirementPopulated[]>([])
     const [foodRequirements, setFoodRequirements] = useState<RequirementPopulated[]>([])
-    const [expandedRequirements, setExpandedRequirements] = useState<Set<number>>(new Set())
+    const [expandedDrinkRequirements, setExpandedDrinkRequirements] = useState<Set<number>>(new Set())
+    const [expandedFoodRequirements, setExpandedFoodRequirements] = useState<Set<number>>(new Set())
 
     useEffect(() => {
         if(userName === '' || organizerName === '' || partyId === -1){
@@ -84,16 +85,28 @@ export const Contributions = () => {
             })
     }, [api.contributionApi, partyId]);
 
-    const toggleRequirement = (requirementId: number) => {
-        setExpandedRequirements(prev => {
-            const newSet = new Set(prev)
-            if (newSet.has(requirementId)) {
-                newSet.delete(requirementId)
-            } else {
-                newSet.add(requirementId)
-            }
-            return newSet
-        })
+    const toggleRequirement = (requirementId: number, isDrink: boolean) => {
+        if (isDrink) {
+            setExpandedDrinkRequirements(prev => {
+                const newSet = new Set(prev)
+                if (newSet.has(requirementId)) {
+                    newSet.delete(requirementId)
+                } else {
+                    newSet.add(requirementId)
+                }
+                return newSet
+            })
+        } else {
+            setExpandedFoodRequirements(prev => {
+                const newSet = new Set(prev)
+                if (newSet.has(requirementId)) {
+                    newSet.delete(requirementId)
+                } else {
+                    newSet.add(requirementId)
+                }
+                return newSet
+            })
+        }
     }
 
     const getContributionsForRequirement = (requirementId: number, contributions: ContributionPopulated[]) => {
@@ -106,21 +119,23 @@ export const Contributions = () => {
             .reduce((sum, contribution) => sum + contribution.quantity, 0)
     }
 
-    const renderRequirement = (requirement: RequirementPopulated, contributions: ContributionPopulated[]) => {
-        const isExpanded = expandedRequirements.has(requirement.id)
-        const requirementContributions = getContributionsForRequirement(requirement.id, contributions)
-        const totalContributed = getTotalContributedQuantity(requirement.id, contributions)
+    const renderRequirement = (requirement: RequirementPopulated, contributions: ContributionPopulated[], isDrink: boolean) => {
+        const isExpanded = isDrink 
+            ? expandedDrinkRequirements.has(requirement.ID)
+            : expandedFoodRequirements.has(requirement.ID)
+        const requirementContributions = getContributionsForRequirement(requirement.ID, contributions)
+        const totalContributed = getTotalContributedQuantity(requirement.ID, contributions)
 
         return (
-            <div key={requirement.id} className={classes.requirement}>
+            <div key={requirement.ID} className={classes.requirement}>
                 <div 
                     className={classes.requirementHeader}
-                    onClick={() => toggleRequirement(requirement.id)}
+                    onClick={() => toggleRequirement(requirement.ID, isDrink)}
                 >
                     <div className={classes.requirementInfo}>
-                        <div className={classes.requirementName}>{requirement.name}</div>
+                        <div className={classes.requirementName}>{requirement.type}</div>
                         <div className={classes.requirementQuantity}>
-                            {totalContributed} / {requirement.quantity} {requirement.quantity_mark}
+                            {totalContributed} / {requirement.target_quantity} {requirement.quantity_mark}
                         </div>
                     </div>
                     <DownOutlined 
@@ -130,10 +145,10 @@ export const Contributions = () => {
                 {isExpanded && (
                     <div className={classes.requirementContent}>
                         {requirementContributions.map(contribution => (
-                            <div key={contribution.id} className={classes.contribution}>
+                            <div key={contribution.ID} className={classes.contribution}>
                                 <div className={classes.contributorInfo}>
                                     <img 
-                                        src={contribution.contributor.profile_picture} 
+                                        src={contribution.contributor.profile_picture_url}
                                         alt={contribution.contributor.username}
                                         className={classes.profilePicture}
                                     />
@@ -171,7 +186,7 @@ export const Contributions = () => {
                     <h2 className={classes.sectionTitle}>Drink Contributions</h2>
                     <button className={classes.addButton}>Add Drink Contribution</button>
                     {drinkRequirements.map(requirement => 
-                        renderRequirement(requirement, drinkContributions)
+                        renderRequirement(requirement, drinkContributions, true)
                     )}
                 </div>
 
@@ -179,7 +194,7 @@ export const Contributions = () => {
                     <h2 className={classes.sectionTitle}>Food Contributions</h2>
                     <button className={classes.addButton}>Add Food Contribution</button>
                     {foodRequirements.map(requirement => 
-                        renderRequirement(requirement, foodContributions)
+                        renderRequirement(requirement, foodContributions, false)
                     )}
                 </div>
             </div>
