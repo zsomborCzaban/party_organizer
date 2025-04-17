@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react';
 import { ConfigProvider, Modal, theme } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../../store/store.ts';
 import { ApiError } from '../../../data/types/ApiResponseTypes.ts';
 import { deleteDrinkContribution, deleteFoodContribution } from '../../../api/apis/ContributionApi.ts';
-import { loadDrinkContributions } from '../../../store/sclices/DrinkContributionSlice.ts';
-import { loadFoodContributions } from '../../../store/sclices/FoodContributionSlice.ts';
 import classes from './DeleteContributionModal.module.scss';
+import { ContributionPopulated } from '../../../data/types/Contribution.ts';
+import { RequirementPopulated } from '../../../data/types/Requirement.ts';
 
 interface DeleteContributeModalProps {
   visible: boolean;
   onClose: () => void;
   mode: string;
   contributionId: number;
+  contribution: ContributionPopulated;
+  requirement: RequirementPopulated;
 }
 
 interface Feedbacks {
@@ -20,12 +20,16 @@ interface Feedbacks {
   buttonSuccess?: string;
 }
 
-const DeleteContributeModal: React.FC<DeleteContributeModalProps> = ({ mode, contributionId, visible, onClose }) => {
+const DeleteContributeModal: React.FC<DeleteContributeModalProps> = ({ 
+  mode, 
+  contributionId, 
+  visible, 
+  onClose,
+  contribution,
+  requirement,
+}) => {
   const [feedbacks, setFeedbacks] = useState<Feedbacks>({});
   const [countdown, setCountdown] = useState(0);
-
-  const dispatch = useDispatch<AppDispatch>();
-  const { selectedParty } = useSelector((state: RootState) => state.selectedPartyStore);
 
   useEffect(() => {
     if (visible) {
@@ -64,9 +68,6 @@ const DeleteContributeModal: React.FC<DeleteContributeModalProps> = ({ mode, con
           newFeedbacks.buttonSuccess = 'deleted successfully';
           setFeedbacks(newFeedbacks);
 
-          if (!selectedParty || !selectedParty.ID) return;
-          dispatch(loadDrinkContributions(selectedParty.ID));
-
           startCloseTimer();
         })
         .catch((err) => {
@@ -87,9 +88,6 @@ const DeleteContributeModal: React.FC<DeleteContributeModalProps> = ({ mode, con
           newFeedbacks.buttonSuccess = 'deleted successfully';
           setFeedbacks(newFeedbacks);
 
-          if (!selectedParty || !selectedParty.ID) return;
-          dispatch(loadFoodContributions(selectedParty.ID));
-
           startCloseTimer();
         })
         .catch((err) => {
@@ -109,6 +107,13 @@ const DeleteContributeModal: React.FC<DeleteContributeModalProps> = ({ mode, con
     setFeedbacks(newFeedbacks);
   };
 
+  const getConfirmationMessage = () => {
+    const baseMessage = `Are you sure you want to delete the following contribution: ${requirement.type} ${contribution.quantity} ${requirement.quantity_mark}`;
+    return contribution.description 
+      ? `${baseMessage} (${contribution.description})?`
+      : `${baseMessage}?`;
+  };
+
   return (
     <ConfigProvider theme={{ algorithm: theme.darkAlgorithm }}>
       <Modal
@@ -120,7 +125,7 @@ const DeleteContributeModal: React.FC<DeleteContributeModalProps> = ({ mode, con
         bodyStyle={{ backgroundColor: 'rgba(33, 33, 33, 0.95)' }}
       >
         <div className={classes.modalContent}>
-          <label className={classes.label}>Are you sure you want to delete this contribution?</label>
+          <label className={classes.label}>{getConfirmationMessage()}</label>
 
           <div className={classes.buttonContainer}>
             <button

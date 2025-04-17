@@ -4,7 +4,6 @@ export interface Requirement {
     type: string;
     target_quantity: number;
     quantity_mark: string;
-    description?: string;
 }
 
 export interface RequirementPopulated {
@@ -13,5 +12,12 @@ export interface RequirementPopulated {
     type: string;
     target_quantity: number;
     quantity_mark: string;
-    description: string;
+}
+
+export const EMPTY_REQUIREMENT_POPULATED: RequirementPopulated = {
+    target_quantity: 0,
+    ID: 0,
+    type: '',
+    party_id: 0,
+    quantity_mark: '',
 }

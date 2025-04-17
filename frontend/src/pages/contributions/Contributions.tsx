@@ -1,7 +1,7 @@
 import {useApi} from "../../context/ApiContext.ts";
 import {useEffect, useState} from "react";
-import {ContributionPopulated} from "../../data/types/Contribution.ts";
-import {RequirementPopulated} from "../../data/types/Requirement.ts";
+import {ContributionPopulated, EMPTY_CONTRIBUTION_POPULATED} from "../../data/types/Contribution.ts";
+import {EMPTY_REQUIREMENT_POPULATED, RequirementPopulated} from "../../data/types/Requirement.ts";
 import {getUserName} from "../../auth/AuthUserUtil.ts";
 import {useNavigate} from "react-router-dom";
 import {toast} from "sonner";
@@ -29,7 +29,8 @@ export const Contributions = () => {
     
     const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
     const [deleteModalMode, setDeleteModalMode] = useState<'drink' | 'food'>('drink');
-    const [contributionIdToDelete, setContributionIdToDelete] = useState<number>(0);
+    const [selectedContribution, setSelectedContribution] = useState<ContributionPopulated>(EMPTY_CONTRIBUTION_POPULATED);
+    const [selectedRequirement, setSelectedRequirement] = useState<RequirementPopulated>(EMPTY_REQUIREMENT_POPULATED);
 
     useEffect(() => {
         if(userName === '' || organizerName === '' || partyId === -1){
@@ -128,8 +129,9 @@ export const Contributions = () => {
             .reduce((sum, contribution) => sum + contribution.quantity, 0)
     }
 
-    const handleDeleteClick = (contributionId: number, mode: 'drink' | 'food') => {
-        setContributionIdToDelete(contributionId);
+    const handleDeleteClick = (contribution: ContributionPopulated, requirement: RequirementPopulated, mode: 'drink' | 'food') => {
+        setSelectedContribution(contribution);
+        setSelectedRequirement(requirement);
         setDeleteModalMode(mode);
         setIsDeleteModalVisible(true);
     };
@@ -199,7 +201,7 @@ export const Contributions = () => {
                                         className={classes.deleteButton}
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            handleDeleteClick(contribution.ID, isDrink ? 'drink' : 'food');
+                                            handleDeleteClick(contribution, requirement, isDrink ? 'drink' : 'food');
                                         }}
                                     >
                                         <DeleteOutlined />
@@ -262,7 +264,9 @@ export const Contributions = () => {
                 visible={isDeleteModalVisible}
                 onClose={() => setIsDeleteModalVisible(false)}
                 mode={deleteModalMode}
-                contributionId={contributionIdToDelete}
+                contributionId={selectedContribution?.ID || 0}
+                contribution={selectedContribution}
+                requirement={selectedRequirement}
             />
         </div>
     )
