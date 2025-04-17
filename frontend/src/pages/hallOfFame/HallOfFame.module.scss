@@ -1,0 +1,171 @@
+.outerContainer {
+    background-image: url('../../data/resources/images/cola-pepsi.png');
+    position: fixed;
+    background-size: cover;
+    background-position: center;
+    margin-top: 70px;
+    overflow-y: auto;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    color: #ffffff;
+    padding-bottom: 80px;
+}
+
+.pageContainer {
+    width: min(80%, 1000px);
+    margin: 20px auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(33, 33, 33, 0.95);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.title {
+    color: #d3d3d3;
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+.description {
+    color: #d3d3d3;
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    opacity: 0.9;
+}
+
+.usersList {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.userCard {
+    background-color: rgba(58, 58, 58, 0.8);
+    border-radius: 8px;
+    border: 1px solid #444;
+    overflow: hidden;
+}
+
+.userHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    cursor: pointer;
+    background-color: rgba(58, 58, 58, 0.8);
+    transition: background-color 0.2s;
+
+    &:hover {
+        background-color: rgba(70, 70, 70, 0.8);
+    }
+}
+
+.userInfo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+}
+
+.profilePicture {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #007bff;
+}
+
+.userDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.userName {
+    font-weight: 600;
+    color: #d3d3d3;
+}
+
+.contributionCount {
+    color: #d3d3d3;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.expandIcon {
+    color: #d3d3d3;
+    transition: transform 0.3s ease;
+    
+    &.expanded {
+        transform: rotate(180deg);
+    }
+}
+
+.contributionsList {
+    padding: 15px;
+    border-top: 1px solid #444;
+    background-color: rgba(33, 33, 33, 0.8);
+}
+
+.contribution {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #444;
+    background-color: rgba(58, 58, 58, 0.8);
+    
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.contributionDetails {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.requirementName {
+    font-weight: 600;
+    color: #d3d3d3;
+}
+
+.contributionQuantity {
+    font-weight: 600;
+    color: #d3d3d3;
+}
+
+.contributionDescription {
+    color: #d3d3d3;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    opacity: 0.9;
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .pageContainer {
+        width: 90%;
+        padding: 15px;
+    }
+
+    .title {
+        font-size: 2rem;
+    }
+
+    .userName {
+        font-size: 1.1rem;
+    }
+
+    .profilePicture {
+        width: 35px;
+        height: 35px;
+    }
+} 
