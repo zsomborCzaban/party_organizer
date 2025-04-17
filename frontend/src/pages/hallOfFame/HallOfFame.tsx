@@ -34,6 +34,8 @@ export const HallOfFame = () => {
     const [drinkRequirements, setDrinkRequirements] = useState<RequirementPopulated[]>([])
     const [foodRequirements, setFoodRequirements] = useState<RequirementPopulated[]>([])
     const [expandedUsers, setExpandedUsers] = useState<Set<number>>(new Set())
+    const [refreshDrinkContributions, setRefreshDrinkContributions] = useState(0)
+    const [refreshFoodContributions, setRefreshFoodContributions] = useState(0)
 
     const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
     const [deleteModalMode, setDeleteModalMode] = useState<'drink' | 'food'>('drink');
@@ -103,7 +105,7 @@ export const HallOfFame = () => {
             .catch(() => {
                 toast.error('Unexpected error')
             })
-    }, [api.contributionApi, partyId]);
+    }, [api.contributionApi, partyId, refreshDrinkContributions]);
 
     useEffect(() => {
         api.contributionApi.getFoodContributionsByParty(partyId)
@@ -117,7 +119,7 @@ export const HallOfFame = () => {
             .catch(() => {
                 toast.error('Unexpected error')
             })
-    }, [api.contributionApi, partyId]);
+    }, [api.contributionApi, partyId, refreshFoodContributions]);
 
     useEffect(() => {
         const allRequirements = [...drinkRequirements, ...foodRequirements];
@@ -259,6 +261,8 @@ export const HallOfFame = () => {
                 contributionId={selectedContribution.ID}
                 contribution={selectedContribution}
                 requirement={selectedRequirement}
+                onFoodSuccess={() => setRefreshFoodContributions(prevState => (prevState+1)%2)}
+                onDrinkSuccess={() => setRefreshDrinkContributions(prevState => (prevState+1)%2)}
             />
         </div>
     )

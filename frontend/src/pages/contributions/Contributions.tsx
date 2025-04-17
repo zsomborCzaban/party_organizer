@@ -21,6 +21,8 @@ export const Contributions = () => {
     const [foodContributions, setFoodContributions] = useState<ContributionPopulated[]>([])
     const [drinkRequirements, setDrinkRequirements] = useState<RequirementPopulated[]>([])
     const [foodRequirements, setFoodRequirements] = useState<RequirementPopulated[]>([])
+    const [refreshDrinkContributions, setRefreshDrinkContributions] = useState(0)
+    const [refreshFoodContributions, setRefreshFoodContributions] = useState(0)
     const [expandedDrinkRequirements, setExpandedDrinkRequirements] = useState<Set<number>>(new Set())
     const [expandedFoodRequirements, setExpandedFoodRequirements] = useState<Set<number>>(new Set())
 
@@ -79,7 +81,7 @@ export const Contributions = () => {
             .catch(() => {
                 toast.error('Unexpected error')
             })
-    }, [api.contributionApi, partyId]);
+    }, [api.contributionApi, partyId, refreshDrinkContributions]);
 
     useEffect(() => {
         api.contributionApi.getFoodContributionsByParty(partyId)
@@ -93,7 +95,7 @@ export const Contributions = () => {
             .catch(() => {
                 toast.error('Unexpected error')
             })
-    }, [api.contributionApi, partyId]);
+    }, [api.contributionApi, partyId, refreshFoodContributions]);
 
     const toggleRequirement = (requirementId: number, isDrink: boolean) => {
         if (isDrink) {
@@ -258,15 +260,19 @@ export const Contributions = () => {
                 onClose={() => setIsModalVisible(false)}
                 options={getModalOptions(modalMode)}
                 mode={modalMode}
+                onFoodSuccess={() => setRefreshFoodContributions(prevState => (prevState+1)%2)}
+                onDrinkSuccess={() => setRefreshDrinkContributions(prevState => (prevState+1)%2)}
             />
 
             <DeleteContributeModal
                 visible={isDeleteModalVisible}
                 onClose={() => setIsDeleteModalVisible(false)}
                 mode={deleteModalMode}
-                contributionId={selectedContribution?.ID || 0}
+                contributionId={selectedContribution.ID}
                 contribution={selectedContribution}
                 requirement={selectedRequirement}
+                onFoodSuccess={() => setRefreshFoodContributions(prevState => (prevState+1)%2)}
+                onDrinkSuccess={() => setRefreshDrinkContributions(prevState => (prevState+1)%2)}
             />
         </div>
     )

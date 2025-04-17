@@ -13,6 +13,8 @@ interface DeleteContributeModalProps {
   contributionId: number;
   contribution: ContributionPopulated;
   requirement: RequirementPopulated;
+  onDrinkSuccess: () => void;
+  onFoodSuccess: () => void;
 }
 
 interface Feedbacks {
@@ -27,6 +29,8 @@ const DeleteContributeModal: React.FC<DeleteContributeModalProps> = ({
   onClose,
   contribution,
   requirement,
+  onFoodSuccess,
+  onDrinkSuccess,
 }) => {
   const [feedbacks, setFeedbacks] = useState<Feedbacks>({});
   const [countdown, setCountdown] = useState(0);
@@ -67,7 +71,7 @@ const DeleteContributeModal: React.FC<DeleteContributeModalProps> = ({
         .then(() => {
           newFeedbacks.buttonSuccess = 'deleted successfully';
           setFeedbacks(newFeedbacks);
-
+          onDrinkSuccess();
           startCloseTimer();
         })
         .catch((err) => {
@@ -87,7 +91,7 @@ const DeleteContributeModal: React.FC<DeleteContributeModalProps> = ({
         .then(() => {
           newFeedbacks.buttonSuccess = 'deleted successfully';
           setFeedbacks(newFeedbacks);
-
+          onFoodSuccess();
           startCloseTimer();
         })
         .catch((err) => {
@@ -122,7 +126,6 @@ const DeleteContributeModal: React.FC<DeleteContributeModalProps> = ({
         onCancel={onClose}
         footer={null}
         className={classes.modal}
-        bodyStyle={{ backgroundColor: 'rgba(33, 33, 33, 0.95)' }}
       >
         <div className={classes.modalContent}>
           <label className={classes.label}>{getConfirmationMessage()}</label>

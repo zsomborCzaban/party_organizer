@@ -1,8 +1,7 @@
 -loginnal ha rossz a jelszo akkor valami felre megy a backenden. (internal server errort kapunk amikor nem kene)
 - hashelve tarolni a jelszot a registration requestben, és kivenni a confirm jelszot
+- amior kitorolt rekordot akarunk kitoroni akkor felremegy a backend es utana semmilyen find nem mukodik
 
-
--publikus endpoint lehet a adiscover és a party home page
 
 -ha lejar a jwt token frontenden akkor jelentkeztessuk ki a usert
 -error kezelesek kipofozasa (ha loginnal nincs backend akkor ne azt adjuk vissza, hogy invalid username or password)

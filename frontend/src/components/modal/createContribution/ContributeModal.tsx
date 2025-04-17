@@ -15,6 +15,8 @@ export interface ContributeModalProps {
   onClose: () => void;
   options: { value: number; label: string }[];
   mode: string;
+  onFoodSuccess: () => void;
+  onDrinkSuccess: () => void;
 }
 
 interface Feedbacks {
@@ -25,7 +27,7 @@ interface Feedbacks {
   buttonSuccess?: string;
 }
 
-export const ContributeModal: React.FC<ContributeModalProps> = ({ mode, options, visible, onClose }) => {
+export const ContributeModal: React.FC<ContributeModalProps> = ({ mode, options, visible, onClose, onDrinkSuccess, onFoodSuccess }) => {
   const [quantity, setQuantity] = useState('');
   const [description, setDescription] = useState('');
   const [requirementId, setRequirementId] = useState(0);
@@ -91,6 +93,7 @@ export const ContributeModal: React.FC<ContributeModalProps> = ({ mode, options,
 
           if (!selectedParty || !selectedParty.ID) return;
           dispatch(loadDrinkContributions(selectedParty.ID));
+          onDrinkSuccess();
         })
         .catch((err) => {
           if (err.response) {
@@ -113,6 +116,7 @@ export const ContributeModal: React.FC<ContributeModalProps> = ({ mode, options,
 
           if (!selectedParty || !selectedParty.ID) return;
           dispatch(loadFoodContributions(selectedParty.ID));
+          onFoodSuccess();
         })
         .catch((err) => {
           if (err.response) {
