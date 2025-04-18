@@ -54,7 +54,7 @@ export class AuthApi {
   async postRegister(props: RegisterPostRequestProps): Promise<void | 'error'> {
     try {
       await this.axiosInstance.post<void>(`${getApiUrl()}/register`, props);
-      toast.success('Successfully registered');
+      toast.success('Register success, please confirm your e-mail to finish registering');
     } catch (error) {
       handleApiError(error);
       return 'error';
