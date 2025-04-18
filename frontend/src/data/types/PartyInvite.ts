@@ -1,10 +1,10 @@
 import {User} from './User';
-import {Party} from './Party';
+import {PartyPopulated} from './Party';
 
 export interface PartyInvite {
     ID: number,
     invitor: User,
     invited: User,
-    party: Party,
+    party: PartyPopulated,
     state: string,
 }

@@ -12,6 +12,7 @@ import {
 } from "../../../data/constants/TableColumns.ts";
 import {useNavigate} from "react-router-dom";
 import classes from './Parties.module.scss';
+import {convertPartiesToTableDatasource, convertPartyInvitesToTableDatasource} from "../../../data/utils/TableUtils.ts";
 
 export const Parties = () => {
 
@@ -67,18 +68,6 @@ export const Parties = () => {
             return;
         })
     }, [api.partyApi, reloadAttendiedParties]);
-
-    const convertInvitesToTableDatasource = (invites: PartyInvite[]) : PartyInviteTableRow[] => {
-        return invites.map(invite => ({
-            id: invite.party.ID, invitedBy: invite.invitor.username, partyName: invite.party.name, partyPlace: invite.party.place, partyTime: invite.party.start_time
-        }))
-    }
-
-    const convertPartiesToTableDatasource = (parties: PartyPopulated[]): PartyTableRow[] => {
-        return parties.map(party => ({
-            id: party.ID, name: party.name, organizerName: party.organizer.username, place: party.place, time: party.start_time
-        }))
-    }
 
     const partyInviteActionButtons: ActionButton<PartyInviteTableRow>[] = [
         {
@@ -145,7 +134,7 @@ export const Parties = () => {
                 <div className={classes.tableWrapper}>
                     <SortableTable
                         columns={partyInviteTableColumns}
-                        data={convertInvitesToTableDatasource(pendingInvites)}
+                        data={convertPartyInvitesToTableDatasource(pendingInvites)}
                         rowsPerPageOptions={[3,5,10,15]}
                         defaultRowsPerPage={5}
                         actionButtons={partyInviteActionButtons}

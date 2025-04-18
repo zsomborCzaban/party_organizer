@@ -24,7 +24,7 @@ export interface PartyInviteTableRow {
     invitedBy: string;
     partyName: string;
     partyPlace: string;
-    partyTime: Date;
+    partyTime: string;
 }
 
 export const partyTableColumns: Column<PartyTableRow>[] = [

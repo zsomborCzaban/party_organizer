@@ -1,7 +1,7 @@
 import { get } from '../Api.ts';
 
 import { getApiUrl } from '../ApiHelper.ts';
-import { Party } from '../../data/types/Party';
+import {Party, PartyPopulated} from '../../data/types/Party';
 import { PartyInvite } from '../../data/types/PartyInvite';
 import axios, {AxiosInstance, AxiosResponse} from "axios";
 import {User} from "../../data/types/User.ts";
@@ -27,9 +27,13 @@ export type PartyInviteInvitesResponse = {
         ID: number,
         invitor: User,
         invited: User,
-        party: Party,
+        party: PartyPopulated,
         state: string,
     }[]
+}
+
+export type JoinPartyResponse = {
+    data: PartyPopulated
 }
 
 export type LeavePartyResponse = {
@@ -79,6 +83,26 @@ export class PartyAttendanceManagerApi {
     async getPartyPendingInvites(partyId: number): Promise<PartyInviteInvitesResponse | 'error'> {
         try {
             const response = await this.axiosInstance.get<PartyInviteInvitesResponse>(`${PARTY_ATTENDANCE_MANAGER_PATH}/getPartyPendingInvites/${partyId}`)
+            return handleApiResponse(response)
+        } catch (error) {
+            handleApiError(error)
+            return 'error'
+        }
+    }
+
+    async joinPublicParty(partyId: number): Promise<JoinPartyResponse | 'error'> {
+        try {
+            const response = await this.axiosInstance.get<JoinPartyResponse>(`${PARTY_ATTENDANCE_MANAGER_PATH}/joinPublicParty/${partyId.toString()}`)
+            return handleApiResponse(response)
+        } catch (error) {
+            handleApiError(error)
+            return 'error'
+        }
+    }
+
+    async joinPrivateParty(accessCode: string): Promise<JoinPartyResponse | 'error'> {
+        try {
+            const response = await this.axiosInstance.get<JoinPartyResponse>(`${PARTY_ATTENDANCE_MANAGER_PATH}/joinPrivateParty/${accessCode}`)
             return handleApiResponse(response)
         } catch (error) {
             handleApiError(error)

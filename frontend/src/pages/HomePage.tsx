@@ -1,20 +1,23 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Table } from 'antd';
 import classes from './HomePage.module.scss';
 import { PartyPopulated } from "../data/types/Party.ts";
 import { useApi } from "../context/ApiContext.ts";
 import { toast } from "sonner";
-import { partyTableColumnsLegacy } from '../data/constants/TableColumns';
+import {convertPartiesToTableDatasource} from "../data/utils/TableUtils.ts";
+import {partyTableColumns, PartyTableRow} from "../data/constants/TableColumns.ts";
+import {ActionButton, SortableTable} from "../components/table/SortableTable.tsx";
+import {useAppSelector} from "../store/store-helper.ts";
+import {isUserLoggedIn} from "../store/slices/UserSlice.ts";
+
 
 export const Homepage = () => {
   const api = useApi();
   const navigate = useNavigate();
+  const userLoggedIn = useAppSelector(isUserLoggedIn);
   const [publicParties, setPublicParties] = useState<PartyPopulated[]>([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setLoading(true);
     api.partyApi.getPublicParties()
       .then(resp => {
         if (resp === 'error') {
@@ -26,14 +29,42 @@ export const Homepage = () => {
       .catch(() => {
         toast.error('Unexpected error');
       })
-      .finally(() => {
-        setLoading(false);
-      });
+
   }, [api.partyApi]);
 
-  const handlePartyClick = (party: PartyPopulated) => {
-    navigate(`/party/${party.ID}`);
-  };
+  const partyVisitLoggedOutActionButton: ActionButton<PartyTableRow> = {
+    label: 'Visit',
+    color: 'info',
+    onClick: (party: PartyTableRow) => {
+      localStorage.setItem('partyName', party.name)
+      localStorage.setItem('partyId', party.id.toString())
+      localStorage.setItem('partyOrganizerName', party.organizerName)
+      navigate(`/partyHome`)
+    }
+  }
+
+  const partyVisitLoggedInActionButton: ActionButton<PartyTableRow> = {
+    label: 'Join',
+    color: 'info',
+    onClick: (party: PartyTableRow) => {
+      api.partyAttendanceApi.joinPublicParty(party.id)
+          .then(response => {
+            if(response === 'error'){
+              toast.error('Unable to join party')
+              return
+            }
+
+            localStorage.setItem('partyName', response.data.name)
+            localStorage.setItem('partyId', response.data.ID.toString())
+            localStorage.setItem('partyOrganizerName', response.data.organizer.username)
+            navigate(`/partyHome`)
+          })
+          .catch(() => {
+            toast.error('Unexpected error')
+          })
+    }
+  }
+
 
   return (
     <div className={classes.homepage}>
@@ -62,16 +93,13 @@ export const Homepage = () => {
         <div className={classes.sectionContainer}>
           <h2>Public Parties</h2>
           <div className={classes.tableContainer}>
-            <Table
-              dataSource={publicParties}
-              columns={partyTableColumnsLegacy}
-              loading={loading}
-              onRow={(record) => ({
-                onClick: () => handlePartyClick(record),
-                style: { cursor: 'pointer' }
-              })}
-              pagination={{ pageSize: 5 }}
-            />
+              <SortableTable
+                  columns={partyTableColumns}
+                  data={convertPartiesToTableDatasource(publicParties)}
+                  rowsPerPageOptions={[3,5,10,15]}
+                  defaultRowsPerPage={5}
+                  actionButtons={userLoggedIn ? [partyVisitLoggedInActionButton] : [partyVisitLoggedOutActionButton]}
+              />
           </div>
         </div>
       </section>

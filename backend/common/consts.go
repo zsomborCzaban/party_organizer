@@ -12,3 +12,5 @@ const AWS_BUCKET_NAME_ENV_KEY = "AWS_BUCKET_NAME"
 const EMAIL_USERNAME_ENV_KEY = "EMAIL_USERNAME"
 const EMAIL_FULL_ENV_KEY = "EMAIL_FULL"
 const EMAIL_PASSWORD_ENV_KEY = "EMAIL_PASSWORD"
+
+const DEFAULT_PROFILE_PICTURE_URL = "https://partyorganizerbucket.s3.eu-north-1.amazonaws.com/user/profile_pictures/default_profile_picture.png"

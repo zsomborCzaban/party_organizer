@@ -39,13 +39,13 @@ interface SortableTableProps<T> {
 }
 
 export function SortableTable<T extends { id: string | number }>({
-                                                                     columns,
-                                                                     data,
-                                                                     actionButtons = [],
-                                                                     defaultSortField = columns[0]?.field,
-                                                                     rowsPerPageOptions = [5, 10, 25],
-                                                                     defaultRowsPerPage = 5,
-                                                                 }: SortableTableProps<T>) {
+    columns,
+    data,
+    actionButtons = [],
+    defaultSortField = columns[0]?.field,
+    rowsPerPageOptions = [5, 10, 25],
+    defaultRowsPerPage = 5,
+}: SortableTableProps<T>) {
     const [order, setOrder] = useState<'asc' | 'desc'>('asc');
     const [orderBy, setOrderBy] = useState<keyof T>(defaultSortField);
     const [page, setPage] = useState(0);

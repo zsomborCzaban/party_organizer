@@ -2,6 +2,7 @@ package domains
 
 import (
 	"errors"
+	"github.com/zsomborCzaban/party_organizer/common"
 	userDomain "github.com/zsomborCzaban/party_organizer/services/users/user/domains"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
@@ -23,8 +24,9 @@ func (rq *RegistrationRequest) TransformToUser() (*userDomain.User, error) {
 	}
 
 	return &userDomain.User{
-		Username: rq.Username,
-		Email:    rq.Email,
-		Password: string(encodedPassword),
+		Username:          rq.Username,
+		Email:             rq.Email,
+		ProfilePictureUrl: common.DEFAULT_PROFILE_PICTURE_URL,
+		Password:          string(encodedPassword),
 	}, nil
 }
