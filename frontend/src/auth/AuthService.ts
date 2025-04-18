@@ -16,6 +16,7 @@ export interface AuthService {
 export const authService: AuthService = {
     userLoggedIn: (jwt) => {
         setJwtAuthToken(jwt);
+        localStorage.removeItem('profile_picture_url')
     },
 
     userLoggedOut: () => {

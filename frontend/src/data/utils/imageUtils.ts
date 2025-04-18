@@ -1,18 +1,13 @@
 import {ChangeEvent} from 'react';
-import {authService} from '../../auth/AuthService';
-import {getUserProfilePicture} from '../../auth/AuthUserUtil';
 import { uploadPicture } from '../../api/apis/UserApi';
+import {toast} from "sonner";
 
-export const handleProfilePictureUpload = (event: ChangeEvent<HTMLInputElement>, profilePictureUrlSetter: React.Dispatch<React.SetStateAction<string>>, errorMessageSetter: React.Dispatch<React.SetStateAction<string>>) => {
+export const handleProfilePictureUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files && event.target.files[0];
 
     if (!file) return;
     if (!file.type.startsWith('image/')) {
-        errorMessageSetter('Upload failed. Please select a valid image file (PNG or JPG).');
-        setTimeout(() => {
-            errorMessageSetter('');
-        }, 4000);
-        return;
+        toast.error('Upload failed. Please select a valid image file (PNG or JPG).')
     }
 
     const formData = new FormData();
@@ -20,21 +15,10 @@ export const handleProfilePictureUpload = (event: ChangeEvent<HTMLInputElement>,
 
     uploadPicture(formData)
         .then(resp => {
-            authService.userLoggedIn(resp.jwt);
-            const newPicture = getUserProfilePicture();
-            if(!newPicture) {
-                errorMessageSetter('Upload successful but failed to fetch new profile picture. Reload the page to see the new profile picture');
-                setTimeout(() => {
-                    errorMessageSetter('');
-                }, 4000);
-                return;
-            }
-            profilePictureUrlSetter(newPicture);
+            localStorage.setItem('profile_picture_url', resp.profile_picture_url)
+            toast.success('Profile picture uploaded')
         })
         .catch(() => {
-            errorMessageSetter('Something unexpected happened');
-            setTimeout(() => {
-                errorMessageSetter('');
-            }, 4000); // 4000 milliseconds = 4 seconds
+            toast.error('Unexpected error')
         });
 };

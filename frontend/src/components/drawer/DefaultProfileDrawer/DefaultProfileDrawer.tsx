@@ -1,12 +1,22 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store/store.ts';
+import {AppDispatch, RootState} from '../../../store/store.ts';
 import {useEffect} from "react";
-import {closePartyProfileDrawer} from "../../store/slices/partyProfileDrawerSlice.ts";
+import {closePartyProfileDrawer} from "../../../store/slices/profileDrawersSlice.ts";
 import classes from "./PartyProfileDrawer.module.scss"
+import {getUser} from "../../../auth/AuthUserUtil.ts";
+import {EMPTY_USER} from "../../../data/types/User.ts";
+import {toast} from "sonner";
+import {
+  handleLogoutUtil,
+  handleUploadProfilePictureUtil
+} from "../../../data/utils/ProfileDrawerUtils.ts";
+import {useNavigate} from "react-router-dom";
 
-export const PartyProfileDrawer = () => {
-  const dispatch = useDispatch();
-  const isOpen = useSelector((state: RootState) => state.profileDrawer.isOpen);
+export const DefaultProfileDrawer = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate()
+  const isOpen = useSelector((state: RootState) => state.profileDrawers.isOpen);
+  const user = getUser() || EMPTY_USER
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -29,8 +39,13 @@ export const PartyProfileDrawer = () => {
     };
   }, [isOpen, dispatch]);
 
-  return (
-      <div>
+  useEffect(() => {
+    if(!user){
+      toast.error('Failed to load user')
+    }
+  }, [user]);
+
+  return (<div>
         {isOpen && (
             <div
                 className={classes.overlay}
@@ -56,15 +71,22 @@ export const PartyProfileDrawer = () => {
 
           <div className={classes.drawerContent}>
             <div className={classes.profileSection}>
-              <div className={classes.avatar}></div>
-              <h3 className={classes.userName}>John Doe</h3>
-              <p className={classes.userEmail}>john.doe@example.com</p>
+              <img
+                  src={user.profile_picture_url}
+                  alt={user.username}
+                  className={classes.avatar}
+              />
+              <h3 className={classes.userName}>{user.username}</h3>
+              <p className={classes.userEmail}>{user.email}</p>
             </div>
 
             <nav className={classes.profileMenu}>
-              <button className={classes.menuItem}>Edit Profile</button>
-              <button className={classes.menuItem}>Settings</button>
-              <button className={classes.menuItem}>Logout</button>
+              <input className={classes.profileInput} id='file-input' type='file' accept='image/*'
+                     onChange={handleUploadProfilePictureUtil}/>
+              <label htmlFor='file-input' className={classes.menuItem}>
+                Upload profile picture
+              </label>
+              <button className={classes.menuItem} onClick={() => handleLogoutUtil(navigate)}>Logout</button>
             </nav>
           </div>
         </div>

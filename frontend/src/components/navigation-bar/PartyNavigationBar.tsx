@@ -7,7 +7,7 @@ import { getUserName } from "../../auth/AuthUserUtil.ts";
 import {NavigationDrawerButton} from "./navigation-button/NavigationDrawerButton.tsx";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../store/store.ts";
-import {togglePartyProfileDrawer} from "../../store/slices/partyProfileDrawerSlice.ts";
+import {togglePartyProfileDrawer} from "../../store/slices/profileDrawersSlice.ts";
 
 export const PartyNavigationBar = () => {
     const dispatch = useDispatch<AppDispatch>()
@@ -18,7 +18,7 @@ export const PartyNavigationBar = () => {
     const organizerName = localStorage.getItem('partyOrganizerName'); //cannot do || 'Unexpected error' because if a user would choose the name unexpected error, he could see the buttons ^^.
     const userName = getUserName()
     const isUserOrganizer = userName && organizerName && userName === organizerName
-    const isProfileDrawerOpen = useSelector((state: RootState) => state.profileDrawer.isOpen);
+    const isProfileDrawerOpen = useSelector((state: RootState) => state.profileDrawers.isOpen);
 
     return (
         <nav className={classes.navBar}>

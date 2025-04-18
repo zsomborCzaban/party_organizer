@@ -8,13 +8,12 @@ const initialState: DrawerState = {
   isOpen: false,
 };
 
-export const partyProfileDrawerSlice = createSlice({
+export const profileDrawersSlice = createSlice({
   name: 'drawer',
   initialState,
   reducers: {
     togglePartyProfileDrawer: (state) => {
       state.isOpen = !state.isOpen
-      console.log('toggleing')
     },
     openPartyProfileDrawer: (state) => {
       state.isOpen = true;
@@ -25,4 +24,4 @@ export const partyProfileDrawerSlice = createSlice({
   },
 });
 
-export const { openPartyProfileDrawer, closePartyProfileDrawer, togglePartyProfileDrawer } = partyProfileDrawerSlice.actions;
+export const { openPartyProfileDrawer, closePartyProfileDrawer, togglePartyProfileDrawer } = profileDrawersSlice.actions;

@@ -32,6 +32,10 @@ export type PartyInviteInvitesResponse = {
     }[]
 }
 
+export type LeavePartyResponse = {
+    data: string,
+}
+
 export class PartyAttendanceManagerApi {
     private axiosInstance: AxiosInstance;
 
@@ -75,6 +79,16 @@ export class PartyAttendanceManagerApi {
     async getPartyPendingInvites(partyId: number): Promise<PartyInviteInvitesResponse | 'error'> {
         try {
             const response = await this.axiosInstance.get<PartyInviteInvitesResponse>(`${PARTY_ATTENDANCE_MANAGER_PATH}/getPartyPendingInvites/${partyId}`)
+            return handleApiResponse(response)
+        } catch (error) {
+            handleApiError(error)
+            return 'error'
+        }
+    }
+
+    async leaveParty(partyId: number): Promise<LeavePartyResponse | 'error'> {
+        try {
+            const response = await this.axiosInstance.get<LeavePartyResponse>(`${PARTY_ATTENDANCE_MANAGER_PATH}/leaveParty/${partyId}`)
             return handleApiResponse(response)
         } catch (error) {
             handleApiError(error)
