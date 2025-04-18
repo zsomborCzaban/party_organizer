@@ -80,7 +80,7 @@ export const Homepage = () => {
         <div className={classes.actionButtons}>
           <button 
             className={classes.createButton}
-            onClick={() => navigate('/create-party')}
+            onClick={() => navigate('/createParty')}
           >
             <div className={classes.buttonContent}>
               <h3>Create Party</h3>

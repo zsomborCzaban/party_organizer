@@ -12,17 +12,6 @@
   position: relative;
   overflow: hidden;
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('../../data/resources/images/party-background.jpg') center/cover;
-    opacity: 0.1;
-  }
-
   .heroContent {
     position: relative;
     z-index: 1;
@@ -84,9 +73,11 @@
 }
 
 .partiesSection {
-  background-color: rgba(33, 33, 33, 0.95);
+  background-color: #f7fafc;
   padding: 60px 20px;
-  color: #d3d3d3;
+  color: #2d3748;
+  border-top: 1px solid rgba(226, 232, 240, 0.8);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
 }
 
 .sectionContainer {
@@ -96,23 +87,45 @@
   h2 {
     font-size: 2rem;
     margin-bottom: 30px;
-    color: #d3d3d3;
+    color: #2d3748;
     font-weight: 700;
   }
 }
 
 .tableContainer {
-  background-color: rgba(58, 58, 58, 0.8);
+  background-color: #ffffff;
   border-radius: 8px;
   padding: 20px;
-  border: 1px solid #444;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .actionSection {
-  background-color: rgba(33, 33, 33, 0.95);
+  background: linear-gradient(135deg, #4299e1, #3182ce);
   padding: 60px 20px;
-  color: #d3d3d3;
+  color: white;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('../data/resources/images/artlist_image.jpg') center/cover;
+    opacity: 0.1;
+  }
+
+  .sectionContainer {
+    position: relative;
+    z-index: 1;
+  }
+
+  h2 {
+    color: white;
+  }
 }
 
 .actionButtons {
@@ -134,6 +147,7 @@
   transition: all 0.3s ease;
   background-size: cover;
   background-position: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   &::before {
     content: '';
@@ -142,26 +156,26 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.3);
     transition: background 0.3s ease;
   }
 
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 
     &::before {
-      background: rgba(0, 0, 0, 0.3);
+      background: rgba(0, 0, 0, 0.2);
     }
   }
 }
 
 .createButton {
-  background-image: url('../../data/resources/images/create-party-bg.jpg');
+  background-image: url('../data/resources/images/artlist_image.jpg');
 }
 
 .joinButton {
-  background-image: url('../../data/resources/images/join-party-bg.jpg');
+  background-image: url('../data/resources/images/u5679648646_2_people_dancing_with_a_galactic_lsd_like_trip_li_78e43cba-8023-4e69-9fa1-75bb9790bbe8_0.png');
 }
 
 .buttonContent {
@@ -328,8 +342,8 @@
 }
 
 @media (max-width: 1024px) {
-  .hero, .features, .localParties {
-    padding: 80px 24px;
+  .hero, .partiesSection, .actionSection {
+    padding: 60px 20px;
   }
 }
 
