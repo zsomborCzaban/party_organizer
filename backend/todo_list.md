@@ -1,6 +1,7 @@
 -loginnal ha rossz a jelszo akkor valami felre megy a backenden. (internal server errort kapunk amikor nem kene)
 - hashelve tarolni a jelszot a registration requestben, és kivenni a confirm jelszot
 - amior kitorolt rekordot akarunk kitoroni akkor felremegy a backend es utana semmilyen find nem mukodik
+- -party invite nem mukodik
 
 
 -ha lejar a jwt token frontenden akkor jelentkeztessuk ki a usert

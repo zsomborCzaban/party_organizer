@@ -89,7 +89,16 @@ export class PartyAttendanceManagerApi {
     async leaveParty(partyId: number): Promise<LeavePartyResponse | 'error'> {
         try {
             const response = await this.axiosInstance.get<LeavePartyResponse>(`${PARTY_ATTENDANCE_MANAGER_PATH}/leaveParty/${partyId}`)
+            console.log(response)
+            if(response.response){
+                if(response.response.data){
+                    return response.response.data
+                } else {
+                    return response.response.errors
+                }
+            }
             return handleApiResponse(response)
+
         } catch (error) {
             handleApiError(error)
             return 'error'
