@@ -165,7 +165,7 @@ const CreateParty: React.FC = () => {
             <h2 className={classes.formTitle}>Create Party</h2>
             
             <div className={classes.inputGroup}>
-              <label className={classes.label}>Party Name</label>
+              <label className={classes.label}>Party Name *</label>
               <Input
                 placeholder='Enter Party Name'
                 value={partyName}
@@ -175,7 +175,7 @@ const CreateParty: React.FC = () => {
             </div>
 
             <div className={classes.inputGroup}>
-              <label className={classes.label}>Displayed Place</label>
+              <label className={classes.label}>Displayed Place *</label>
               <Input
                 placeholder='Enter Displayed Place'
                 value={displayedPlace}
@@ -197,7 +197,7 @@ const CreateParty: React.FC = () => {
             </div>
 
             <div className={classes.inputGroup}>
-              <label className={classes.label}>Time</label>
+              <label className={classes.label}>Time *</label>
               <DatePicker
                 showTime
                 onChange={(date) => setStartTime(date)}
