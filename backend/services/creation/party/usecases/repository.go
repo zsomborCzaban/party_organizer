@@ -25,9 +25,12 @@ func (pr Repository) AddUserToParty(party *domains.Party, user *userDomain.User)
 	//if err := pr.DbAccess.AddToAssociation(party, "Participants", user); err != nil {
 	//	return err
 	//}
-
-	party.Participants = append(party.Participants, *user)
-	return pr.DbAccess.Update(party, party.ID)
+	associations := db.AssociationParameter{
+		Model:       party,
+		Association: "Participants",
+		Values:      append(party.Participants, *user),
+	}
+	return pr.DbAccess.ReplaceAssociations(associations)
 }
 
 func (pr Repository) RemoveUserFromParty(party *domains.Party, user *userDomain.User) error {
