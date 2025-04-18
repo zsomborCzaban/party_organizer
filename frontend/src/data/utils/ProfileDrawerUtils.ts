@@ -21,7 +21,6 @@ export const handleUploadProfilePictureUtil = (event: ChangeEvent<HTMLInputEleme
 export const handleLeavePartyUtils = (api: Api, navigate: NavigateFunction, partyId: number) => {
     api.partyAttendanceApi.leaveParty(partyId)
         .then((resp) => {
-            console.log(resp)
             if(!resp.data){
                 toast.error(resp.errors) //todo: handle error here
                 return

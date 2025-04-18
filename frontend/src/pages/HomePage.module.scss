@@ -1,71 +1,190 @@
 .homepage {
   min-height: 100vh;
-  background-color: #f7fafc;
-  margin-top: 70px;
+  display: flex;
+  flex-direction: column;
 }
 
 .hero {
-  background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
-  padding: 80px 48px;
-  text-align: center;
+  background: linear-gradient(135deg, #4299e1, #3182ce);
   color: white;
+  padding: 80px 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('../../data/resources/images/party-background.jpg') center/cover;
+    opacity: 0.1;
+  }
 
   .heroContent {
+    position: relative;
+    z-index: 1;
     max-width: 800px;
     margin: 0 auto;
 
     h1 {
-      font-size: 48px;
+      font-size: 3rem;
+      margin-bottom: 20px;
       font-weight: 700;
-      margin-bottom: 24px;
-      letter-spacing: -1px;
     }
 
     p {
-      font-size: 20px;
-      margin-bottom: 32px;
+      font-size: 1.25rem;
+      margin-bottom: 40px;
       opacity: 0.9;
     }
   }
 
   .heroButtons {
     display: flex;
-    gap: 16px;
+    gap: 20px;
     justify-content: center;
   }
 }
 
 .primaryButton {
-  padding: 12px 24px;
   background-color: white;
-  color: #3182ce;
+  color: #4299e1;
   border: none;
+  padding: 12px 30px;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
 }
 
 .secondaryButton {
-  padding: 12px 24px;
   background-color: transparent;
   color: white;
   border: 2px solid white;
+  padding: 12px 30px;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 
   &:hover {
     background-color: rgba(255, 255, 255, 0.1);
     transform: translateY(-2px);
+  }
+}
+
+.partiesSection {
+  background-color: rgba(33, 33, 33, 0.95);
+  padding: 60px 20px;
+  color: #d3d3d3;
+}
+
+.sectionContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: #d3d3d3;
+    font-weight: 700;
+  }
+}
+
+.tableContainer {
+  background-color: rgba(58, 58, 58, 0.8);
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid #444;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.actionSection {
+  background-color: rgba(33, 33, 33, 0.95);
+  padding: 60px 20px;
+  color: #d3d3d3;
+}
+
+.actionButtons {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  padding: 0 20px;
+}
+
+.createButton, .joinButton {
+  position: relative;
+  height: 300px;
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-size: cover;
+  background-position: center;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    transition: background 0.3s ease;
+  }
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+
+    &::before {
+      background: rgba(0, 0, 0, 0.3);
+    }
+  }
+}
+
+.createButton {
+  background-image: url('../../data/resources/images/create-party-bg.jpg');
+}
+
+.joinButton {
+  background-image: url('../../data/resources/images/join-party-bg.jpg');
+}
+
+.buttonContent {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  text-align: center;
+
+  h3 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: white;
+    font-weight: 700;
+  }
+
+  p {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.9);
   }
 }
 
@@ -215,18 +334,28 @@
 }
 
 @media (max-width: 768px) {
-  .hero {
-    padding: 60px 16px;
-
-    .heroContent {
-      h1 {
-        font-size: 36px;
-      }
-
-      p {
-        font-size: 18px;
-      }
+  .heroContent {
+    h1 {
+      font-size: 2rem;
     }
+
+    p {
+      font-size: 1rem;
+    }
+  }
+
+  .heroButtons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .actionButtons {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .createButton, .joinButton {
+    height: 200px;
   }
 
   .features, .localParties {
