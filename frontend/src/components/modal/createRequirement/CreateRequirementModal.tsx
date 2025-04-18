@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Input, Modal } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../../store/store.ts';
 import { ApiError } from '../../../data/types/ApiResponseTypes.ts';
 import { Requirement } from '../../../data/types/Requirement.ts';
 import { setForTime } from '../../../data/utils/timeoutSetterUtils.ts';
 import { createDrinkRequirement, createFoodRequirement } from '../../../api/apis/RequirementApi.ts';
-import { loadDrinkRequirements } from '../../../store/slices/DrinkRequirementSlice.ts';
-import { loadFoodRequirements } from '../../../store/slices/FoodRequirementSlice.ts';
 import classes from './CreateRequirementModal.module.scss';
 import {ContributeModalProps} from "../createContribution/ContributeModal.tsx";
 
@@ -25,10 +21,7 @@ const CreateRequirementModal: React.FC<ContributeModalProps> = ({ mode, visible,
   const [targetQuantity, setTargetQuantity] = useState('');
   const [quantityMark, setQuantityMark] = useState('');
   const [feedbacks, setFeedbacks] = useState<Feedbacks>({});
-
-  const dispatch = useDispatch<AppDispatch>();
-
-  const { selectedParty } = useSelector((state: RootState) => state.selectedPartyStore);
+  const partyId = Number(localStorage.getItem('partyId') || '-1')
 
   useEffect(() => {
     if (visible) {
@@ -71,12 +64,11 @@ const CreateRequirementModal: React.FC<ContributeModalProps> = ({ mode, visible,
 
   const handleCreateRequirement = () => {
     if (!validate()) return;
-    if (!selectedParty || !selectedParty.ID) return;
     const requirement: Requirement = {
       type,
       target_quantity: Number(targetQuantity),
       quantity_mark: quantityMark,
-      party_id: selectedParty.ID,
+      party_id: partyId,
     };
     const newFeedbacks: Feedbacks = {};
 
@@ -86,9 +78,6 @@ const CreateRequirementModal: React.FC<ContributeModalProps> = ({ mode, visible,
           console.log(createdRequirement);
           newFeedbacks.buttonSuccess = 'created successfully';
           setForTime(setFeedbacks, newFeedbacks, {}, 3000);
-
-          if (!selectedParty || !selectedParty.ID) return;
-          dispatch(loadDrinkRequirements(selectedParty.ID));
         })
         .catch((err) => {
           if (err.response) {
@@ -108,9 +97,6 @@ const CreateRequirementModal: React.FC<ContributeModalProps> = ({ mode, visible,
           console.log(createdRequirement);
           newFeedbacks.buttonSuccess = 'created successfully';
           setForTime(setFeedbacks, newFeedbacks, {}, 3000);
-
-          if (!selectedParty || !selectedParty.ID) return;
-          dispatch(loadFoodRequirements(selectedParty.ID));
         })
         .catch((err) => {
           if (err.response) {

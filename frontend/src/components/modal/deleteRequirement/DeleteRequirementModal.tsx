@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Modal } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../../store/store.ts';
 import { ApiError } from '../../../data/types/ApiResponseTypes.ts';
 import { deleteDrinkRequirement, deleteFoodRequirement } from '../../../api/apis/RequirementApi.ts';
-import { loadDrinkRequirements } from '../../../store/slices/DrinkRequirementSlice.ts';
-import { loadFoodRequirements } from '../../../store/slices/FoodRequirementSlice.ts';
 import classes from './DeleteRequirementModal.module.scss'
 
 // todo: instead of creating a delete modal for each delete craete a confirmAction modal, that gets the function to call if confirmed
@@ -26,10 +22,6 @@ interface Feedbacks {
 const DeleteContributeModal: React.FC<DeleteContributeModalProps> = ({ mode, requirementId, visible, onClose }) => {
   const [feedbacks, setFeedbacks] = useState<Feedbacks>({});
   const [countdown, setCountdown] = useState(0);
-
-  const dispatch = useDispatch<AppDispatch>();
-
-  const { selectedParty } = useSelector((state: RootState) => state.selectedPartyStore);
 
   useEffect(() => {
     if (visible) {
@@ -70,9 +62,6 @@ const DeleteContributeModal: React.FC<DeleteContributeModalProps> = ({ mode, req
           newFeedbacks.buttonSuccess = 'deleted successfully';
           setFeedbacks(newFeedbacks);
 
-          if (!selectedParty || !selectedParty.ID) return;
-          dispatch(loadDrinkRequirements(selectedParty.ID));
-
           startCloseTimer();
         })
         .catch((err) => {
@@ -92,9 +81,6 @@ const DeleteContributeModal: React.FC<DeleteContributeModalProps> = ({ mode, req
         .then(() => {
           newFeedbacks.buttonSuccess = 'deleted successfully';
           setFeedbacks(newFeedbacks);
-
-          if (!selectedParty || !selectedParty.ID) return;
-          dispatch(loadFoodRequirements(selectedParty.ID));
 
           startCloseTimer();
         })

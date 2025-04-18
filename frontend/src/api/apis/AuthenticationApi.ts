@@ -43,7 +43,7 @@ export class AuthApi {
   async postLogin(username: string, password: string): Promise<LoginPostResponse | 'error'> {
     try {
       const response = await this.axiosInstance.post<LoginPostResponse>(`${getApiUrl()}/login`, { username, password });
-      toast.success('You logged in yaay');
+      localStorage.removeItem('profile_picture_url')
       return handleApiResponse(response);
     } catch (error) {
       handleApiError(error);
