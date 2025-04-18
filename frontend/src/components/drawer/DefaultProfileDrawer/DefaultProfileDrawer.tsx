@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux';
 import {AppDispatch, RootState} from '../../../store/store.ts';
 import {useEffect} from "react";
-import {closePartyProfileDrawer} from "../../../store/slices/profileDrawersSlice.ts";
-import classes from "./PartyProfileDrawer.module.scss"
+import {closeDefaultProfileDrawer} from "../../../store/slices/profileDrawersSlice.ts";
+import classes from "./DefaultProfileDrawer.module.scss"
 import {getUser} from "../../../auth/AuthUserUtil.ts";
 import {EMPTY_USER} from "../../../data/types/User.ts";
 import {toast} from "sonner";
@@ -15,13 +15,13 @@ import {useNavigate} from "react-router-dom";
 export const DefaultProfileDrawer = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate()
-  const isOpen = useSelector((state: RootState) => state.profileDrawers.isOpen);
+  const isOpen = useSelector((state: RootState) => state.profileDrawers.isDefaultProfileOpen);
   const user = getUser() || EMPTY_USER
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        dispatch(closePartyProfileDrawer());
+        dispatch(closeDefaultProfileDrawer());
       }
     };
 
@@ -49,7 +49,7 @@ export const DefaultProfileDrawer = () => {
         {isOpen && (
             <div
                 className={classes.overlay}
-                onClick={() => dispatch(closePartyProfileDrawer())}
+                onClick={() => dispatch(closeDefaultProfileDrawer())}
                 aria-hidden="true"
             />
         )}
@@ -62,7 +62,7 @@ export const DefaultProfileDrawer = () => {
             <h2>Profile</h2>
             <button
                 className={classes.closeButton}
-                onClick={() => dispatch(closePartyProfileDrawer())}
+                onClick={() => dispatch(closeDefaultProfileDrawer())}
                 aria-label="Close profile drawer"
             >
               &times;
@@ -86,7 +86,7 @@ export const DefaultProfileDrawer = () => {
               <label htmlFor='file-input' className={classes.menuItem}>
                 Upload profile picture
               </label>
-              <button className={classes.menuItem} onClick={() => handleLogoutUtil(navigate)}>Logout</button>
+              <button className={classes.menuItem} onClick={() => handleLogoutUtil(navigate, dispatch, '/')}>Logout</button>
             </nav>
           </div>
         </div>

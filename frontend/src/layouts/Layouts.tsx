@@ -3,12 +3,14 @@ import { Footer } from '../components/footer/Footer';
 import { Outlet } from 'react-router-dom';
 import classes from './Layouts.module.scss';
 import {PartyNavigationBar} from "../components/navigation-bar/PartyNavigationBar.tsx";
-import {PartyProfileDrawer} from "../components/drawer/PartyProfileDrawer.tsx";
+import {PartyProfileDrawer} from "../components/drawer/PartyProfileDrawer/PartyProfileDrawer.tsx";
+import {DefaultProfileDrawer} from "../components/drawer/DefaultProfileDrawer/DefaultProfileDrawer.tsx";
 
 export const MainLayout = () => {
     return (
         <div className={classes.app}>
             <NavigationBar />
+            <DefaultProfileDrawer />
             <main className={classes.appContent}>
                 <Outlet />
             </main>

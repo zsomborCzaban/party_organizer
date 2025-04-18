@@ -1,11 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 interface DrawerState {
-  isOpen: boolean;
+  isPartyProfileOpen: boolean;
+  isDefaultProfileOpen: boolean;
 }
 
 const initialState: DrawerState = {
-  isOpen: false,
+  isDefaultProfileOpen: false,
+  isPartyProfileOpen: false,
 };
 
 export const profileDrawersSlice = createSlice({
@@ -13,15 +15,24 @@ export const profileDrawersSlice = createSlice({
   initialState,
   reducers: {
     togglePartyProfileDrawer: (state) => {
-      state.isOpen = !state.isOpen
+      state.isPartyProfileOpen = !state.isPartyProfileOpen
     },
     openPartyProfileDrawer: (state) => {
-      state.isOpen = true;
+      state.isPartyProfileOpen = true;
     },
     closePartyProfileDrawer: (state) => {
-      state.isOpen = false;
+      state.isPartyProfileOpen = false;
+    },
+    toggleDefaultProfileDrawer: (state) => {
+      state.isDefaultProfileOpen = !state.isDefaultProfileOpen
+    },
+    openDefaultProfileDrawer: (state) => {
+      state.isDefaultProfileOpen = true;
+    },
+    closeDefaultProfileDrawer: (state) => {
+      state.isDefaultProfileOpen = false;
     },
   },
 });
 
-export const { openPartyProfileDrawer, closePartyProfileDrawer, togglePartyProfileDrawer } = profileDrawersSlice.actions;
+export const { openPartyProfileDrawer, closePartyProfileDrawer, togglePartyProfileDrawer, openDefaultProfileDrawer, closeDefaultProfileDrawer, toggleDefaultProfileDrawer } = profileDrawersSlice.actions;

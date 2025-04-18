@@ -14,7 +14,7 @@ import { foodContributionSlice } from './slices/FoodContributionSlice';
 import { partyParticipantsSlice } from './slices/PartyParticipantSlice';
 import { partyPendingInviteSlice } from './slices/PendingInvitesForPartySlice';
 import { userSlice } from './slices/UserSlice';
-import { partyProfileDrawerSlice } from "./slices/partyProfileDrawerSlice.ts";
+import { profileDrawersSlice } from "./slices/profileDrawersSlice.ts";
 
 export const store = configureStore({
   reducer: {
@@ -32,7 +32,7 @@ export const store = configureStore({
     partyParticipantStore: partyParticipantsSlice.reducer,
     partyPendingInviteStore: partyPendingInviteSlice.reducer,
     userStore: userSlice.reducer,
-    profileDrawer: partyProfileDrawerSlice.reducer,
+    profileDrawers: profileDrawersSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

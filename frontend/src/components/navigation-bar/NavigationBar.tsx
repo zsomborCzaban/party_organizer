@@ -3,11 +3,16 @@ import classes from './NavigationBar.module.scss';
 import { NavigationButton } from './navigation-button/NavigationButton';
 import { useAppSelector } from '../../store/store-helper';
 import { isUserLoggedIn } from '../../store/slices/UserSlice';
+import {toggleDefaultProfileDrawer} from "../../store/slices/profileDrawersSlice.ts";
+import {NavigationDrawerButton} from "./navigation-button/NavigationDrawerButton.tsx";
+import {useDispatch} from "react-redux";
+import {AppDispatch} from "../../store/store.ts";
 
 export const NavigationBar = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const userLoggedIn = useAppSelector(isUserLoggedIn);
+    const dispatch = useDispatch<AppDispatch>();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const userLoggedIn = useAppSelector(isUserLoggedIn);
 
   return (
     <nav className={classes.navBar}>
@@ -44,11 +49,10 @@ export const NavigationBar = () => {
 
       <div className={classes.rightSection}>
         {userLoggedIn && (
-          <NavigationButton
-            buttonText='Profile'
-            navigateToLink='/profile'
-            isActive={location.pathname === '/profile'}
-          />
+            <NavigationDrawerButton
+                buttonText='Profile'
+                onClick={() => dispatch(toggleDefaultProfileDrawer())}
+            />
         )}
         {location.pathname !== '/login' && !userLoggedIn && (
           <button

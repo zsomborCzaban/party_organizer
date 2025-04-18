@@ -18,7 +18,7 @@ export const PartyProfileDrawer = () => {
   const dispatch = useDispatch<AppDispatch>();
   const api = useApi()
   const navigate = useNavigate()
-  const isOpen = useSelector((state: RootState) => state.profileDrawers.isOpen);
+  const isOpen = useSelector((state: RootState) => state.profileDrawers.isPartyProfileOpen);
   const user = getUser() || EMPTY_USER
   const partyId = Number(localStorage.getItem('partyId') || '-1')
 
@@ -92,7 +92,7 @@ export const PartyProfileDrawer = () => {
                 Upload profile picture
               </label>
               <button className={classes.menuItem} onClick={() => handleLeavePartyUtils(api, navigate, partyId)}>Leave party</button>
-              <button className={classes.menuItem} onClick={() => handleLogoutUtil(navigate)}>Logout</button>
+              <button className={classes.menuItem} onClick={() => handleLogoutUtil(navigate, dispatch, '/partyHome')}>Logout</button>
             </nav>
           </div>
         </div>

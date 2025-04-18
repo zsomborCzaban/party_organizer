@@ -4,10 +4,14 @@ import {handleProfilePictureUpload} from "./imageUtils.ts";
 import {ChangeEvent} from "react";
 import {Api} from "../../api/Api.ts";
 import {toast} from "sonner";
+import {ThunkDispatch, UnknownAction} from "@reduxjs/toolkit";
+import {closeDefaultProfileDrawer, closePartyProfileDrawer} from "../../store/slices/profileDrawersSlice.ts";
 
-export const handleLogoutUtil = (navigate: NavigateFunction) => {
+export const handleLogoutUtil = (navigate: NavigateFunction, dispatch: ThunkDispatch<never, undefined, UnknownAction>, navigateTo: string) => {
+    navigate(navigateTo)
+    dispatch(closeDefaultProfileDrawer())
+    dispatch(closePartyProfileDrawer())
     authService.userLoggedOut()
-    navigate('/')
 }
 
 export const handleUploadProfilePictureUtil = (event: ChangeEvent<HTMLInputElement>) => {
