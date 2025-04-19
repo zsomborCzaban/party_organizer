@@ -112,6 +112,26 @@
   width: 500px;
 }
 
+.emailConfirmationContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+  width: 100%;
+
+  .error {
+    margin: 0;
+    text-align: left;
+    width: auto;
+  }
+
+  .link {
+    margin: 0;
+  }
+}
+
 .link {
   color: #4299e1;
   font-weight: 500;

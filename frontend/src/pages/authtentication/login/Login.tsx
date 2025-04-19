@@ -55,7 +55,7 @@ export const Login = () => {
                 if(resp.is_error){
                     const newFeedbacks: Feedbacks = {}
                     newFeedbacks.ButtonError = resp.errors.toString()
-                    if (resp.errors === 'Confirm your email before logging in'){
+                    if (resp.errors === 'Confirm your email before logging in!'){
                         newFeedbacks.IsSendConfirmEmailVisible = 'true'
                     }
                     setFeedbacks(newFeedbacks)
@@ -145,25 +145,23 @@ export const Login = () => {
                 <p className={classes.error}>{feedbacks.ButtonError}</p>
             )}
             {feedbacks.IsSendConfirmEmailVisible && (
-                <>
+                <div className={classes.emailConfirmationContainer}>
                     <p className={classes.error}>Didn't receive any email?</p>
                     <a
                         href=''
                         onClick={sendConfirmEmail}
                         className={classes.link}
                     >
-                        Click here to send again!
+                        Send again!
                     </a>
-                </>
-    )
-}
-
-    <div className={classes.signUpContainer}>
-        <p>New to the platform?</p>
-        <a
-            href=''
-            onClick={() => navigate('/register')}
-            className={classes.link}
+                </div>
+            )}
+            <div className={classes.signUpContainer}>
+                <p>New to the platform?</p>
+                <a
+                    href=''
+                    onClick={() => navigate('/register')}
+                    className={classes.link}
                 >
                     Create an account
                 </a>
