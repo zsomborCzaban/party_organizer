@@ -1,5 +1,4 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Discover from './pages/overView/discover/Discover';
 import { PartyHome } from './pages/party/party-home/PartyHome';
 import { Contributions } from './pages/contributions/Contributions.tsx';
 import { HallOfFame } from './pages/hallOfFame/HallOfFame.tsx';
@@ -41,7 +40,6 @@ export const AppRouter = () => (
       <Route element={<MainLayout />}>
         <Route path="/" element={<Homepage />} />
         <Route element={<RequireAuthForRoute />}>
-          <Route path="/overview/discover" element={<Discover />} />
           <Route path="/parties" element={<Parties />} />
           <Route path="/friends" element={<Friends />} />
         </Route>
