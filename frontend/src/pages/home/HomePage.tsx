@@ -10,6 +10,7 @@ import {ActionButton, SortableTable} from "../../components/table/SortableTable.
 import {useAppSelector} from "../../store/store-helper.ts";
 import {isUserLoggedIn} from "../../store/slices/UserSlice.ts";
 import AccessCodeModal from "../overView/discover/AccessCodeModal.tsx";
+import {NavigateToPartyHome} from "../../data/utils/PartyUtils.ts";
 
 
 export const Homepage = () => {
@@ -39,10 +40,7 @@ export const Homepage = () => {
     label: 'Visit',
     color: 'info',
     onClick: (party: PartyTableRow) => {
-      localStorage.setItem('partyName', party.name)
-      localStorage.setItem('partyId', party.id.toString())
-      localStorage.setItem('partyOrganizerName', party.organizerName)
-      navigate(`/partyHome`)
+        NavigateToPartyHome(navigate, party.name, party.id, party.organizerName)
     }
   }
 
@@ -51,20 +49,17 @@ export const Homepage = () => {
     color: 'info',
     onClick: (party: PartyTableRow) => {
       api.partyAttendanceApi.joinPublicParty(party.id)
-          .then(response => {
+        .then(response => {
             if(response === 'error'){
               toast.error('Unable to join party')
               return
             }
 
-            localStorage.setItem('partyName', response.data.name)
-            localStorage.setItem('partyId', response.data.ID.toString())
-            localStorage.setItem('partyOrganizerName', response.data.organizer.username)
-            navigate(`/partyHome`)
-          })
-          .catch(() => {
+            NavigateToPartyHome(navigate, party.name, party.id, party.organizerName)
+        })
+        .catch(() => {
             toast.error('Unexpected error')
-          })
+        })
     }
   }
 

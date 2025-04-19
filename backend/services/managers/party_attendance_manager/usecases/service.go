@@ -241,7 +241,7 @@ func (ps PartyInviteService) JoinPrivateParty(userId uint, accessCode string) ap
 		return api.ErrorBadRequest(domains.INVALID_ACCESS_CODE)
 	}
 
-	party, err := ps.PartyRepository.FindById(uint(partyId))
+	party, err := ps.PartyRepository.FindById(uint(partyId), "Organizer")
 	if err != nil {
 		return api.ErrorBadRequest(domains.INVALID_ACCESS_CODE)
 	}

@@ -13,6 +13,7 @@ import {
 import {useNavigate} from "react-router-dom";
 import classes from './Parties.module.scss';
 import {convertPartiesToTableDatasource, convertPartyInvitesToTableDatasource} from "../../../data/utils/TableUtils.ts";
+import {NavigateToPartyHome} from "../../../data/utils/PartyUtils.ts";
 
 export const Parties = () => {
 
@@ -112,10 +113,7 @@ export const Parties = () => {
             label: 'Visit',
             color: 'info',
             onClick: (party: PartyTableRow) => {
-                localStorage.setItem('partyName', party.name)
-                localStorage.setItem('partyId', party.id.toString())
-                localStorage.setItem('partyOrganizerName', party.organizerName)
-                navigate(`/partyHome`)
+                NavigateToPartyHome(navigate, party.name, party.id, party.organizerName)
             }
         }
     ];

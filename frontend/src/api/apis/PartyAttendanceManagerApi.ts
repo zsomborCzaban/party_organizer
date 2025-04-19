@@ -180,9 +180,9 @@ export const joinPublicParty = async (partyId: number): Promise<Party> =>
       .catch((err) => reject(err));
   });
 
-export const joinPrivateParty = async (accessCode: string): Promise<Party> =>
-  new Promise<Party>((resolve, reject) => {
-    get<Party>(`${PARTY_ATTENDANCE_MANAGER_PATH}/joinPrivateParty/${accessCode}`)
-      .then((party: Party) => resolve(party))
+export const joinPrivateParty = async (accessCode: string): Promise<PartyPopulated> =>
+  new Promise<PartyPopulated>((resolve, reject) => {
+    get<PartyPopulated>(`${PARTY_ATTENDANCE_MANAGER_PATH}/joinPrivateParty/${accessCode}`)
+      .then((party: PartyPopulated) => resolve(party))
       .catch((err) => reject(err));
   });

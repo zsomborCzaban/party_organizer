@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Modal } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { setForTime } from '../../../data/utils/timeoutSetterUtils';
-import { Party } from '../../../data/types/Party';
+import {PartyPopulated} from '../../../data/types/Party';
 import { joinPrivateParty } from '../../../api/apis/PartyAttendanceManagerApi';
-import { setSelectedParty } from '../../../store/slices/PartySlice';
+import {NavigateToPartyHome} from "../../../data/utils/PartyUtils.ts";
+import {toast} from "sonner";
 
 const styles: { [key: string]: React.CSSProperties } = {
   modalContent: {
@@ -77,10 +78,9 @@ const AccessCodeModal: React.FC<MyModalProps> = ({ visible, onClose }) => {
   const handleSubmit = () => {
     if (inputValue) {
       joinPrivateParty(inputValue)
-        .then((party: Party) => {
-          console.log(party);
-          setSelectedParty(party);
-          navigate('/visitParty/partyHome');
+        .then((party: PartyPopulated) => {
+          NavigateToPartyHome(navigate, party.name, party.ID, party.organizer.username)
+          toast.success('Party joined')
         })
         .catch((err) => {
           if (err.response && err.response.data && err.response.data.errors) {
