@@ -1,11 +1,10 @@
-- loginnal ha rossz a jelszo akkor valami felre megy a backenden. (internal server errort kapunk amikor nem kene)
 - hashelve tarolni a jelszot a registration requestben, és kivenni a confirm jelszot
 
-- error kezelesek kipofozasa (ha loginnal nincs backend akkor ne azt adjuk vissza, hogy invalid username or password)
 - scroll to the top on tab valtas frontenden
 
 auto delete on parties after they have been hosted
 delete parties (maybe)
+autodelete on registration requests.
 
 
 # doksi
@@ -31,3 +30,4 @@ tovabbi fejlesztések:
 - hostolásnál monitorozas kiepitese
 - egyed kapcsolat diagram javitasa a dokumentacioban (kiegeszitese a regisztracios requesttel)
 - link beviteli mezok validalasa phising linkek ellen
+- tranzakciók továbbfejlesztése a backenden
