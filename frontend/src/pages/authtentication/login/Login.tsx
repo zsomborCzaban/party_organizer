@@ -10,6 +10,7 @@ interface Feedbacks {
   Username?: string;
   Password?: string;
   ButtonError?: string;
+  IsSendConfirmEmailVisible?: string
 
   [key: string]: string | undefined;
 }
@@ -52,7 +53,12 @@ export const Login = () => {
                 }
 
                 if(resp.is_error){
-                    setFeedbacks({ButtonError: resp.errors.toString()})
+                    const newFeedbacks: Feedbacks = {}
+                    newFeedbacks.ButtonError = resp.errors.toString()
+                    if (resp.errors === 'Confirm your email before logging in'){
+                        newFeedbacks.IsSendConfirmEmailVisible = 'true'
+                    }
+                    setFeedbacks(newFeedbacks)
                     return;
                 }
 
@@ -64,6 +70,11 @@ export const Login = () => {
             })
             .finally(() => setIsLoginRequestLoading(false))
         };
+
+    const sendConfirmEmail = (e:  React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+        e.preventDefault()
+        toast.success('Emails sent')
+    }
 
     return (
         <div className={classes.container}>
@@ -93,12 +104,12 @@ export const Login = () => {
             </div>
 
             <div className={classes.inputGroup}>
-                    <label
-                        htmlFor='password'
-                        className={classes.inputLabel}
-                    >
-                        Password
-                    </label>
+                <label
+                    htmlFor='password'
+                    className={classes.inputLabel}
+                >
+                    Password
+                </label>
                 <input
                     type='password'
                     id='password'
@@ -133,13 +144,26 @@ export const Login = () => {
             {feedbacks.ButtonError && (
                 <p className={classes.error}>{feedbacks.ButtonError}</p>
             )}
+            {feedbacks.IsSendConfirmEmailVisible && (
+                <>
+                    <p className={classes.error}>Didn't receive any email?</p>
+                    <a
+                        href=''
+                        onClick={sendConfirmEmail}
+                        className={classes.link}
+                    >
+                        Click here to send again!
+                    </a>
+                </>
+    )
+}
 
-            <div className={classes.signUpContainer}>
-                <p>New to the platform?</p>
-                <a
-                    href=''
-                    onClick={() => navigate('/register')}
-                    className={classes.link}
+    <div className={classes.signUpContainer}>
+        <p>New to the platform?</p>
+        <a
+            href=''
+            onClick={() => navigate('/register')}
+            className={classes.link}
                 >
                     Create an account
                 </a>
