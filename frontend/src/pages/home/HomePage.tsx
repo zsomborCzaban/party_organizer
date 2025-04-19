@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import classes from './HomePage.module.scss';
-import { PartyPopulated } from "../data/types/Party.ts";
-import { useApi } from "../context/ApiContext.ts";
+import { PartyPopulated } from "../../data/types/Party.ts";
+import { useApi } from "../../context/ApiContext.ts";
 import { toast } from "sonner";
-import {convertPartiesToTableDatasource} from "../data/utils/TableUtils.ts";
-import {partyTableColumns, PartyTableRow} from "../data/constants/TableColumns.tsx";
-import {ActionButton, SortableTable} from "../components/table/SortableTable.tsx";
-import {useAppSelector} from "../store/store-helper.ts";
-import {isUserLoggedIn} from "../store/slices/UserSlice.ts";
+import {convertPartiesToTableDatasource} from "../../data/utils/TableUtils.ts";
+import {partyTableColumns, PartyTableRow} from "../../data/constants/TableColumns.tsx";
+import {ActionButton, SortableTable} from "../../components/table/SortableTable.tsx";
+import {useAppSelector} from "../../store/store-helper.ts";
+import {isUserLoggedIn} from "../../store/slices/UserSlice.ts";
+import AccessCodeModal from "../overView/discover/AccessCodeModal.tsx";
 
 
 export const Homepage = () => {
@@ -16,8 +17,10 @@ export const Homepage = () => {
   const navigate = useNavigate();
   const userLoggedIn = useAppSelector(isUserLoggedIn);
   const [publicParties, setPublicParties] = useState<PartyPopulated[]>([]);
+  const [isAccessCodeModalVisible, setIsAccessCodeModalVisible] = useState(false);
 
-  useEffect(() => {
+
+    useEffect(() => {
     api.partyApi.getPublicParties()
       .then(resp => {
         if (resp === 'error') {
@@ -117,7 +120,7 @@ export const Homepage = () => {
           </button>
           <button 
             className={classes.joinButton}
-            onClick={() => navigate('/join-party')}
+            onClick={() => setIsAccessCodeModalVisible(true)}
           >
             <div className={classes.buttonContent}>
               <h3>Join Party</h3>
@@ -126,6 +129,10 @@ export const Homepage = () => {
           </button>
         </div>
       </section>
+        <AccessCodeModal
+            visible={isAccessCodeModalVisible}
+            onClose={() => setIsAccessCodeModalVisible(false)}
+        />
     </div>
   );
 };

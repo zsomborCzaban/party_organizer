@@ -7,7 +7,7 @@ import ManageParty from './pages/party/manage-party/ManageParty.tsx';
 import PartySettings from './pages/party/party-settings/PartySettings.tsx';
 import { Login } from './pages/authtentication/login/Login';
 import Register from './pages/authtentication/register/Register';
-import { Homepage } from './pages/HomePage';
+import { Homepage } from './pages/home/HomePage.tsx';
 import { RequireAuthForRoute } from './auth/RequireAuthForRoute';
 import { Parties } from './pages/party/parties/Parties';
 import CreateParty from './pages/party/create-party/CreateParty.tsx';

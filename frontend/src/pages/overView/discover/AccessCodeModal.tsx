@@ -83,9 +83,9 @@ const AccessCodeModal: React.FC<MyModalProps> = ({ visible, onClose }) => {
           navigate('/visitParty/partyHome');
         })
         .catch((err) => {
-          if (err.response) {
-            const { errors } = err.response.data;
-            setForTime<string>(setFeedback, errors[0].err, '', 4000);
+          if (err.response && err.response.data && err.response.data.errors) {
+            const errors = err.response.data.errors;
+            setForTime<string>(setFeedback, errors, '', 4000);
           } else {
             setFeedback('Something unexpected happened. Try again later!');
           }

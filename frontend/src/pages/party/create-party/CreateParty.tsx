@@ -148,14 +148,6 @@ const CreateParty: React.FC = () => {
             muted
             playsInline
             preload="auto"
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              transform: 'scale(1.01)',
-              backfaceVisibility: 'hidden',
-              WebkitBackfaceVisibility: 'hidden',
-            }}
           >
             <source src={artlistVideo} type="video/mp4" />
           </video>
