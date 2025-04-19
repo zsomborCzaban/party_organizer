@@ -9,7 +9,7 @@ import {partyTableColumns, PartyTableRow} from "../../data/constants/TableColumn
 import {ActionButton, SortableTable} from "../../components/table/SortableTable.tsx";
 import {useAppSelector} from "../../store/store-helper.ts";
 import {isUserLoggedIn} from "../../store/slices/UserSlice.ts";
-import AccessCodeModal from "../overView/discover/AccessCodeModal.tsx";
+import AccessCodeModal from "./AccessCodeModal.tsx";
 import {NavigateToPartyHome} from "../../data/utils/PartyUtils.ts";
 
 

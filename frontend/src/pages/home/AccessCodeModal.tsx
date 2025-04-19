@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Modal } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { setForTime } from '../../../data/utils/timeoutSetterUtils';
-import {PartyPopulated} from '../../../data/types/Party';
-import { joinPrivateParty } from '../../../api/apis/PartyAttendanceManagerApi';
-import {NavigateToPartyHome} from "../../../data/utils/PartyUtils.ts";
+import { setForTime } from '../../data/utils/TimeoutSetterUtils.ts';
+import {PartyPopulated} from '../../data/types/Party.ts';
+import { joinPrivateParty } from '../../api/apis/PartyAttendanceManagerApi.ts';
+import {NavigateToPartyHome} from "../../data/utils/PartyUtils.ts";
 import {toast} from "sonner";
 
 const styles: { [key: string]: React.CSSProperties } = {
