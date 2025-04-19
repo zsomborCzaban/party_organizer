@@ -38,7 +38,6 @@ func (rs *RegistrationService) Register(registrationRequest domains.Registration
 		return api.Error(http.StatusBadRequest, errorUserAlreadyExists.Errors)
 	}
 	if err2 == nil && reg.Email == registrationRequest.Email {
-		rs.SendConfirmEmail(registrationRequest)
 		return api.Success("You already registered with that username and email, please confirm your email to finish")
 	}
 	if err2.Error() != domains2.UserNotFound+registrationRequest.Username {
@@ -60,14 +59,14 @@ func (rs *RegistrationService) Register(registrationRequest domains.Registration
 		return api.ErrorInternalServerError(err4.Error())
 	}
 
-	resp := rs.SendConfirmEmail(registrationRequest)
+	resp := rs.sendConfirmEmail(registrationRequest)
 	if resp.GetCode() != http.StatusOK {
 		rs.RegistrationRepository.Delete(&registrationRequest) //todo: handle error on delete
 	}
 	return resp
 }
 
-func (rs *RegistrationService) SendConfirmEmail(registerRequest domains.RegistrationRequest) api.IResponse {
+func (rs *RegistrationService) sendConfirmEmail(registerRequest domains.RegistrationRequest) api.IResponse {
 	username := os.Getenv(common.EMAIL_USERNAME_ENV_KEY)
 	password := os.Getenv(common.EMAIL_PASSWORD_ENV_KEY)
 	email := os.Getenv(common.EMAIL_FULL_ENV_KEY)
@@ -119,4 +118,21 @@ func (rs *RegistrationService) ConfirmEmail(username, confirmHash string) api.IR
 	}
 
 	return api.Success("Email confirmed")
+}
+
+func (rs *RegistrationService) ResendConfirmEmail(username string) api.IResponse {
+	_, err := rs.UserRepository.FindByUsername(username)
+	if err == nil {
+		return api.ErrorBadRequest("Email already confirmed. try logging in!")
+	}
+	if err.Error() != domains.UserNotFound+username {
+		return api.ErrorInternalServerError(err.Error())
+	}
+
+	reg, err2 := rs.RegistrationRepository.FindByUsername(username)
+	if err2 != nil {
+		return api.ErrorBadRequest(err2.Error())
+	}
+
+	return rs.sendConfirmEmail(*reg)
 }
