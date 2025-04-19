@@ -113,5 +113,10 @@ func (rs *RegistrationService) ConfirmEmail(username, confirmHash string) api.IR
 		return api.ErrorInternalServerError(err4.Error())
 	}
 
+	err5 := rs.RegistrationRepository.Delete(reg)
+	if err5 != nil {
+		return api.ErrorInternalServerError(err5.Error())
+	}
+
 	return api.Success("Email confirmed")
 }
