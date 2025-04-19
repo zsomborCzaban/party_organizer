@@ -112,14 +112,20 @@
   width: 500px;
 }
 
-.emailConfirmationContainer {
+.buttonErrorContainer {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 8px;
   margin-top: 8px;
   width: 100%;
+
+  .sendConfirmEmailContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+  }
 
   .error {
     margin: 0;
@@ -129,6 +135,7 @@
 
   .link {
     margin: 0;
+    font-size: 1rem;
   }
 }
 

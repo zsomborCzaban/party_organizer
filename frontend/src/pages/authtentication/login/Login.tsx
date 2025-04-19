@@ -94,6 +94,7 @@ export const Login = () => {
                         setUsername(e.target.value)
                         feedbacks.Username = ''
                         feedbacks.ButtonError = ''
+                        feedbacks.IsSendConfirmEmailVisible = ''
                         setFeedbacks(feedbacks)
                     }}
                     className={classes.input}
@@ -118,6 +119,7 @@ export const Login = () => {
                         setPassword(e.target.value)
                         feedbacks.Password = ''
                         feedbacks.ButtonError = ''
+                        feedbacks.IsSendConfirmEmailVisible = ''
                         setFeedbacks(feedbacks)
                     }}
                     required
@@ -141,22 +143,24 @@ export const Login = () => {
             >
                 Sign In
             </button>
-            {feedbacks.ButtonError && (
-                <p className={classes.error}>{feedbacks.ButtonError}</p>
-            )}
-            {feedbacks.IsSendConfirmEmailVisible && (
-                <div className={classes.emailConfirmationContainer}>
-                    <p className={classes.error}>Didn't receive any email?</p>
-                    <a
-                        href=''
-                        onClick={sendConfirmEmail}
-                        className={classes.link}
-                    >
-                        Send again!
-                    </a>
-                </div>
-            )}
-            <div className={classes.signUpContainer}>
+            <div className={classes.buttonErrorContainer}>
+                {feedbacks.ButtonError && (
+                    <p className={classes.error}>{feedbacks.ButtonError}</p>
+                )}
+                {feedbacks.IsSendConfirmEmailVisible && (
+                    <div className={classes.sendConfirmEmailContainer}>
+                        <p className={classes.error}>Didn't receive any email?</p>
+                        <a
+                            href=''
+                            onClick={sendConfirmEmail}
+                         className={classes.link}
+                        >
+                            Send again!
+                        </a>
+                    </div>
+                )}
+        </div>
+    <div className={classes.signUpContainer}>
                 <p>New to the platform?</p>
                 <a
                     href=''
