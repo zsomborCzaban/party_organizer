@@ -34,7 +34,7 @@ func (rs *RegistrationService) Register(registrationRequest domains.Registration
 	reg, err2 := rs.RegistrationRepository.FindByUsername(registrationRequest.Username)
 	if err2 == nil && reg.Email != registrationRequest.Email {
 		errorUserAlreadyExists := api.NewValidationErrors()
-		errorUserAlreadyExists.CollectValidationError("username", "username already taken", registrationRequest.Username)
+		errorUserAlreadyExists.CollectValidationError("Username", "Username already taken", registrationRequest.Username)
 		return api.Error(http.StatusBadRequest, errorUserAlreadyExists.Errors)
 	}
 	if err2 == nil && reg.Email == registrationRequest.Email {
@@ -48,7 +48,7 @@ func (rs *RegistrationService) Register(registrationRequest domains.Registration
 	_, err3 := rs.UserRepository.FindByUsername(registrationRequest.Username)
 	if err3 == nil {
 		errorUserAlreadyExists := api.NewValidationErrors()
-		errorUserAlreadyExists.CollectValidationError("username", "username already taken", registrationRequest.Username)
+		errorUserAlreadyExists.CollectValidationError("Username", "Username already taken", registrationRequest.Username)
 		return api.Error(http.StatusBadRequest, errorUserAlreadyExists.Errors)
 	}
 	if err3.Error() != domains2.UserNotFound+registrationRequest.Username {

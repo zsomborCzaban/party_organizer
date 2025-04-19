@@ -38,8 +38,10 @@ func (val *Validator) CustomErrorMessage(err validator.FieldError) string {
 		return fmt.Sprintf("%s is required", err.Field())
 	case "min":
 		return fmt.Sprintf("%s must be at least %s characters long", err.Field(), err.Param())
+	//case "containsany":
+	//	return fmt.Sprintf("%s must contain one of these characters: %s", err.Field(), err.Param())
 	case "containsany":
-		return fmt.Sprintf("%s must contain one of these characters: %s", err.Field(), err.Param())
+		return fmt.Sprintf("%s must contain a number", err.Field())
 	case "eqfield":
 		return fmt.Sprintf("%s must match %s", err.Field(), err.Param())
 	case "gt":

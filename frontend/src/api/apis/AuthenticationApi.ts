@@ -31,7 +31,7 @@ export type LoginPostProps = {
 
 export type LoginPostResponse = ApiResponse<{ jwt: string }>
 
-export type RegisterPostRequestProps = {
+export type RegisterRequestBody = {
   username: string;
   email: string;
   password: string;
@@ -56,10 +56,10 @@ export class AuthApi {
     }
   }
 
-  async postRegister(props: RegisterPostRequestProps): Promise<void | 'error'> {
+  async postRegister(props: RegisterRequestBody): Promise<ApiResponse<string> | 'error'> {
     try {
-      await this.axiosInstance.post<void>(`${getApiUrl()}/register`, props);
-      toast.success('Register success, please confirm your e-mail to finish registering');
+      const response = await this.axiosInstance.post<ApiResponse<string>>(`${getApiUrl()}/register`, props);
+      return handleApiResponse(response)
     } catch (error) {
       handleApiError(error);
       return 'error';
