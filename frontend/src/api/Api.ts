@@ -55,7 +55,7 @@ export const parseResponse = <T>(response: AxiosResponse<ApiResponse<T>>) =>
 
     const apiResponse: ApiResponse<T> = response.data;
 
-    if (apiResponse.isError || apiResponse.code !== 200) {
+    if (apiResponse.is_error || apiResponse.code !== 200) {
        
       return reject(`invalid response status: ${apiResponse.code}; is error: ${apiResponse.errors}`);
     }

@@ -1,7 +1,7 @@
 export interface ApiResponse<T> {
-  isError: boolean;
+  is_error: boolean;
   code: number;
-  errors: ApiError[];
+  errors: string | ApiError[];
   data: T;
 }
 

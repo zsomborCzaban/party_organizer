@@ -76,10 +76,7 @@ func ErrorNotFound(entity string) IResponse {
 }
 
 func ErrorInvalidCredentials() IResponse {
-	ve := NewValidationErrors()
-	ve.CollectValidationError("", "invalid password or username", nil)
-
-	return Error(http.StatusNotAcceptable, ve.Errors)
+	return Error(http.StatusNotAcceptable, "invalid password or username")
 }
 
 func ErrorUnauthorized(message string) IResponse {

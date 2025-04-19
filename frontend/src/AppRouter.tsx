@@ -13,13 +13,16 @@ import CreateParty from './pages/party/create-party/CreateParty.tsx';
 import { Friends } from './pages/friends/Friends';
 import { MainLayout, PartyLayout } from "./layouts/Layouts.tsx";
 import { Cocktails } from "./pages/cocktails/Cocktails.tsx";
+import {RequireNoAuthForRoute} from "./auth/RequireNoAuthForRoute.tsx";
 
 export const AppRouter = () => (
   <BrowserRouter>
     <Routes>
       <Route element={<MainLayout />}>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route element={<RequireNoAuthForRoute />} >
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Route>
       </Route>
 
       <Route element={<PartyLayout />}>
