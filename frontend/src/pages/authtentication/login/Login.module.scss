@@ -20,6 +20,7 @@
     color: #1a202c;
     font-weight: 600;
     letter-spacing: -0.5px;
+    text-align: center;
   }
 }
 
@@ -64,6 +65,9 @@
       background-color: #ffffff;
       outline: none;
     }
+  }
+  p {
+    margin-bottom: 0;
   }
 }
 
