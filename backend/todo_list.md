@@ -32,3 +32,4 @@ tovabbi fejlesztések:
 - link beviteli mezok validalasa phising linkek ellen
 - tranzakciók továbbfejlesztése a backenden
 - nickname implementálása, hogy elnevezhessék az emberek magukat tobben is ugyanannak
+- mailing is limited to 500mail/day
