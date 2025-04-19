@@ -9,7 +9,7 @@ import {
     partyInviteTableColumns,
     partyTableColumns,
     PartyTableRow
-} from "../../../data/constants/TableColumns.ts";
+} from "../../../data/constants/TableColumns.tsx";
 import {useNavigate} from "react-router-dom";
 import classes from './Parties.module.scss';
 import {convertPartiesToTableDatasource, convertPartyInvitesToTableDatasource} from "../../../data/utils/TableUtils.ts";

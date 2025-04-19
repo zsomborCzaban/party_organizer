@@ -2,7 +2,7 @@ export interface User {
     ID: number,
     username: string;
     email: string;
-    profile_picture_url?: string;
+    profile_picture_url: string;
 }
 
 export const EMPTY_USER: User = {

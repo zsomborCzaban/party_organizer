@@ -6,7 +6,7 @@ import DeleteRequirementModal from '../../../components/modal/deleteRequirement/
 import { User } from '../../../data/types/User.ts';
 import { setForTime } from '../../../data/utils/timeoutSetterUtils.ts';
 import {Requirement, RequirementPopulated} from '../../../data/types/Requirement.ts';
-import { invitedTableColumnsLegacy, requirementTableColumnsLegacy, userTableColumnsLegacy } from '../../../data/constants/TableColumns.ts';
+import { invitedTableColumnsLegacy, requirementTableColumnsLegacy, userTableColumnsLegacy } from '../../../data/constants/TableColumns.tsx';
 import { inviteToParty, kickFromParty } from '../../../api/apis/PartyAttendanceManagerApi.ts';
 import {EMPTY_PARTY_POPULATED, PartyPopulated} from "../../../data/types/Party.ts";
 import {PartyInvite} from "../../../data/types/PartyInvite.ts";

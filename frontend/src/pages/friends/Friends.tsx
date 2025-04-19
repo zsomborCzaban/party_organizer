@@ -3,11 +3,17 @@ import {useEffect, useState} from "react";
 import {toast} from "sonner";
 import {FriendInvite} from "../../data/types/FriendInvite.ts";
 import {User} from "../../data/types/User.ts";
-import {ActionButton, Column, SortableTable} from "../../components/table/SortableTable.tsx";
+import {ActionButton, SortableTable} from "../../components/table/SortableTable.tsx";
 import styles from './Friends.module.scss';
 import {Button, TextField} from "@mui/material";
-import {FriendInviteTableRow, FriendTableRow} from "../../data/constants/TableColumns.ts";
+import {
+    FriendInviteTableColumns,
+    FriendInviteTableRow,
+    FriendTableColumns,
+    FriendTableRow
+} from "../../data/constants/TableColumns.tsx";
 import classes from "../party/parties/Parties.module.scss";
+import {convertFriendsToTableData, convertInvitesToTableData} from "../../data/utils/TableUtils.ts";
 
 export const Friends = () => {
     const api = useApi();
@@ -62,24 +68,6 @@ export const Friends = () => {
         });
     };
 
-    const friendColumns: Column<FriendTableRow>[] = [
-        {
-            field: 'username',
-            headerName: 'Username',
-        },
-        {
-            field: 'email',
-            headerName: 'Email',
-        }
-    ];
-
-    const inviteColumns: Column<FriendInviteTableRow>[] = [
-        {
-            field: 'invitedBy',
-            headerName: 'Invited By',
-        }
-    ];
-
     const inviteActionButtons: ActionButton<FriendInviteTableRow>[] = [
         {
             label: 'Accept',
@@ -130,21 +118,6 @@ export const Friends = () => {
         }
     ];
 
-    const convertFriendsToTableData = (friends: User[]): FriendTableRow[] => {
-        return friends.map(friend => ({
-            id: friend.ID,
-            username: friend.username,
-            email: friend.email
-        }));
-    };
-
-    const convertInvitesToTableData = (invites: FriendInvite[]): FriendInviteTableRow[] => {
-        return invites.map(invite => ({
-            id: invite.invitor.ID,
-            invitedBy: invite.invitor.username
-        }));
-    };
-
     return (
         <div className={styles.container}>
             <div className={classes.header}>
@@ -177,7 +150,7 @@ export const Friends = () => {
             <div className={styles.section}>
                 <h2>Pending Invites</h2>
                 <SortableTable
-                    columns={inviteColumns}
+                    columns={FriendInviteTableColumns}
                     data={convertInvitesToTableData(pendingInvites)}
                     actionButtons={inviteActionButtons}
                     rowsPerPageOptions={[5, 10, 15]}
@@ -188,7 +161,7 @@ export const Friends = () => {
             <div className={styles.section}>
                 <h2>My Friends</h2>
                 <SortableTable
-                    columns={friendColumns}
+                    columns={FriendTableColumns}
                     data={convertFriendsToTableData(friends)}
                     actionButtons={friendActionButtons}
                     rowsPerPageOptions={[5, 10, 15]}
