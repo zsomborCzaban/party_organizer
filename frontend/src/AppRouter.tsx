@@ -14,6 +14,10 @@ import { Friends } from './pages/friends/Friends';
 import { MainLayout, PartyLayout } from "./layouts/Layouts.tsx";
 import { Cocktails } from "./pages/cocktails/Cocktails.tsx";
 import {RequireNoAuthForRoute} from "./auth/RequireNoAuthForRoute.tsx";
+import {ForgotPassword} from "./pages/authtentication/forgotPassword/ForgotPassword.tsx";
+import {ResendConfirmationEmail} from "./pages/authtentication/resendConfirmationEmail/ResendConfirmationEmail.tsx";
+import {ConfirmEmail} from "./pages/authtentication/confirmEmail/ConfirmEmail.tsx";
+import {ChangePassword} from "./pages/authtentication/changePassword/ChangePassword.tsx";
 
 export const AppRouter = () => (
   <BrowserRouter>
@@ -22,6 +26,10 @@ export const AppRouter = () => (
         <Route element={<RequireNoAuthForRoute />} >
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgotPassword" element={<ForgotPassword />} />
+          <Route path="/resendConfirmationEmail" element={<ResendConfirmationEmail />} />
+          <Route path="/confirmEmail" element={<ConfirmEmail />} />
+          <Route path="/changePassword" element={<ChangePassword />} />
         </Route>
       </Route>
 

@@ -118,7 +118,7 @@ export const Login = () => {
             </div>
             <a
                 href=''
-                onClick={() => navigate('/forgot-password')}
+                onClick={() => navigate('/forgotPassword')}
                 className={classes.link}
             >
                 Forgot Password?
