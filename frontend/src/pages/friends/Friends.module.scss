@@ -52,4 +52,12 @@
         flex: 1;
         max-width: 300px;
     }
-} 
+}
+
+.tableWrapper {
+    margin-top: 1rem;
+
+    & + & {
+        margin-top: 2rem;
+    }
+}

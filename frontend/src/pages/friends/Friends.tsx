@@ -149,25 +149,29 @@ export const Friends = () => {
 
             <div className={styles.section}>
                 <h2>Pending Invites</h2>
-                <SortableTable
-                    columns={FriendInviteTableColumns}
-                    data={convertInvitesToTableData(pendingInvites)}
-                    actionButtons={inviteActionButtons}
-                    rowsPerPageOptions={[5, 10, 15]}
-                    defaultRowsPerPage={5}
-                />
+                <div className={classes.tableWrapper}>
+                    <SortableTable
+                        columns={FriendInviteTableColumns}
+                        data={convertInvitesToTableData(pendingInvites)}
+                        actionButtons={inviteActionButtons}
+                        rowsPerPageOptions={[5, 10, 15]}
+                        defaultRowsPerPage={5}
+                    />
+                </div>
             </div>
 
-            <div className={styles.section}>
-                <h2>My Friends</h2>
-                <SortableTable
-                    columns={FriendTableColumns}
-                    data={convertFriendsToTableData(friends)}
-                    actionButtons={friendActionButtons}
-                    rowsPerPageOptions={[5, 10, 15]}
-                    defaultRowsPerPage={5}
-                />
+                <div className={styles.section}>
+                    <h2>My Friends</h2>
+                    <div className={classes.tableWrapper}>
+                        <SortableTable
+                            columns={FriendTableColumns}
+                            data={convertFriendsToTableData(friends)}
+                            actionButtons={friendActionButtons}
+                            rowsPerPageOptions={[5, 10, 15]}
+                            defaultRowsPerPage={5}
+                        />
+                    </div>
+                </div>
             </div>
-        </div>
     );
 };
