@@ -125,7 +125,7 @@ export const ChangePassword = () => {
             }}
             placeholder="Confirm your new password"
           />
-          {password !== confirmPassword && <p className={classes.error}>'Passwords do not match ✗'</p>}
+          {password !== confirmPassword && <p className={classes.errorLast}>'Passwords do not match ✗'</p>}
         </div>
 
         <button
