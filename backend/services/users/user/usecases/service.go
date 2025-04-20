@@ -165,7 +165,7 @@ func (us *UserService) ForgotPassword(username string) api.IResponse {
 	m := gomail.NewMessage()
 	m.SetHeader("From", emailFull)
 	m.SetHeader("To", user.Email)
-	m.SetHeader("Subject", "Hello!")
+	m.SetHeader("Subject", "Forgot Password!")
 	m.SetBody("text/html", email.ParseForgotPasswordEmailBody(frontendLink))
 
 	d := gomail.NewDialer("smtp.gmail.com", 587, emailUsername, emailPassword)

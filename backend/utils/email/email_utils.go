@@ -10,9 +10,9 @@ func ParseForgotPasswordEmailBody(frontendLink string) string {
 <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0;">
     <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
         <h2 style="color: #2d3748;">Password Reset Request</h2>
-        <p>Hello,</p>
-        <p>We received a request to reset your password. If you didn't make this request, you can safely ignore this email.</p>
-        <p>To reset your password, please click the button below:</p>
+        <p style="color: #2d3748;">Hello,</p>
+        <p style="color: #2d3748;">We received a request to reset your password. If you didn't make this request, you can safely ignore this email.</p>
+        <p style="color: #2d3748;">To reset your password, please click the button below:</p>
         
         <div style="text-align: center; margin: 20px 0;">
             <a href="` + frontendLink + `" 
@@ -43,11 +43,11 @@ func ParseConfirmEmailEmailBody(frontendLink string) string {
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 </head>
-<body style="font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 0;">
-    <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-        <h2>Confirm Your Email</h2>
-        <p>Hello,</p>
-        <p>Thank you for registering with Party Organizer! To complete your registration, please confirm your email address by clicking the button below:</p>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #2d3748; margin: 0; padding: 0;">
+    <div style="max-width: 600px; margin: 0 auto; color: #2d3748; padding: 20px;">
+        <h2 style="color: #2d3748;">Confirm Your Email</h2>
+        <p style="color: #2d3748;">Hello,</p>
+        <p style="color: #2d3748;">Thank you for registering with Party Organizer! To complete your registration, please confirm your email address by clicking the button below:</p>
         <p style="text-align: center;">
             <a href="` + frontendLink + `" style="display: inline-block; padding: 12px 24px; background-color: #4299e1; color: white; text-decoration: none; border-radius: 8px; font-weight: bold;">Confirm Email</a>
         </p>

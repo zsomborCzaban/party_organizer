@@ -77,7 +77,7 @@ func (rs *RegistrationService) sendConfirmEmail(registerRequest domains.Registra
 	m := gomail.NewMessage()
 	m.SetHeader("From", emailAddress)
 	m.SetHeader("To", registerRequest.Email)
-	m.SetHeader("Subject", "Hello!") //todo: write email body
+	m.SetHeader("Subject", "Confirm your email!")
 	m.SetBody("text/html", email.ParseConfirmEmailEmailBody(frontendLink))
 
 	d := gomail.NewDialer("smtp.gmail.com", 587, username, password)
