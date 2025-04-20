@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import classes from './ConfirmEmail.module.scss';
 import { useApi } from '../../../context/ApiContext';
@@ -8,7 +8,7 @@ export const ConfirmEmail = () => {
   const api = useApi();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const confirmEmail = () => {
@@ -17,9 +17,10 @@ export const ConfirmEmail = () => {
 
     if (!hash || !username) {
       setError('Invalid or expired confirmation link');
-      setIsLoading(false);
       return;
     }
+
+    setIsLoading(true);
     api.authApi.confirmEmail(username, hash)
         .then(resp => {
           if(resp === 'error'){
@@ -29,14 +30,13 @@ export const ConfirmEmail = () => {
           }
 
           if (resp.is_error && resp.errors === 'Email already confirmed. try logging in!') {
-            //todo: emial already confirmed
-            return;
+              toast.success('Email already confirmed')
+              navigate('/login')
+              return;
           }
 
           if(resp.is_error && resp.code !== 500){
-            console.log('inhere')
             setError('Invalid or expired confirmation link');
-            setIsLoading(false);
             return;
           }
 
@@ -46,52 +46,48 @@ export const ConfirmEmail = () => {
             return
           }
 
-          //todo: email confrim success
-
-
+            toast.success('Email confirmed')
+            navigate('/login')
         })
         .catch(() => {
           toast.error('Unexpected error')
           setError('Failed to confirm email. Please try again.');
         })
-        .finally(() =>{
+        .finally(() => {
           setIsLoading(false);
-        })
-    
+        });
   };
-
-
-  useEffect(() => {
-    confirmEmail();
-  }, []);
 
   return (
     <div className={classes.container}>
       <h2 className={classes.title}>Confirm Email</h2>
-      {isLoading ? (
-        <p className={classes.description}>Confirming your email...</p>
-      ) : error ? (
         <>
-          <p className={classes.error}>{error}</p>
-          <div className={classes.backToLoginContainer}>
-            <a
-              href=""
-              onClick={(e) => {
-                e.preventDefault();
-                navigate('/login');
-              }}
-              className={classes.link}
-            >
-              Back to Login
-            </a>
-          </div>
+          <p className={classes.description}>Click the button below to confirm your email address.</p>
+          <button
+            onClick={confirmEmail}
+            className={classes.confirmButton}
+            disabled={isLoading}
+          >
+            {'Confirm My Email'}
+          </button>
+          {error && (
+            <>
+              <p className={classes.error}>{error}</p>
+              <div className={classes.backToLoginContainer}>
+                <a
+                  href=""
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate('/login');
+                  }}
+                  className={classes.link}
+                >
+                  Back to Login
+                </a>
+              </div>
+            </>
+          )}
         </>
-      ) : (
-        <>
-          <p className={classes.success}>Email confirmed successfully!</p>
-          <p className={classes.description}>Redirecting to login page...</p>
-        </>
-      )}
     </div>
   );
 };
