@@ -1,0 +1,15 @@
+meta {
+  name: Resend Confirm Email
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{BACKEND_URL}}{{API_PATH}}/resendConfirmEmail/tamás
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{BEARER_TOKEN_JWT}}
+}

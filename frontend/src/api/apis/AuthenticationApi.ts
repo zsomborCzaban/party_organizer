@@ -77,4 +77,16 @@ export class AuthApi {
       return 'error';
     }
   }
+
+  async resendConfirmEmail(username: string): Promise<ApiResponse<string> | 'error'> {
+    try {
+      const response = await this.axiosInstance.get<ApiResponse<string>>(
+          `${getApiUrl()}/resendConfirmEmail/${username}`
+      );
+      return handleApiResponse(response);
+    } catch (error) {
+      handleApiError(error);
+      return 'error';
+    }
+  }
 }

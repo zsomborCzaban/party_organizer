@@ -23,6 +23,7 @@ export const Login = () => {
     const [password, setPassword] = useState('')
     const [feedbacks, setFeedbacks] = useState<Feedbacks>({});
     const [isLoginRequestLoading, setIsLoginRequestLoading] = useState(false)
+    const [lastTriedUsername, setLastTriedUsername] = useState('')
 
     const validate = () => {
         const newFeedbacks: Feedbacks = {ButtonError: '', Password: '', Username: ''}
@@ -45,6 +46,7 @@ export const Login = () => {
         if(!validate()) return
 
         setIsLoginRequestLoading(true)
+        setLastTriedUsername(username)
         api.authApi.postLogin(username.trim(), password.trim())
             .then(resp => {
                 if(resp === 'error'){
@@ -73,6 +75,15 @@ export const Login = () => {
 
     const sendConfirmEmail = (e:  React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
         e.preventDefault()
+        api.authApi.resendConfirmEmail(lastTriedUsername)
+            .then(resp => {
+                if(resp === 'error'){
+                    toast.error('Unexpected error')
+                }
+            })
+            .catch(() => {
+                toast.error('Unexpected error')
+            })
         toast.success('Emails sent')
     }
 

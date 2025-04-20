@@ -86,10 +86,10 @@ const Register = () => {
 
     setIsRegisterRequestLoading(true)
     const registerRequestBody: RegisterRequestBody = {
-      username: username,
+      username: username.trim(),
       email: email,
-      password: password,
-      confirm_password: confirmPassword,
+      password: password.trim(),
+      confirm_password: confirmPassword.trim(),
     }
 
     api.authApi.postRegister(registerRequestBody)
