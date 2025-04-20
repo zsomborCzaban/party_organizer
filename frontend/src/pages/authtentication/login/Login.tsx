@@ -42,6 +42,13 @@ export const Login = () => {
         return isValid
     }
 
+    const isFeedbacksEmpty = () => {
+        if(feedbacks.Username) return false
+        if(feedbacks.Password) return false
+        return true
+    }
+
+
     const handleLoginClicked = async () => {
         if(!validate()) return
 
@@ -150,7 +157,7 @@ export const Login = () => {
             <button
                 onClick={handleLoginClicked}
                 className={classes.loginButton}
-                disabled={isLoginRequestLoading}
+                disabled={isLoginRequestLoading || !isFeedbacksEmpty()}
             >
                 Sign In
             </button>

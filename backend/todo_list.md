@@ -23,7 +23,7 @@ when inviting nonexistong user give back normal error message
 
 tovabbi fejlesztések:
 - refresh tokenek oauth bejelntkezéshez.
-- 3rd party user providerrel integrálódni
+- 3rd party user providerrel integrálódni/ vagy refresh token megvalósítása token blacklisttel
 - misc contributions ahol nicns requirement
 - endpointok atirasa querry parameterekre
 - ci/cl setup githubon

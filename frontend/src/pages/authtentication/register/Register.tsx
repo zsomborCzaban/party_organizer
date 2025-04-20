@@ -52,7 +52,6 @@ const Register = () => {
   const isFeedbacksEmpty = () => {
     if(feedbacks.Username) return false
     if(feedbacks.Email) return false
-    if(feedbacks.ButtonError) return false
     if(feedbacks.Password) return false
     return true
   }
@@ -80,7 +79,7 @@ const Register = () => {
     setFeedbacks(newFeedbacks);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if(!validate()) return
 
@@ -114,7 +113,6 @@ const Register = () => {
   return (
     <div className={classes.container}>
       <h2 className={classes.title}>Create Account</h2>
-      <form onSubmit={handleSubmit}>
         <div className={classes.inputGroup}>
           <label
             htmlFor='username'
@@ -203,7 +201,7 @@ const Register = () => {
         </div>
 
         <button
-          type='submit'
+          onClick={handleRegister}
           className={classes.registerButton}
           disabled={password !== confirmPassword || !isFeedbacksEmpty() || isRegisterRequestLoading}
         >
@@ -222,7 +220,6 @@ const Register = () => {
             Sign in to existing account
           </a>
         </div>
-      </form>
     </div>
   );
 };

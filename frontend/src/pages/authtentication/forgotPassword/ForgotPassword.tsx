@@ -32,6 +32,11 @@ export const ForgotPassword = () => {
     return isValid
   }
 
+  const isFeedbacksEmpty = () => {
+    if(feedbacks.Username) return false
+    return true
+  }
+
   const resetPasswordClicked = () => {
     if (!validate()) return
 
@@ -86,7 +91,7 @@ export const ForgotPassword = () => {
         <button
           className={classes.resetPasswordButton}
           onClick={resetPasswordClicked}
-          disabled={isLoading}
+          disabled={isLoading || !isFeedbacksEmpty()}
         >
           Reset Password
         </button>
