@@ -3,6 +3,8 @@ import { getApiUrl } from '../ApiHelper.ts';
 import { User } from '../../data/types/User';
 import { LoginResponseDataInterface } from './AuthenticationApi';
 import axios, {AxiosInstance, AxiosResponse} from "axios";
+import {ApiResponse} from "../../data/types/ApiResponseTypes.ts";
+import {clearJwtAuthToken, setJwtAuthToken} from "../../auth/AuthStorageUtils.ts";
 
 const USER_PATH = `${getApiUrl()}/user`;
 
@@ -23,6 +25,11 @@ export type UsersResponse = {
     data: User[]
 }
 
+export type changePasswordBody = {
+    password: string,
+    confirm_password: string,
+}
+
 export class UserApi {
     private axiosInstance: AxiosInstance;
 
@@ -37,6 +44,21 @@ export class UserApi {
         } catch (error) {
             handleApiError(error)
             return 'error'
+        }
+    }
+
+    async changePassword(body: changePasswordBody, xzs: string): Promise<ApiResponse<string> | 'error'> {
+        try {
+            setJwtAuthToken(xzs)
+            const response = await this.axiosInstance.post<ApiResponse<string>>(
+                `${USER_PATH}/resetPassword`, body
+            );
+            return handleApiResponse(response);
+        } catch (error) {
+            handleApiError(error);
+            return 'error';
+        } finally {
+            clearJwtAuthToken()
         }
     }
 }
