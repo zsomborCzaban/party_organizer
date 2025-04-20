@@ -33,3 +33,4 @@ tovabbi fejlesztések:
 - tranzakciók továbbfejlesztése a backenden
 - nickname implementálása, hogy elnevezhessék az emberek magukat tobben is ugyanannak
 - mailing is limited to 500mail/day
+- frontendes apios error kezelést rendbe szedni

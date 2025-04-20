@@ -53,7 +53,7 @@ export class UserApi {
             const response = await this.axiosInstance.post<ApiResponse<string>>(
                 `${USER_PATH}/resetPassword`, body
             );
-            return handleApiResponse(response);
+            return handleApiResponse(response.response ? response.response: response); //axios post gives back different resp on request success and on request error for some reason
         } catch (error) {
             handleApiError(error);
             return 'error';

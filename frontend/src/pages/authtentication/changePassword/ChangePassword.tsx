@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import classes from './ChangePassword.module.scss';
 import { useApi } from '../../../context/ApiContext';
 import { toast } from 'sonner';
+import {ApiError} from "../../../data/types/ApiResponseTypes.ts";
 
 interface Feedbacks {
   Password?: string;
@@ -42,13 +43,31 @@ export const ChangePassword = () => {
     return true
   }
 
+  const handleErrors = (errs: ApiError[] | string) => {
+    const newFeedbacks: Feedbacks = {
+      Password: '',
+      ButtonError: '',
+    };
+
+    if(typeof errs === 'string'){
+      newFeedbacks.ButtonError = 'Invalid or expired change password link'
+    } else {
+      Array.from(errs).forEach((err) => {
+        if (newFeedbacks[err.field] !== undefined) {
+          newFeedbacks[err.field] = err.err;
+        }
+      });
+    }
+
+    setFeedbacks(newFeedbacks);
+  };
+
   const handleChangePassword = () => {
     if (!validate()) return;
 
     const xzs = searchParams.get('xzs');
-    const username = searchParams.get('username');
 
-    if (!xzs || !username) {
+    if (!xzs) {
       setFeedbacks({ButtonError: 'Invalid or expired change password link'})
       return;
     }
@@ -61,31 +80,24 @@ export const ChangePassword = () => {
             return;
           }
 
+          if(resp.is_error){
+            if(resp.code === 500){
+              toast.error('Unexpected error occurred');
+              return;
+            }
 
+            handleErrors(resp.errors)
+            return;
+          }
+
+          toast.success('Password changed')
+          navigate('/login')
         })
         .catch(() => {
-
+          toast.error('Unexpected error occurred');
+          return;
         })
-    // try {
-    //   const response = await api.authApi.postChangePassword(token, password);
-    //
-    //   if (response === 'error') {
-    //     toast.error('Unexpected error occurred');
-    //     return;
-    //   }
-    //
-    //   if (response.is_error) {
-    //     setFeedbacks({ ButtonError: response.errors.toString() });
-    //     return;
-    //   }
-    //
-    //   toast.success('Password changed successfully');
-    //   navigate('/login');
-    // } catch (error) {
-    //   toast.error('Unexpected error occurred');
-    // } finally {
-    //   setIsLoading(false);
-    // }
+        .finally(() => setIsLoading(false))
   };
 
   return (

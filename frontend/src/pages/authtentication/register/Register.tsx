@@ -64,8 +64,6 @@ const Register = () => {
       ButtonError: '',
     };
 
-    console.log(errs)
-
     if(typeof errs === 'string'){
       newFeedbacks.ButtonError = errs
     } else {
