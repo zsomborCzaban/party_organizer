@@ -1,5 +1,6 @@
 - hashelve tarolni a jelszot a registration requestben, és kivenni a confirm jelszot
 - uj jelszo beallitasanal hashelve kell eltarolni a jelszot
+- tablazatokra max szelesseget rakni
 
 - scroll to the top on tab valtas frontenden
 
