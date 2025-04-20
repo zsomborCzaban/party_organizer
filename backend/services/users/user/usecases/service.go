@@ -158,6 +158,7 @@ func (us *UserService) ForgotPassword(username string) api.IResponse {
 	emailUsername := os.Getenv(common.EMAIL_USERNAME_ENV_KEY)
 	emailPassword := os.Getenv(common.EMAIL_PASSWORD_ENV_KEY)
 	emailFull := os.Getenv(common.EMAIL_FULL_ENV_KEY)
+	frontendUrl := os.Getenv(common.FRONTEND_URL_ENV_KEY)
 
 	m := gomail.NewMessage()
 	m.SetHeader("From", emailFull)

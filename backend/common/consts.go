@@ -1,6 +1,7 @@
 package common
 
 const DEFAULT_LOCAL_DB_NAME = "application.db"
+const FRONTEND_URL_ENV_KEY = "FRONTEND_URL" //to know where to send the forgot password nad confirm registration emails
 
 const JWT_SINGING_KEY_ENV_KEY = "JWT_SINGING_KEY"
 
