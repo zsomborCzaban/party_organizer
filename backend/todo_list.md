@@ -1,4 +1,5 @@
 - hashelve tarolni a jelszot a registration requestben, és kivenni a confirm jelszot
+- uj jelszo beallitasanal hashelve kell eltarolni a jelszot
 
 - scroll to the top on tab valtas frontenden
 
