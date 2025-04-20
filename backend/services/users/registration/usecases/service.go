@@ -5,6 +5,7 @@ import (
 	"github.com/zsomborCzaban/party_organizer/services/users/registration/domains"
 	domains2 "github.com/zsomborCzaban/party_organizer/services/users/user/domains"
 	"github.com/zsomborCzaban/party_organizer/utils/api"
+	"github.com/zsomborCzaban/party_organizer/utils/email"
 	"github.com/zsomborCzaban/party_organizer/utils/random"
 	"github.com/zsomborCzaban/party_organizer/utils/repo"
 	"gopkg.in/gomail.v2"
@@ -69,13 +70,15 @@ func (rs *RegistrationService) Register(registrationRequest domains.Registration
 func (rs *RegistrationService) sendConfirmEmail(registerRequest domains.RegistrationRequest) api.IResponse {
 	username := os.Getenv(common.EMAIL_USERNAME_ENV_KEY)
 	password := os.Getenv(common.EMAIL_PASSWORD_ENV_KEY)
-	email := os.Getenv(common.EMAIL_FULL_ENV_KEY)
+	emailAddress := os.Getenv(common.EMAIL_FULL_ENV_KEY)
+	frontendUrl := os.Getenv(common.FRONTEND_URL_ENV_KEY)
+	frontendLink := frontendUrl + "/confirmEmail?username=" + registerRequest.Username + "&hash=" + registerRequest.ConfirmHash
 
 	m := gomail.NewMessage()
-	m.SetHeader("From", email)
+	m.SetHeader("From", emailAddress)
 	m.SetHeader("To", registerRequest.Email)
 	m.SetHeader("Subject", "Hello!") //todo: write email body
-	m.SetBody("text/plain", "This is the email body")
+	m.SetBody("text/html", email.ParseConfirmEmailEmailBody(frontendLink))
 
 	d := gomail.NewDialer("smtp.gmail.com", 587, username, password)
 
