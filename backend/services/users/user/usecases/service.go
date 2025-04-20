@@ -10,6 +10,7 @@ import (
 	registrationDomains "github.com/zsomborCzaban/party_organizer/services/users/registration/domains"
 	"github.com/zsomborCzaban/party_organizer/services/users/user/domains"
 	"github.com/zsomborCzaban/party_organizer/utils/api"
+	"github.com/zsomborCzaban/party_organizer/utils/email"
 	"github.com/zsomborCzaban/party_organizer/utils/repo"
 	s3Wrapper "github.com/zsomborCzaban/party_organizer/utils/s3"
 	"gopkg.in/gomail.v2"
@@ -159,12 +160,13 @@ func (us *UserService) ForgotPassword(username string) api.IResponse {
 	emailPassword := os.Getenv(common.EMAIL_PASSWORD_ENV_KEY)
 	emailFull := os.Getenv(common.EMAIL_FULL_ENV_KEY)
 	frontendUrl := os.Getenv(common.FRONTEND_URL_ENV_KEY)
+	frontendLink := frontendUrl + "/changePassword?xzs=" + *jwt
 
 	m := gomail.NewMessage()
 	m.SetHeader("From", emailFull)
 	m.SetHeader("To", user.Email)
-	m.SetHeader("Subject", "Hello!") //todo: write email body
-	m.SetBody("text/plain", "This is the email body, use this token to login and change your password: "+*jwt)
+	m.SetHeader("Subject", "Hello!")
+	m.SetBody("text/html", email.ParseForgotPasswordEmailBody(frontendLink))
 
 	d := gomail.NewDialer("smtp.gmail.com", 587, emailUsername, emailPassword)
 

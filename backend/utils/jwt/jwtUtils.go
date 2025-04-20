@@ -15,13 +15,14 @@ var (
 )
 
 const ONE_DAY_IN_SECONDS = 86400
+const ONE_HOUR_IN_SECONDS = 3600
 const JWT_EXPIRATION_TIMEOUT_ENV_VAR_KEY = "JWT_EXPIRATION_TIMEOUT_KEY"
 const JWT_SIGNING_KEY_ENV_VAR_KEY = "JWT_SIGNING_KEY"
 
 const JWT_ISSUER_ENV_VAR_KEY = "JWT_ISSUER_KEY"
 const JWT_ISSUER_DEFAULT_VALUE = "no_one"
 
-func WithClaims(subject string, additionalClaims map[string]string) (*string, error) {
+func WithClaims(subject string, additionalClaims map[string]string, expirationTime int64) (*string, error) {
 	expirationTimeout := env.GetEnvInt64(JWT_EXPIRATION_TIMEOUT_ENV_VAR_KEY, ONE_DAY_IN_SECONDS)
 
 	//singingKeyString := env.GetEnvString(JWT_SIGNING_KEY_ENV_VAR_KEY, "")
