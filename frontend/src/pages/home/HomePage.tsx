@@ -36,6 +36,11 @@ export const Homepage = () => {
 
   }, [api.partyApi]);
 
+    const navigateToLogin = () => {
+      navigate('login')
+      toast.warning('Login to access that page')
+    }
+
   const partyVisitLoggedOutActionButton: ActionButton<PartyTableRow> = {
     label: 'Visit',
     color: 'info',
@@ -116,7 +121,7 @@ export const Homepage = () => {
           </button>
           <button 
             className={classes.joinButton}
-            onClick={() => setIsAccessCodeModalVisible(true)}
+            onClick={userLoggedIn ? () => setIsAccessCodeModalVisible(true) : navigateToLogin}
           >
             <div className={classes.buttonContent}>
               <h3>Join Party</h3>
