@@ -154,7 +154,7 @@ export const HallOfFame = () => {
 
             return {
                 user,
-                totalContributions: userDrinkContributions.length + userDrinkContributions.length,
+                totalContributions: userDrinkContributions.length + userFoodContributions.length,
                 contributions: [...userDrinkContributions, ...userFoodContributions]
             };
         });
