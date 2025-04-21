@@ -20,13 +20,10 @@ export const Footer = () => {
           <h4>Quick Links</h4>
           <ul>
             <li>
-              <button onClick={() => navigate('/')}>Home</button>
+              <button onClick={() => navigate('/')}>Discover</button>
             </li>
             <li>
-              <button onClick={() => navigate('/overview/discover')}>Discover</button>
-            </li>
-            <li>
-              <button onClick={() => navigate('/my-parties')}>My Parties</button>
+              <button onClick={() => navigate('/parties')}>Parties</button>
             </li>
             <li>
               <button onClick={() => navigate('/friends')}>Friends</button>
@@ -34,35 +31,32 @@ export const Footer = () => {
           </ul>
         </div>
 
-        <div className={classes.footerSection}>
-          <h4>Support</h4>
-          <ul>
-            <li>
-              <button onClick={() => navigate('/help')}>Help Center</button>
-            </li>
-            <li>
-              <button onClick={() => navigate('/contact')}>Contact Us</button>
-            </li>
-            <li>
-              <button onClick={() => navigate('/privacy')}>Privacy Policy</button>
-            </li>
-            <li>
-              <button onClick={() => navigate('/terms')}>Terms of Service</button>
-            </li>
-          </ul>
-        </div>
+        {/*<div className={classes.footerSection}>*/}
+        {/*  <h4>Support</h4>*/}
+        {/*  <ul>*/}
+        {/*    <li>*/}
+        {/*      <button onClick={() => navigate('/help')}>Help Center</button>*/}
+        {/*    </li>*/}
+        {/*    <li>*/}
+        {/*      <button onClick={() => navigate('/contact')}>Contact Us</button>*/}
+        {/*    </li>*/}
+        {/*    <li>*/}
+        {/*      <button onClick={() => navigate('/privacy')}>Privacy Policy</button>*/}
+        {/*    </li>*/}
+        {/*    <li>*/}
+        {/*      <button onClick={() => navigate('/terms')}>Terms of Service</button>*/}
+        {/*    </li>*/}
+        {/*  </ul>*/}
+        {/*</div>*/}
 
         <div className={classes.footerSection}>
           <h4>Connect With Us</h4>
           <div className={classes.socialLinks}>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
-              𝕏 Twitter
-            </a>
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
-              Facebook
-            </a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+            <a href="https://www.instagram.com/party_organizer_the_thesis/" target="_blank" rel="noopener noreferrer">
               Instagram
+            </a>
+            <a href="mailto:partyorganizercustomerservice@gmail.com" className={classes.emailLink}>
+              Email Us
             </a>
           </div>
         </div>

@@ -9,9 +9,6 @@ delete parties (maybe)
 
 footert rendbeszedni
 partyoptions party invitnal az invite azt irja ki mindig h something went wrong,
-light them profilnal a gombor kore keretet tenni
-discovernel a gombokat rendbeszedni
-
 
 # doksi
 oldal terkep
