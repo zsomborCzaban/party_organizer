@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import classes from './NavigationButtonDarkThene.module.scss';
+import classes from './NavigationButtonDarkTheme.module.scss';
 
 interface Props {
     buttonText: string;
@@ -7,7 +7,7 @@ interface Props {
     isActive?: boolean;
 }
 
-export const NavigationButton = ({ buttonText, navigateToLink, isActive }: Props) => {
+export const NavigationButtonDarkTheme = ({ buttonText, navigateToLink, isActive }: Props) => {
     const navigate = useNavigate();
 
     return (

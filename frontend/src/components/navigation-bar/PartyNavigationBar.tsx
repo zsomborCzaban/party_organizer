@@ -1,10 +1,10 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import classes from './NavigationBarDarkTheme.module.scss';
-import { NavigationButton } from './navigation-button/NavigationButton';
+import { NavigationButtonDarkTheme } from './navigation-button/NavigationButtonDarkTheme.tsx';
 import { useAppSelector } from '../../store/store-helper';
 import { isUserLoggedIn } from '../../store/slices/UserSlice';
 import { getUserName } from "../../auth/AuthUserUtil.ts";
-import {NavigationDrawerButton} from "./navigation-button/NavigationDrawerButton.tsx";
+import {NavigationDrawerButtonDarkTheme} from "./navigation-button/NavigationDrawerButtonDarkTheme.tsx";
 import {useDispatch} from "react-redux";
 import {AppDispatch} from "../../store/store.ts";
 import {togglePartyProfileDrawer} from "../../store/slices/profileDrawersSlice.ts";
@@ -39,36 +39,36 @@ export const PartyNavigationBar = () => {
             <div className={classes.centerSection}>
                 {userLoggedIn && isUserOrganizer && (
                         <>
-                            <NavigationButton
+                            <NavigationButtonDarkTheme
                                 buttonText='Manage Party'
                                 navigateToLink='/manageParty'
                                 isActive={location.pathname === '/manageParty'}
                             />
-                            <NavigationButton
+                            <NavigationButtonDarkTheme
                                 buttonText='Party Settings'
                                 navigateToLink='/partySettings'
                                 isActive={location.pathname === '/partySettings'}
                             />
                         </>
                     )}
-                <NavigationButton
+                <NavigationButtonDarkTheme
                     buttonText='Home'
                     navigateToLink='/partyHome'
                     isActive={location.pathname === '/partyHome'}
                 />
                 {userLoggedIn && (
                     <>
-                        <NavigationButton
+                        <NavigationButtonDarkTheme
                             buttonText='Contributions'
                             navigateToLink='/contributions'
                             isActive={location.pathname === '/contributions'}
                         />
-                        <NavigationButton
+                        <NavigationButtonDarkTheme
                             buttonText='Hall Of Fame'
                             navigateToLink='/hallOfFame'
                             isActive={location.pathname === '/hallOfFame'}
                         />
-                        <NavigationButton
+                        <NavigationButtonDarkTheme
                             buttonText='Cocktails'
                             navigateToLink='/cocktails'
                             isActive={location.pathname === '/cocktails'}
@@ -79,7 +79,7 @@ export const PartyNavigationBar = () => {
 
             <div className={classes.rightSection}>
                 {userLoggedIn ? (
-                    <NavigationDrawerButton
+                    <NavigationDrawerButtonDarkTheme
                         buttonText='Profile'
                         onClick={() => dispatch(togglePartyProfileDrawer())}
                     />

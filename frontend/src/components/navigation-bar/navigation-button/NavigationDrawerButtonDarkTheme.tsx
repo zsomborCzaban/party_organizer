@@ -1,4 +1,4 @@
-import classes from './NavigationButtonDarkThene.module.scss';
+import classes from './NavigationButtonDarkTheme.module.scss';
 
 interface Props {
     buttonText: string;
@@ -6,7 +6,7 @@ interface Props {
     isActive?: boolean;
 }
 
-export const NavigationDrawerButton = ({ buttonText, onClick, isActive }: Props) => {
+export const NavigationDrawerButtonDarkTheme = ({ buttonText, onClick, isActive }: Props) => {
     return (
         <button
             className={`${classes.button} ${isActive ? classes.active : ''}`}
