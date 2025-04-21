@@ -5,6 +5,8 @@ import {toast} from "sonner";
 
 export const RequireAuthForRoute = () => {
   const userLoggedIn = useAppSelector(isUserLoggedIn);
-  if(!userLoggedIn) toast.warning('Login to access that page')
+  if(!userLoggedIn) {
+    toast.warning('Login to access that page')
+  }
   return userLoggedIn ? <Outlet /> : <Navigate to='/login' />;
 };

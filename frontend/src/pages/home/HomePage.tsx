@@ -36,10 +36,10 @@ export const Homepage = () => {
 
   }, [api.partyApi]);
 
-    const navigateToLogin = () => {
-      navigate('login')
-      toast.warning('Login to access that page')
-    }
+  const navigateToLogin = () => {
+    navigate('login')
+    toast.warning('Login to access that page')
+  }
 
   const partyVisitLoggedOutActionButton: ActionButton<PartyTableRow> = {
     label: 'Visit',

@@ -1,6 +1,8 @@
 - hashelve tarolni a jelszot a registration requestben, és kivenni a confirm jelszot
 - uj jelszo beallitasanal hashelve kell eltarolni a jelszot
+- profilkep feltoltesnel validalni h kep e a feltoltott file
 - tablazatokra max szelesseget rakni
+
 
 - scroll to the top on tab valtas frontenden
 
@@ -8,6 +10,9 @@ auto delete on parties after they have been hosted
 delete parties (maybe)
 
 partyoptions party invitnal az invite azt irja ki mindig h something went wrong,
+
+
+ogouztnal, nem a homra dob vissza hanem a loginra
 
 # doksi
 oldal terkep

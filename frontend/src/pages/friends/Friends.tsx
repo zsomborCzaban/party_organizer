@@ -154,7 +154,7 @@ export const Friends = () => {
                         columns={FriendInviteTableColumns}
                         data={convertInvitesToTableData(pendingInvites)}
                         actionButtons={inviteActionButtons}
-                        rowsPerPageOptions={[5, 10, 15]}
+                        rowsPerPageOptions={[3, 5, 10, 15]}
                         defaultRowsPerPage={5}
                     />
                 </div>
@@ -167,7 +167,7 @@ export const Friends = () => {
                             columns={FriendTableColumns}
                             data={convertFriendsToTableData(friends)}
                             actionButtons={friendActionButtons}
-                            rowsPerPageOptions={[5, 10, 15]}
+                            rowsPerPageOptions={[3, 5, 10, 15]}
                             defaultRowsPerPage={5}
                         />
                     </div>
