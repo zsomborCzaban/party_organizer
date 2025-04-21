@@ -122,18 +122,30 @@ export const HallOfFame = () => {
     }, [api.contributionApi, partyId, refreshFoodContributions]);
 
     useEffect(() => {
-        const allRequirements = [...drinkRequirements, ...foodRequirements];
-        const allContributions = [...drinkContributions, ...foodContributions];
-
-        const requirementsMap = new Map(
-            allRequirements.map(req => [req.ID,  req ])
+        const drinkRequirementsMap = new Map(
+            drinkRequirements.map(req => [req.ID,  req ])
         );
 
+        const foodRequirementsMap = new Map(
+            foodRequirements.map(req => [req.ID,  req ])
+        );
+
+        //could be improved
         const userData = participants.map(user => {
-            const userContributions = allContributions
+            const userDrinkContributions = drinkContributions
                 .filter(c => c.contributor.ID === user.ID)
                 .map(contribution => {
-                    const requirement = requirementsMap.get(contribution.requirement_id) || EMPTY_REQUIREMENT_POPULATED;
+                    const requirement = drinkRequirementsMap.get(contribution.requirement_id) || EMPTY_REQUIREMENT_POPULATED;
+                    return {
+                        contribution,
+                        requirement,
+                    };
+                });
+
+            const userFoodContributions = foodContributions
+                .filter(c => c.contributor.ID === user.ID)
+                .map(contribution => {
+                    const requirement = foodRequirementsMap.get(contribution.requirement_id) || EMPTY_REQUIREMENT_POPULATED;
                     return {
                         contribution,
                         requirement,
@@ -142,8 +154,8 @@ export const HallOfFame = () => {
 
             return {
                 user,
-                totalContributions: userContributions.length,
-                contributions: userContributions
+                totalContributions: userDrinkContributions.length + userDrinkContributions.length,
+                contributions: [...userDrinkContributions, ...userFoodContributions]
             };
         });
 
