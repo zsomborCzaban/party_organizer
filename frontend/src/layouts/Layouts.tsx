@@ -3,8 +3,8 @@ import { Footer } from '../components/footer/Footer';
 import { Outlet } from 'react-router-dom';
 import classes from './Layouts.module.scss';
 import {PartyNavigationBar} from "../components/navigation-bar/PartyNavigationBar.tsx";
-import {PartyProfileDrawer} from "../components/drawer/PartyProfileDrawer/PartyProfileDrawer.tsx";
-import {DefaultProfileDrawer} from "../components/drawer/DefaultProfileDrawer/DefaultProfileDrawer.tsx";
+import {PartyProfileDrawer} from "../components/drawer/partyProfileDrawer/PartyProfileDrawer.tsx";
+import {DefaultProfileDrawer} from "../components/drawer/defaultProfileDrawer/DefaultProfileDrawer.tsx";
 
 export const MainLayout = () => {
     return (
