@@ -6,7 +6,11 @@
 
 auto delete on parties after they have been hosted
 delete parties (maybe)
-autodelete on registration requests.
+
+footert rendbeszedni
+partyoptions party invitnal az invite azt irja ki mindig h something went wrong,
+light them profilnal a gombor kore keretet tenni
+discovernel a gombokat rendbeszedni
 
 
 # doksi

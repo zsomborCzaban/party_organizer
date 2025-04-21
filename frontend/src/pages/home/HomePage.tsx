@@ -70,20 +70,21 @@ export const Homepage = () => {
         <div className={classes.heroContent}>
           <h1>Welcome to Party Organizer</h1>
           <p>Discover, create, and join amazing events in your area</p>
-          <div className={classes.heroButtons}>
-            <button 
-              className={classes.primaryButton}
-              onClick={() => navigate('/register')}
-            >
-              Get Started
-            </button>
-            <button 
-              className={classes.secondaryButton}
-              onClick={() => navigate('/overview/discover')}
-            >
-              Explore Events
-            </button>
-          </div>
+          {!userLoggedIn && (
+              <div className={classes.heroButtons}>
+                <button
+                    className={classes.primaryButton}
+                    onClick={() => navigate('/register')}
+                >
+                  Get started
+                </button>
+                <button
+                    className={classes.secondaryButton}
+                    onClick={() => navigate('/login')}
+                >
+                  Sign in
+                </button>
+              </div>)}
         </div>
       </section>
 
@@ -91,11 +92,11 @@ export const Homepage = () => {
         <div className={classes.sectionContainer}>
           <h2>Public Parties</h2>
           <div className={classes.tableContainer}>
-              <SortableTable
-                  columns={partyTableColumns}
-                  data={convertPartiesToTableDatasource(publicParties)}
-                  rowsPerPageOptions={[3,5,10,15]}
-                  defaultRowsPerPage={5}
+            <SortableTable
+                columns={partyTableColumns}
+                data={convertPartiesToTableDatasource(publicParties)}
+                rowsPerPageOptions={[3, 5, 10, 15]}
+                defaultRowsPerPage={5}
                   actionButtons={userLoggedIn ? [partyVisitLoggedInActionButton] : [partyVisitLoggedOutActionButton]}
               />
           </div>
