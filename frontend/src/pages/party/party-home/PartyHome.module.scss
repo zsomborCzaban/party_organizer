@@ -55,18 +55,21 @@
 }
 
 .progressBar {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(0, 0, 0, 0.3);
     border-radius: 10px;
-    height: 20px;
+    height: 24px;
     position: relative;
     overflow: hidden;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .progressFill {
-    background: linear-gradient(90deg, #4CAF50 0%, #8BC34A 100%);
+    background: linear-gradient(90deg, #00B8FF 0%, #0088FF 100%);
     height: 100%;
     border-radius: 10px;
     transition: width 0.3s ease;
+    box-shadow: 0 0 15px rgba(0, 184, 255, 0.4);
 }
 
 .progressText {
@@ -75,8 +78,12 @@
     left: 50%;
     transform: translate(-50%, -50%);
     margin: 0;
-    font-weight: 600;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+    -webkit-text-stroke: 0.5px rgba(0, 0, 0, 0.3);
 }
 
 .contributeButton {
