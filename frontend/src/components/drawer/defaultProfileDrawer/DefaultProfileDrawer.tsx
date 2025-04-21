@@ -7,12 +7,15 @@ import {getUser} from "../../../auth/AuthUserUtil.ts";
 import {EMPTY_USER} from "../../../data/types/User.ts";
 import {toast} from "sonner";
 import {
+  handleChangePassword,
   handleLogoutUtil,
   handleUploadProfilePictureUtil
 } from "../../../data/utils/ProfileDrawerUtils.ts";
 import {useNavigate} from "react-router-dom";
+import {useApi} from "../../../context/ApiContext.ts";
 
 export const DefaultProfileDrawer = () => {
+  const api = useApi();
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate()
   const isOpen = useSelector((state: RootState) => state.profileDrawers.isDefaultProfileOpen);
@@ -86,7 +89,10 @@ export const DefaultProfileDrawer = () => {
               <label htmlFor='file-input' className={classes.menuItem}>
                 Upload profile picture
               </label>
-              <button className={classes.menuItem} onClick={() => handleLogoutUtil(navigate, dispatch, '/')}>Logout</button>
+              <button className={classes.menuItem} onClick={() => handleChangePassword(api, user.username)}>Change password
+              </button>
+              <button className={classes.menuItem} onClick={() => handleLogoutUtil(navigate, dispatch, '/')}>Logout
+              </button>
             </nav>
           </div>
         </div>

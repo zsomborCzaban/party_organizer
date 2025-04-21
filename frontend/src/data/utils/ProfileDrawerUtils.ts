@@ -34,3 +34,23 @@ export const handleLeavePartyUtils = (api: Api, navigate: NavigateFunction, part
             toast.error('Unexpected error')
         })
 }
+
+export const handleChangePassword = (api: Api, username: string) => {
+    api.authApi.forgotPassword(username)
+        .then(resp => {
+            if(resp === 'error'){
+                toast.error('Unexpected error')
+                return
+            }
+
+            if (resp.is_error) {
+                toast.error('Unexpected error')
+                return
+            }
+
+            toast.success('Email sent')
+            toast.success('Check your emails, to change your password')
+            return
+        })
+        .catch(() => toast.error('Unexpected error'))
+}

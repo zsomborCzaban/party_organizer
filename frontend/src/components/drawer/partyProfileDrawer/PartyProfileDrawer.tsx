@@ -7,6 +7,7 @@ import {getUser} from "../../../auth/AuthUserUtil.ts";
 import {EMPTY_USER} from "../../../data/types/User.ts";
 import {toast} from "sonner";
 import {
+  handleChangePassword,
   handleLeavePartyUtils,
   handleLogoutUtil,
   handleUploadProfilePictureUtil
@@ -91,8 +92,15 @@ export const PartyProfileDrawer = () => {
               <label htmlFor='file-input' className={classes.menuItem}>
                 Upload profile picture
               </label>
-              <button className={classes.menuItem} onClick={() => handleLeavePartyUtils(api, navigate, partyId)}>Leave party</button>
-              <button className={classes.menuItem} onClick={() => handleLogoutUtil(navigate, dispatch, '/partyHome')}>Logout</button>
+              <button className={classes.menuItem} onClick={() => handleLeavePartyUtils(api, navigate, partyId)}>Leave
+                party
+              </button>
+              <button className={classes.menuItem} onClick={() => handleChangePassword(api, user.username)}>Change
+                password
+              </button>
+              <button className={classes.menuItem}
+                      onClick={() => handleLogoutUtil(navigate, dispatch, '/partyHome')}>Logout
+              </button>
             </nav>
           </div>
         </div>
