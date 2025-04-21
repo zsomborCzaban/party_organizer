@@ -7,7 +7,6 @@
 auto delete on parties after they have been hosted
 delete parties (maybe)
 
-footert rendbeszedni
 partyoptions party invitnal az invite azt irja ki mindig h something went wrong,
 
 # doksi
