@@ -2,6 +2,7 @@
 - uj jelszo beallitasanal hashelve kell eltarolni a jelszot
 - profilkep feltoltesnel validalni h kep e a feltoltott file
 - tablazatokra max szelesseget rakni
+- a party header nem olvasható a dokumentacióban a kontrastok miatt
 
 
 - scroll to the top on tab valtas frontenden
