@@ -179,7 +179,7 @@ const CreateParty: React.FC = () => {
             <div className={classes.inputGroup}>
               <label className={classes.label}>Actual Location</label>
               <Input
-                placeholder='Enter googlemaps plus code'
+                placeholder='Enter googlemaps link'
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
               />
@@ -236,6 +236,7 @@ const CreateParty: React.FC = () => {
                 <Checkbox
                   checked={isAccessCodeEnabled}
                   onChange={(e) => setIsAccessCodeEnabled(e.target.checked)}
+                  disabled={!isPrivate}
                 >
                   Enable Access Code
                 </Checkbox>
