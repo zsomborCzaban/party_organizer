@@ -18,6 +18,7 @@ export const PartyHome = ()=>{
     const userLoggedIn = useAppSelector(isUserLoggedIn);
     // const [partyId, setPartyId] = useState(0)
     const [party, setParty] = useState<PartyPopulated>(EMPTY_PARTY_POPULATED)
+    const [timeRemaining, setTimeRemaining] = useState<number>(0);
 
     useEffect(() => {
         const getPartyId = localStorage.getItem('partyId')
@@ -68,6 +69,20 @@ export const PartyHome = ()=>{
         
     }, [api.partyApi, navigate, userLoggedIn]);
 
+    useEffect(() => {
+        const partyStartTime = new Date(party.start_time).getTime();
+        const currentTime = new Date().getTime();
+        const timeDiff = partyStartTime - currentTime;
+        const hoursRemaining = timeDiff / (1000 * 60 * 60);
+
+        if (hoursRemaining > 336) {
+            setTimeRemaining(336);
+        } else if (hoursRemaining < 0) {
+            setTimeRemaining(0);
+        } else {
+            setTimeRemaining(hoursRemaining);
+        }
+    }, [party.start_time]);
 
     const handleContributeClick = () => {
         navigate('/contributions');
@@ -77,6 +92,23 @@ export const PartyHome = ()=>{
         const d = new Date(date);
 
         return `${d.toLocaleString('default', { month: 'long' })} ${d.getDate()}, ${d.toLocaleTimeString('default', { hour: '2-digit', minute: '2-digit' })}`;
+    };
+
+    const getProgressBarWidth = () => {
+        if (timeRemaining > 336) {
+            return '0%';
+        }
+        return `${((336 - timeRemaining) / 336) * 100}%`;
+    };
+
+    const getProgressText = () => {
+        if (timeRemaining > 336) {
+            return 'More than 336 hours until party';
+        }
+        if (timeRemaining <= 0) {
+            return 'Party has started!';
+        }
+        return `${Math.ceil(timeRemaining)} hours until party`;
     };
 
     return (
@@ -97,8 +129,11 @@ export const PartyHome = ()=>{
 
                     <div className={classes.progressBarContainer}>
                         <div className={classes.progressBar}>
-                            <div className={classes.progressFill} style={{ width: '60%' }} />
-                            <p className={classes.progressText}>60% Complete</p>
+                            <div 
+                                className={classes.progressFill} 
+                                style={{ width: getProgressBarWidth() }} 
+                            />
+                            <p className={classes.progressText}>{getProgressText()}</p>
                         </div>
                     </div>
 
