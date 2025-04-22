@@ -1,22 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import {ConfigProvider, Input, Modal, theme} from 'antd';
-import { AppDispatch, RootState } from '../../../store/store.ts';
-import { useDispatch, useSelector } from 'react-redux';
-import { ApiError } from '../../../data/types/ApiResponseTypes.ts';
 import { Contribution } from '../../../data/types/Contribution.ts';
-import { setForTime } from '../../../data/utils/timeoutSetterUtils.ts';
+import { setForTime } from '../../../data/utils/TimeoutSetterUtils.ts';
 import { createDrinkContribution, createFoodContribution } from '../../../api/apis/ContributionApi.ts';
-import { loadDrinkContributions } from '../../../store/slices/DrinkContributionSlice.ts';
-import { loadFoodContributions } from '../../../store/slices/FoodContributionSlice.ts';
 import classes from './ContributeModal.module.scss';
 
 export interface ContributeModalProps {
   visible: boolean;
   onClose: () => void;
-  options: { value: number; label: string }[];
+  options?: { value: number; label: string }[];
   mode: string;
-  onFoodSuccess: () => void;
-  onDrinkSuccess: () => void;
+  onFoodSuccess?: () => void;
+  onDrinkSuccess?: () => void;
 }
 
 interface Feedbacks {
@@ -32,9 +27,6 @@ export const ContributeModal: React.FC<ContributeModalProps> = ({ mode, options,
   const [description, setDescription] = useState('');
   const [requirementId, setRequirementId] = useState(0);
   const [feedbacks, setFeedbacks] = useState<Feedbacks>({});
-
-  const dispatch = useDispatch<AppDispatch>();
-  const { selectedParty } = useSelector((state: RootState) => state.selectedPartyStore);
 
   useEffect(() => {
     if (visible) {
@@ -61,7 +53,7 @@ export const ContributeModal: React.FC<ContributeModalProps> = ({ mode, options,
       newFeedbacks.requirementId = 'requirement is required';
       valid = false;
     }
-    if (!options.some((option) => option.value === requirementId)) {
+    if (!options || !options.some((option) => option.value === requirementId)) {
       newFeedbacks.requirementId = 'choose requirement from the available options';
       valid = false;
     }
@@ -70,9 +62,10 @@ export const ContributeModal: React.FC<ContributeModalProps> = ({ mode, options,
     return valid;
   };
 
-  const handleErrors = (errs: ApiError[]) => {
-    console.log(errs);
-    // todo: implement me!!!
+  const handleErrors = (errs: string) => {
+    const newFeedbacks: Feedbacks = {}
+    newFeedbacks.buttonError = errs;
+    setFeedbacks(newFeedbacks);
   };
 
   const handleContribute = () => {
@@ -86,14 +79,12 @@ export const ContributeModal: React.FC<ContributeModalProps> = ({ mode, options,
 
     if (mode === 'drink') {
       createDrinkContribution(contribution)
-        .then((createdContribution: Contribution) => {
-          console.log(createdContribution);
+        .then(() => {
           newFeedbacks.buttonSuccess = 'created successfully';
           setForTime(setFeedbacks, newFeedbacks, {}, 3000);
-
-          if (!selectedParty || !selectedParty.ID) return;
-          dispatch(loadDrinkContributions(selectedParty.ID));
-          onDrinkSuccess();
+          if(onDrinkSuccess){
+            onDrinkSuccess();
+          }
         })
         .catch((err) => {
           if (err.response) {
@@ -109,14 +100,12 @@ export const ContributeModal: React.FC<ContributeModalProps> = ({ mode, options,
 
     if (mode === 'food') {
       createFoodContribution(contribution)
-        .then((createdContribution: Contribution) => {
-          console.log(createdContribution);
+        .then(() => {
           newFeedbacks.buttonSuccess = 'created successfully';
           setForTime(setFeedbacks, newFeedbacks, {}, 3000);
-
-          if (!selectedParty || !selectedParty.ID) return;
-          dispatch(loadFoodContributions(selectedParty.ID));
-          onFoodSuccess();
+          if(onFoodSuccess){
+            onFoodSuccess();
+          }
         })
         .catch((err) => {
           if (err.response) {
@@ -152,7 +141,7 @@ export const ContributeModal: React.FC<ContributeModalProps> = ({ mode, options,
             className={classes.selectField}
           >
             <option value='0'>-- Please select --</option>
-            {options.map((option) => (
+            {options && options.map((option) => (
               <option
                 key={option.value}
                 value={option.value}

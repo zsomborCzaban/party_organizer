@@ -2,10 +2,11 @@
 - uj jelszo beallitasanal hashelve kell eltarolni a jelszot
 - profilkep feltoltesnel validalni h kep e a feltoltott file
 - tablazatokra max szelesseget rakni
-- a party header nem olvasható a dokumentacióban a kontrastok miatt
+- kick usernél egy modalt feldobni előtte.
 
 
 - scroll to the top on tab valtas frontenden
+
 
 auto delete on parties after they have been hosted
 delete parties (maybe)

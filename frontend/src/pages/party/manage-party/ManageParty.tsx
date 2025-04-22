@@ -3,16 +3,17 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CreateRequirementModal from '../../../components/modal/createRequirement/CreateRequirementModal.tsx';
 import DeleteRequirementModal from '../../../components/modal/deleteRequirement/DeleteRequirementModal.tsx';
-import { User } from '../../../data/types/User.ts';
-import { setForTime } from '../../../data/utils/timeoutSetterUtils.ts';
+import {EMPTY_USER, User} from '../../../data/types/User.ts';
+import { setForTime } from '../../../data/utils/TimeoutSetterUtils.ts';
 import {Requirement, RequirementPopulated} from '../../../data/types/Requirement.ts';
 import { invitedTableColumnsLegacy, requirementTableColumnsLegacy, userTableColumnsLegacy } from '../../../data/constants/TableColumns.tsx';
-import { inviteToParty, kickFromParty } from '../../../api/apis/PartyAttendanceManagerApi.ts';
+import { inviteToParty } from '../../../api/apis/PartyAttendanceManagerApi.ts';
 import {EMPTY_PARTY_POPULATED, PartyPopulated} from "../../../data/types/Party.ts";
 import {PartyInvite} from "../../../data/types/PartyInvite.ts";
 import {useApi} from "../../../context/ApiContext.ts";
 import {toast} from "sonner";
 import classes from './ManageParty.module.scss';
+import KickUserModal from "../../../components/modal/kickUserModal/KickUserModal.tsx";
 
 
 const ManageParty = () => {
@@ -25,6 +26,8 @@ const ManageParty = () => {
   const [inviteFeedbackError, setInviteFeedbackError] = useState('');
   const [requirementModalVisible, setRequirementModalVisible] = useState(false);
   const [requirementModalMode, setRequirementModalMode] = useState('');
+  const [kickUserModalVisible, setKickUserModalVisible] = useState(false)
+  const [userToKick, setUserToKick] = useState<User>(EMPTY_USER)
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [deleteModalMode, setDeleteModalMode] = useState('');
   const [requirementToDelete, setRequirementToDelete] = useState(-1);
@@ -149,14 +152,8 @@ const ManageParty = () => {
   };
 
   const handleKickParticipant = (kickedUser: User) => {
-    kickFromParty(party.ID, kickedUser.ID)
-      .then(() => {
-        setReloadParticipants((reloadParticipants+1)%2)
-      })
-      .catch((err) => {
-        console.log(err);
-        // todo: make a confirmaction modal and handle feedback
-      });
+    setUserToKick(kickedUser);
+    setKickUserModalVisible(true);
   };
 
   const participantColumns = [
@@ -253,14 +250,6 @@ const ManageParty = () => {
     <div className={classes.background}>
       <div className={classes.outerContainer}>
         <ConfigProvider theme={{ algorithm: theme.darkAlgorithm }}>
-          {/*<VisitPartyNavBar onProfileClick={() => setProfileOpen(true)} />*/}
-          {/*<VisitPartyProfile*/}
-          {/*  isOpen={profileOpen}*/}
-          {/*  onClose={() => setProfileOpen(false)}*/}
-          {/*  currentParty={party}*/}
-          {/*  user={user}*/}
-          {/*  onLeaveParty={() => console.log('leaveparty')}*/}
-          {/*/>*/}
           <CreateRequirementModal
             visible={requirementModalVisible}
             onClose={() => {
@@ -279,6 +268,15 @@ const ManageParty = () => {
             }}
             mode={deleteModalMode}
             requirementId={requirementToDelete}
+          />
+          <KickUserModal
+              visible={kickUserModalVisible}
+              onClose={() => {
+                setKickUserModalVisible(false)
+                setReloadParticipants((reloadDrinkReqs+1)%2) //todo: find a better solution instead of refreshing on every modal close
+              }}
+              user={userToKick}
+              partyId={partyId}
           />
           <div className={classes.container}>
             <h2>Invite</h2>

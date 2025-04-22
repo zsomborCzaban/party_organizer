@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Input, Modal } from 'antd';
-import { ApiError } from '../../../data/types/ApiResponseTypes.ts';
 import { Requirement } from '../../../data/types/Requirement.ts';
-import { setForTime } from '../../../data/utils/timeoutSetterUtils.ts';
+import { setForTime } from '../../../data/utils/TimeoutSetterUtils.ts';
 import { createDrinkRequirement, createFoodRequirement } from '../../../api/apis/RequirementApi.ts';
 import classes from './CreateRequirementModal.module.scss';
 import {ContributeModalProps} from "../createContribution/ContributeModal.tsx";
@@ -57,9 +56,10 @@ const CreateRequirementModal: React.FC<ContributeModalProps> = ({ mode, visible,
     return valid;
   };
 
-  const handleErrors = (errs: ApiError[]) => {
-    console.log(errs);
-    // todo: implement me!!!
+  const handleErrors = (errs: string) => {
+    const newFeedbacks: Feedbacks = {}
+    newFeedbacks.buttonError = errs;
+    setFeedbacks(newFeedbacks);
   };
 
   const handleCreateRequirement = () => {

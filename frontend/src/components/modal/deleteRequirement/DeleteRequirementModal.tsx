@@ -31,21 +31,20 @@ const DeleteContributeModal: React.FC<DeleteContributeModalProps> = ({ mode, req
   }, [visible]);
 
   const startCloseTimer = () => {
-    let count = 5; // Start from 5 seconds
+    let count = 5;
 
     const countdownTimer = () => {
       if (count >= 1) {
-        setCountdown(count); // Update the countdown state
-        count -= 1; // Decrement the countdown
+        setCountdown(count);
+        count -= 1;
 
-        setTimeout(countdownTimer, 1000); // Call the function again after 1 second
+        setTimeout(countdownTimer, 1000);
       } else {
-        // Close the modal after countdown finishes
-        onClose(); // Or set visible to false
+        onClose();
       }
     };
 
-    countdownTimer(); // Start the countdown
+    countdownTimer();
   };
 
   const handleErrors = (errs: ApiError[]) => {

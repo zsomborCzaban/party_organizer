@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { ConfigProvider, Modal, theme } from 'antd';
-import { ApiError } from '../../../data/types/ApiResponseTypes.ts';
 import { deleteDrinkContribution, deleteFoodContribution } from '../../../api/apis/ContributionApi.ts';
 import classes from './DeleteContributionModal.module.scss';
 import { ContributionPopulated } from '../../../data/types/Contribution.ts';
@@ -58,9 +57,10 @@ const DeleteContributeModal: React.FC<DeleteContributeModalProps> = ({
     countdownTimer();
   };
 
-  const handleErrors = (errs: ApiError[]) => {
-    console.log(errs);
-    // todo: implement me!!!
+  const handleErrors = (errs: string) => {
+    const newFeedbacks: Feedbacks = {}
+    newFeedbacks.buttonError = errs;
+    setFeedbacks(newFeedbacks);
   };
 
   const handleDelete = () => {
