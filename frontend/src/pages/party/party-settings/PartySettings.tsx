@@ -180,15 +180,6 @@ const PartySettings = () => {
       <div className={classes.background}>
         <div className={classes.outerContainer}>
           <ConfigProvider theme={{algorithm: theme.darkAlgorithm}}>
-            {/*<VisitPartyNavBar onProfileClick={() => setProfileOpen(true)} />*/}
-            {/*<VisitPartyProfile*/}
-            {/*  isOpen={profileOpen}*/}
-            {/*  onClose={() => setProfileOpen(false)}*/}
-            {/*  currentParty={selectedParty}*/}
-            {/*  user={user}*/}
-            {/*  onLeaveParty={() => console.log('leaveparty')}*/}
-            {/*/>*/}
-
             <div className={classes.container}>
               <h2 className={classes.h2}>Party Settings</h2>
 
@@ -261,31 +252,22 @@ const PartySettings = () => {
               <div className={classes.inputDiv}>
                 <div className={classes.checkboxContainer}>
                   <div className={classes.checkbox}>
-                    <label
-                        htmlFor='isPrivate'
-                        className={classes.label}
-                    >
-                      Private
-                    </label>
                     <Checkbox
                         id='isPrivate'
                         checked={isPrivate}
                         onChange={(e) => setIsPrivate(e.target.checked)}
-                    />
+                    > Private
+                    </Checkbox>
                   </div>
 
                   <div className={classes.checkbox}>
-                    <label
-                        htmlFor='isAccessCodeEnabled'
-                        className={classes.label}
-                    >
-                      Access Code Enabled
-                    </label>
                     <Checkbox
                         id='isAccessCodeEnabled'
                         checked={isAccessCodeEnabled}
                         onChange={(e) => setAccessCodeEnabled(e.target.checked)}
-                    />
+                        disabled={!isPrivate}
+                    > Access Code Enabled
+                    </Checkbox>
                   </div>
                 </div>
                 {feedbacks.AccessCodeEnabled && <p className={classes.error}>{feedbacks.AccessCodeEnabled}</p>}
@@ -300,6 +282,7 @@ const PartySettings = () => {
                           value={accessCode}
                           onChange={(e) => setAccessCode(e.target.value)}
                           className={classes.input}
+                          prefix={party.ID.toString() + "_"}
                       />
                       {feedbacks.AccessCode && <p className={classes.error}>{feedbacks.AccessCode}</p>}
                     </>

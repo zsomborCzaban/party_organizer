@@ -65,19 +65,22 @@
 
 .checkboxContainer {
   display: flex;
-  flex-direction: row;
-  gap: 20px;
-  width: 60%;
+  gap: 35px;
+  width: 500px;
+  align-items: flex-start;
 }
 
 .checkbox {
   display: flex;
-  flex-direction: row;
-  gap: 5px;
-  color: #d3d3d3;
+  align-items: center;
+  gap: 8px;
 
   :global(.ant-checkbox-wrapper) {
-    color: #d3d3d3;
+    font-size: 1rem;
+
+    .ant-checkbox {
+      transform: scale(1.1);
+    }
   }
 }
 
