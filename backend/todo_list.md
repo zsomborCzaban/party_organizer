@@ -4,7 +4,7 @@
 - tablazatokra max szelesseget rakni
 - kick usernél egy modalt feldobni előtte.
 
-
+- szervezőnek bulielhagyás/törlés opció
 - scroll to the top on tab valtas frontenden
 
 

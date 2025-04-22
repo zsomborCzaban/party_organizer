@@ -23,7 +23,7 @@ export const handleLeavePartyUtils = (api: Api, navigate: NavigateFunction, part
     api.partyAttendanceApi.leaveParty(partyId)
         .then((resp) => {
             if(!resp.data){
-                toast.error(resp.errors) //todo: handle error here
+                toast.error(resp.errors)
                 return
             }
 
