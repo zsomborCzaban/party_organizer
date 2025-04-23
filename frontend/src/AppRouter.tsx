@@ -27,8 +27,8 @@ export const AppRouter = () => (
           <Route path="/register" element={<Register />} />
           <Route path="/forgotPassword" element={<ForgotPassword />} />
           <Route path="/confirmEmail" element={<ConfirmEmail />} />
-          <Route path="/changePassword" element={<ChangePassword />} />
         </Route>
+        <Route path="/changePassword" element={<ChangePassword />} />
       </Route>
 
       <Route element={<PartyLayout />}>

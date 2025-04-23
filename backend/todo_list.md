@@ -6,12 +6,17 @@
 
 - szervezőnek bulielhagyás/törlés opció
 - scroll to the top on tab valtas frontenden
+- barát mehívásnál nem létező felhasználónál error üzenet
+
+- telefon nézet megcsinálása
 
 
 auto delete on parties after they have been hosted
 delete parties (maybe)
 
 partyoptions party invitnal az invite azt irja ki mindig h something went wrong,
+
+ha egy nem szervező a szervező oldalakra megy és csinálni valamit akkor ki lesz loginolva
 
 
 ogouztnal, nem a homra dob vissza hanem a loginra

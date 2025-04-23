@@ -1,36 +1,36 @@
-import { Button, ConfigProvider, Table, theme } from 'antd';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import CreateRequirementModal from '../../../components/modal/createRequirement/CreateRequirementModal.tsx';
-import DeleteRequirementModal from '../../../components/modal/deleteRequirement/DeleteRequirementModal.tsx';
-import {EMPTY_USER, User} from '../../../data/types/User.ts';
-import { setForTime } from '../../../data/utils/TimeoutSetterUtils.ts';
-import {Requirement, RequirementPopulated} from '../../../data/types/Requirement.ts';
-import { invitedTableColumnsLegacy, requirementTableColumnsLegacy, userTableColumnsLegacy } from '../../../data/constants/TableColumns.tsx';
-import { inviteToParty } from '../../../api/apis/PartyAttendanceManagerApi.ts';
-import {EMPTY_PARTY_POPULATED, PartyPopulated} from "../../../data/types/Party.ts";
-import {PartyInvite} from "../../../data/types/PartyInvite.ts";
-import {useApi} from "../../../context/ApiContext.ts";
-import {toast} from "sonner";
-import classes from './ManageParty.module.scss';
-import KickUserModal from "../../../components/modal/kickUserModal/KickUserModal.tsx";
+import { Button, ConfigProvider, Table, theme } from 'antd'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import CreateRequirementModal from '../../../components/modal/createRequirement/CreateRequirementModal.tsx'
+import DeleteRequirementModal from '../../../components/modal/deleteRequirement/DeleteRequirementModal.tsx'
+import {EMPTY_USER, User} from '../../../data/types/User.ts'
+import { setForTime } from '../../../data/utils/TimeoutSetterUtils.ts'
+import {Requirement, RequirementPopulated} from '../../../data/types/Requirement.ts'
+import { invitedTableColumnsLegacy, requirementTableColumnsLegacy, userTableColumnsLegacy } from '../../../data/constants/TableColumns.tsx'
+import { inviteToParty } from '../../../api/apis/PartyAttendanceManagerApi.ts'
+import {EMPTY_PARTY_POPULATED, PartyPopulated} from "../../../data/types/Party.ts"
+import {PartyInvite} from "../../../data/types/PartyInvite.ts"
+import {useApi} from "../../../context/ApiContext.ts"
+import {toast} from "sonner"
+import classes from './ManageParty.module.scss'
+import KickUserModal from "../../../components/modal/kickUserModal/KickUserModal.tsx"
 
 
 const ManageParty = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const api = useApi()
   const partyId = Number(localStorage.getItem('partyId') || '-1')
 
-  const [usernameInput, setUsernameInput] = useState('');
-  const [inviteFeedbackSuccess, setInviteFeedbackSuccess] = useState('');
-  const [inviteFeedbackError, setInviteFeedbackError] = useState('');
-  const [requirementModalVisible, setRequirementModalVisible] = useState(false);
-  const [requirementModalMode, setRequirementModalMode] = useState('');
+  const [usernameInput, setUsernameInput] = useState('')
+  const [inviteFeedbackSuccess, setInviteFeedbackSuccess] = useState('')
+  const [inviteFeedbackError, setInviteFeedbackError] = useState('')
+  const [requirementModalVisible, setRequirementModalVisible] = useState(false)
+  const [requirementModalMode, setRequirementModalMode] = useState('')
   const [kickUserModalVisible, setKickUserModalVisible] = useState(false)
   const [userToKick, setUserToKick] = useState<User>(EMPTY_USER)
-  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-  const [deleteModalMode, setDeleteModalMode] = useState('');
-  const [requirementToDelete, setRequirementToDelete] = useState(-1);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false)
+  const [deleteModalMode, setDeleteModalMode] = useState('')
+  const [requirementToDelete, setRequirementToDelete] = useState(-1)
 
   const [party, setParty] = useState<PartyPopulated>(EMPTY_PARTY_POPULATED)
   const [drinkReqs, setDrinkReqs] = useState<RequirementPopulated[]>([])
@@ -59,7 +59,7 @@ const ManageParty = () => {
         .catch(() => {
           toast.error('Unexpected error')
         })
-  }, [api.partyApi, navigate, partyId]);
+  }, [api.partyApi, navigate, partyId])
 
   useEffect(() => {
     api.requirementApi.getDrinkRequirementsByPartyId(partyId)
@@ -73,7 +73,7 @@ const ManageParty = () => {
         .catch(() => {
           toast.error('Unexpected error')
         })
-  }, [api.requirementApi, partyId, reloadDrinkReqs]);
+  }, [api.requirementApi, partyId, reloadDrinkReqs])
 
   useEffect(() => {
     api.requirementApi.getFoodRequirementsByPartyId(partyId)
@@ -87,7 +87,7 @@ const ManageParty = () => {
         .catch(() => {
           toast.error('Unexpected error')
         })
-  }, [api.requirementApi, partyId, reloadFoodReqs]);
+  }, [api.requirementApi, partyId, reloadFoodReqs])
 
   useEffect(() => {
     api.partyApi.getPartyParticipants(partyId)
@@ -102,7 +102,7 @@ const ManageParty = () => {
           toast.error('Unexpected error')
         })
     
-  }, [api.partyApi, partyId, reloadParticipants]);
+  }, [api.partyApi, partyId, reloadParticipants])
 
   useEffect(() => {
     api.partyAttendanceApi.getPartyPendingInvites(partyId)
@@ -116,45 +116,53 @@ const ManageParty = () => {
         .catch(() => {
           toast.error('Unexpected error')
         })
-  }, [api.partyAttendanceApi, partyId, reloadPendingInvites]);
+  }, [api.partyAttendanceApi, partyId, reloadPendingInvites])
 
 
   const handleInviteToParty = (username: string) => {
     inviteToParty(party.ID, username)
       .then(() => {
         setReloadPendingInvites((reloadPendingInvites+1)%2)
-        setForTime<string>(setInviteFeedbackSuccess, 'Invite sent!', '', 3000);
+        setForTime<string>(setInviteFeedbackSuccess, 'Invite sent!', '', 3000)
       })
       .catch((err) => {
-        console.log(err);
-        setForTime<string>(setInviteFeedbackError, 'Something went wrong!', '', 3000);
-      });
-  };
+        console.log(err)
+        if(err && err.response && err.response.data && err.response.data.errors){
+          const errorMsg: string = err.response.data.errors
+          if(errorMsg.includes('user not found')) {
+            setForTime<string>(setInviteFeedbackError, "User doesn't exist!", '', 3000)
+            return
+          }
+        }
+        setForTime<string>(setInviteFeedbackError, 'Something went wrong!', '', 3000)
+        toast.error('Unexpected error')
+      })
+  }
 
   const handleAddRequirement = (mode: string) => {
-    if (mode === 'drink') setRequirementModalMode('drink');
-    if (mode === 'food') setRequirementModalMode('food');
-    setRequirementModalVisible(true);
-  };
+    if (mode === 'drink') setRequirementModalMode('drink')
+    if (mode === 'food') setRequirementModalMode('food')
+    setRequirementModalVisible(true)
+  }
 
   const handleDeleteRequirement = (requirement: Requirement, mode: string) => {
     if (mode === 'drink') {
-      setDeleteModalMode('drink');
-      setRequirementToDelete(requirement.ID || -1);
-      setDeleteModalVisible(true);
+      setDeleteModalMode('drink')
+      setRequirementToDelete(requirement.ID || -1)
+      setDeleteModalVisible(true)
     }
 
     if (mode === 'food') {
-      setDeleteModalMode('food');
-      setRequirementToDelete(requirement.ID || -1);
-      setDeleteModalVisible(true);
+      setDeleteModalMode('food')
+      setRequirementToDelete(requirement.ID || -1)
+      setDeleteModalVisible(true)
     }
-  };
+  }
 
   const handleKickParticipant = (kickedUser: User) => {
-    setUserToKick(kickedUser);
-    setKickUserModalVisible(true);
-  };
+    setUserToKick(kickedUser)
+    setKickUserModalVisible(true)
+  }
 
   const participantColumns = [
     ...userTableColumnsLegacy,
@@ -170,7 +178,7 @@ const ManageParty = () => {
         </Button>
       ),
     },
-  ];
+  ]
 
   const drinkRequirementColumns = [
     ...requirementTableColumnsLegacy,
@@ -186,7 +194,7 @@ const ManageParty = () => {
         </Button>
       ),
     },
-  ];
+  ]
 
   const foodRequirementColumns = [
     ...requirementTableColumnsLegacy,
@@ -202,11 +210,11 @@ const ManageParty = () => {
         </Button>
       ),
     },
-  ];
+  ]
 
   const renderReqs = (requirements: Requirement[], mode: string) => {
     if (!requirements || requirements.length === 0) {
-      return <div>There&#39;s no drink requirements yet!</div>;
+      return <div>There&#39s no drink requirements yet!</div>
     }
     return (
       <Table
@@ -215,12 +223,12 @@ const ManageParty = () => {
         pagination={false}
         scroll={{ y: 200 }}
       />
-    );
-  };
+    )
+  }
 
   const renderParticipants = () => {
     if (!participants || participants.length === 0) {
-      return <div>There&#39;s no drink requirements yet!</div>;
+      return <div>There&#39s no drink requirements yet!</div>
     }
     return (
       <Table
@@ -229,12 +237,12 @@ const ManageParty = () => {
         pagination={false}
         scroll={{ y: 200 }}
       />
-    );
-  };
+    )
+  }
 
   const renderPendingInvites = () => {
     if (!pendingInvites || pendingInvites.length === 0) {
-      return <div>There&#39;s no pending invites at the moment</div>;
+      return <div>There&#39s no pending invites at the moment</div>
     }
     return (
       <Table
@@ -243,8 +251,8 @@ const ManageParty = () => {
         pagination={false}
         scroll={{ y: 200 }}
       />
-    );
-  };
+    )
+  }
 
   return (
     <div className={classes.background}>
@@ -349,7 +357,7 @@ const ManageParty = () => {
         </ConfigProvider>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ManageParty;
+export default ManageParty
