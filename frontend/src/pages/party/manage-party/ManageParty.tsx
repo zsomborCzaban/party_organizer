@@ -133,6 +133,14 @@ const ManageParty = () => {
             setForTime<string>(setInviteFeedbackError, "User doesn't exist!", '', 3000)
             return
           }
+          if(errorMsg.includes('User already accepted the invite')) {
+            setForTime<string>(setInviteFeedbackSuccess, "User already in the party", '', 3000)
+            return
+          }
+          if(errorMsg.includes('cannot party invite yourself')) {
+            setForTime<string>(setInviteFeedbackError, "Can not invite yourself", '', 3000)
+            return
+          }
         }
         setForTime<string>(setInviteFeedbackError, 'Something went wrong!', '', 3000)
         toast.error('Unexpected error')
