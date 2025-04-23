@@ -457,7 +457,7 @@ func Test_FriendInviteService_Invite_FailOnFindUser(t *testing.T) {
 
 	response := service.Invite(invitedUsername, userId)
 
-	assert.Equal(t, api.ErrorBadRequest(expectedErr.Error()), response)
+	assert.Equal(t, api.ErrorNotFound("friend"), response)
 }
 
 func Test_FriendInviteService_CreateInvitation_Success(t *testing.T) {

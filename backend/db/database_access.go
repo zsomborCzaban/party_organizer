@@ -45,10 +45,10 @@ func (dbHandler DatabaseAccessImpl) FindAll(associations ...string) (interface{}
 	return entities, nil
 }
 
-func (dbHandler DatabaseAccessImpl) Update(entity interface{}) error {
+func (dbHandler DatabaseAccessImpl) Update(entity interface{}, id uint) error {
 	dbHandler.DB.NewSession()
 
-	if err := dbHandler.DB.Update(entity); err != nil {
+	if err := dbHandler.DB.Update(entity, dbHandler.DBEntityProvider.Create(), id); err != nil {
 		log.Print(err.Error())
 		return NewDBError(err.Error())
 	}

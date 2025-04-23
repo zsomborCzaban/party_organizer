@@ -14,6 +14,6 @@ func NewUserAuthRouter(router *mux.Router, controller domains.IUserController) {
 func NewUserPrivateRouter(router *mux.Router, controller domains.IUserController) {
 	router.HandleFunc("/user/getFriends", controller.GetFriends).Methods("GET")
 	router.HandleFunc("/user/uploadProfilePicture", controller.UploadProfilePicture).Methods("POST")
-	router.HandleFunc("/resetPassword", controller.ChangePassword).Methods("POST")
+	router.HandleFunc("/user/resetPassword", controller.ChangePassword).Methods("POST")
 
 }

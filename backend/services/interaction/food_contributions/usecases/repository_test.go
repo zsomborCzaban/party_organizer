@@ -6,6 +6,7 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/zsomborCzaban/party_organizer/db"
 	"github.com/zsomborCzaban/party_organizer/services/interaction/food_contributions/domains"
+	"gorm.io/gorm"
 	"testing"
 )
 
@@ -44,9 +45,10 @@ func Test_Create_Fail(t *testing.T) {
 func Test_Update_Success(t *testing.T) {
 	repository, dbAccess := setupDefaultRepository()
 
-	dbAccess.On("Update", mock.Anything).Return(nil)
+	dbAccess.On("Update", mock.Anything, mock.Anything).Return(nil)
 
-	err := repository.Update(nil)
+	foodContribution := domains.FoodContribution{Model: gorm.Model{ID: 1}}
+	err := repository.Update(&foodContribution)
 
 	assert.Nil(t, err)
 }
@@ -55,9 +57,10 @@ func Test_Update_Fail(t *testing.T) {
 	repository, dbAccess := setupDefaultRepository()
 
 	expectedError := errors.New("update failed")
-	dbAccess.On("Update", mock.Anything).Return(expectedError)
+	dbAccess.On("Update", mock.Anything, mock.Anything).Return(expectedError)
 
-	err := repository.Update(nil)
+	foodContribution := domains.FoodContribution{Model: gorm.Model{ID: 1}}
+	err := repository.Update(&foodContribution)
 
 	assert.Equal(t, expectedError, err)
 }

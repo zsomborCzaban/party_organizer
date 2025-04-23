@@ -87,7 +87,7 @@ func (fs FriendInviteService) Decline(invitorId, userId uint) api.IResponse {
 func (fs FriendInviteService) Invite(invitedUsername string, userId uint) api.IResponse {
 	invited, err := fs.UserRepository.FindByUsername(invitedUsername)
 	if err != nil {
-		return api.ErrorBadRequest(err.Error())
+		return api.ErrorNotFound(invitedUsername)
 	}
 
 	if userId == invited.ID {

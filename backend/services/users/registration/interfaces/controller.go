@@ -59,3 +59,20 @@ func (c *RegistrationController) ConfirmEmail(w http.ResponseWriter, r *http.Req
 		return
 	}
 }
+
+func (c *RegistrationController) ResendConfirmEmail(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	username, ok := vars["username"]
+	if !ok {
+		br := api.ErrorBadRequest("Failed to get username")
+
+		br.Send(w)
+		return
+	}
+
+	resp := c.RegistrationService.ResendConfirmEmail(username)
+	couldSend := resp.Send(w)
+	if !couldSend {
+		return
+	}
+}

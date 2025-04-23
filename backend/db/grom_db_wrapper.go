@@ -30,21 +30,23 @@ func (dbWrapper *GormDBWrapper) Create(entity interface{}) error {
 func (dbWrapper *GormDBWrapper) First(dest interface{}, associations []string, conds ...interface{}) error {
 	dbWrapper.DB = dbWrapper.DB.Session(&gorm.Session{NewDB: true})
 	for _, association := range associations {
-		dbWrapper.DB = dbWrapper.DB.Preload(association)
+		dbWrapper.DB = dbWrapper.DB.Preload(association) //causes concurrent map writes once
 	}
-	dbWrapper.DB.Error = nil //todo: find out why the error from previous request is persistent (why we use the same entity)
-	return dbWrapper.DB.First(dest, conds).Error
+	dbWrapper.DB.Error = nil                     //todo: find out why the error from previous request is persistent (why we use the same entity)
+	return dbWrapper.DB.First(dest, conds).Error //causes concurrent map writes once
 }
 
 func (dbWrapper *GormDBWrapper) Find(dest interface{}, associations []string, conds ...interface{}) error {
 	for _, association := range associations {
 		dbWrapper.DB = dbWrapper.DB.Preload(association)
 	}
-	return dbWrapper.DB.Find(dest, conds).Error
+
+	dbWrapper.DB.Error = nil
+	return dbWrapper.DB.Find(dest, conds).Error //causes concurrent map writes once
 }
 
-func (dbWrapper *GormDBWrapper) Update(entity interface{}) error {
-	return dbWrapper.DB.Model(entity).Omit(COLUMNS_TO_OMIT_DURING_UPDATE...).Updates(entity).Error
+func (dbWrapper *GormDBWrapper) Update(entity interface{}, model interface{}, id uint) error {
+	return dbWrapper.DB.Model(model).Where("id = ?", id).Omit(COLUMNS_TO_OMIT_DURING_UPDATE...).Updates(entity).Error //caused concurent mapp writes once
 }
 
 func (dbWrapper *GormDBWrapper) Delete(entity interface{}) error {
@@ -89,7 +91,7 @@ func (dbWrapper *GormDBWrapper) Many2ManyQueryId(dest interface{}, associations 
 		for _, preloadColumn := range associations {
 			dbWrapper.DB = dbWrapper.DB.Preload(preloadColumn)
 		}
-		return dbWrapper.DB.Raw(query, cond.M2MConditionColumnValue).Find(dest).Error
+		return dbWrapper.DB.Raw(query, cond.M2MConditionColumnValue).Find(dest).Error //caused concurent mapwrited once
 
 	} else {
 		query := fmt.Sprintf(

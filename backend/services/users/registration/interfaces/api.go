@@ -8,4 +8,5 @@ import (
 func NewRegistrationRouter(router *mux.Router, controller domains.IRegistrationController) {
 	router.HandleFunc("/register", controller.Register).Methods("POST")
 	router.HandleFunc("/confirmEmail/{username}/{confirm_hash}", controller.ConfirmEmail).Methods("GET") //todo: rewrite to post instead of get
+	router.HandleFunc("/resendConfirmEmail/{username}", controller.ResendConfirmEmail).Methods("GET")
 }

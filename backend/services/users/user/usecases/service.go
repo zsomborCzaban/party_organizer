@@ -7,8 +7,10 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/zsomborCzaban/party_organizer/common"
+	registrationDomains "github.com/zsomborCzaban/party_organizer/services/users/registration/domains"
 	"github.com/zsomborCzaban/party_organizer/services/users/user/domains"
 	"github.com/zsomborCzaban/party_organizer/utils/api"
+	"github.com/zsomborCzaban/party_organizer/utils/email"
 	"github.com/zsomborCzaban/party_organizer/utils/repo"
 	s3Wrapper "github.com/zsomborCzaban/party_organizer/utils/s3"
 	"gopkg.in/gomail.v2"
@@ -18,16 +20,18 @@ import (
 )
 
 type UserService struct {
-	Validator       api.IValidator
-	UserRepository  domains.IUserRepository
-	S3ClientWrapper s3Wrapper.IS3ClientWrapper
+	Validator              api.IValidator
+	UserRepository         domains.IUserRepository
+	RegistrationRepository registrationDomains.IRegistrationRepository
+	S3ClientWrapper        s3Wrapper.IS3ClientWrapper
 }
 
 func NewUserService(repoCollector *repo.RepoCollector, validator api.IValidator, s3Wrapper s3Wrapper.IS3ClientWrapper) *UserService {
 	return &UserService{
-		UserRepository:  repoCollector.UserRepo,
-		Validator:       validator,
-		S3ClientWrapper: s3Wrapper,
+		UserRepository:         repoCollector.UserRepo,
+		RegistrationRepository: repoCollector.RegistrationRepo,
+		Validator:              validator,
+		S3ClientWrapper:        s3Wrapper,
 	}
 }
 
@@ -36,8 +40,13 @@ func (us *UserService) Login(loginRequest domains.LoginRequest) api.IResponse {
 		return api.ErrorValidation(err1.Errors)
 	}
 
-	user, err2 := us.UserRepository.FindByUsername(*loginRequest.Username)
-	if err2 != nil {
+	registrationRequest, _ := us.RegistrationRepository.FindByUsername(*loginRequest.Username)
+	if registrationRequest != nil {
+		return api.ErrorUnauthorized(domains.EmailNotConfirmed)
+	}
+
+	user, err3 := us.UserRepository.FindByUsername(*loginRequest.Username)
+	if err3 != nil {
 		return api.ErrorInvalidCredentials()
 	}
 
@@ -45,8 +54,8 @@ func (us *UserService) Login(loginRequest domains.LoginRequest) api.IResponse {
 		return api.ErrorInvalidCredentials()
 	}
 
-	jwt, err3 := user.GenerateJWT()
-	if err3 != nil {
+	jwt, err4 := user.GenerateJWT()
+	if err4 != nil {
 		return api.ErrorBadRequest("error while generating jwt")
 	}
 
@@ -150,12 +159,14 @@ func (us *UserService) ForgotPassword(username string) api.IResponse {
 	emailUsername := os.Getenv(common.EMAIL_USERNAME_ENV_KEY)
 	emailPassword := os.Getenv(common.EMAIL_PASSWORD_ENV_KEY)
 	emailFull := os.Getenv(common.EMAIL_FULL_ENV_KEY)
+	frontendUrl := os.Getenv(common.FRONTEND_URL_ENV_KEY)
+	frontendLink := frontendUrl + "/changePassword?xzs=" + *jwt
 
 	m := gomail.NewMessage()
 	m.SetHeader("From", emailFull)
 	m.SetHeader("To", user.Email)
-	m.SetHeader("Subject", "Hello!") //todo: write email body
-	m.SetBody("text/plain", "This is the email body, use this token to login and change your password: "+*jwt)
+	m.SetHeader("Subject", "Forgot Password!")
+	m.SetBody("text/html", email.ParseForgotPasswordEmailBody(frontendLink))
 
 	d := gomail.NewDialer("smtp.gmail.com", 587, emailUsername, emailPassword)
 

@@ -1,6 +1,7 @@
 package domains
 
 import (
+	"github.com/zsomborCzaban/party_organizer/utils/env"
 	"github.com/zsomborCzaban/party_organizer/utils/jwt"
 	"gorm.io/gorm"
 	"strconv"
@@ -39,20 +40,22 @@ func (u *User) HasFriend(friendId uint) bool {
 
 func (u *User) GenerateJWT() (*string, error) {
 	idString := strconv.FormatUint(uint64(u.ID), 10)
+	expirationTime := env.GetEnvInt64(jwt.JWT_EXPIRATION_TIMEOUT_ENV_VAR_KEY, jwt.ONE_DAY_IN_SECONDS)
 
 	return jwt.WithClaims(idString, map[string]string{
 		"email":             u.Email,
 		"username":          u.Username,
 		"id":                idString,
 		"profilePictureUrl": u.ProfilePictureUrl,
-	})
+	}, expirationTime)
 }
 
 func (u *User) GenerateJWTForPasswordChange() (*string, error) {
 	idString := strconv.FormatUint(uint64(u.ID), 10)
+	expirationTime := int64(jwt.ONE_HOUR_IN_SECONDS)
 
 	return jwt.WithClaims(idString, map[string]string{
 		"id":                idString,
 		"canChangePassword": "allowed",
-	})
+	}, expirationTime)
 }
