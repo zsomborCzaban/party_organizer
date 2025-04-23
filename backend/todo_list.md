@@ -2,11 +2,9 @@
 - uj jelszo beallitasanal hashelve kell eltarolni a jelszot
 - profilkep feltoltesnel validalni h kep e a feltoltott file
 - tablazatokra max szelesseget rakni
-- kick usernél egy modalt feldobni előtte.
 
 - szervezőnek bulielhagyás/törlés opció
 - scroll to the top on tab valtas frontenden
-- barát mehívásnál nem létező felhasználónál error üzenet
 
 - telefon nézet megcsinálása
 
@@ -14,22 +12,17 @@
 auto delete on parties after they have been hosted
 delete parties (maybe)
 
-partyoptions party invitnal az invite azt irja ki mindig h something went wrong,
+
 
 ha egy nem szervező a szervező oldalakra megy és csinálni valamit akkor ki lesz loginolva
-
-
 ogouztnal, nem a homra dob vissza hanem a loginra
 
 # doksi
-oldal terkep
 modellek kozotti kapcsolat
 
 tanulsag: model-t masik folderbe tenni mint, hogy lehessen back referenceket csinalni
 
 concurrent mapwrite errort fixelni backendben
-
-when inviting nonexistong user give back normal error message
 
 
 
