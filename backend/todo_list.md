@@ -12,6 +12,8 @@
 auto delete on parties after they have been hosted
 delete parties (maybe)
 
+- balra jobbra görgetést megfixálni néhány oldalon
+
 
 
 ha egy nem szervező a szervező oldalakra megy és csinálni valamit akkor ki lesz loginolva

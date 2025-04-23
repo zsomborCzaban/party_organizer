@@ -1,5 +1,15 @@
 import React from 'react';
 import classes from './Cocktails.module.scss';
+import Mojito from '../../data/resources/images/cocktails/mojito.png'
+import Margarita from '../../data/resources/images/cocktails/margarita.jpg'
+import AperolSpritz from '../../data/resources/images/cocktails/Aperol_Spritz.webp'
+import BanananDaiquire from '../../data/resources/images/cocktails/Banana-Daiquiri.webp'
+import MoscowMule from '../../data/resources/images/cocktails/moscow_mule.webp'
+import EspressoMartini from '../../data/resources/images/cocktails/Espresso-Martini.png'
+import Negroni from '../../data/resources/images/cocktails/Negroni.jpg'
+import PinaColada from '../../data/resources/images/cocktails/pinacolada.webp'
+import RumPunch from '../../data/resources/images/cocktails/rum_punch.jpg'
+import TequilaSunrise from '../../data/resources/images/cocktails/tequila-sunrise.jpg'
 
 interface Cocktail {
     id: number;
@@ -22,10 +32,10 @@ const cocktails: Cocktail[] = [
             "Soda water",
             "Lime wheel and mint sprig for garnish"
         ],
-        image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b"
+        image: Mojito
     },
     {
-        id: 3,
+        id: 2,
         name: "Margarita",
         description: "A classic cocktail consisting of tequila, orange liqueur, and lime juice, often served with salt on the rim of the glass.",
         ingredients: [
@@ -35,10 +45,10 @@ const cocktails: Cocktail[] = [
             "Salt for rim",
             "Lime wheel for garnish"
         ],
-        image: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a"
+        image: Margarita
     },
     {
-        id: 4,
+        id: 3,
         name: "Espresso Martini",
         description: "A cold, coffee-flavored cocktail made with vodka, espresso coffee, and coffee liqueur.",
         ingredients: [
@@ -48,7 +58,7 @@ const cocktails: Cocktail[] = [
             "15 ml Simple Syrup",
             "Ice"
         ],
-        image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+        image: EspressoMartini
     },
     {
         id: 5,
@@ -61,7 +71,7 @@ const cocktails: Cocktail[] = [
             "Orange Peel",
             "Ice"
         ],
-        image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+        image: Negroni
     },
     {
         id: 6,
@@ -73,7 +83,7 @@ const cocktails: Cocktail[] = [
             "2 oz pineapple juice",
             "Pineapple wedge and cherry for garnish"
         ],
-        image: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a"
+        image: PinaColada
     },
     {
         id: 7,
@@ -85,7 +95,7 @@ const cocktails: Cocktail[] = [
             "1/2 oz fresh lime juice",
             "Lime wheel for garnish"
         ],
-        image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b"
+        image: MoscowMule
     },
     {
         id: 9,
@@ -99,7 +109,7 @@ const cocktails: Cocktail[] = [
             "1/2 oz grenadine",
             "Orange slice and cherry for garnish"
         ],
-        image: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a"
+        image: RumPunch
     },
     {
         id: 10,
@@ -111,7 +121,7 @@ const cocktails: Cocktail[] = [
             "1 oz soda water",
             "Orange slice for garnish"
         ],
-        image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b"
+        image: AperolSpritz
     },
     {
         id: 11,
@@ -123,7 +133,7 @@ const cocktails: Cocktail[] = [
             "1/2 oz grenadine",
             "Orange slice and cherry for garnish"
         ],
-        image: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a"
+        image: TequilaSunrise
     },
     {
         id: 12,
@@ -136,7 +146,7 @@ const cocktails: Cocktail[] = [
             "1 ripe banana",
             "Banana slice for garnish"
         ],
-        image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b"
+        image: BanananDaiquire
     }
 ];
 
