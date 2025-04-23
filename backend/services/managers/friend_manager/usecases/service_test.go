@@ -6,8 +6,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/zsomborCzaban/party_organizer/services/managers/friend_manager/domains"
-	userDomain "github.com/zsomborCzaban/party_organizer/services/user/domains"
-	userUsecases "github.com/zsomborCzaban/party_organizer/services/user/usecases"
+	userDomain "github.com/zsomborCzaban/party_organizer/services/users/user/domains"
+	userUsecases "github.com/zsomborCzaban/party_organizer/services/users/user/usecases"
 	"github.com/zsomborCzaban/party_organizer/utils/api"
 	"github.com/zsomborCzaban/party_organizer/utils/repo"
 	"gorm.io/gorm"
@@ -457,7 +457,7 @@ func Test_FriendInviteService_Invite_FailOnFindUser(t *testing.T) {
 
 	response := service.Invite(invitedUsername, userId)
 
-	assert.Equal(t, api.ErrorBadRequest(expectedErr.Error()), response)
+	assert.Equal(t, api.ErrorNotFound("friend"), response)
 }
 
 func Test_FriendInviteService_CreateInvitation_Success(t *testing.T) {

@@ -5,7 +5,7 @@ import (
 	drinkContributionDomains "github.com/zsomborCzaban/party_organizer/services/interaction/drink_contributions/domains"
 	foodContributionDomains "github.com/zsomborCzaban/party_organizer/services/interaction/food_contributions/domains"
 	"github.com/zsomborCzaban/party_organizer/services/managers/party_attendance_manager/domains"
-	userDomain "github.com/zsomborCzaban/party_organizer/services/user/domains"
+	userDomain "github.com/zsomborCzaban/party_organizer/services/users/user/domains"
 	"github.com/zsomborCzaban/party_organizer/utils/api"
 	"github.com/zsomborCzaban/party_organizer/utils/repo"
 	"strconv"
@@ -241,7 +241,7 @@ func (ps PartyInviteService) JoinPrivateParty(userId uint, accessCode string) ap
 		return api.ErrorBadRequest(domains.INVALID_ACCESS_CODE)
 	}
 
-	party, err := ps.PartyRepository.FindById(uint(partyId))
+	party, err := ps.PartyRepository.FindById(uint(partyId), "Organizer")
 	if err != nil {
 		return api.ErrorBadRequest(domains.INVALID_ACCESS_CODE)
 	}

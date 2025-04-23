@@ -1,0 +1,13 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  .appContent {
+    display: flex;
+    min-height: 92vh;
+    width: 100vw;
+    justify-content: center;
+    align-content: center;
+  }
+}

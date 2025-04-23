@@ -27,7 +27,7 @@ func (dr FoodContributionRepository) Create(contribution *domains.FoodContributi
 }
 
 func (dr FoodContributionRepository) Update(contribution *domains.FoodContribution) error {
-	if err := dr.DbAccess.Update(contribution); err != nil {
+	if err := dr.DbAccess.Update(contribution, contribution.ID); err != nil {
 		return err
 	}
 	return nil

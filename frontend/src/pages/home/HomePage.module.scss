@@ -1,0 +1,387 @@
+.homepage {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.hero {
+  background: linear-gradient(135deg, #4299e1, #3182ce);
+  color: white;
+  padding: 80px 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+
+  .heroContent {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+
+    p {
+      font-size: 1.25rem;
+      margin-bottom: 40px;
+      opacity: 0.9;
+    }
+  }
+
+  .heroButtons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+  }
+}
+
+.primaryButton {
+  background-color: white;
+  color: #4299e1;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.secondaryButton {
+  background-color: transparent;
+  color: white;
+  border: 2px solid white;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+  }
+}
+
+.partiesSection {
+  background-color: #f7fafc;
+  padding: 60px 20px;
+  color: #2d3748;
+  border-top: 1px solid rgba(226, 232, 240, 0.8);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.sectionContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: #2d3748;
+    font-weight: 700;
+  }
+}
+
+.tableContainer {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.actionSection {
+  background: linear-gradient(135deg, #4299e1, #3182ce);
+  padding: 60px 20px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('../../data/resources/images/artlist_image.jpg') center/cover;
+    opacity: 0.1;
+  }
+
+  .sectionContainer {
+    position: relative;
+    z-index: 1;
+  }
+
+  h2 {
+    color: white;
+  }
+}
+
+.actionButtons {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  padding: 0 20px;
+}
+
+.createButton, .joinButton {
+  position: relative;
+  height: 300px;
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    transition: background 0.3s ease;
+  }
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+
+    &::before {
+      background: rgba(0, 0, 0, 0.2);
+    }
+  }
+}
+
+.createButton {
+  background-image: url('../../data/resources/images/artlist_image.jpg');
+}
+
+.joinButton {
+  background-image: url('../../data/resources/images/u5679648646_2_people_dancing_with_a_galactic_lsd_like_trip_li_78e43cba-8023-4e69-9fa1-75bb9790bbe8_0.png');
+}
+
+.buttonContent {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  text-align: center;
+
+  h3 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: white;
+    font-weight: 700;
+  }
+
+  p {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.9);
+  }
+}
+
+.features {
+  padding: 80px 48px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  h2 {
+    text-align: center;
+    font-size: 36px;
+    color: #2d3748;
+    margin-bottom: 48px;
+    font-weight: 700;
+  }
+
+  .featureGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 32px;
+  }
+
+  .featureCard {
+    background: white;
+    padding: 32px;
+    border-radius: 16px;
+    text-align: center;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.05);
+    }
+
+    .featureIcon {
+      font-size: 40px;
+      margin-bottom: 16px;
+    }
+
+    h3 {
+      font-size: 20px;
+      color: #2d3748;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    p {
+      color: #718096;
+      line-height: 1.6;
+    }
+  }
+}
+
+.localParties {
+  padding: 80px 48px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  h2 {
+    text-align: center;
+    font-size: 36px;
+    color: #2d3748;
+    margin-bottom: 48px;
+    font-weight: 700;
+  }
+
+  .partyGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 32px;
+  }
+
+  .partyCard {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.05);
+    }
+
+    .partyImage {
+      height: 200px;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .partyContent {
+      padding: 24px;
+
+      h3 {
+        font-size: 20px;
+        color: #2d3748;
+        margin-bottom: 16px;
+        font-weight: 600;
+      }
+
+      .partyDetails {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 16px;
+
+        span {
+          color: #718096;
+          font-size: 14px;
+        }
+      }
+
+      p {
+        color: #4a5568;
+        line-height: 1.6;
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+.loading {
+  text-align: center;
+  color: #718096;
+  padding: 48px;
+}
+
+.noParties {
+  text-align: center;
+  padding: 48px;
+  background: white;
+  border-radius: 16px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+
+  p {
+    color: #718096;
+    margin-bottom: 24px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .hero, .partiesSection, .actionSection {
+    padding: 60px 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroContent {
+    h1 {
+      font-size: 2rem;
+    }
+
+    p {
+      font-size: 1rem;
+    }
+  }
+
+  .heroButtons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .actionButtons {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .createButton, .joinButton {
+    height: 200px;
+  }
+
+  .features, .localParties {
+    padding: 60px 16px;
+
+    h2 {
+      font-size: 30px;
+      margin-bottom: 36px;
+    }
+  }
+
+  .featureGrid {
+    grid-template-columns: 1fr;
+  }
+} 

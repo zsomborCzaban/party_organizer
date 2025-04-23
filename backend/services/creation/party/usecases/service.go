@@ -2,13 +2,14 @@ package usecases
 
 import (
 	"fmt"
+	"github.com/google/uuid"
 	drinkReqDomain "github.com/zsomborCzaban/party_organizer/services/creation/drink_requirement/domains"
 	foodReqDomain "github.com/zsomborCzaban/party_organizer/services/creation/food_requirement/domains"
 	"github.com/zsomborCzaban/party_organizer/services/creation/party/domains"
 	drinkContribDomain "github.com/zsomborCzaban/party_organizer/services/interaction/drink_contributions/domains"
 	foodContributionDomains "github.com/zsomborCzaban/party_organizer/services/interaction/food_contributions/domains"
 	partyInvitationDomains "github.com/zsomborCzaban/party_organizer/services/managers/party_attendance_manager/domains"
-	userDomain "github.com/zsomborCzaban/party_organizer/services/user/domains"
+	userDomain "github.com/zsomborCzaban/party_organizer/services/users/user/domains"
 	"github.com/zsomborCzaban/party_organizer/utils/api"
 	"github.com/zsomborCzaban/party_organizer/utils/repo"
 )
@@ -45,11 +46,12 @@ func (ps PartyService) Create(partyDTO domains.PartyDTO, userId uint) api.IRespo
 
 	party := partyDTO.TransformToParty()
 	party.OrganizerID = userId
+	accessCode := party.AccessCode
 	if party.AccessCodeEnabled {
-		party.AccessCode = fmt.Sprintf("%d_%s", party.ID, party.AccessCode)
+		party.AccessCode = uuid.New().String()
 	}
 
-	organizer, err := ps.UserRepository.FindById(userId)
+	user, err := ps.UserRepository.FindById(userId)
 	if err != nil {
 		return api.ErrorInternalServerError(domains.DeletedUser)
 	}
@@ -59,7 +61,12 @@ func (ps PartyService) Create(partyDTO domains.PartyDTO, userId uint) api.IRespo
 		return api.ErrorInternalServerError(err2.Error())
 	}
 
-	party.Organizer = *organizer
+	if party.AccessCodeEnabled {
+		party.AccessCode = fmt.Sprintf("%d_%s", party.ID, accessCode)
+		ps.PartyRepository.Update(party) //todo: give different response on different uuid
+	}
+	party.Organizer = *user
+
 	return api.Success(party)
 }
 
@@ -110,7 +117,6 @@ func (ps PartyService) Update(partyDTO domains.PartyDTO, userId uint) api.IRespo
 		return api.ErrorUnauthorized("cannot update other people's party")
 	}
 	party := partyDTO.TransformToParty()
-	party.OrganizerID = originalParty.OrganizerID
 	if party.AccessCodeEnabled {
 		party.AccessCode = fmt.Sprintf("%d_%s", party.ID, party.AccessCode)
 	}

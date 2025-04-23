@@ -8,7 +8,7 @@ type IDatabase interface {
 	Create(entity interface{}) error
 	First(dest interface{}, associations []string, conds ...interface{}) error
 	Find(dest interface{}, associations []string, conds ...interface{}) error
-	Update(entity interface{}) error
+	Update(entity interface{}, model interface{}, id uint) error
 	Delete(entity interface{}) error
 
 	ProcessWhereStatements(conds []QueryParameter)

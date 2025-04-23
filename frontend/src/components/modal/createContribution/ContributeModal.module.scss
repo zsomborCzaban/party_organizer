@@ -1,0 +1,142 @@
+.modal {
+  :global {
+    .ant-modal-content {
+      background-color: rgba(33, 33, 33, 0.98);
+      border: 1px solid #444;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    .ant-modal-header {
+      background-color: rgba(33, 33, 33, 0.98);
+      border-bottom: 1px solid #444;
+    }
+
+    .ant-modal-title {
+      color: #d3d3d3;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .ant-modal-close {
+      color: #d3d3d3;
+      
+      &:hover {
+        color: #fff;
+      }
+    }
+  }
+}
+
+.modalContent {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    color: #d3d3d3;
+    background-color: rgba(33, 33, 33, 0.98);
+}
+
+.label {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #d3d3d3;
+}
+
+.selectField {
+    width: 100%;
+    padding: 10px;
+    background-color: rgba(58, 58, 58, 0.8);
+    border: 1px solid #444;
+    border-radius: 6px;
+    color: #d3d3d3;
+    font-size: 1rem;
+    cursor: pointer;
+
+    &:focus {
+        outline: none;
+        border-color: #007bff;
+    }
+
+    option {
+        background-color: rgba(33, 33, 33, 0.95);
+        color: #d3d3d3;
+    }
+}
+
+.inputField {
+    width: 100%;
+    padding: 10px;
+    background-color: rgba(58, 58, 58, 0.8);
+    border: 1px solid #444;
+    border-radius: 6px;
+    color: #d3d3d3;
+    font-size: 1rem;
+
+    &:focus {
+        outline: none;
+        border-color: #007bff;
+    }
+
+    &::placeholder {
+        color: #888;
+    }
+}
+
+.buttonContainer {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.submitButton {
+    flex: 1;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+    &:hover {
+        background-color: #0056b3;
+    }
+
+    &:active {
+        transform: translateY(1px);
+    }
+}
+
+.cancelButton {
+    flex: 1;
+    background-color: rgba(255, 102, 102, 0.8);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+    &:hover {
+        background-color: rgba(255, 102, 102, 1);
+    }
+
+    &:active {
+        transform: translateY(1px);
+    }
+}
+
+.error {
+    color: #ff6666;
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+.success {
+    color: #4CAF50;
+    font-size: 0.9rem;
+    margin-top: 5px;
+} 

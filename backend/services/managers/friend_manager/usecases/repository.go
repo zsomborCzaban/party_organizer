@@ -27,7 +27,7 @@ func (fr FriendInviteRepository) Create(invitation *domains.FriendInvite) error 
 }
 
 func (fr FriendInviteRepository) Update(invitation *domains.FriendInvite) error {
-	if err := fr.DbAccess.Update(invitation); err != nil {
+	if err := fr.DbAccess.Update(invitation, invitation.ID); err != nil {
 		return err
 	}
 	return nil

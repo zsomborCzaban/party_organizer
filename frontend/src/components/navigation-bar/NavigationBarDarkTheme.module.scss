@@ -1,0 +1,125 @@
+.navBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+    padding: 0 48px;
+    background-color: rgba(17, 24, 39, 0.95);
+    backdrop-filter: blur(10px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.leftSection {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    max-width: 400px;
+
+    .pageTitle {
+        font-size: 24px;
+        font-weight: 700;
+        color: #fff;
+        cursor: pointer;
+        letter-spacing: -0.5px;
+        transition: color 0.2s ease;
+
+        &:first-child {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 20px;
+        }
+
+        &:hover {
+            color: #4299e1;
+        }
+    }
+}
+
+.centerSection {
+    flex: 2;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.rightSection {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 16px;
+    max-width: 300px;
+}
+
+.authButton {
+    padding: 8px 20px;
+    border-radius: 8px;
+    background-color: #4299e1;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    
+    &:hover {
+        background-color: #3182ce;
+        transform: translateY(-1px);
+    }
+    
+    &:active {
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 1024px) {
+    .navBar {
+        padding: 0 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .navBar {
+        padding: 0 16px;
+    }
+
+    .centerSection {
+        gap: 4px;
+    }
+
+    .leftSection {
+        gap: 16px;
+
+        .pageTitle {
+            font-size: 20px;
+
+            &:first-child {
+                font-size: 18px;
+            }
+        }
+    }
+
+    .authButton {
+        padding: 6px 16px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 640px) {
+    .centerSection {
+        display: none;
+    }
+
+    .leftSection, .rightSection {
+        flex: auto;
+        max-width: none;
+    }
+} 

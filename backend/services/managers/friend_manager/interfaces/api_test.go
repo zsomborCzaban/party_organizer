@@ -4,7 +4,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/zsomborCzaban/party_organizer/db"
 	"github.com/zsomborCzaban/party_organizer/services/managers/friend_manager/usecases"
-	usecases2 "github.com/zsomborCzaban/party_organizer/services/user/usecases"
+	usecases2 "github.com/zsomborCzaban/party_organizer/services/users/user/usecases"
 	repoUtils "github.com/zsomborCzaban/party_organizer/utils/repo"
 	"testing"
 )

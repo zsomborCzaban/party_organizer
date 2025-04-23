@@ -2,7 +2,7 @@ package domains
 
 import (
 	"github.com/stretchr/testify/assert"
-	userDomain "github.com/zsomborCzaban/party_organizer/services/user/domains"
+	userDomain "github.com/zsomborCzaban/party_organizer/services/users/user/domains"
 	"github.com/zsomborCzaban/party_organizer/utils/adminUser"
 	"gorm.io/gorm"
 	"testing"

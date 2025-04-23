@@ -1,0 +1,147 @@
+.footer {
+  background-color: #ffffff;
+  border-top: 1px solid rgba(226, 232, 240, 0.8);
+  padding: 64px 0 0 0;
+  width: 100vw;
+}
+
+.footerContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 48px;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 48px;
+}
+
+.footerSection {
+  .sectionTitle {
+    font-size: 24px;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 16px;
+    letter-spacing: -0.5px;
+  }
+
+  h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 20px;
+  }
+
+  .description {
+    color: #718096;
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      margin-bottom: 12px;
+
+      button {
+        background: none;
+        border: none;
+        padding: 0;
+        color: #718096;
+        font-size: 14px;
+        cursor: pointer;
+        transition: color 0.2s ease;
+
+        &:hover {
+          color: #4299e1;
+        }
+      }
+    }
+  }
+}
+
+.socialLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  a {
+    color: #718096;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &:hover {
+      color: #4299e1;
+    }
+  }
+
+  .emailLink {
+    &::before {
+      content: "✉";
+      font-size: 16px;
+    }
+  }
+}
+
+.footerBottom {
+  margin-top: 48px;
+  padding: 24px 48px;
+  border-top: 1px solid rgba(226, 232, 240, 0.8);
+
+  .copyright {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+    color: #718096;
+    font-size: 14px;
+  }
+}
+
+// Media queries for responsiveness
+@media (max-width: 1024px) {
+  .footerContent {
+    padding: 0 24px;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+
+  .footerBottom {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 640px) {
+  .footer {
+    padding: 48px 0 0 0;
+  }
+
+  .footerContent {
+    padding: 0 16px;
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .footerSection {
+    text-align: center;
+
+    ul {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+
+  .socialLinks {
+    align-items: center;
+  }
+
+  .footerBottom {
+    padding: 24px 16px;
+    margin-top: 32px;
+  }
+} 

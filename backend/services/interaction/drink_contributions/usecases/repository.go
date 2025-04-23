@@ -27,7 +27,7 @@ func (dr DrinkContributionRepository) Create(contribution *domains.DrinkContribu
 }
 
 func (dr DrinkContributionRepository) Update(contribution *domains.DrinkContribution) error {
-	if err := dr.DbAccess.Update(contribution); err != nil {
+	if err := dr.DbAccess.Update(contribution, contribution.ID); err != nil {
 		return err
 	}
 	return nil

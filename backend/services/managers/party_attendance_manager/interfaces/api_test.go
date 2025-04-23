@@ -7,7 +7,7 @@ import (
 	usecases4 "github.com/zsomborCzaban/party_organizer/services/interaction/drink_contributions/usecases"
 	usecases5 "github.com/zsomborCzaban/party_organizer/services/interaction/food_contributions/usecases"
 	"github.com/zsomborCzaban/party_organizer/services/managers/party_attendance_manager/usecases"
-	usecases3 "github.com/zsomborCzaban/party_organizer/services/user/usecases"
+	usecases3 "github.com/zsomborCzaban/party_organizer/services/users/user/usecases"
 	repoUtils "github.com/zsomborCzaban/party_organizer/utils/repo"
 	"testing"
 )

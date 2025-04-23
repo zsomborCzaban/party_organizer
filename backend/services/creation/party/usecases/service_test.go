@@ -10,8 +10,8 @@ import (
 	drinkContributionUsecases "github.com/zsomborCzaban/party_organizer/services/interaction/drink_contributions/usecases"
 	foodContributionUsecases "github.com/zsomborCzaban/party_organizer/services/interaction/food_contributions/usecases"
 	partyInvitationUsecases "github.com/zsomborCzaban/party_organizer/services/managers/party_attendance_manager/usecases"
-	userDomain "github.com/zsomborCzaban/party_organizer/services/user/domains"
-	userUsecases "github.com/zsomborCzaban/party_organizer/services/user/usecases"
+	userDomain "github.com/zsomborCzaban/party_organizer/services/users/user/domains"
+	userUsecases "github.com/zsomborCzaban/party_organizer/services/users/user/usecases"
 	"github.com/zsomborCzaban/party_organizer/utils/api"
 	"github.com/zsomborCzaban/party_organizer/utils/repo"
 	"gorm.io/gorm"
@@ -61,6 +61,7 @@ func Test_PartyService_Create_Success(t *testing.T) {
 	validator.On("Validate", partyDTO).Return(nil)
 	userRepo.On("FindById", userId, mock.Anything).Return(organizer, nil)
 	partyRepo.On("Create", mock.Anything).Return(nil)
+	partyRepo.On("Update", mock.Anything).Return(nil)
 
 	response := service.Create(partyDTO, userId)
 

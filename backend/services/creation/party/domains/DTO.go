@@ -1,23 +1,23 @@
 package domains
 
 import (
-	"github.com/zsomborCzaban/party_organizer/services/user/domains"
+	"github.com/zsomborCzaban/party_organizer/services/users/user/domains"
 	"gorm.io/gorm"
 	"time"
 )
 
 type PartyDTO struct {
-	ID                uint           `json:"ID,omitempty"`
-	Place             string         `json:"place,omitempty" validate:"required,min=3"`
-	StartTime         time.Time      `json:"start_time,omitempty" validate:"required"`
-	Name              string         `json:"name,omitempty" validate:"required"`
-	GoogleMapsLink    string         `json:"google_maps_link"`
-	FacebookLink      string         `json:"facebook_link" validate:"required"`
-	WhatsappLink      string         `json:"whatsapp_link"`
+	ID                uint           `json:"ID"`
+	Place             string         `json:"place" validate:"required,min=3"`
+	StartTime         time.Time      `json:"start_time" validate:"required,after_24_hours"`
+	Name              string         `json:"name" validate:"required"`
+	GoogleMapsLink    string         `json:"google_maps_link" validate:"omitempty,http_url"`
+	FacebookLink      string         `json:"facebook_link" validate:"omitempty,http_url"`
+	WhatsappLink      string         `json:"whatsapp_link" validate:"omitempty,http_url"`
 	Private           bool           `json:"is_private"`
-	AccessCodeEnabled bool           `json:"access_code_enabled"`
-	AccessCode        string         `json:"access_code"`
-	OrganizerID       uint           `json:"organizer_id,omitempty"`
+	AccessCodeEnabled bool           `json:"access_code_enabled" validate:"bool_allowed_by_bool=Private"`
+	AccessCode        string         `json:"access_code" validate:"string_allowed_by_bool_and_min_3=AccessCodeEnabled,string_allowed_by_bool=AccessCodeEnabled"`
+	OrganizerID       uint           `json:"organizer_id"`
 	Participants      []domains.User `json:"participants"`
 }
 

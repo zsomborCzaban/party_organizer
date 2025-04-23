@@ -4,7 +4,7 @@ type IDatabaseAccess interface {
 	Create(entity interface{}) error
 	FindById(id interface{}, associations ...string) (interface{}, error)
 	FindAll(associations ...string) (interface{}, error)
-	Update(entity interface{}) error
+	Update(entity interface{}, id uint) error
 	Delete(entity interface{}) error
 
 	BatchDelete(conds []QueryParameter) error
