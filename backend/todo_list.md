@@ -1,6 +1,3 @@
-- hashelve tarolni a jelszot a registration requestben, és kivenni a confirm jelszot
-- uj jelszo beallitasanal hashelve kell eltarolni a jelszot
-- profilkep feltoltesnel validalni h kep e a feltoltott file
 - tablazatokra max szelesseget rakni
 
 - szervezőnek bulielhagyás/törlés opció
