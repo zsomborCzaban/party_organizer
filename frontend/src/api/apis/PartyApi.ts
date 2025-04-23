@@ -122,6 +122,16 @@ export class PartyApi {
             return 'error'
         }
     }
+
+    async deleteParty(partyId: number): Promise<string | 'error'> {
+        try {
+            const response = await this.axiosInstance.delete<string>(`${PARTY_PATH}/${partyId.toString()}`)
+            return handleApiResponse(response)
+        } catch (error) {
+            handleApiError(error)
+            return 'error'
+        }
+    }
 }
 
 export const createParty = async (requestBody: Party): Promise<PartyPopulated> =>

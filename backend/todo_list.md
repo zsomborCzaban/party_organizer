@@ -1,16 +1,9 @@
 - tablazatokra max szelesseget rakni
-
-- szervezőnek bulielhagyás/törlés opció
 - scroll to the top on tab valtas frontenden
-
 - telefon nézet megcsinálása
-
-
-auto delete on parties after they have been hosted
-delete parties (maybe)
-
 - balra jobbra görgetést megfixálni néhány oldalon
 
+- buli torles dokumentalasa
 
 
 ha egy nem szervező a szervező oldalakra megy és csinálni valamit akkor ki lesz loginolva
