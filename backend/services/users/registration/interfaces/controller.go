@@ -19,16 +19,16 @@ func NewRegistrationController(registrationService domains.IRegistrationService)
 }
 
 func (c *RegistrationController) Register(w http.ResponseWriter, r *http.Request) {
-	var registerReq domains.RegistrationRequest
+	var registerReqDTO domains.DTORegistrationRequest
 	decoder := json.NewDecoder(r.Body)
-	if err := decoder.Decode(&registerReq); err != nil {
+	if err := decoder.Decode(&registerReqDTO); err != nil {
 		br := api.ErrorBadRequest(domains.BadRequest)
 
 		br.Send(w)
 		return
 	}
 
-	resp := c.RegistrationService.Register(registerReq)
+	resp := c.RegistrationService.Register(registerReqDTO)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		return
