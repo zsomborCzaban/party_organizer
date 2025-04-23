@@ -15,40 +15,27 @@ const cocktails: Cocktail[] = [
         name: "Mojito",
         description: "A refreshing Cuban highball that traditionally consists of five ingredients: white rum, sugar, lime juice, soda water, and mint.",
         ingredients: [
-            "60 ml White Rum",
-            "30 ml Fresh Lime Juice",
-            "10 g Sugar",
-            "6-8 Fresh Mint Leaves",
-            "Soda Water",
-            "Ice"
+            "2 oz white rum",
+            "1 oz fresh lime juice",
+            "2 teaspoons sugar",
+            "6-8 fresh mint leaves",
+            "Soda water",
+            "Lime wheel and mint sprig for garnish"
         ],
-        image: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
-    },
-    {
-        id: 2,
-        name: "Old Fashioned",
-        description: "A cocktail made by muddling sugar with bitters and water, adding whiskey or bourbon, and garnishing with orange slice or zest and a cocktail cherry.",
-        ingredients: [
-            "60 ml Bourbon or Rye Whiskey",
-            "1 Sugar Cube",
-            "2-3 dashes Angostura Bitters",
-            "Orange Peel",
-            "Ice"
-        ],
-        image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+        image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b"
     },
     {
         id: 3,
         name: "Margarita",
-        description: "A cocktail consisting of tequila, orange liqueur, and lime juice often served with salt on the rim of the glass.",
+        description: "A classic cocktail consisting of tequila, orange liqueur, and lime juice, often served with salt on the rim of the glass.",
         ingredients: [
-            "60 ml Tequila",
-            "30 ml Cointreau or Triple Sec",
-            "30 ml Fresh Lime Juice",
+            "2 oz tequila",
+            "1 oz Cointreau or triple sec",
+            "1 oz fresh lime juice",
             "Salt for rim",
-            "Ice"
+            "Lime wheel for garnish"
         ],
-        image: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+        image: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a"
     },
     {
         id: 4,
@@ -78,42 +65,78 @@ const cocktails: Cocktail[] = [
     },
     {
         id: 6,
-        name: "Pina Colada",
+        name: "Piña Colada",
         description: "A sweet cocktail made with rum, coconut cream, and pineapple juice, usually served either blended or shaken with ice.",
         ingredients: [
-            "60 ml White Rum",
-            "60 ml Coconut Cream",
-            "90 ml Pineapple Juice",
-            "Pineapple Wedge",
-            "Ice"
+            "2 oz white rum",
+            "2 oz coconut cream",
+            "2 oz pineapple juice",
+            "Pineapple wedge and cherry for garnish"
         ],
-        image: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+        image: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a"
     },
     {
         id: 7,
         name: "Moscow Mule",
-        description: "A cocktail made with vodka, spicy ginger beer, and lime juice, garnished with a slice or wedge of lime.",
+        description: "A cocktail made with vodka, spicy ginger beer, and lime juice, traditionally served in a copper mug.",
         ingredients: [
-            "60 ml Vodka",
-            "120 ml Ginger Beer",
-            "15 ml Lime Juice",
-            "Lime Wedge",
-            "Ice"
+            "2 oz vodka",
+            "4-6 oz ginger beer",
+            "1/2 oz fresh lime juice",
+            "Lime wheel for garnish"
         ],
-        image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+        image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b"
     },
     {
-        id: 8,
-        name: "Whiskey Sour",
-        description: "A mixed drink containing whiskey, lemon juice, sugar, and optionally, a dash of egg white.",
+        id: 9,
+        name: "Rum Punch",
+        description: "A tropical cocktail that combines dark rum with various fruit juices and grenadine for a sweet and fruity flavor.",
         ingredients: [
-            "60 ml Bourbon",
-            "22 ml Fresh Lemon Juice",
-            "22 ml Simple Syrup",
-            "15 ml Egg White (optional)",
-            "Ice"
+            "2 oz dark rum",
+            "1 oz orange juice",
+            "1 oz pineapple juice",
+            "1/2 oz lime juice",
+            "1/2 oz grenadine",
+            "Orange slice and cherry for garnish"
         ],
-        image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+        image: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a"
+    },
+    {
+        id: 10,
+        name: "Aperol Spritz",
+        description: "A refreshing Italian aperitif cocktail made with prosecco, Aperol, and soda water.",
+        ingredients: [
+            "3 oz prosecco",
+            "2 oz Aperol",
+            "1 oz soda water",
+            "Orange slice for garnish"
+        ],
+        image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b"
+    },
+    {
+        id: 11,
+        name: "Tequila Sunrise",
+        description: "A cocktail made with tequila, orange juice, and grenadine, creating a beautiful sunrise effect in the glass.",
+        ingredients: [
+            "2 oz tequila",
+            "4 oz orange juice",
+            "1/2 oz grenadine",
+            "Orange slice and cherry for garnish"
+        ],
+        image: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a"
+    },
+    {
+        id: 12,
+        name: "Banana Daiquiri",
+        description: "A fruity variation of the classic daiquiri, made with rum, lime juice, simple syrup, and fresh banana.",
+        ingredients: [
+            "2 oz white rum",
+            "1 oz fresh lime juice",
+            "1/2 oz simple syrup",
+            "1 ripe banana",
+            "Banana slice for garnish"
+        ],
+        image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b"
     }
 ];
 
