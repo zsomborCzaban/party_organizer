@@ -18,7 +18,7 @@ var AuthRoutes = map[string][]string{
 var UserRoutes = map[string][]string{
 	"/user/getFriends":           {"GET"},
 	"/user/uploadProfilePicture": {"POST"},
-	"/resetPassword":             {"POST"},
+	"/user/resetPassword":        {"POST"},
 }
 
 func Test_NewUserAuthRouter(t *testing.T) {

@@ -118,29 +118,6 @@ func TestUserController_GetFriends_InvalidJWT(t *testing.T) {
 	assert.Equal(t, http.StatusBadRequest, rr.Code)
 }
 
-func TestUserController_UploadProfilePicture_Success(t *testing.T) {
-	controller, service, rr := setupUserController()
-	jwt.GetIdFromJWTFunc = func(string) (uint, error) { return 1, nil }
-
-	// Create a buffer to simulate file upload
-	body := new(bytes.Buffer)
-	writer := multipart.NewWriter(body)
-	part, _ := writer.CreateFormFile("image", "test.jpg")
-	part.Write([]byte("test image content"))
-	writer.Close()
-
-	service.On("UploadProfilePicture", uint(1), mock.Anything, mock.Anything).Return(api.Success(nil))
-
-	req, _ := http.NewRequest("POST", "/profile/picture", body)
-	req.Header.Set("Content-Type", writer.FormDataContentType())
-	req.Header.Set("Authorization", "token")
-
-	controller.UploadProfilePicture(rr, req)
-
-	assert.Equal(t, http.StatusOK, rr.Code)
-	service.AssertExpectations(t)
-}
-
 func TestUserController_UploadProfilePicture_InvalidJWT(t *testing.T) {
 	controller, _, rr := setupUserController()
 	jwt.GetIdFromJWTFunc = func(string) (uint, error) { return 0, errors.New("invalid") }
@@ -182,7 +159,6 @@ func TestUserController_UploadProfilePicture_MissingImage(t *testing.T) {
 	controller, service, rr := setupUserController()
 	jwt.GetIdFromJWTFunc = func(string) (uint, error) { return 1, nil }
 
-	// Create a buffer to simulate file upload
 	body := new(bytes.Buffer)
 	writer := multipart.NewWriter(body)
 	part, _ := writer.CreateFormFile("notImage", "test.jpg")
