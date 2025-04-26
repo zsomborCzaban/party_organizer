@@ -5,7 +5,7 @@ import {Api} from "../../api/Api.ts";
 import {toast} from "sonner";
 import {ThunkDispatch, UnknownAction} from "@reduxjs/toolkit";
 import {closeDefaultProfileDrawer, closePartyProfileDrawer} from "../../store/slices/profileDrawersSlice.ts";
-import {handleProfilePictureUpload} from "./ImageUtils.ts";
+import {handleProfilePictureUpload} from "./imageUtils.ts";
 
 export const handleLogoutUtil = (navigate: NavigateFunction, dispatch: ThunkDispatch<never, undefined, UnknownAction>, navigateTo: string) => {
     navigate(navigateTo)

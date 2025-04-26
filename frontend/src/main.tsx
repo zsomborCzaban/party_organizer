@@ -13,7 +13,6 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ApiContext.Provider value={new Api()}>
       <Provider store={store}>
-        {/* todo: make a loading screen */}
         <PersistGate
           loading={<div>Loading...</div>}
           persistor={persistor}

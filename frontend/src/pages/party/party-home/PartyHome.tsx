@@ -16,7 +16,6 @@ export const PartyHome = ()=>{
     const api = useApi()
     const navigate = useNavigate()
     const userLoggedIn = useAppSelector(isUserLoggedIn);
-    // const [partyId, setPartyId] = useState(0)
     const [party, setParty] = useState<PartyPopulated>(EMPTY_PARTY_POPULATED)
     const [timeRemaining, setTimeRemaining] = useState<number>(0);
 
@@ -29,8 +28,6 @@ export const PartyHome = ()=>{
         }
 
         const receivedPartyId = Number(getPartyId)
-        // setPartyId(receivedPartyId)
-        
         if(userLoggedIn){
             api.partyApi.getParty(receivedPartyId)
                 .then(result => {

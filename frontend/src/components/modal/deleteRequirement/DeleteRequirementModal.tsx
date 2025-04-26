@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Modal } from 'antd';
-import { ApiError } from '../../../data/types/ApiResponseTypes.ts';
 import { deleteDrinkRequirement, deleteFoodRequirement } from '../../../api/apis/RequirementApi.ts';
 import classes from './DeleteRequirementModal.module.scss'
 
@@ -47,9 +46,10 @@ const DeleteContributeModal: React.FC<DeleteContributeModalProps> = ({ mode, req
     countdownTimer();
   };
 
-  const handleErrors = (errs: ApiError[]) => {
-    console.log(errs);
-    // todo: implement me!!!
+  const handleErrors = (errs: string) => {
+    const newFeedbacks: Feedbacks = {}
+    newFeedbacks.buttonError = errs;
+    setFeedbacks(newFeedbacks);
   };
 
   const handleDelete = () => {

@@ -148,7 +148,6 @@
   color: #ff6666;
 }
 
-// Custom styles for Ant Design components
 :global {
   .ant-picker {
     background-color: #3a3a3a;
@@ -169,7 +168,6 @@
   }
 }
 
-// Media queries for responsiveness
 @media (max-width: 768px) {
   .container {
     width: 90%;

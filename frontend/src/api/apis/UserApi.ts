@@ -13,7 +13,6 @@ const handleApiResponse = <T>(response: AxiosResponse<T>): T => {
 };
 
 const handleApiError = (error: unknown) => {
-    // TODO: handle errors as needed
     if (axios.isAxiosError(error)) {
         console.error(`Axios error: ${error.message}`);
     } else {

@@ -45,7 +45,6 @@ export class PartyApi {
     async getPublicParties(): Promise< PartiesResponse | 'error'> {
         try {
             const response = await this.axiosInstance.get<PartiesResponse>(`${getApiUrl()}/publicParties`)
-            // toast.success('Public parties received')
             return handleApiResponse(response)
         } catch (error) {
             handleApiError(error)
@@ -56,7 +55,6 @@ export class PartyApi {
     async getAttendedParties(): Promise< PartiesResponse | 'error'> {
         try {
             const response = await this.axiosInstance.get<PartiesResponse>(`${PARTY_PATH}/getPartiesByParticipantId`)
-            // toast.success('Public parties received')
             return handleApiResponse(response)
         } catch (error) {
             handleApiError(error)
