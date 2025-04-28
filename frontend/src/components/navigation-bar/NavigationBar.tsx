@@ -64,6 +64,7 @@ export const NavigationBar = () => {
                     <button
                         className={classes.mobileMenuButton}
                         onClick={handleMobileMenuToggle}
+                        aria-label="Toggle menu"
                     >
                         <Menu className={classes.menuIcon} />
                     </button>
@@ -84,7 +85,11 @@ export const NavigationBar = () => {
                 </div>
             </nav>
 
-            {/* Mobile Menu */}
+            <div
+                className={`${classes.mobileMenuBackdrop} ${isMobileMenuOpen ? classes.open : ''}`}
+                onClick={handleMobileMenuToggle}
+            />
+
             <div className={`${classes.mobileMenu} ${isMobileMenuOpen ? classes.open : ''}`}>
                 <NavigationButton
                     buttonText='Discover'
