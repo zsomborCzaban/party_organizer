@@ -10,7 +10,7 @@ import {
   handleChangePassword,
   handleLogoutUtil,
   handleUploadProfilePictureUtil
-} from "../../../data/utils/ProfileDrawerUtils.ts";
+} from "../../../data/utils/profileDrawerUtils.ts";
 import {useNavigate} from "react-router-dom";
 import {useApi} from "../../../context/ApiContext.ts";
 

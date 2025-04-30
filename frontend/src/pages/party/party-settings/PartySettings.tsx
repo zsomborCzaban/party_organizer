@@ -4,11 +4,11 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ApiError } from '../../../data/types/ApiResponseTypes.ts';
 import {EMPTY_PARTY_POPULATED, Party, PartyPopulated} from '../../../data/types/Party.ts';
-import { setForTime } from '../../../data/utils/timeoutSetterUtils.ts';
 import { updateParty } from '../../../api/apis/PartyApi.ts';
 import {useApi} from "../../../context/ApiContext.ts";
 import {toast} from "sonner";
 import classes from './PartySettings.module.scss';
+import {setForTime} from "../../../data/utils/timeoutSetterUtils.ts";
 
 interface Feedbacks {
   Name?: string;

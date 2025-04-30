@@ -40,8 +40,8 @@ func (us *UserService) Login(loginRequest domains.LoginRequest) api.IResponse {
 		return api.ErrorValidation(err1.Errors)
 	}
 
-	registrationRequest, _ := us.RegistrationRepository.FindByUsername(*loginRequest.Username)
-	if registrationRequest != nil {
+	_, err := us.RegistrationRepository.FindByUsername(*loginRequest.Username)
+	if err == nil {
 		return api.ErrorUnauthorized(domains.EmailNotConfirmed)
 	}
 

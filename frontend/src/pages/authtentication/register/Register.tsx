@@ -212,8 +212,8 @@ const Register = () => {
             <span>or</span>
           </div>
           <a
-            href='/login'
-            className={classes.signInButton}
+              onClick={() => navigate('/login')}
+              className={classes.signInButton}
           >
             Sign in to existing account
           </a>

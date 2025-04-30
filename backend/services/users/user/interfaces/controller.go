@@ -8,6 +8,7 @@ import (
 	"github.com/zsomborCzaban/party_organizer/utils/jwt"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 type UserController struct {
@@ -97,7 +98,7 @@ func (uc *UserController) UploadProfilePicture(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	file, fileHeader, err3 := r.FormFile("image")
+	file, mutlipartFileHeader, err3 := r.FormFile("image")
 	if err3 != nil {
 		br := api.ErrorBadRequest(domains.BadRequest)
 
@@ -105,7 +106,32 @@ func (uc *UserController) UploadProfilePicture(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	resp := uc.UserService.UploadProfilePicture(userId, file, fileHeader)
+	fileHeader := make([]byte, 512)
+	if _, err4 := file.Read(fileHeader); err4 != nil {
+		br := api.ErrorBadRequest(err4.Error())
+
+		br.Send(w)
+		return
+	}
+
+	mime := http.DetectContentType(fileHeader)
+	if !strings.Contains(mime, "image") {
+		br := api.ErrorBadRequest(domains.InvalidFileFormat)
+
+		br.Send(w)
+		return
+
+	}
+
+	//sets the file pointer back to the beginning of the file
+	if _, err5 := file.Seek(0, 0); err5 != nil {
+		br := api.ErrorBadRequest(err5.Error())
+
+		br.Send(w)
+		return
+	}
+
+	resp := uc.UserService.UploadProfilePicture(userId, file, mutlipartFileHeader)
 	couldSend := resp.Send(w)
 	if !couldSend {
 		//todo: handle logging

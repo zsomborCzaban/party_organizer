@@ -6,7 +6,6 @@ import (
 	domains2 "github.com/zsomborCzaban/party_organizer/services/users/user/domains"
 	"github.com/zsomborCzaban/party_organizer/utils/api"
 	"github.com/zsomborCzaban/party_organizer/utils/email"
-	"github.com/zsomborCzaban/party_organizer/utils/random"
 	"github.com/zsomborCzaban/party_organizer/utils/repo"
 	"gopkg.in/gomail.v2"
 	"net/http"
@@ -27,44 +26,45 @@ func NewRegistrationService(repoCollector *repo.RepoCollector, validator api.IVa
 	}
 }
 
-func (rs *RegistrationService) Register(registrationRequest domains.RegistrationRequest) api.IResponse {
-	if err1 := rs.Validator.Validate(registrationRequest); err1 != nil {
+func (rs *RegistrationService) Register(registrationRequestDTO domains.DTORegistrationRequest) api.IResponse {
+	if err1 := rs.Validator.Validate(registrationRequestDTO); err1 != nil {
 		return api.ErrorValidation(err1.Errors)
 	}
 
-	reg, err2 := rs.RegistrationRepository.FindByUsername(registrationRequest.Username)
-	if err2 == nil && reg.Email != registrationRequest.Email {
+	reg, err2 := rs.RegistrationRepository.FindByUsername(registrationRequestDTO.Username)
+	if err2 == nil && reg.Email != registrationRequestDTO.Email {
 		errorUserAlreadyExists := api.NewValidationErrors()
-		errorUserAlreadyExists.CollectValidationError("Username", "Username already taken", registrationRequest.Username)
+		errorUserAlreadyExists.CollectValidationError("Username", "Username already taken", registrationRequestDTO.Username)
 		return api.Error(http.StatusBadRequest, errorUserAlreadyExists.Errors)
 	}
-	if err2 == nil && reg.Email == registrationRequest.Email {
+	if err2 == nil && reg.Email == registrationRequestDTO.Email {
 		return api.Success("You already registered with that username and email, please confirm your email to finish")
 	}
-	if err2.Error() != domains2.UserNotFound+registrationRequest.Username {
+	if err2.Error() != domains2.UserNotFound+registrationRequestDTO.Username {
 		return api.ErrorInternalServerError(err2.Error())
 	}
 
-	_, err3 := rs.UserRepository.FindByUsername(registrationRequest.Username)
+	_, err3 := rs.UserRepository.FindByUsername(registrationRequestDTO.Username)
 	if err3 == nil {
 		errorUserAlreadyExists := api.NewValidationErrors()
-		errorUserAlreadyExists.CollectValidationError("Username", "Username already taken", registrationRequest.Username)
+		errorUserAlreadyExists.CollectValidationError("Username", "Username already taken", registrationRequestDTO.Username)
 		return api.Error(http.StatusBadRequest, errorUserAlreadyExists.Errors)
 	}
-	if err3.Error() != domains2.UserNotFound+registrationRequest.Username {
+	if err3.Error() != domains2.UserNotFound+registrationRequestDTO.Username {
 		return api.ErrorInternalServerError(err3.Error())
 	}
 
-	registrationRequest.ConfirmHash = random.GenerateRandomString(64)
-	if err4 := rs.RegistrationRepository.Create(&registrationRequest); err4 != nil {
+	registrationRequest, err4 := registrationRequestDTO.TransformToRegistrationRequest()
+	if err4 != nil {
 		return api.ErrorInternalServerError(err4.Error())
 	}
 
-	resp := rs.sendConfirmEmail(registrationRequest)
-	if resp.GetCode() != http.StatusOK {
-		rs.RegistrationRepository.Delete(&registrationRequest) //todo: handle error on delete
+	if err5 := rs.RegistrationRepository.Create(registrationRequest); err5 != nil {
+		return api.ErrorInternalServerError(err5.Error())
 	}
-	return resp
+
+	rs.sendConfirmEmail(*registrationRequest)
+	return api.Success("Registration success. To finish, confirm your email")
 }
 
 func (rs *RegistrationService) sendConfirmEmail(registerRequest domains.RegistrationRequest) api.IResponse {

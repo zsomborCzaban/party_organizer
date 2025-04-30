@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {ConfigProvider, Input, Modal, theme} from 'antd';
 import { Contribution } from '../../../data/types/Contribution.ts';
-import { setForTime } from '../../../data/utils/TimeoutSetterUtils.ts';
+import { setForTime } from '../../../data/utils/timeoutSetterUtils.ts';
 import { createDrinkContribution, createFoodContribution } from '../../../api/apis/ContributionApi.ts';
 import classes from './ContributeModal.module.scss';
 

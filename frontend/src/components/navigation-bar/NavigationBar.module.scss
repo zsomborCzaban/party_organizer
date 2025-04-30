@@ -63,14 +63,73 @@
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
-  
+
   &:hover {
     background-color: #3182ce;
     transform: translateY(-1px);
   }
-  
+
   &:active {
     transform: translateY(0);
+  }
+}
+
+.mobileMenuButton {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  margin-right: 16px;
+
+  .menuIcon {
+    width: 24px;
+    height: 24px;
+    color: #2d3748;
+  }
+}
+
+.mobileMenu {
+  display: none;
+  position: fixed;
+  top: 70px;
+  left: 0;
+  right: 0;
+  background-color: #ffffff;
+  padding: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 999;
+  transform: translateY(-100%);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+
+  &.open {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .authButton {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+  }
+}
+
+.mobileMenuBackdrop {
+  display: none;
+  position: fixed;
+  top: 70px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+
+  &.open {
+    display: block;
   }
 }
 
@@ -78,15 +137,15 @@
   .navBar {
     padding: 0 24px;
   }
+
+  .centerSection {
+    gap: 6px;
+  }
 }
 
 @media (max-width: 768px) {
   .navBar {
     padding: 0 16px;
-  }
-
-  .centerSection {
-    gap: 4px;
   }
 
   .pageTitle {
@@ -99,12 +158,29 @@
 }
 
 @media (max-width: 640px) {
+  .navBar {
+    padding: 0 12px;
+  }
+
   .centerSection {
     display: none;
+  }
+
+  .mobileMenuButton {
+    display: block;
   }
 
   .leftSection, .rightSection {
     flex: auto;
     max-width: none;
+  }
+
+  .pageTitle {
+    font-size: 18px;
+  }
+
+  .authButton {
+    padding: 6px 12px;
+    font-size: 12px;
   }
 }

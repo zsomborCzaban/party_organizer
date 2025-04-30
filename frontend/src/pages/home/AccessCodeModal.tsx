@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { setForTime } from '../../data/utils/TimeoutSetterUtils.ts';
 import {PartyPopulated} from '../../data/types/Party.ts';
 import { joinPrivateParty } from '../../api/apis/PartyAttendanceManagerApi.ts';
-import {NavigateToPartyHome} from "../../data/utils/PartyUtils.ts";
+import {NavigateToPartyHome} from "../../data/utils/partyUtils.ts";
 import {toast} from "sonner";
 
 const styles: { [key: string]: React.CSSProperties } = {
@@ -66,8 +66,8 @@ const AccessCodeModal: React.FC<MyModalProps> = ({ visible, onClose }) => {
 
   useEffect(() => {
     if (visible) {
-      setFeedback(''); // Reset feedback when the modal opens
-      setInputValue(''); // Optional: Reset input value when modal opens
+      setFeedback('');
+      setInputValue('');
     }
   }, [visible]);
 

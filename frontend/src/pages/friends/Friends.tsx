@@ -13,7 +13,7 @@ import {
     FriendTableRow
 } from "../../data/constants/TableColumns.tsx";
 import classes from "../party/parties/Parties.module.scss";
-import {convertFriendsToTableData, convertInvitesToTableData} from "../../data/utils/TableUtils.ts";
+import {convertFriendsToTableData, convertInvitesToTableData} from "../../data/utils/tableUtils.ts";
 
 export const Friends = () => {
     const api = useApi();

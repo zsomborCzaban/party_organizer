@@ -12,8 +12,8 @@ import {
 } from "../../../data/constants/TableColumns.tsx";
 import {useNavigate} from "react-router-dom";
 import classes from './Parties.module.scss';
-import {convertPartiesToTableDatasource, convertPartyInvitesToTableDatasource} from "../../../data/utils/TableUtils.ts";
-import {NavigateToPartyHome} from "../../../data/utils/PartyUtils.ts";
+import {convertPartiesToTableDatasource, convertPartyInvitesToTableDatasource} from "../../../data/utils/tableUtils.ts";
+import {NavigateToPartyHome} from "../../../data/utils/partyUtils.ts";
 
 export const Parties = () => {
 

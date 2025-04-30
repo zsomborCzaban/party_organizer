@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Modal } from 'antd';
-import classes from '../deleteRequirement/DeleteRequirementModal.module.scss'
+import classes from './KickUserModal.module.scss'
 import {kickFromParty} from "../../../api/apis/PartyAttendanceManagerApi.ts";
 import {User} from "../../../data/types/User.ts";
 
