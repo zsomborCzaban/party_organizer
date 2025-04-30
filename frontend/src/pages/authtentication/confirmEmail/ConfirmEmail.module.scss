@@ -97,4 +97,16 @@
       box-shadow: none;
     }
   }
-} 
+}
+
+.backgroundVideo {
+  width: max-content;
+  height: max-content;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.videoContainer {
+  width: 200px;
+  height: 300px;
+}
