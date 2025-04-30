@@ -30,25 +30,6 @@ export const Footer = () => {
             </li>
           </ul>
         </div>
-
-        {/*<div className={classes.footerSection}>*/}
-        {/*  <h4>Support</h4>*/}
-        {/*  <ul>*/}
-        {/*    <li>*/}
-        {/*      <button onClick={() => navigate('/help')}>Help Center</button>*/}
-        {/*    </li>*/}
-        {/*    <li>*/}
-        {/*      <button onClick={() => navigate('/contact')}>Contact Us</button>*/}
-        {/*    </li>*/}
-        {/*    <li>*/}
-        {/*      <button onClick={() => navigate('/privacy')}>Privacy Policy</button>*/}
-        {/*    </li>*/}
-        {/*    <li>*/}
-        {/*      <button onClick={() => navigate('/terms')}>Terms of Service</button>*/}
-        {/*    </li>*/}
-        {/*  </ul>*/}
-        {/*</div>*/}
-
         <div className={classes.footerSection}>
           <h4>Connect With Us</h4>
           <div className={classes.socialLinks}>

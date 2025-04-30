@@ -28,20 +28,20 @@ func (dbWrapper *GormDBWrapper) Create(entity interface{}) error {
 }
 
 func (dbWrapper *GormDBWrapper) First(dest interface{}, associations []string, conds ...interface{}) error {
-	dbWrapper.DB = dbWrapper.DB.Session(&gorm.Session{NewDB: true})
+	db := dbWrapper.DB.Session(&gorm.Session{NewDB: true})
 	for _, association := range associations {
-		dbWrapper.DB = dbWrapper.DB.Preload(association) //causes concurrent map writes once
+		db = db.Preload(association)
 	}
-	dbWrapper.DB.Error = nil                     //todo: find out why the error from previous request is persistent (why we use the same entity)
-	return dbWrapper.DB.First(dest, conds).Error //causes concurrent map writes once
+	return db.First(dest, conds).Error
 }
 
 func (dbWrapper *GormDBWrapper) Find(dest interface{}, associations []string, conds ...interface{}) error {
+	//db := dbWrapper.DB.Session(&gorm.Session{NewDB: true})
 	for _, association := range associations {
 		dbWrapper.DB = dbWrapper.DB.Preload(association)
 	}
 
-	dbWrapper.DB.Error = nil
+	//dbWrapper.DB.Error = nil
 	return dbWrapper.DB.Find(dest, conds).Error //causes concurrent map writes once
 }
 
@@ -83,27 +83,26 @@ func (dbWrapper *GormDBWrapper) ProcessWhereStatements(conds []QueryParameter) {
 //}
 
 func (dbWrapper *GormDBWrapper) Many2ManyQueryId(dest interface{}, associations []string, cond Many2ManyQueryParameter) error {
+	db := dbWrapper.DB.Session(&gorm.Session{NewDB: true})
 	if !cond.OrActive {
 		query := fmt.Sprintf(
 			"SELECT * FROM %s WHERE id IN (SELECT %s FROM %s WHERE %s = ?)",
 			cond.QueriedTable, cond.M2MQueriedColumnName, cond.Many2ManyTable, cond.M2MConditionColumnName,
 		)
 		for _, preloadColumn := range associations {
-			dbWrapper.DB = dbWrapper.DB.Preload(preloadColumn)
+			db = db.Preload(preloadColumn)
 		}
-		return dbWrapper.DB.Raw(query, cond.M2MConditionColumnValue).Find(dest).Error //caused concurent mapwrited once
-
+		return db.Raw(query, cond.M2MConditionColumnValue).Find(dest).Error
 	} else {
 		query := fmt.Sprintf(
 			"SELECT * FROM %s WHERE id IN (SELECT %s FROM %s WHERE %s = ? OR %s = ?)",
 			cond.QueriedTable, cond.M2MQueriedColumnName, cond.Many2ManyTable, cond.M2MConditionColumnName, cond.OrConditionColumnName,
 		)
 		for _, preloadColumn := range associations {
-			dbWrapper.DB = dbWrapper.DB.Preload(preloadColumn)
+			db = db.Preload(preloadColumn)
 		}
-		return dbWrapper.DB.Raw(query, cond.M2MConditionColumnValue, cond.OrConditionColumnValue).Find(dest).Error
+		return db.Raw(query, cond.M2MConditionColumnValue, cond.OrConditionColumnValue).Find(dest).Error
 	}
-	//return dbWrapper.DB.Model(model).Preload(preload, "id = ?", 3).Find(dest).Error
 }
 
 func (dbWrapper *GormDBWrapper) ReplaceAssociations(param AssociationParameter) error {

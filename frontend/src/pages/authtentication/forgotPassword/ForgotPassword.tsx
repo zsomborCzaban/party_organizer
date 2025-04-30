@@ -108,7 +108,6 @@ export const ForgotPassword = () => {
         <div className={classes.backToLoginContainer}>
           <p>Remember your password?</p>
           <a
-              href=''
               onClick={() => navigate('/login')}
               className={classes.link}
           >

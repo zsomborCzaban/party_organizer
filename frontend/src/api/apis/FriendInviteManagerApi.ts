@@ -1,5 +1,5 @@
-import { get } from '../../api/Api';
-import { getApiUrl } from '../../api/ApiHelper';
+import { get } from '../Api.ts';
+import { getApiUrl } from '../ApiHelper.ts';
 import { FriendInvite } from '../../data/types/FriendInvite';
 import axios, {AxiosInstance, AxiosResponse} from "axios";
 import {toast} from "sonner";
@@ -11,7 +11,6 @@ const handleApiResponse = <T>(response: AxiosResponse<T>): T => {
 };
 
 const handleApiError = (error: unknown) => {
-    // TODO: handle errors as needed
     if (axios.isAxiosError(error)) {
         console.error(`Axios error: ${error.message}`);
         if(error.status === 404) {

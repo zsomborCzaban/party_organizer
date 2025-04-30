@@ -4,13 +4,13 @@ import classes from './HomePage.module.scss';
 import { PartyPopulated } from "../../data/types/Party.ts";
 import { useApi } from "../../context/ApiContext.ts";
 import { toast } from "sonner";
-import {convertPartiesToTableDatasource} from "../../data/utils/TableUtils.ts";
+import {convertPartiesToTableDatasource} from "../../data/utils/tableUtils.ts";
 import {partyTableColumns, PartyTableRow} from "../../data/constants/TableColumns.tsx";
 import {ActionButton, SortableTable} from "../../components/table/SortableTable.tsx";
 import {useAppSelector} from "../../store/store-helper.ts";
 import {isUserLoggedIn} from "../../store/slices/UserSlice.ts";
 import AccessCodeModal from "./AccessCodeModal.tsx";
-import {NavigateToPartyHome} from "../../data/utils/PartyUtils.ts";
+import {NavigateToPartyHome} from "../../data/utils/partyUtils.ts";
 
 
 export const Homepage = () => {

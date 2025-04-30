@@ -25,12 +25,11 @@ func TestPartyRepository_AddUserToParty_Success(t *testing.T) {
 	party := &domains.Party{}
 	user := &userDomain.User{Model: gorm.Model{ID: 1}}
 
-	mockDb.On("Update", party, party.ID).Return(nil)
+	mockDb.On("ReplaceAssociations", mock.Anything).Return(nil)
 
 	err := repo.AddUserToParty(party, user)
 
 	assert.NoError(t, err)
-	assert.Len(t, party.Participants, 1)
 	mockDb.AssertExpectations(t)
 }
 

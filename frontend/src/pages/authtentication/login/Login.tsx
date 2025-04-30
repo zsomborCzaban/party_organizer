@@ -148,7 +148,6 @@ export const Login = () => {
                 )}
             </div>
             <a
-                href=''
                 onClick={() => navigate('/forgotPassword')}
                 className={classes.link}
             >
@@ -171,7 +170,7 @@ export const Login = () => {
                         <a
                             href=''
                             onClick={sendConfirmEmail}
-                         className={classes.link}
+                            className={classes.link}
                         >
                             Send again!
                         </a>
@@ -181,7 +180,6 @@ export const Login = () => {
     <div className={classes.signUpContainer}>
                 <p>New to the platform?</p>
                 <a
-                    href=''
                     onClick={() => navigate('/register')}
                     className={classes.link}
                 >

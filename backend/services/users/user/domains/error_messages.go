@@ -7,4 +7,5 @@ const (
 	FailedValidation    = "request failed validation"
 	InternalServerError = "internal server error"
 	InvalidCredentials  = "invalid or insufficient credentials"
+	InvalidFileFormat   = "invalid file format"
 )

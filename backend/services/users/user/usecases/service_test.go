@@ -6,7 +6,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/zsomborCzaban/party_organizer/common"
-	domains2 "github.com/zsomborCzaban/party_organizer/services/users/user/domains"
+	registrationDomains "github.com/zsomborCzaban/party_organizer/services/users/registration/domains"
+	registrationUsecases "github.com/zsomborCzaban/party_organizer/services/users/registration/usecases"
+	"github.com/zsomborCzaban/party_organizer/services/users/user/domains"
 	"github.com/zsomborCzaban/party_organizer/utils/api"
 	"github.com/zsomborCzaban/party_organizer/utils/repo"
 	mockS3 "github.com/zsomborCzaban/party_organizer/utils/s3"
@@ -18,38 +20,41 @@ import (
 
 const JWT_SIGNING_KEY_VALUE = "verysecretkey"
 
-func setupDefaultService() (*UserService, *api.MockValidator, *MockRepository, *mockS3.MockS3ClientWrapper) {
+func setupDefaultService() (*UserService, *api.MockValidator, *MockRepository, *mockS3.MockS3ClientWrapper, *registrationUsecases.MockRepository) {
 	validator := new(api.MockValidator)
 	userRepo := new(MockRepository)
 	s3Client := new(mockS3.MockS3ClientWrapper)
+	regReqRepo := new(registrationUsecases.MockRepository)
 
 	repoCollector := &repo.RepoCollector{
-		UserRepo: userRepo,
+		UserRepo:         userRepo,
+		RegistrationRepo: regReqRepo,
 	}
 
 	service := NewUserService(repoCollector, validator, s3Client)
 
-	return service, validator, userRepo, s3Client
+	return service, validator, userRepo, s3Client, regReqRepo
 }
 
 func Test_UserService_Login_Success(t *testing.T) {
-	service, validator, userRepo, _ := setupDefaultService()
+	service, validator, userRepo, _, regReqRepo := setupDefaultService()
 	os.Setenv(common.JWT_SINGING_KEY_ENV_KEY, JWT_SIGNING_KEY_VALUE)
 	defer os.Unsetenv(common.JWT_SINGING_KEY_ENV_KEY)
 
 	username := "testuser"
 	password := "password123"
-	loginRequest := domains2.LoginRequest{
+	loginRequest := domains.LoginRequest{
 		Username: &username,
 		Password: &password,
 	}
-	user := &domains2.User{
+	user := &domains.User{
 		Username: username,
 		Password: "$2a$10$nk2OIw17ipD7mUBoNjzhr.s79s2S2oOIDHUkHOtVUIdNkaGuFniCu", // Mock hashed password
 	}
 
 	validator.On("Validate", loginRequest).Return(nil)
 	userRepo.On("FindByUsername", username).Return(user, nil)
+	regReqRepo.On("FindByUsername", username).Return(&registrationDomains.RegistrationRequest{}, errors.New("not found"))
 
 	response := service.Login(loginRequest)
 
@@ -59,11 +64,11 @@ func Test_UserService_Login_Success(t *testing.T) {
 }
 
 func Test_UserService_Login_FailValidation(t *testing.T) {
-	service, validator, _, _ := setupDefaultService()
+	service, validator, _, _, _ := setupDefaultService()
 
 	username := ""
 	password := ""
-	loginRequest := domains2.LoginRequest{
+	loginRequest := domains.LoginRequest{
 		Username: &username,
 		Password: &password,
 	}
@@ -77,17 +82,18 @@ func Test_UserService_Login_FailValidation(t *testing.T) {
 }
 
 func Test_UserService_Login_FailUserNotFound(t *testing.T) {
-	service, validator, userRepo, _ := setupDefaultService()
+	service, validator, userRepo, _, regReqRepo := setupDefaultService()
 
 	username := "nonexistent"
 	password := "password123"
-	loginRequest := domains2.LoginRequest{
+	loginRequest := domains.LoginRequest{
 		Username: &username,
 		Password: &password,
 	}
 
 	validator.On("Validate", loginRequest).Return(nil)
-	userRepo.On("FindByUsername", username).Return(&domains2.User{}, errors.New("not found"))
+	userRepo.On("FindByUsername", username).Return(&domains.User{}, errors.New("not found"))
+	regReqRepo.On("FindByUsername", username).Return(&registrationDomains.RegistrationRequest{}, errors.New("not found"))
 
 	response := service.Login(loginRequest)
 
@@ -95,21 +101,22 @@ func Test_UserService_Login_FailUserNotFound(t *testing.T) {
 }
 
 func Test_UserService_Login_FailInvalidPassword(t *testing.T) {
-	service, validator, userRepo, _ := setupDefaultService()
+	service, validator, userRepo, _, regReqRepo := setupDefaultService()
 
 	username := "testuser"
 	password := "wrongpassword"
-	loginRequest := domains2.LoginRequest{
+	loginRequest := domains.LoginRequest{
 		Username: &username,
 		Password: &password,
 	}
-	user := &domains2.User{
+	user := &domains.User{
 		Username: username,
 		Password: "$2a$10$somehashedpassword", // Mock hashed password
 	}
 
 	validator.On("Validate", loginRequest).Return(nil)
 	userRepo.On("FindByUsername", username).Return(user, nil)
+	regReqRepo.On("FindByUsername", username).Return(&registrationDomains.RegistrationRequest{}, errors.New("not found"))
 
 	response := service.Login(loginRequest)
 
@@ -117,12 +124,12 @@ func Test_UserService_Login_FailInvalidPassword(t *testing.T) {
 }
 
 func Test_UserService_AddFriend_Success(t *testing.T) {
-	service, _, userRepo, _ := setupDefaultService()
+	service, _, userRepo, _, _ := setupDefaultService()
 
 	userId := uint(1)
 	friendId := uint(2)
-	user := &domains2.User{Model: gorm.Model{ID: userId}}
-	friend := &domains2.User{Model: gorm.Model{ID: friendId}}
+	user := &domains.User{Model: gorm.Model{ID: userId}}
+	friend := &domains.User{Model: gorm.Model{ID: friendId}}
 
 	userRepo.On("FindById", userId, mock.Anything).Return(user, nil)
 	userRepo.On("FindById", friendId, mock.Anything).Return(friend, nil)
@@ -134,7 +141,7 @@ func Test_UserService_AddFriend_Success(t *testing.T) {
 }
 
 func Test_UserService_AddFriend_FailSelfFriend(t *testing.T) {
-	service, _, _, _ := setupDefaultService()
+	service, _, _, _, _ := setupDefaultService()
 
 	userId := uint(1)
 	response := service.AddFriend(userId, userId)
@@ -143,13 +150,13 @@ func Test_UserService_AddFriend_FailSelfFriend(t *testing.T) {
 }
 
 func Test_UserService_AddFriend_FailFindUser(t *testing.T) {
-	service, _, userRepo, _ := setupDefaultService()
+	service, _, userRepo, _, _ := setupDefaultService()
 
 	userId := uint(1)
 	friendId := uint(2)
 	expectedErr := errors.New("not found")
 
-	userRepo.On("FindById", userId, mock.Anything).Return(&domains2.User{}, expectedErr)
+	userRepo.On("FindById", userId, mock.Anything).Return(&domains.User{}, expectedErr)
 
 	response := service.AddFriend(friendId, userId)
 
@@ -157,15 +164,15 @@ func Test_UserService_AddFriend_FailFindUser(t *testing.T) {
 }
 
 func Test_UserService_AddFriend_FailFindFriend(t *testing.T) {
-	service, _, userRepo, _ := setupDefaultService()
+	service, _, userRepo, _, _ := setupDefaultService()
 
 	userId := uint(1)
 	friendId := uint(2)
-	user := &domains2.User{Model: gorm.Model{ID: userId}}
+	user := &domains.User{Model: gorm.Model{ID: userId}}
 	expectedErr := errors.New("not found")
 
 	userRepo.On("FindById", userId, mock.Anything).Return(user, nil)
-	userRepo.On("FindById", friendId, mock.Anything).Return(&domains2.User{}, expectedErr)
+	userRepo.On("FindById", friendId, mock.Anything).Return(&domains.User{}, expectedErr)
 
 	response := service.AddFriend(friendId, userId)
 
@@ -173,12 +180,12 @@ func Test_UserService_AddFriend_FailFindFriend(t *testing.T) {
 }
 
 func Test_UserService_AddFriend_FailAdd(t *testing.T) {
-	service, _, userRepo, _ := setupDefaultService()
+	service, _, userRepo, _, _ := setupDefaultService()
 
 	userId := uint(1)
 	friendId := uint(2)
-	user := &domains2.User{Model: gorm.Model{ID: userId}}
-	friend := &domains2.User{Model: gorm.Model{ID: friendId}}
+	user := &domains.User{Model: gorm.Model{ID: userId}}
+	friend := &domains.User{Model: gorm.Model{ID: friendId}}
 	expectedErr := errors.New("add failed")
 
 	userRepo.On("FindById", userId, mock.Anything).Return(user, nil)
@@ -191,12 +198,12 @@ func Test_UserService_AddFriend_FailAdd(t *testing.T) {
 }
 
 func Test_UserService_GetFriends_Success(t *testing.T) {
-	service, _, userRepo, _ := setupDefaultService()
+	service, _, userRepo, _, _ := setupDefaultService()
 
 	userId := uint(1)
-	user := &domains2.User{
+	user := &domains.User{
 		Model: gorm.Model{ID: userId},
-		Friends: []domains2.User{
+		Friends: []domains.User{
 			{Model: gorm.Model{ID: 2}, Username: "friend1"},
 			{Model: gorm.Model{ID: 3}, Username: "friend2"},
 		},
@@ -207,16 +214,16 @@ func Test_UserService_GetFriends_Success(t *testing.T) {
 	response := service.GetFriends(userId)
 
 	assert.False(t, response.GetIsError())
-	assert.Len(t, response.GetData().([]domains2.UserDTO), 2)
+	assert.Len(t, response.GetData().([]domains.UserDTO), 2)
 }
 
 func Test_UserService_GetFriends_Fail(t *testing.T) {
-	service, _, userRepo, _ := setupDefaultService()
+	service, _, userRepo, _, _ := setupDefaultService()
 
 	userId := uint(1)
 	expectedErr := errors.New("not found")
 
-	userRepo.On("FindById", userId, mock.Anything).Return(&domains2.User{}, expectedErr)
+	userRepo.On("FindById", userId, mock.Anything).Return(&domains.User{}, expectedErr)
 
 	response := service.GetFriends(userId)
 
@@ -224,10 +231,10 @@ func Test_UserService_GetFriends_Fail(t *testing.T) {
 }
 
 func Test_UserService_UploadProfilePicture_Success(t *testing.T) {
-	service, _, userRepo, s3Client := setupDefaultService()
+	service, _, userRepo, s3Client, _ := setupDefaultService()
 
 	userId := uint(1)
-	user := &domains2.User{Model: gorm.Model{ID: userId}}
+	user := &domains.User{Model: gorm.Model{ID: userId}}
 
 	tempFile, err := os.CreateTemp("", "test-*.jpg")
 	if err != nil {
@@ -255,7 +262,7 @@ func Test_UserService_UploadProfilePicture_Success(t *testing.T) {
 }
 
 func Test_UserService_UploadProfilePicture_FailFindUser(t *testing.T) {
-	service, _, userRepo, _ := setupDefaultService()
+	service, _, userRepo, _, _ := setupDefaultService()
 
 	userId := uint(1)
 	expectedErr := errors.New("not found")
@@ -268,7 +275,7 @@ func Test_UserService_UploadProfilePicture_FailFindUser(t *testing.T) {
 
 	fileHeader := &multipart.FileHeader{}
 
-	userRepo.On("FindById", userId, mock.Anything).Return(&domains2.User{}, expectedErr)
+	userRepo.On("FindById", userId, mock.Anything).Return(&domains.User{}, expectedErr)
 
 	response := service.UploadProfilePicture(userId, file, fileHeader)
 
@@ -276,10 +283,10 @@ func Test_UserService_UploadProfilePicture_FailFindUser(t *testing.T) {
 }
 
 func Test_UserService_UploadProfilePicture_FailBucketNotSet(t *testing.T) {
-	service, _, userRepo, _ := setupDefaultService()
+	service, _, userRepo, _, _ := setupDefaultService()
 
 	userId := uint(1)
-	user := &domains2.User{Model: gorm.Model{ID: userId}}
+	user := &domains.User{Model: gorm.Model{ID: userId}}
 
 	file, err := os.CreateTemp("", "test-*.jpg")
 	if err != nil {
@@ -299,10 +306,10 @@ func Test_UserService_UploadProfilePicture_FailBucketNotSet(t *testing.T) {
 }
 
 func Test_UserService_UploadProfilePicture_FailS3Upload(t *testing.T) {
-	service, _, userRepo, s3Client := setupDefaultService()
+	service, _, userRepo, s3Client, _ := setupDefaultService()
 
 	userId := uint(1)
-	user := &domains2.User{Model: gorm.Model{ID: userId}}
+	user := &domains.User{Model: gorm.Model{ID: userId}}
 	file, err := os.CreateTemp("", "test-*.jpg")
 	if err != nil {
 		t.Fatalf("Failed to create temp file: %v", err)
@@ -327,10 +334,10 @@ func Test_UserService_UploadProfilePicture_FailS3Upload(t *testing.T) {
 }
 
 func Test_UserService_UploadProfilePicture_FailUpdateUser(t *testing.T) {
-	service, _, userRepo, s3Client := setupDefaultService()
+	service, _, userRepo, s3Client, _ := setupDefaultService()
 
 	userId := uint(1)
-	user := &domains2.User{Model: gorm.Model{ID: userId}}
+	user := &domains.User{Model: gorm.Model{ID: userId}}
 	file, err := os.CreateTemp("", "test-*.jpg")
 	if err != nil {
 		t.Fatalf("Failed to create temp file: %v", err)

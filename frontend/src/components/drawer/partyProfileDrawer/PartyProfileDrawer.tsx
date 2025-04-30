@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import {AppDispatch, RootState} from '../../../store/store.ts';
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {closePartyProfileDrawer} from "../../../store/slices/profileDrawersSlice.ts";
 import classes from "./PartyProfileDrawer.module.scss"
 import {getUser} from "../../../auth/AuthUserUtil.ts";
@@ -11,9 +11,10 @@ import {
   handleLeavePartyUtils,
   handleLogoutUtil,
   handleUploadProfilePictureUtil
-} from "../../../data/utils/ProfileDrawerUtils.ts";
+} from "../../../data/utils/profileDrawerUtils.ts";
 import {useNavigate} from "react-router-dom";
 import {useApi} from "../../../context/ApiContext.ts";
+import {DeletePartyModal} from "../../modal/deleteParty/DeletePartyModal.tsx";
 
 export const PartyProfileDrawer = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -22,6 +23,8 @@ export const PartyProfileDrawer = () => {
   const isOpen = useSelector((state: RootState) => state.profileDrawers.isPartyProfileOpen);
   const user = getUser() || EMPTY_USER
   const partyId = Number(localStorage.getItem('partyId') || '-1')
+  const organizerName = localStorage.getItem('partyOrganizerName') || ''
+  const [isDeletePartyModalVisible, setIsDeletePartyModalVisible] = useState(false);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -52,6 +55,11 @@ export const PartyProfileDrawer = () => {
 
   return (
       <div>
+        <DeletePartyModal
+            visible={isDeletePartyModalVisible}
+            onClose={() => setIsDeletePartyModalVisible(false)}
+            partyId={partyId}
+        />
         {isOpen && (
             <div
                 className={classes.overlay}
@@ -92,9 +100,16 @@ export const PartyProfileDrawer = () => {
               <label htmlFor='file-input' className={classes.menuItem}>
                 Upload profile picture
               </label>
-              <button className={classes.menuItem} onClick={() => handleLeavePartyUtils(api, navigate, partyId)}>Leave
-                party
-              </button>
+              {user.username === organizerName ?
+                  <button className={classes.menuItem}
+                          onClick={() => setIsDeletePartyModalVisible(true)}>Delete party
+                  </button>
+                  :
+                  <button className={classes.menuItem}
+                          onClick={() => handleLeavePartyUtils(api, navigate, partyId)}>Leave
+                    party
+                  </button>
+              }
               <button className={classes.menuItem} onClick={() => handleChangePassword(api, user.username)}>Change
                 password
               </button>
