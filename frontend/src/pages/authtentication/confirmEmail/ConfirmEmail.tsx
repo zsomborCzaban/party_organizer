@@ -12,7 +12,35 @@ export const ConfirmEmail = () => {
     const [searchParams] = useSearchParams();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string>('');
-    const [success, setSuccess] = useState(false)
+    const [success, setSuccess] = useState(false);
+    const [switchStates, setSwitchStates] = useState({
+        first: false,
+        second: false,
+        third: false,
+        fourth: false
+    });
+
+    const handleSwitchChange = (switchName: keyof typeof switchStates) => {
+        setSwitchStates(prev => {
+            const newState = { ...prev };
+            newState[switchName] = !prev[switchName];
+            
+            // Reset only the current switch and subsequent switches when turned off
+            if (!newState[switchName]) {
+                const switchOrder = ['first', 'second', 'third', 'fourth'];
+                const currentIndex = switchOrder.indexOf(switchName);
+                
+                // Reset only the current switch and all switches after it
+                switchOrder.forEach((key, index) => {
+                    if (index >= currentIndex) {
+                        newState[key as keyof typeof switchStates] = false;
+                    }
+                });
+            }
+            
+            return newState;
+        });
+    };
 
     const confirmEmail = () => {
         const hash = searchParams.get('hash');
@@ -98,7 +126,11 @@ export const ConfirmEmail = () => {
                 <div className={classes.firstAttentionSpanContainer}>
                     <div className={classes.videoLabel}>
                         <p>I don't have enough attention span to wait.</p>
-                        <Switch id="airplane-mode"/>
+                        <Switch 
+                            id="first-switch"
+                            checked={switchStates.first}
+                            onChange={() => handleSwitchChange('first')}
+                        />
                     </div>
                     <div className={classes.videoContainer}>
                         <video
@@ -111,69 +143,87 @@ export const ConfirmEmail = () => {
                         />
                     </div>
                 </div>
-                <div className={classes.secondAttentionSpanContainer}>
-                    <div className={classes.videoLabel}>
-                        <p>I don't have enough attention span to wait.</p>
-                        <Switch id="airplane-mode"/>
-                    </div>
-                    <div className={classes.videoContainer}>
-                        <video
-                            src={partyVideo}
-                            autoPlay
-                            loop
-                            muted
-                            playsInline
-                            className={classes.backgroundVideo}
-                        />
-                    </div>
-                </div>
-
-                <div className={classes.thirdAttentionSpanContainer}>
-                    <div className={classes.videoLabel}>
-                        <p>I don't have enough attention span to wait.</p>
-                        <Switch id="airplane-mode"/>
-                    </div>
-                    <div className={classes.videoContainer}>
-                        <video
-                            src={partyVideo}
-                            autoPlay
-                            loop
-                            muted
-                            playsInline
-                            className={classes.backgroundVideo}
-                        />
-                    </div>
-                </div>
-
-                <div className={classes.fourthAttentionSpanContainer}>
-                    <div className={classes.videoLabel}>
-                        <p>I don't have enough attention span to wait.</p>
-                        <Switch id="airplane-mode"/>
-                    </div>
-                    <div className={classes.videoContainer}>
-                        <div className="video-responsive">
-                            <iframe
-                                width="853"
-                                height="480"
-                                src="https://www.youtube.com/embed/nxSbhVnwdFw"
-                                frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                                title="Embedded youtube"
+                
+                {switchStates.first && (
+                    <div className={classes.secondAttentionSpanContainer}>
+                        <div className={classes.videoLabel}>
+                            <p>I don't have enough attention span to wait.</p>
+                            <Switch 
+                                id="second-switch"
+                                checked={switchStates.second}
+                                onChange={() => handleSwitchChange('second')}
+                            />
+                        </div>
+                        <div className={classes.videoContainer}>
+                            <video
+                                src={partyVideo}
+                                autoPlay
+                                loop
+                                muted
+                                playsInline
+                                className={classes.backgroundVideo}
                             />
                         </div>
                     </div>
-                </div>
-                
-                
-                <div className={classes.fifthAttentionSpanContainer}>
-                    <div className={classes.videoLabel}>
-                        <p>I don't have enough attention span to wait.</p>
-                        <Switch id="airplane-mode"/>
-                    </div>
-                    <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">trust me</a>
-                </div>
+                )}
 
+                {switchStates.second && (
+                    <div className={classes.thirdAttentionSpanContainer}>
+                        <div className={classes.videoLabel}>
+                            <p>I don't have enough attention span to wait.</p>
+                            <Switch 
+                                id="third-switch"
+                                checked={switchStates.third}
+                                onChange={() => handleSwitchChange('third')}
+                            />
+                        </div>
+                        <div className={classes.videoContainer}>
+                            <video
+                                src={partyVideo}
+                                autoPlay
+                                loop
+                                muted
+                                playsInline
+                                className={classes.backgroundVideo}
+                            />
+                        </div>
+                    </div>
+                )}
+
+                {switchStates.third && (
+                    <div className={classes.fourthAttentionSpanContainer}>
+                        <div className={classes.videoLabel}>
+                            <p>I don't have enough attention span to wait.</p>
+                            <Switch 
+                                id="fourth-switch"
+                                checked={switchStates.fourth}
+                                onChange={() => handleSwitchChange('fourth')}
+                            />
+                        </div>
+                        <div className={classes.videoContainer}>
+                            <div className="video-responsive">
+                                <iframe
+                                    width="853"
+                                    height="480"
+                                    src="https://www.youtube.com/embed/nxSbhVnwdFw"
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                    title="Embedded youtube"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                )}
+                
+                {switchStates.fourth && (
+                    <div className={classes.fifthAttentionSpanContainer}>
+                        <div className={classes.videoLabel}>
+                            <p>I don't have enough attention span to wait.</p>
+                        </div>
+                        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">trust me</a>
+                    </div>
+                )}
             </div>
         </div>
     );
