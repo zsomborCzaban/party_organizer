@@ -125,6 +125,12 @@
     grid-row: 1;
     transform: rotate(-5deg);
     margin-top: -100px;
+
+    .videoContainer {
+      width: 400px;
+      height: 225px; // 16:9 aspect ratio
+      border-radius: 0;
+    }
   }
 }
 

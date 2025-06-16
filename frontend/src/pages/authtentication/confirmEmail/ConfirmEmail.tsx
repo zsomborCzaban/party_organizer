@@ -5,6 +5,7 @@ import { useApi } from '../../../context/ApiContext';
 import { toast } from 'sonner';
 import {Switch} from "@mui/material";
 import partyVideo from "../../../data/resources/videos/Subway Surfers (2024) - Gameplay [4K 9x16] No Copyright.mp4";
+import screensaverVideo from "../../../data/resources/videos/screensaver.webm";
 
 export const ConfirmEmail = () => {
     const api = useApi();
@@ -136,7 +137,7 @@ export const ConfirmEmail = () => {
                     {switchStates.first && (
                         <div className={classes.videoContainer}>
                             <video
-                                src={partyVideo}
+                                src={screensaverVideo}
                                 autoPlay
                                 loop
                                 muted
