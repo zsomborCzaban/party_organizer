@@ -128,8 +128,12 @@
 
     .videoContainer {
       width: 400px;
-      height: 225px; // 16:9 aspect ratio
+      height: 225px;
       border-radius: 0;
+    }
+
+    .videoLabel {
+      width: 400px;
     }
   }
 }
@@ -140,6 +144,15 @@
     grid-row: 1;
     transform: rotate(180deg);
     margin-top: -100px;
+
+    .videoContainer {
+      width: 250px;
+      height: 350px;
+    }
+
+    .videoLabel {
+      width: 250px;
+    }
   }
 }
 
@@ -148,6 +161,15 @@
     grid-column: 2;
     grid-row: 2;
     transform: rotate(-2deg);
+
+    .videoContainer {
+      width: 250px;
+      height: 350px;
+    }
+
+    .videoLabel {
+      width: 250px;
+    }
   }
 }
 
@@ -156,6 +178,32 @@
     grid-column: 1;
     grid-row: 3;
     transform: rotate(4deg);
+
+    .videoContainer {
+      width: 560px;
+      height: 315px;
+      border-radius: 12px;
+      overflow: hidden;
+
+      .video-responsive {
+        position: relative;
+        width: 100%;
+        height: 100%;
+
+        iframe {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          border: none;
+        }
+      }
+    }
+
+    .videoLabel {
+      width: 560px;
+    }
   }
 }
 
@@ -164,6 +212,10 @@
     grid-column: 3;
     grid-row: 3;
     transform: rotate(-3deg);
+
+    .videoLabel {
+      width: 250px;
+    }
   }
 }
 
@@ -176,6 +228,9 @@
   padding: 8px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  position: relative;
+  z-index: 1;
 
   p {
     margin: 0;
