@@ -17,7 +17,8 @@ export const ConfirmEmail = () => {
         first: false,
         second: false,
         third: false,
-        fourth: false
+        fourth: false,
+        fifth: false
     });
 
     const handleSwitchChange = (switchName: keyof typeof switchStates) => {
@@ -27,7 +28,7 @@ export const ConfirmEmail = () => {
             
             // Reset only the current switch and subsequent switches when turned off
             if (!newState[switchName]) {
-                const switchOrder = ['first', 'second', 'third', 'fourth'];
+                const switchOrder = ['first', 'second', 'third', 'fourth', 'fifth'];
                 const currentIndex = switchOrder.indexOf(switchName);
                 
                 // Reset only the current switch and all switches after it
@@ -132,16 +133,18 @@ export const ConfirmEmail = () => {
                             onChange={() => handleSwitchChange('first')}
                         />
                     </div>
-                    <div className={classes.videoContainer}>
-                        <video
-                            src={partyVideo}
-                            autoPlay
-                            loop
-                            muted
-                            playsInline
-                            className={classes.backgroundVideo}
-                        />
-                    </div>
+                    {switchStates.first && (
+                        <div className={classes.videoContainer}>
+                            <video
+                                src={partyVideo}
+                                autoPlay
+                                loop
+                                muted
+                                playsInline
+                                className={classes.backgroundVideo}
+                            />
+                        </div>
+                    )}
                 </div>
                 
                 {switchStates.first && (
@@ -154,16 +157,18 @@ export const ConfirmEmail = () => {
                                 onChange={() => handleSwitchChange('second')}
                             />
                         </div>
-                        <div className={classes.videoContainer}>
-                            <video
-                                src={partyVideo}
-                                autoPlay
-                                loop
-                                muted
-                                playsInline
-                                className={classes.backgroundVideo}
-                            />
-                        </div>
+                        {switchStates.second && (
+                            <div className={classes.videoContainer}>
+                                <video
+                                    src={partyVideo}
+                                    autoPlay
+                                    loop
+                                    muted
+                                    playsInline
+                                    className={classes.backgroundVideo}
+                                />
+                            </div>
+                        )}
                     </div>
                 )}
 
@@ -177,16 +182,18 @@ export const ConfirmEmail = () => {
                                 onChange={() => handleSwitchChange('third')}
                             />
                         </div>
-                        <div className={classes.videoContainer}>
-                            <video
-                                src={partyVideo}
-                                autoPlay
-                                loop
-                                muted
+                        {switchStates.third && (
+                            <div className={classes.videoContainer}>
+                                <video
+                                    src={partyVideo}
+                                    autoPlay
+                                    loop
+                                    muted
                                 playsInline
                                 className={classes.backgroundVideo}
                             />
-                        </div>
+                            </div>
+                        )}
                     </div>
                 )}
 
@@ -200,9 +207,10 @@ export const ConfirmEmail = () => {
                                 onChange={() => handleSwitchChange('fourth')}
                             />
                         </div>
-                        <div className={classes.videoContainer}>
-                            <div className="video-responsive">
-                                <iframe
+                        {switchStates.fourth && (
+                            <div className={classes.videoContainer}>
+                                <div className="video-responsive">
+                                    <iframe
                                     width="853"
                                     height="480"
                                     src="https://www.youtube.com/embed/nxSbhVnwdFw"
@@ -213,6 +221,7 @@ export const ConfirmEmail = () => {
                                 />
                             </div>
                         </div>
+                        )}
                     </div>
                 )}
                 
@@ -220,8 +229,15 @@ export const ConfirmEmail = () => {
                     <div className={classes.fifthAttentionSpanContainer}>
                         <div className={classes.videoLabel}>
                             <p>I don't have enough attention span to wait.</p>
+                            <Switch 
+                                id="fifth-switch"
+                                checked={switchStates.fifth}
+                                onChange={() => handleSwitchChange('fifth')}
+                            />
                         </div>
-                        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">trust me</a>
+                        {switchStates.fifth && (
+                            <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">trust me</a>
+                        )}
                     </div>
                 )}
             </div>
