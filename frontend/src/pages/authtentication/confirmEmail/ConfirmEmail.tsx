@@ -236,7 +236,7 @@ export const ConfirmEmail = () => {
                             />
                         </div>
                         {switchStates.fifth && (
-                            <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">trust me</a>
+                            <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">click me, trust me bro</a>
                         )}
                     </div>
                 )}
