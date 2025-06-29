@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import classes from './ConfirmEmail.module.scss';
 import { useApi } from '../../../context/ApiContext';
@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import {Switch} from "@mui/material";
 import partyVideo from "../../../data/resources/videos/Subway Surfers (2024) - Gameplay [4K 9x16] No Copyright.mp4";
 import screensaverVideo from "../../../data/resources/videos/screensaver.webm";
+import { DinoGame } from '../../../components/DinoGame/DinoGame';
 
 export const ConfirmEmail = () => {
     const api = useApi();
@@ -21,6 +22,7 @@ export const ConfirmEmail = () => {
         fourth: false,
         fifth: false
     });
+    const gameContainerRef = useRef<HTMLDivElement>(null);
 
     const handleSwitchChange = (switchName: keyof typeof switchStates) => {
         setSwitchStates(prev => {
@@ -90,6 +92,19 @@ export const ConfirmEmail = () => {
                 setIsLoading(false);
             });
     };
+
+    useEffect(() => {
+        const preventScroll = (e: KeyboardEvent) => {
+            if (switchStates.third && (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'ArrowDown')) {
+                e.preventDefault();
+            }
+        };
+
+        window.addEventListener('keydown', preventScroll);
+        return () => {
+            window.removeEventListener('keydown', preventScroll);
+        };
+    }, [switchStates.third]);
 
     return (
         <div>
@@ -185,14 +200,7 @@ export const ConfirmEmail = () => {
                         </div>
                         {switchStates.third && (
                             <div className={classes.videoContainer}>
-                                <video
-                                    src={partyVideo}
-                                    autoPlay
-                                    loop
-                                    muted
-                                playsInline
-                                className={classes.backgroundVideo}
-                            />
+                                <DinoGame />
                             </div>
                         )}
                     </div>
