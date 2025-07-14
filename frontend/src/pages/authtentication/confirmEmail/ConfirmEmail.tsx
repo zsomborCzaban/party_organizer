@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import classes from './ConfirmEmail.module.scss';
 import { useApi } from '../../../context/ApiContext';
@@ -20,6 +20,9 @@ export const ConfirmEmail = () => {
         third: false,
         fourth: false,
     });
+    const [progress, setProgress] = useState(0);
+    const [isProgressActive, setIsProgressActive] = useState(false);
+    const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
     const handleSwitchChange = (switchName: keyof typeof switchStates) => {
         setSwitchStates(prev => {
@@ -43,12 +46,49 @@ export const ConfirmEmail = () => {
         });
     };
 
+    const startProgressAndConfirm = () => {
+        setError('');
+        setSuccess(false);
+        setIsProgressActive(true);
+        setProgress(0);
+    };
+
+    useEffect(() => {
+        if (isProgressActive) {
+            const totalDuration = 60000;
+            const steps = 100;
+            const interval = totalDuration / steps;
+            progressIntervalRef.current = setInterval(() => {
+                setProgress(prev => {
+                    if (prev >= 100) {
+                        if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
+                        return 100;
+                    }
+                    return prev + 1;
+                });
+            }, interval);
+        } else {
+            if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
+        }
+        return () => {
+            if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
+        };
+    }, [isProgressActive]);
+
+    useEffect(() => {
+        if (isProgressActive && progress >= 100) {
+            confirmEmail();
+        }
+    }, [progress, isProgressActive]);
+
     const confirmEmail = () => {
         const hash = searchParams.get('hash');
         const username = searchParams.get('username');
 
         if (!hash || !username) {
             setError('Invalid or expired confirmation link');
+            setIsProgressActive(false);
+            setProgress(0);
             return;
         }
 
@@ -58,6 +98,8 @@ export const ConfirmEmail = () => {
                 if(resp === 'error'){
                     toast.error('Unexpected error')
                     setError('Failed to confirm email. Please try again.');
+                    setIsProgressActive(false);
+                    setProgress(0);
                     return
                 }
 
@@ -69,12 +111,16 @@ export const ConfirmEmail = () => {
 
                 if(resp.is_error && resp.code !== 500){
                     setError('Invalid or expired confirmation link');
+                    setIsProgressActive(false);
+                    setProgress(0);
                     return;
                 }
 
                 if(resp.is_error && resp.code === 500){
                     toast.error('Unexpected error')
                     setError('Failed to confirm email. Please try again.');
+                    setIsProgressActive(false);
+                    setProgress(0);
                     return
                 }
 
@@ -87,6 +133,8 @@ export const ConfirmEmail = () => {
             })
             .finally(() => {
                 setIsLoading(false);
+                setIsProgressActive(false);
+                setProgress(0);
             });
     };
 
@@ -110,12 +158,23 @@ export const ConfirmEmail = () => {
                 <>
                     <p className={classes.description}>Click the button below to confirm your email address.</p>
                     <button
-                        onClick={confirmEmail}
+                        onClick={startProgressAndConfirm}
                         className={classes.confirmButton}
-                        disabled={isLoading}
+                        disabled={isLoading || isProgressActive}
                     >
                         {'Confirm My Email'}
                     </button>
+                    {isProgressActive && (
+                        <div className={classes.progressBarWrapper}>
+                            <div className={classes.progressBarBg}>
+                                <div
+                                    className={classes.progressBarFill}
+                                    style={{ width: `${progress}%` }}
+                                />
+                            </div>
+                            <span className={classes.progressText}>{Math.floor(progress)}%</span>
+                        </div>
+                    )}
                     {(error || success) && (
                         <>
                             {error && (<p className={classes.error}>{error}</p>)}
