@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import classes from './ConfirmEmail.module.scss';
 import { useApi } from '../../../context/ApiContext';
@@ -6,7 +6,6 @@ import { toast } from 'sonner';
 import {Switch} from "@mui/material";
 import partyVideo from "../../../data/resources/videos/Subway Surfers (2024) - Gameplay [4K 9x16] No Copyright.mp4";
 import screensaverVideo from "../../../data/resources/videos/screensaver.webm";
-import { DinoGame } from '../../../components/DinoGame/DinoGame';
 
 export const ConfirmEmail = () => {
     const api = useApi();
@@ -20,9 +19,7 @@ export const ConfirmEmail = () => {
         second: false,
         third: false,
         fourth: false,
-        fifth: false
     });
-    const gameContainerRef = useRef<HTMLDivElement>(null);
 
     const handleSwitchChange = (switchName: keyof typeof switchStates) => {
         setSwitchStates(prev => {
@@ -189,7 +186,7 @@ export const ConfirmEmail = () => {
                 )}
 
                 {switchStates.second && (
-                    <div className={classes.thirdAttentionSpanContainer}>
+                    <div className={classes.fourthAttentionSpanContainer}>
                         <div className={classes.videoLabel}>
                             <p>I don't have enough attention span to wait.</p>
                             <Switch 
@@ -199,24 +196,6 @@ export const ConfirmEmail = () => {
                             />
                         </div>
                         {switchStates.third && (
-                            <div className={classes.videoContainer}>
-                                <DinoGame />
-                            </div>
-                        )}
-                    </div>
-                )}
-
-                {switchStates.third && (
-                    <div className={classes.fourthAttentionSpanContainer}>
-                        <div className={classes.videoLabel}>
-                            <p>I don't have enough attention span to wait.</p>
-                            <Switch 
-                                id="fourth-switch"
-                                checked={switchStates.fourth}
-                                onChange={() => handleSwitchChange('fourth')}
-                            />
-                        </div>
-                        {switchStates.fourth && (
                             <div className={classes.videoContainer}>
                                 <div className="video-responsive">
                                     <iframe
@@ -234,18 +213,18 @@ export const ConfirmEmail = () => {
                     </div>
                 )}
                 
-                {switchStates.fourth && (
+                {switchStates.third && (
                     <div className={classes.fifthAttentionSpanContainer}>
                         <div className={classes.videoLabel}>
                             <p>I don't have enough attention span to wait.</p>
                             <Switch 
                                 id="fifth-switch"
-                                checked={switchStates.fifth}
-                                onChange={() => handleSwitchChange('fifth')}
+                                checked={switchStates.fourth}
+                                onChange={() => handleSwitchChange('fourth')}
                             />
                         </div>
-                        {switchStates.fifth && (
-                            <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">click me, trust me bro</a>
+                        {switchStates.fourth && (
+                            <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">click me, what could go wrong?</a>
                         )}
                     </div>
                 )}

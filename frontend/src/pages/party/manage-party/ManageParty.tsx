@@ -240,7 +240,7 @@ const ManageParty = () => {
     }
     return (
       <Table
-        dataSource={participants.map((person) => ({ ...person, key: person.ID }))}
+        dataSource={participants.map((person) => ({ ...person, key: person.id }))}
         columns={participantColumns}
         pagination={false}
         scroll={{ y: 200 }}

@@ -18,7 +18,7 @@ export const getUserId = () => {
   try {
     const decoded: UserJwtPayload = jwtDecode(authToken);
     return decoded.sub;
-  } catch (e) {
+  } catch () {
     return null;
   }
 };
@@ -32,7 +32,7 @@ export const getUserEmail = () => {
   try {
     const decoded: UserJwtPayload = jwtDecode(authToken);
     return decoded.email;
-  } catch (e) {
+  } catch () {
     return null;
   }
 };
@@ -46,7 +46,7 @@ export const getUserName = () => {
   try {
     const decoded: UserJwtPayload = jwtDecode(authToken);
     return decoded.username;
-  } catch (e) {
+  } catch () {
     return null;
   }
 };
@@ -65,7 +65,7 @@ export const getUserProfilePicture = () => {
     }
     const decoded: UserJwtPayload = jwtDecode(authToken);
     return decoded.profilePictureUrl;
-  } catch (e) {
+  } catch () {
     return null;
   }
 };
@@ -80,13 +80,13 @@ export const getUser = () => {
     const freshPicture = localStorage.getItem('profile_picture_url')
     const decoded: UserJwtPayload = jwtDecode(authToken);
     const user: User = {
-      ID: Number(decoded.id),
+      id: Number(decoded.id),
       username: decoded.username,
       email: decoded.email,
       profile_picture_url: freshPicture ? freshPicture : decoded.profilePictureUrl,
     };
     return user;
-  } catch (e) {
+  } catch () {
     return null;
   }
 };

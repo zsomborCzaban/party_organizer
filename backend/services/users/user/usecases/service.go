@@ -13,6 +13,7 @@ import (
 	"github.com/zsomborCzaban/party_organizer/utils/email"
 	"github.com/zsomborCzaban/party_organizer/utils/repo"
 	s3Wrapper "github.com/zsomborCzaban/party_organizer/utils/s3"
+	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/gomail.v2"
 	"mime/multipart"
 	"os"
@@ -187,10 +188,15 @@ func (us *UserService) ChangePassword(req domains.ChangePasswordRequest, userId 
 		return api.ErrorBadRequest(err2.Error())
 	}
 
-	user.Password = req.Password
-	err3 := us.UserRepository.UpdateUser(user)
+	encodedPassword, err3 := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err3 != nil {
-		return api.ErrorInternalServerError(err3.Error())
+		return api.ErrorInternalServerError(err3)
+	}
+
+	user.Password = string(encodedPassword)
+	err4 := us.UserRepository.UpdateUser(user)
+	if err4 != nil {
+		return api.ErrorInternalServerError(err4.Error())
 	}
 
 	return api.Success("Password changed")
