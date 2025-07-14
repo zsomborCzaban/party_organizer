@@ -240,6 +240,22 @@
   }
 }
 
+.videoResponsive {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.videoResponsive iframe {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: none;
+  display: block;
+}
+
 .backgroundVideo {
   width: 100%;
   height: 100%;

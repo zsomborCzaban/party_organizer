@@ -256,18 +256,17 @@ export const ConfirmEmail = () => {
                         </div>
                         {switchStates.third && (
                             <div className={classes.videoContainer}>
-                                <div className="video-responsive">
+                                <div className={classes.videoResponsive}>
                                     <iframe
-                                    width="853"
-                                    height="480"
-                                    src="https://www.youtube.com/embed/nxSbhVnwdFw"
-                                    frameBorder="0"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowFullScreen
-                                    title="Embedded youtube"
-                                />
+                                        src="https://www.youtube.com/embed/nxSbhVnwdFw"
+                                        frameBorder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                        title="Embedded youtube"
+                                        style={{ width: '100%', height: '100%', display: 'block' }}
+                                    />
+                                </div>
                             </div>
-                        </div>
                         )}
                     </div>
                 )}
