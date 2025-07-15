@@ -19,7 +19,7 @@ export const convertPartyInvitesToTableDatasource = (invites: PartyInvite[]) : P
 
 export const convertFriendsToTableData = (friends: User[]): FriendTableRow[] => {
     return friends.map(friend => ({
-        id: friend.ID,
+        id: friend.id,
         username: friend.username,
         email: friend.email,
         friendProfilePicture: friend.profile_picture_url,
@@ -28,7 +28,7 @@ export const convertFriendsToTableData = (friends: User[]): FriendTableRow[] => 
 
 export const convertInvitesToTableData = (invites: FriendInvite[]): FriendInviteTableRow[] => {
     return invites.map(invite => ({
-        id: invite.invitor.ID,
+        id: invite.invitor.id,
         invitedBy: invite.invitor.username,
         invitorProfilePicture: invite.invitor.profile_picture_url,
     }));

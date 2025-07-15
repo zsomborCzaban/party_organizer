@@ -80,13 +80,24 @@ func (ur UserRepository) AddFriend(user, friend *domains.User) error {
 	//	return err2
 	//}
 	//not nice workaround
-	user.Friends = append(user.Friends, *friend)
-	if err := ur.DbAccess.Update(user, user.ID); err != nil {
+
+	associations := db.AssociationParameter{
+		Model:       user,
+		Association: "Friends",
+		Values:      append(user.Friends, *friend),
+	}
+	err := ur.DbAccess.ReplaceAssociations(associations)
+	if err != nil {
 		return err
 	}
 
-	friend.Friends = append(friend.Friends, *user)
-	if err2 := ur.DbAccess.Update(friend, friend.ID); err2 != nil {
+	associations2 := db.AssociationParameter{
+		Model:       friend,
+		Association: "Friends",
+		Values:      append(friend.Friends, *user),
+	}
+	err2 := ur.DbAccess.ReplaceAssociations(associations2)
+	if err2 != nil {
 		return err2
 	}
 
