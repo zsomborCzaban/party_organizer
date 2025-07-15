@@ -39,12 +39,12 @@ func (fs FriendInviteService) Accept(invitorId, userId uint) api.IResponse {
 		return api.Success(invite)
 	}
 
-	invitor, err2 := fs.UserRepository.FindById(invitorId)
+	invitor, err2 := fs.UserRepository.FindById(invitorId, "Friends")
 	if err2 != nil {
 		return api.ErrorBadRequest(err2.Error())
 	}
 
-	user, err3 := fs.UserRepository.FindById(userId)
+	user, err3 := fs.UserRepository.FindById(userId, "Friends")
 	if err3 != nil {
 		return api.ErrorBadRequest(err3.Error())
 	}

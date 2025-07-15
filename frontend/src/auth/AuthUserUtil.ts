@@ -80,7 +80,7 @@ export const getUser = () => {
     const freshPicture = localStorage.getItem('profile_picture_url')
     const decoded: UserJwtPayload = jwtDecode(authToken);
     const user: User = {
-      ID: Number(decoded.id),
+      id: Number(decoded.id),
       username: decoded.username,
       email: decoded.email,
       profile_picture_url: freshPicture ? freshPicture : decoded.profilePictureUrl,
