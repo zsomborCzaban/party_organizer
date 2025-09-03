@@ -30,7 +30,7 @@ Here are my recommendations:
 
 Hey there!
 
-Before diving into the code, keep in mind that this was my first time working with Go and React. Most of this project was built after long workdays and under time pressure (I used it for my BSc thesis), so I often chose quick and dirty solutions just to feel like I was making progress.
+Before diving into the code, please keep in mind that this was my first time working with Go and React. Most of this project was built after long workdays and under time pressure (I used it for my BSc thesis), so I often chose quick and dirty solutions just to feel like I was making progress.
 
 This is most obvious in the frontend code, which I now see has plenty of mistakes. I hope to never make the mistake of adding technical debt in the name of making progress.
 
