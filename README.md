@@ -1,24 +1,46 @@
-# Project Name
+# Party Organizer
 
-## Preface
-
-*(This section will contain the project preface. Content to be added later.)*
+<div id="header" align="center">
+  <img src="https://user-images.githubusercontent.com/74038190/212750147-854a394f-fee9-4080-9770-78a4b7ece53f.gif" width="500">
+<br><br><p>
+  <strong>
+    hey there
+    <img src="https://media.giphy.com/media/hvRJCLFzcasrR4ia7z/giphy.gif" width="30px"/>
+  </strong>
+  <p/>
+  <p>Welcome to the repository of my Party Organizer webiste<p/>
+  <p>You can find a working demo at <a href="http://130.110.2.198/"> http://130.110.2.198/</a>. This was one of my earielst project and it has some flaws. I'm building other projects instead of perfecting this one, because theres more to learn I feel like. <p/>
+</div>
 
 ---
 
-## Demo
+## Demo instructions
 
-*(This section will contain demo instructions and links. Content to be added later.)*
+I believe that the website is straight forward and doesnt need instructions, but there are some functions that only party owners can see that could be easily missed in a quick review.
+
+My reccommendations:
+ - Check out the sign up process.
+ - Check out the "A regular party" with its **owners account**
+ - 1. **username:** recruiter
+ - 2. **password:** IWillHireZsombor0
 
 ---
 
 ## Technical Overview
 
-*(This section will provide a technical introduction and overview. Content to be added later.)*
+Hey there!
+
+Before checking out my code, please note that this was my first ever time working with go and react. Most of my code was written after 8 hours of work and under a time pressure (I used this for my thesis at my Bsc), so often quick and dirty solutions were choose for the sake of "feeling like making progress". This mostly reflect on my frontend code, and I hope I'll never do a project again with this mentality. While I think my backend code turned out mostly fine, in my frontend code i made lots of mistakes.
+
+The application has a static frontend and an API for the backend with sqlite database (that could be swapped out). 
+
+On the backend I followed clean architecture
+
+On the frontend my first mistake was not following any architecture, which I deeply regret. Now I would follow MVVM.
 
 ---
 
-## Installation Instructions
+## Running the app locally
 
 - Clone the repository
 
