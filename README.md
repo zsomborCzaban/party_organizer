@@ -20,9 +20,11 @@ I believe the website is straightforward and doesn’t require much explanation.
 
 Here are my recommendations:
 - Try out the sign-up process.
+- Check out the party creation process.
 - Check out the **"A Regular Party"** page using the owner’s account:
     1. **Username:** recruiter
     2. **Password:** IWillHireZsombor0
+- (optional) Check out the website from phone
 
 ---
 
