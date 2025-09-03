@@ -8,39 +8,42 @@
     <img src="https://media.giphy.com/media/hvRJCLFzcasrR4ia7z/giphy.gif" width="30px"/>
   </strong>
   <p/>
-  <p>Welcome to the repository of my Party Organizer webiste<p/>
-  <p>You can find a working demo at <a href="http://130.110.2.198/"> http://130.110.2.198/</a>. This was one of my earielst project and it has some flaws. I'm building other projects instead of perfecting this one, because theres more to learn I feel like. <p/>
+  <p>Welcome to the repository for my Party Organizer website!</p>
+  <p>You can try a live demo at <a href="http://130.110.2.198/">http://130.110.2.198/</a>. This was one of my earliest projects, therefore it has some flaws. Instead of perfecting it, I decided to move on and build other projects to learn more.</p>
 </div>
 
 ---
 
-## Demo instructions
+## 📖 Demo Instructions
 
-I believe that the website is straight forward and doesnt need instructions, but there are some functions that only party owners can see that could be easily missed in a quick review.
+I believe the website is straightforward and doesn’t require much explanation. However, there are some features only **party owners** can access, which could be easy to miss during a quick review.
 
-My reccommendations:
- - Check out the sign up process.
- - Check out the "A regular party" with its **owners account**
- - 1. **username:** recruiter
- - 2. **password:** IWillHireZsombor0
+Here are my recommendations:
+- Try out the sign-up process.
+- Check out the **"A Regular Party"** page using the owner’s account:
+    1. **Username:** recruiter
+    2. **Password:** IWillHireZsombor0
 
 ---
 
-## Technical Overview
+## 🛠️ Technical Overview
 
 Hey there!
 
-Before checking out my code, please note that this was my first ever time working with go and react. Most of my code was written after 8 hours of work and under a time pressure (I used this for my thesis at my Bsc), so often quick and dirty solutions were choose for the sake of "feeling like making progress". This mostly reflect on my frontend code, and I hope I'll never do a project again with this mentality. While I think my backend code turned out mostly fine, in my frontend code i made lots of mistakes.
+Before diving into the code, keep in mind that this was my first time working with Go and React. Most of this project was built after long workdays and under time pressure (I used it for my BSc thesis), so I often chose quick and dirty solutions just to feel like I was making progress.
 
-The application has a static frontend and an API for the backend with sqlite database (that could be swapped out). 
+This is most obvious in the frontend code, which I now see has plenty of mistakes. I hope to never make the mistake of adding technical debt in the name of making progress.
 
-On the backend I followed clean architecture
+The app consists of:
+- A **static frontend**
+- A **backend API** with a **SQLite** database (that can be swapped)
 
-On the frontend my first mistake was not following any architecture, which I deeply regret. Now I would follow MVVM.
+On the backend, I followed Clean Architecture. 
+On the frontend, I made the mistake of not following any architecture, which I deeply regret (and would have regretted even more if I had to do unit test). If I did it again, I’d follow **MVVM** architecture.
 
 ---
 
-## Running the app locally
+## 🚀 Running the app locally
 
 - Clone the repository
 
