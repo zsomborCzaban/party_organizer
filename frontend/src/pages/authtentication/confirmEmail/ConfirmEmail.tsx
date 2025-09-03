@@ -162,7 +162,7 @@ export const ConfirmEmail = () => {
                         className={classes.confirmButton}
                         disabled={isLoading || isProgressActive}
                     >
-                        {'Confirm My Email'}
+                        {isProgressActive ? 'Confirming...' : 'Confirm My Email' }
                     </button>
                     {isProgressActive && (
                         <div className={classes.progressBarWrapper}>
@@ -179,18 +179,6 @@ export const ConfirmEmail = () => {
                         <>
                             {error && (<p className={classes.error}>{error}</p>)}
                             {success && (<p className={classes.success}>Email confirmed successfully</p>)}
-                            <div className={classes.backToLoginContainer}>
-                                <a
-                                    href=""
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        navigate('/login');
-                                    }}
-                                    className={classes.link}
-                                >
-                                    Back to Login
-                                </a>
-                            </div>
                         </>
                     )}
                 </>
