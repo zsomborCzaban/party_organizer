@@ -7,14 +7,17 @@
     hey there
     <img src="https://media.giphy.com/media/hvRJCLFzcasrR4ia7z/giphy.gif" width="30px"/>
   </strong>
-  <p/>
+  </p>
   <p>Welcome to the repository for my Party Organizer website!</p>
-  <p>You can try a live demo at <a href="http://130.110.2.198/">http://130.110.2.198/</a>. This was one of my earliest projects, therefore it has some flaws. Instead of perfecting it, I decided to move on and build other projects to learn more.</p>
+  <p><del>You can try a live demo at <a href="http://130.110.2.198/">http://130.110.2.198/</a>.</del> This was one of my earliest projects, therefore it has some flaws. Instead of perfecting it, I decided to move on and build other projects to learn more.</p>
+  <p>(The demo is currently down. Waiting on Oracle to make more "always free-eligible instances" available in my region)</p>
 </div>
 
 ---
 
 ## 📖 Demo Instructions
+
+⚠️⚠️ Out of Service ⚠️⚠️
 
 I believe the website is straightforward and doesn’t require much explanation. However, there are some features only **party owners** can access, which could be easy to miss during a quick review.
 
@@ -62,14 +65,16 @@ On the frontend, I made the mistake of not following any architecture, which I d
     * [Google Support](https://support.google.com)
 5. Create a `.env` file in the `party_organizer/backend` directory, using `.env.example` as a template, and fill it with your credentials.
 
-6. (optional): If you want a populated database to start with, rename `example.db` to `application.db` inside the `party_organizer/backend` directory.
+6. Enable `CGO` by setting `CGO_ENABLED=1` at your systems environment variables, and get `gcc` if you don't already have one.
 
-7. Run the following command inside `party_organizer/backend`:
+7. (optional): If you want a populated database to start with, rename `example.db` to `application.db` inside the `party_organizer/backend` directory.
+
+8. Run the following command inside `party_organizer/backend`:
 
    ```bash
    go mod tidy
    ```
-8. Start the backend with:
+9. Start the backend with:
 
    ```bash
    go run main.go
